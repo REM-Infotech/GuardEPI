@@ -37,18 +37,17 @@ def caduser_end():
     
     try:
         form = CreateUserForm()
-        tipo_user = session.get('tipo-usuario', None)
         
         html = "pages/forms/admin/CreateUserForm.html"
         
-        if tipo_user == "super_admin":
-            choices = [("super_admin", "Administrador Root"), ("default_user", "Usuário Padrão")]
+        # if tipo_user == "super_admin":
+        #     choices = [("super_admin", "Administrador Root"), ("default_user", "Usuário Padrão")]
             
-        elif tipo_user == "admin":
-            choices = [("admin", "Administrador"), ("default_user", "Usuário Padrão")]
+        # elif tipo_user == "admin":
+        #     choices = [("admin", "Administrador"), ("default_user", "Usuário Padrão")]
 
-        for choice in choices:
-            form.tipo_user.choices.append(choice)
+        # for choice in choices:
+        #     form.tipo_user.choices.append(choice)
         
         if form.validate_on_submit():
                 
@@ -56,10 +55,7 @@ def caduser_end():
                 login = form.login.data,
                 nome_usuario = form.nome.data,
                 senhacrip = form.password.data,
-                email = form.email.data,
-                type_user = form.tipo_user.data,
-                license_key = session.get("license_token", None),
-                login_id = 0
+                email = form.email.data
             )
             
             try:

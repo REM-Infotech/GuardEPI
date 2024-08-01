@@ -23,13 +23,9 @@
             {{ form.email(id="floatingemail", class="form-control", placeholder="E-mail") }}
             {{ form.email.label(for="floatingemail")}}
         </div>
-        <div class="form mb-3">
-            {{ form.tipo_user.label() }}
-            {{ form.tipo_user(class="form-control") }}
-        </div>
         <hr class="my-4">
         <div class="d-grid">
-            {{ form.submit_cadastro(class="btn btn-primary btn-login text-uppercase fw-bold") }}
+            {{ form.submit(class="btn btn-primary btn-login text-uppercase fw-bold") }}
         </div>
     </form>
 </div>
