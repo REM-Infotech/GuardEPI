@@ -45,13 +45,13 @@ def get_grade():
 
     try:
         form = Cautela()
-        lista = [] 
+        lista = []
         for query in GradeEPI.query.filter_by(nome_epi=form.nome_epi.data).all():
             lista.append((query.tipo_grade, query.tipo_grade))
         form.tipo_grade.choices.extend(lista)
 
         page = 'pages/forms/cautelas/get_grade.html'
-        return render_template(page, form = form)
+        return render_template(page, form=form)
     except Exception as e:
         pass
 
@@ -64,21 +64,15 @@ def emitir_cautela():
         form = Cautela()
         if form.validate_on_submit:
             list_epis_solict = []
-
             form_flask = list(form.data)
-
             epi = request.form
-
             list_epi = list(epi)
-
             funcionario = form.select_funcionario.data
-
-            nomedoc_cautela = f'Cautela - {funcionario} - {datetime.now().strftime("%d-%m-%Y %H-%M-%S")}.pdf'
+            nomedoc_cautela = f'Cautela - {funcionario} - {
+                datetime.now().strftime("%d-%m-%Y %H-%M-%S")}.pdf'
 
             for epis in list_epi:
-
                 if epis not in form_flask and epis != "csrf_token":
-
                     qtd_entregar = epi[epis].split(" - ")[-1]
                     grade = epi[epis].split(" - ")[1]
 
@@ -94,7 +88,7 @@ def emitir_cautela():
                             estoque_grade.qtd_estoque = estoque_grade.qtd_estoque - 1
 
                             registrar = RegistrosEPI(
-                                nome_epi= estoque_grade.nome_epi,
+                                nome_epi=estoque_grade.nome_epi,
                                 funcionario=funcionario,
                                 data_solicitacao=datetime.now(),
                                 doc_cautela=nomedoc_cautela
@@ -104,14 +98,12 @@ def emitir_cautela():
                             db.session.commit()
 
                         elif estoque_grade and estoque_grade.qtd_estoque == 0 or estoque_grade.qtd_estoque < 1:
-
                             flash(
                                 f'Produto "{data_estoque.nome_epi}" sem estoque disponível', "error")
 
                     else:
                         flash(f'Produto/Grade não encontrado!', "error")
-
-            messages = get_flashed_messages()
+                        return jsonify({"Item não encontrado": "error"}), 500
 
             data_funcionario = Funcionarios.query.filter_by(
                 nome_funcionario=funcionario).first()
@@ -121,8 +113,7 @@ def emitir_cautela():
                 'name': data_funcionario.nome_funcionario,
                 'cargo': data_funcionario.cargo,
                 'departamento': data_funcionario.departamento,
-                'registration': data_funcionario.codigo,
-                # ... Adicione outros detalhes
+                'registration': data_funcionario.codigo
             }
 
             item_data = [
@@ -133,15 +124,12 @@ def emitir_cautela():
 
                 item_data.append(obj)
 
-            # Gera o PDF
             num = generate_pid()
-
-            image_data = Empresa.query.filter(Empresa.nome_empresa == data_funcionario.empresa).first()
-
-            image_data = image_data.blob_imagem
-
-            original_path = os.path.join(app.config['IMAGE_TEMP_PATH'], "logo.png")
-
+            dbase = Empresa.query.filter(
+                Empresa.nome_empresa == data_funcionario.empresa).first()
+            image_data = dbase.blob_imagem
+            original_path = os.path.join(
+                app.config['IMAGE_TEMP_PATH'], "logo.png")
             with open(original_path, 'wb') as file:
                 file.write(image_data)
 
@@ -159,19 +147,14 @@ def emitir_cautela():
                     app.config['Docs_Path'], f"EPI_control_sheet{num}.pdf")
 
                 adjust_image_transparency(original_path, adjusted_path, 1)
-
                 create_EPI_control_sheet(ctrl_sheet, employee_data, delivery_data={
                 }, item_data=item_data, logo_path=adjusted_path)
-
                 create_watermark_pdf(adjusted_path, temp_watermark_pdf)
-
                 add_watermark(ctrl_sheet, path_cautela, temp_watermark_pdf)
-
                 set_cautela = RegistrosEPI.query.filter_by(
                     doc_cautela=nomedoc_cautela).first()
 
                 if set_cautela is None:
-
                     url = ""
                     item_html = render_template(
                         'includes/show_pdf.html', url=url)
@@ -181,14 +164,11 @@ def emitir_cautela():
                     cautela_data = file.read()
 
                 set_cautela.blob_cautela = cautela_data
-
                 db.session.commit()
 
                 url = url_for(
                     'serve_pdf', filename=nomedoc_cautela, _external=True)
                 item_html = render_template('includes/show_pdf.html', url=url)
-
-                # Retorna o HTML do item
                 return item_html
 
             except Exception as e:
@@ -197,12 +177,9 @@ def emitir_cautela():
 
             finally:
 
-                for root, dirs, files in os.walk("app/PDF"):
-
+                for root, dirs, files in os.walk(app.config['Docs_Path']):
                     for file in files:
-
                         if ".pdf" in file or "adjusted" in file:
-
                             os.remove(f"{root}/{file}")
 
     except Exception as e:

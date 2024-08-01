@@ -59,8 +59,6 @@ def importe_epi(form):
         type_query = item
         update_counts(queryit, queryobjs, doc_path, type_query)
         
-        set_estoque()
-        
 def update_counts(model, field, doc_path, type_query):
     
 
@@ -86,34 +84,12 @@ def update_counts(model, field, doc_path, type_query):
             kwargs[fd.name] = its
                 
         record = model.query.filter_by(nome_epi = kwargs.get("nome_epi")).first()
-        
         if record is None or record.tipo_grade != tipo_grade:
             new_record = model(**kwargs)
             db.session.add(new_record)
             db.session.commit()
-            
-            
-        
 
         if i == ws.max_row:
             flash("Equipamentos cadastrados com sucesso!", "success")
-
-    db.session.commit()
-    
-def set_estoque():
-    
-    epis_agrupados = db.session.query(
-    GradeEPI.nome_epi, GradeEPI.ca, GradeEPI.cod_ca, GradeEPI.tipo_qtd,
-    func.sum(GradeEPI.qtd_estoque).label('quantidade_total')
-    ).group_by(GradeEPI.nome_epi).all()
-
-    # Atualizar ou inserir no banco de estoque
-    for epi in epis_agrupados:
-        estoque_item = EstoqueEPI.query.filter_by(nome_epi=epi.nome_epi).first()
-        if estoque_item:
-            estoque_item.quantidade_total = epi.quantidade_total
-        else:
-            novo_item = EstoqueEPI(nome_epi=epi.nome_epi, qtd_total_estoque=epi.quantidade_total, tipo_qtd=epi.tipo_qtd, ca=epi.ca)
-            db.session.add(novo_item)
 
     db.session.commit()
