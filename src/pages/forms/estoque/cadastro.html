@@ -1,0 +1,51 @@
+<div class="modal fade" id="cadastroEstoque" tabindex="-1" aria-labelledby="cadastroEstoqueLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="m-0 font-weight-bold text-primary">Cadastrar Grade Equipamento</h6>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="#!" enctype="multipart/form-data" class="form-floating">
+                    {{ form.hidden_tag() }}
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                {{ form.nome_epi(class="form-control", id="nome_epi", placeholder="") }}
+                                {{ form.nome_epi.label(for="nome_epi") }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                {{ form.tipo_grade(class="form-control", id="tipo_grade", placeholder="") }}
+                                {{ form.tipo_grade.label(for="tipo_grade") }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                {{ form.tipo_qtd(type="text", class="form-control", id="tipo_qtd", placeholder="") }}
+                                {{ form.tipo_qtd.label(for="tipo_qtd") }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                {{ form.qtd_estoque(class="form-control", id="qtd_estoque", placeholder="") }}
+                                {{ form.qtd_estoque.label(for="qtd_estoque") }}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="footer">
+                        <div class="d-grid gap-2">
+                            {{ form.submit(class="btn btn-success form-control") }}
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

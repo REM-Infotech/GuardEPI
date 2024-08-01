@@ -1,0 +1,25 @@
+<div class="modal fade" id="modal-pdf" tabindex="-1" aria-labelledby="EmissãoCautelaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="m-0 font-weight-bold text-primary">Cautela</h6>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <iframe id="pdfiframe" class="embed-responsive-item" src="{{ url }}" style="width: 100%"></iframe>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<script>
+    $('#EmissãoCautela').modal('hide');
+</script>
+
+{% if url != "" %}
+<script>
+    $('#modal-pdf').modal('show');
+</script>
+{% endif %}

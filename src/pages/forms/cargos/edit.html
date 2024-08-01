@@ -1,0 +1,35 @@
+<div class="modal fade" data-modal_edit="editSecao" id="editSecao" tabindex="-1" aria-labelledby="editSecaoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="m-0 font-weight-bold text-primary">Editar Seção</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" method="post" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-floating mb-3">
+                                {{ form.setor(class="form-control", id="setor", placeholder="...") }}
+                                {{ form.setor.label(for="setor") }}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating mb-3">
+                                {{ form.desc(class="form-control", id="desc", placeholder="...") }}
+                                {{ form.desc.label(for="desc") }}
+                            </div>
+                        </div>
+
+                        <div class="footer">
+                            <div class="d-grid gap-2">
+                                {{ form.submit(class="btn btn-success form-control") }}
+                            </div>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename = 'js/setEdit.js') }}"></script>

@@ -1,0 +1,135 @@
+<div class="container-fluid px-4">
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h2 class="">Dashboard</h1>
+                <hr>
+        </div>
+        <div class="card-body bg-secondary bg-opacity-25">
+            <div class="row">
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-success text-white mb-4">
+                        <div class="card-header">
+                            <h4>Total EPI's Liberadas</h4>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="text">58</h3>
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <a class="small text-white stretched-link" href="#">View Details</a>
+                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-primary text-white mb-4">
+                        <div class="card-header">
+                            <h4>Valor total Saídas</h4>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="text">R$ 00,0</h3>
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <a class="small text-white stretched-link" href="#">View Details</a>
+                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-warning text-white mb-4">
+                        <div class="card-header">
+                            <h4>EPI's Proximas do vencimento</h4>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="text">0</h3>
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <a class="small text-white stretched-link" href="#">View Details</a>
+                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card bg-danger text-white mb-4">
+                        <div class="card-header">
+                            <h4>EPI's Vencidas</h4>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="text">0</h3>
+                        </div>
+                        <div class="card-footer d-flex align-items-center justify-content-between">
+                            <a class="small text-white stretched-link" href="#">View Details</a>
+                            <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-chart-area me-1"></i>
+                            Gráfico Saídas - Area
+                        </div>
+                        <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-chart-bar me-1"></i>
+                            Gráfico Saídas - Barra
+                        </div>
+                        <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    Tabela de Saídas EPI's
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" id="DashboardTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Produto</th>
+                                <th>Funcionário</th>
+                                <th>Data Saída</th>
+                                <th data-sortable="false">Cautela</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if database %}
+                            {% for item in database %}
+                            <tr>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.nome_epi }}</td>
+                                <td>{{ item.funcionario }}</td>
+                                <td>{{ item.data_solicitacao.strftime("%d/%m/%Y") }}</td>
+                                <td><a class="btn btn-primary btn-sm" href="{{ url_for('serve_pdf', index = item.id, _external=True) }}">
+                                    Ver PDF</a></td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Produto</th>
+                                <th>Funcionário</th>
+                                <th>Data Saída</th>
+                                <th>Cautela</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>

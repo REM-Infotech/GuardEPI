@@ -1,0 +1,88 @@
+<div class="container-fluid px-4">
+    <script src="{{ url_for('static', filename = 'js/Formatadores/CNPJ.js') }}"></script>
+    <div class="card mt-4 mb-4">
+        <div class="card-header">
+            <h2>Funcionários</h2>
+            <hr>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#cadastroFuncionario">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-plus"></i>
+                </span>
+                <span class="text">Cadastrar</span>
+            </button>
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#importarquivo">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-file-import"></i>
+                </span>
+                <span class="text">Import em lotes</span>
+            </button>
+            <a class="btn btn-primary" href="#!">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-file-csv"></i>
+                </span>
+                <span class="text">Gerar Relatório</span>
+            </a>
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-striped" id="FuncionariosTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Funcionario</th>
+                        <th>Função</th>
+                        <th>Departamento</th>
+                        <th>Empresa</th>
+                        <th data-sortable="false">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if database %}
+                    {% for item in database %}
+                    <tr>
+                        <td>{{item.id}}</td>
+                        <td>{{ item.nome_funcionario }}</td>
+                        <td>{{ item.cargo }}</td>
+                        <td>{{ item.departamento }}</td>
+                        <td>{{ item.empresa }}</td>
+                        <td>
+                            <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
+                                hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
+                                hx-trigger="click" hx-target="#results">
+                                <span class="icon text-white-50">
+                                    <i class="fa-solid fa-trash"></i>
+                                </span>
+                                <span class="text">Deletar</span>
+                            </button>
+                            <button type="button" id="EditEstoqueButton" class="btn btn-warning btn-sm mb-2"
+                                hx-get="{{ url_for('set_editar', tipo = request.endpoint, item = item.id) }}"
+                                hx-target="#results">
+                                <span class="icon text-white-50">
+                                    <i class="fa-solid fa-pen"></i>
+                                </span>
+                                <span class="text">Editar</span>
+                            </button>
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>#</th>
+                        <th>Funcionario</th>
+                        <th>Função</th>
+                        <th>Departamento</th>
+                        <th>Empresa</th>
+                        <th>Ações</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+</div>
+<div id="results">
+    
+</div>
+{% include 'pages/forms/funcionarios/create.html' %}
