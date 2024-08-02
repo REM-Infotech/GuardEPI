@@ -67,7 +67,8 @@ def check_permit(groups_usr: list, PERM: str) -> bool:
         if not checkroute:
             continue
         
-        if dict(checkroute['permissoes']).get(PERM, None):
+        grant = list(checkroute['permissoes'])
+        if any(PERM == perms for perms in grant):
             returns = True
             break
         
