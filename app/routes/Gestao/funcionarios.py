@@ -10,7 +10,7 @@ from app.routes.CRUD.update import *
 from app.routes.CRUD.delete import *
 from app.routes.EPI.emitir_cautela import *
 from app.routes.Gestao.set import config_form
-from app.decorators import read_perm
+from app.decorators import read_perm, set_endpoint
 
 def set_choices() -> list[tuple[str, str]]:
 
@@ -21,6 +21,7 @@ def set_choices() -> list[tuple[str, str]]:
 
 @app.route("/funcionarios")
 @login_required
+@set_endpoint
 @read_perm
 def funcionarios():
 

@@ -15,6 +15,8 @@ def create_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
         
+        if check_permit(session["groups_usr"], "CREATE") is False:
+            abort(405)    
         return func(*args, **kwargs)
     return decorated_function
 
@@ -22,7 +24,7 @@ def read_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
         
-        if check_permit(session["groups_usr"]) is False:
+        if check_permit(session["groups_usr"], "READ") is False:
             abort(405)     
         
         return func(*args, **kwargs)
@@ -32,7 +34,7 @@ def update_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
         
-        if check_permit(session["groups_usr"]) is False:
+        if check_permit(session["groups_usr"], "UPDATE") is False:
             abort(405)
         
         return func(*args, **kwargs)
@@ -42,7 +44,7 @@ def delete_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
         
-        if check_permit(session["groups_usr"]) is False:
+        if check_permit(session["groups_usr"], "DELETE") is False:
             abort(405)
         
         return func(*args, **kwargs)
@@ -54,7 +56,7 @@ def query_db(group_usr: str) -> dict:
     if dbase: 
         return json.loads(dbase.perms)
 
-def check_permit(groups_usr: list) -> bool:
+def check_permit(groups_usr: list, PERM: str) -> bool:
     
     returns = False
     
@@ -65,13 +67,10 @@ def check_permit(groups_usr: list) -> bool:
         if not checkroute:
             continue
         
-        if not any(checkroute.get(PERM, None) is not None
-                   for PERM in ["CREATE", "READ", "UPDATE", "DELETE"]):
-            continue
+        if dict(checkroute['permissoes']).get(PERM, None):
+            returns = True
+            break
         
-        returns = True
-        break
-    
     return returns
         
     
