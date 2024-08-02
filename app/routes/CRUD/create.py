@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from flask_wtf.file import FileField
 from sqlalchemy import LargeBinary
 
+from app.decorators import create_perm
 from app.models import *
 from app.Forms import *
 from app import app
@@ -39,6 +40,7 @@ def get_models(tipo) -> Type[tipo]:
 
 @app.route("/cadastrar/<tipo>", methods=["POST"])
 @login_required
+@create_perm
 def cadastrar(tipo: str):
 
     tipo = tipo.lower()

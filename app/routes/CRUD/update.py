@@ -8,6 +8,7 @@ from wtforms import DateField
 from sqlalchemy import LargeBinary
 from sqlalchemy import Float
 
+from app.decorators import update_perm
 from app.misc import *
 from app.models import *
 from app.Forms import *
@@ -109,6 +110,7 @@ def set_editar(tipo: str, item: int):
 
 @app.route("/editar/<tipo>/<id>", methods=["POST"])
 @login_required
+@update_perm
 def editar(tipo: str | None, id: int):
 
     form = getform(f"edit_{tipo}")

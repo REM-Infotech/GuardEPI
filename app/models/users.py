@@ -24,6 +24,7 @@ class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(length=30), nullable=False, unique=True)
     nome_usuario = db.Column(db.String(length=64), nullable=False, unique=True)
+    grupos = db.Column(db.String(length=1024), nullable=False)
     email = db.Column(db.String(length=50), nullable=False, unique=True)
     password = db.Column(db.String(length=60), nullable=False)
     login_time = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Etc/GMT+4')))
@@ -41,9 +42,18 @@ class Users(db.Model, UserMixin):
     def converte_senha(self, senha_texto_claro) -> bool:
         return bcrypt.checkpw(senha_texto_claro.encode("utf-8"), self.password.encode("utf-8"))
     
-    def __init__(self, login: str, nome_usuario: str, email: str) -> None:
+    def __init__(self, login: str, nome_usuario: str, email: str, grupos: str) -> None:
         
+        self.grupos = grupos
         self.login = login
         self.nome_usuario = nome_usuario
         self.email = email
         
+class Groups(db.Model):
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name_group = db.Column(db.String(length=30), nullable=False, unique=True)
+    members = db.Column(db.String(length=1024), nullable=False)
+    perms = db.Column(db.String(length=1024), nullable=False)
+    
+    

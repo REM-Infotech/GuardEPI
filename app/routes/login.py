@@ -30,6 +30,7 @@ def login():
         if user:
             check_pw = user.converte_senha(form.password.data)
             if check_pw:
+                session["groups_usr"] = json.loads(user.grupos)
                 session["nome_usuario"] = user.nome_usuario
                 session.pop("next")
                 login_user(user, remember=form.keep_login.data)

@@ -1,6 +1,7 @@
 from flask_login import *
 from flask import *
 
+from app.decorators import delete_perm
 from app.misc import *
 from app.models import *
 from app import db
@@ -21,6 +22,7 @@ def get_models(tipo: str) -> Type[tipo]:
     return models[tipo]
 
 @app.route("/deletar_item/<database>/<id>", methods = ["POST"])
+@delete_perm
 def deletar_item(database: str, id: int):
     
     database = database.lower()

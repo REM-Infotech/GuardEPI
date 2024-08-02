@@ -2,9 +2,11 @@ from flask import *
 from flask_login import *
 from app import app
 from app.models import *
+from app.decorators import set_endpoint
 
 @app.route("/dashboard", methods = ["GET"])
 @login_required
+@set_endpoint
 def dashboard():
     
     """
