@@ -9,8 +9,8 @@
                 </a>
                 <div class="sb-sidenav-menu-heading">Interface</div>
 
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                    data-bs-target="#colapse_Tables" aria-expanded="false" aria-controls="colapse_Tables">
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#colapse_Tables"
+                    aria-expanded="false" aria-controls="colapse_Tables">
                     <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                     Gestão EPI's
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -19,12 +19,24 @@
                     data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
                         <a class="nav-link" href="{{ url_for('Equipamentos') }}">Equipamentos</a>
-                        <a class="nav-link" href="{{ url_for('Estoque') }}">Estoque</a>
                         <a class="nav-link" href="{{ url_for('Cautelas') }}">Cautelas</a>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesEstoque"
+                            aria-expanded="false" aria-controls="pagesEstoque">
+                            Estoque
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="pagesEstoque" aria-labelledby="headingOne"
+                            data-bs-parent="#sidenavAccordionPages">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{{ url_for('Estoque') }}">Geral</a>
+                                <a class="nav-link" href="#!">Grades</a>
+                                <a class="nav-link" href="#!">Entradas</a>
+                            </nav>
+                        </div>
                     </nav>
                 </div>
-                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                    data-bs-target="#colapse_TablesEmpresa" aria-expanded="false" aria-controls="colapse_TablesEmpresa">
+                <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#colapse_TablesEmpresa"
+                    aria-expanded="false" aria-controls="colapse_TablesEmpresa">
                     <div class="sb-nav-link-icon"><i class="fa-regular fa-building"></i></div>
                     Corporativo
                     <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -38,6 +50,8 @@
                         <a class="nav-link" href="{{ url_for('Departamentos') }}">Departamentos</a>
                     </nav>
                 </div>
+                
+                <div class="sb-sidenav-menu-heading">Sistema</div>
 
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapse_Settings"
                     aria-expanded="false" aria-controls="collapse_Settings">

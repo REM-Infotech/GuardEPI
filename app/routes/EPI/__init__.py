@@ -9,12 +9,6 @@ from app.routes.CRUD.update import *
 from app.routes.CRUD.delete import *
 from app.routes.EPI.emitir_cautela import *
 
-def set_choices() -> list[tuple[str, str]]:
-
-    dbase = ProdutoEPI.query.all()
-
-    return [(epi.nome_epi, epi.nome_epi) for epi in dbase]
-
 
 @app.route("/Equipamentos")
 @login_required
@@ -33,22 +27,7 @@ def Equipamentos():
                            DataTables=DataTables, url_image=url)
 
 
-@app.route("/Estoque")
-@login_required
-def Estoque():
 
-    database = GradeEPI.query.all()
-    title = request.endpoint.capitalize()
-    DataTables = 'js/EstoqueTable.js'
-    page = "pages/Estoque.html"
-    form = CadastroGradeForm()
-
-    form.nome_epi.choices.extend(set_choices())
-
-    importForm = IMPORTEPIForm()
-    return render_template("index.html", page=page, title=title, database=database,
-                           DataTables=DataTables, form=form, importForm=importForm,
-                           format_currency_brl=format_currency_brl)
 
 
 @app.route("/Cautelas")
