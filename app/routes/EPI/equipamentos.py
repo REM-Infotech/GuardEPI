@@ -13,10 +13,10 @@ def Equipamentos():
 
     importForm = IMPORTEPIForm()
     form = CadastroEPIForm()
-    page = "pages/Equipamentos.html"
+    page = f"pages/epi/{request.endpoint.lower()}.html"
     title = request.endpoint.capitalize()
     database = ProdutoEPI.query.all()
-    DataTables = 'js/EquipamentosTable.js'
+    DataTables = 'js/DataTables/epi/EquipamentosTable.js'
     url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
     return render_template("index.html", page=page, title=title, form=form,
                            importForm=importForm, database=database,

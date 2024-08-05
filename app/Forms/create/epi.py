@@ -14,7 +14,9 @@ class InsertEstoqueForm(FlaskForm):
 
     nome_epi = SelectField(label='EPI', choices=[("Vazio", "Selecione")], validators=[DataRequired()])
     tipo_grade = SelectField(label='Grade', choices=[("Vazio", "Selecione")], validators=[DataRequired()])
-    tipo_qtd = SelectField(label='Tipo de Quantidade(Ex.: Peça, Unidade, Par, etc)', choices=[("Vazio", "Selecione")], validators=[DataRequired()])
+    tipo_qtd = SelectField(label='Tipo de Quantidade(Ex.: Peça, Unidade, Par, etc)', 
+                           choices=[("Vazio", "Selecione")], validators=[DataRequired()])
+    
     qtd_estoque = IntegerField( label='Quantidade em Estoque', validators=[DataRequired()])
     submit = SubmitField(label='Salvar')
 

@@ -7,7 +7,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="#!" enctype="multipart/form-data" class="form-floating">
+                <form method="POST" action="{{ url_for('lancamento_produto') }}" enctype="multipart/form-data" class="form-floating">
                     {{ form.hidden_tag() }}
 
                     <div class="row g-3">

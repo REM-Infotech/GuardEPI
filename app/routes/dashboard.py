@@ -22,7 +22,7 @@ def dashboard():
     database = RegistrosEPI.query.all()
     title = request.endpoint.capitalize()
     page = "pages/dashboard.html"
-    DataTables = 'js/DashboardTable.js'
+    DataTables = 'js/DataTables/DashboardTable.js'
     
     resp = make_response(render_template("index.html", page = page, title = title, 
                            database = database, DataTables = DataTables))

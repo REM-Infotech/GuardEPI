@@ -16,11 +16,10 @@ from app.decorators import read_perm, set_endpoint
 def Departamentos():
 
     importForm = IMPORTEPIForm()
-    import_endpoint = 'import_lotes'
     form = CadastroDepartamentos()
     page = f"pages/{request.endpoint.lower()}.html"
     database = Departamento.query.all()
-    DataTables = f'js/{request.endpoint.capitalize()}Table.js'
+    DataTables = f'js/DataTables/Gestao/{request.endpoint.capitalize()}Table.js'
     return render_template("index.html", page=page, form=form, database=database,
-                           DataTables=DataTables, import_endpoint=import_endpoint,
+                           DataTables=DataTables,
                            importForm=importForm)

@@ -17,10 +17,10 @@ from app import app
 @login_required
 def Cautelas():
 
-    page = "pages/Cautelas.html"
+    page = f"pages/epi/{request.endpoint.lower()}.html"
     database = RegistrosEPI.query.all()
     title = request.endpoint.capitalize()
-    DataTables = 'js/CautelasTable.js'
+    DataTables = 'js/DataTables/epi/CautelasTable.js'
     form = Cautela()
     session["itens_lista_cautela"] = []
     dbase_produto = ProdutoEPI.query.all()
