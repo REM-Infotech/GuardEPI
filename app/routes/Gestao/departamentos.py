@@ -16,7 +16,7 @@ from app.decorators import read_perm, set_endpoint
 def Departamentos():
 
     importForm = IMPORTEPIForm()
-    import_endpoint = 'importacao_corporativo'
+    import_endpoint = 'import_lotes'
     form = CadastroDepartamentos()
     page = f"pages/{request.endpoint.lower()}.html"
     database = Departamento.query.all()

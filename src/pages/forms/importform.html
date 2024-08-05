@@ -6,17 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                {% if not import_endpoint %}
-                    {% set endpoint_atual = request.path.split("/")[-1].lower() %}
-                    {% if endpoint_atual == "estoque" %}
-                        {% set import_endpoint = 'importacao_grade' %}
-                    {% else %}
-                        {% set import_endpoint = 'importacao_produto' %}
-                    {% endif %}
-                    {% set action = url_for(import_endpoint) %}
-                {% else %} 
-                {% set action = url_for(import_endpoint, tipo = request.endpoint) %}
-                {% endif %}
+                {% set action = url_for('import_lotes', tipo = request.endpoint) %}
                 
 
                 <form method="POST" enctype="multipart/form-data" action="{{ action }}">

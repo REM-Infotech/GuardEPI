@@ -17,7 +17,7 @@ from app.decorators import read_perm, set_endpoint
 def cargos():
 
     importForm = IMPORTEPIForm()
-    import_endpoint = 'importacao_corporativo'
+    import_endpoint = 'import_lotes'
     page = f"pages/{request.endpoint.lower()}.html"
     database = Cargos.query.all()
     DataTables = f'js/{request.endpoint.capitalize()}Table.js'

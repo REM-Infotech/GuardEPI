@@ -30,9 +30,9 @@ def getModel(tipo) -> Type[tipo]:
     return model[tipo]
 
 
-@app.route("/importacao_corporativo/<tipo>", methods=["POST"])
+@app.route("/import_lotes/<tipo>", methods=["POST"])
 @login_required
-def importacao_corporativo(tipo: str):
+def import_lotes(tipo: str):
 
     try:
         form = IMPORTEPIForm()

@@ -20,7 +20,7 @@ def funcionarios():
 
     form = config_form(CadastroFuncionario())
     importForm = IMPORTEPIForm()
-    import_endpoint = 'importacao_corporativo'
+    import_endpoint = 'import_lotes'
     DataTables = f'js/{request.endpoint.capitalize()}Table.js'
     page = f"pages/{request.endpoint.lower()}.html"
     database = Funcionarios.query.all()
