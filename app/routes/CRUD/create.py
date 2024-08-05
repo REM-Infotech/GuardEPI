@@ -1,5 +1,5 @@
-from flask_login import *
-from flask import *
+from flask_login import login_required
+from flask import redirect, abort, flash
 from flask_wtf import FlaskForm
 
 from werkzeug.utils import secure_filename
@@ -8,7 +8,7 @@ from sqlalchemy import LargeBinary
 
 from app.decorators import create_perm
 from app.models import *
-from app.Forms import *
+from app.Forms.create import *
 from app import app
 from app import db
 
@@ -21,7 +21,7 @@ tipo = db.Model
 def getform(form) -> Type[FlaskForm]:
 
     forms = {"equipamentos": CadastroEPIForm(),
-             "estoque": CadastroGradeForm(),
+             "estoque": InsertEstoqueForm(),
              "departamentos": CadastroDepartamentos(),
              "cargos": CadastroCargo()}
 

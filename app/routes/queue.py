@@ -15,16 +15,19 @@ import pandas as pd
 tipo = db.Model
 
 
-def getModel(form) -> Type[tipo]:
+def getModel(tipo) -> Type[tipo]:
 
-    forms = {
+    model = {
         'funcionarios': Funcionarios,
         'empresas': Empresa,
         'departamentos': Departamento,
-        'cargos': Cargos
+        'cargos': Cargos,
+        'estoque': EstoqueEPI,
+        'grade': GradeEPI,
+        'produto': ProdutoEPI
     }
 
-    return forms[form]
+    return model[tipo]
 
 
 @app.route("/importacao_corporativo/<tipo>", methods=["POST"])

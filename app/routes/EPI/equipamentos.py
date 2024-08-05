@@ -1,13 +1,10 @@
-from flask import *
-from flask_login import *
+from flask import render_template, request
+from flask_login import login_required
 from app import app
-from app.Forms import *
-from app.models import *
-from app.misc import *
-from app.routes.CRUD.create import *
-from app.routes.CRUD.update import *
-from app.routes.CRUD.delete import *
-from app.routes.EPI.cautela import *
+from app.Forms.create import CadastroEPIForm
+from app.Forms.globals import IMPORTEPIForm
+from app.models.EPI import ProdutoEPI
+from app.misc import format_currency_brl
 
 
 @app.route("/Equipamentos")

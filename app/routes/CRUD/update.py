@@ -1,5 +1,5 @@
-from flask_login import *
-from flask import *
+from flask_login import login_required
+from flask import redirect, url_for, render_template, session, abort, flash, send_from_directory
 from flask_wtf import FlaskForm
 
 from werkzeug.utils import secure_filename
@@ -9,9 +9,10 @@ from sqlalchemy import LargeBinary
 from sqlalchemy import Float
 
 from app.decorators import update_perm
-from app.misc import *
-from app.models import *
-from app.Forms import *
+from app.misc import format_currency_brl, generate_pid
+from app.models.EPI import ProdutoEPI, GradeEPI, RegistrosEPI
+from app.models.Funcionários import Empresa, Funcionarios, Cargos, Departamento
+from app.Forms.edit import *
 from app import app
 from app import db
 

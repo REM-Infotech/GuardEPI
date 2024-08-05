@@ -1,8 +1,11 @@
-from flask import *
-from flask_login import *
-from app.Forms import *
-from app.models import *
-from app.misc import *
+from flask import jsonify, url_for, render_template, session, abort, flash, request
+from flask_login import login_required
+from app.Forms.create import Cautela
+from app.models.EPI import RegistrosEPI, ProdutoEPI, GradeEPI
+from app.models.Funcionários import Funcionarios, Empresa
+from app.misc import generate_pid
+from app.misc.generate_doc import (add_watermark, adjust_image_transparency,
+create_EPI_control_sheet, create_watermark_pdf)
 
 import os
 from datetime import datetime
