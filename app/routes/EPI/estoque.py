@@ -6,6 +6,7 @@ from app.Forms.globals import IMPORTEPIForm
 from app.Forms.create import InsertEstoqueForm, CadastroGrade
 
 from app.misc import format_currency_brl
+from app.decorators import read_perm, set_endpoint
 
 def set_choices() -> list[tuple[str, str]]:
 
@@ -15,6 +16,8 @@ def set_choices() -> list[tuple[str, str]]:
 
 @app.route("/Estoque")
 @login_required
+@set_endpoint
+@read_perm
 def Estoque():
 
     database = GradeEPI.query.all()

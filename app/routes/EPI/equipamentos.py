@@ -6,9 +6,12 @@ from app.Forms.globals import IMPORTEPIForm
 from app.models.EPI import ProdutoEPI
 from app.misc import format_currency_brl
 
+from app.decorators import read_perm, set_endpoint
 
 @app.route("/Equipamentos")
 @login_required
+@set_endpoint
+@read_perm
 def Equipamentos():
 
     importForm = IMPORTEPIForm()

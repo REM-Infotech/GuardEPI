@@ -13,8 +13,12 @@ from datetime import datetime
 from app import db
 from app import app
 
+from app.decorators import read_perm, set_endpoint, create_perm
+
 @app.route("/Cautelas")
 @login_required
+@set_endpoint
+@read_perm
 def Cautelas():
 
     page = f"pages/epi/{request.endpoint.lower()}.html"
@@ -79,6 +83,7 @@ def get_grade():
 
 @app.route("/emitir_cautela", methods=["POST"])
 @login_required
+@create_perm
 def emitir_cautela():
 
     try:
