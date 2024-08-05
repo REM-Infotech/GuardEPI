@@ -1,8 +1,10 @@
-from flask import *
-from flask_login import *
-from app.Forms import *
+from flask import session, flash, request, redirect, url_for, render_template
+from flask_login import login_user, logout_user
+from app.Forms import LoginForm
 from app import app
-from app.models import *
+from app.models.users import Users
+
+import json
 
 
 @app.route("/", methods = ["GET"])

@@ -1,7 +1,7 @@
-from flask import *
-from flask_login import *
+from flask import render_template, request, make_response, jsonify
+from flask_login import login_required
 from app import app
-from app.models import *
+from app.models.EPI import RegistrosEPI
 from app.decorators import set_endpoint
 
 @app.route("/dashboard", methods = ["GET"])

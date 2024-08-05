@@ -1,9 +1,16 @@
-from flask import *
-from flask_login import *
-from app import app
-from app.models import *
+from flask import (redirect, render_template, abort, flash,
+url_for, request, session)
+from flask_login import login_required
 
-from app.Forms import *
+from app import app
+from app import db
+
+from app.models.users import Users
+
+from app.Forms.globals import IMPORTEPIForm
+from app.Forms.create import CreateUserForm
+from app.Forms.edit import (ChangeEmail, ChangePassWord, 
+AdmChangeEmail, AdmChangePassWord)
 
 
 sqlalchemy_excepts = ['AmbiguousForeignKeysError', 'Any', 'ArgumentError', 'AwaitRequired', 'Base20DeprecationWarning', 'CircularDependencyError', 'CompileError', 

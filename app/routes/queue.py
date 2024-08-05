@@ -1,16 +1,16 @@
-from flask import Flask, url_for, abort, flash, redirect
+from flask import url_for, abort, flash, redirect
 import os
 from app import app
 from app import db
 from flask_login import login_required
-from datetime import datetime
-import openpyxl
+
 from werkzeug.utils import secure_filename
-import re
-from app.Forms import *
-from app.models import *
 from typing import Type
 import pandas as pd
+
+from app.Forms.globals import IMPORTEPIForm
+from app.models.Funcionários import *
+from app.models.EPI import *
 
 tipo = db.Model
 

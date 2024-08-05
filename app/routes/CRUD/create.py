@@ -32,6 +32,7 @@ def get_models(tipo) -> Type[tipo]:
 
     models = {"equipamentos": ProdutoEPI,
               "estoque": GradeEPI,
+              "empresa": Empresa,
               "departamentos": [Departamento, Departamento.departamento],
               "cargos": [Cargos, Cargos.cargo]}
 

@@ -1,21 +1,12 @@
-from flask import *
-from flask_login import *
+from flask import render_template, request
+from flask_login import login_required
 from app import app
-from app import db
-from app.Forms import *
-from app.models import *
-from app.misc import *
-from app.routes.CRUD.create import *
-from app.routes.CRUD.update import *
-from app.routes.CRUD.delete import *
-from app.routes.EPI.cautela import *
+
+from app.Forms.globals import IMPORTEPIForm
+from app.Forms.create import CadastroDepartamentos
+
+from app.models.Funcionários import Departamento
 from app.decorators import read_perm, set_endpoint
-
-def set_choices() -> list[tuple[str, str]]:
-
-    dbase = ProdutoEPI.query.all()
-
-    return [(epi.nome_epi, epi.nome_epi) for epi in dbase]
 
 
 @app.route("/Departamentos")

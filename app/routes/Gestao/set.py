@@ -1,5 +1,4 @@
-from app.models import *
-from app.Forms import *
+from app.models.Funcionários import Empresa, Departamento, Cargos
 
 from typing import Type
 from flask_wtf import FlaskForm
