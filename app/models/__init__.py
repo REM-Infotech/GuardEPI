@@ -76,6 +76,22 @@ with app.app_context():
                     "DELETE"
                 ]
             },
+            "Grade": {
+                "permissoes": [
+                    "CREATE",
+                    "READ",
+                    "UPDATE",
+                    "DELETE"
+                ]
+            },
+            "Entradas": {
+                "permissoes": [
+                    "CREATE",
+                    "READ",
+                    "UPDATE",
+                    "DELETE"
+                ]
+            },
             "cargos": {
                 "permissoes": [
                     "CREATE",

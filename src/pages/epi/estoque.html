@@ -9,7 +9,7 @@
                     <span class="icon text-white-50">
                         <i class="fa-solid fa-plus"></i>
                     </span>
-                    <span class="text">Cadastrar</span>
+                    <span class="text">Lançamento Produto</span>
                 </button>
                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#importarquivo">
                     <span class="icon text-white-50">
@@ -31,7 +31,6 @@
                     <tr>
                         <th>#</th>
                         <th>Produto</th>
-                        <th>Tipo</th>
                         <th>Tipo Unidade</th>
                         <th>Qtd Estoque</th>
                         <th data-sortable="false">Ações</th>
@@ -43,7 +42,6 @@
                     <tr>
                         <td>{{ item.id }}</td>
                         <td>{{ item.nome_epi }}</td>
-                        <td>{{ item.tipo_grade }}</td>
                         <td>{{ item.tipo_qtd }}</td>
                         <td>{{ item.qtd_estoque }}</td>
                         <td>
@@ -72,7 +70,6 @@
                     <tr>
                         <th>#</th>
                         <th>Produto</th>
-                        <th>Tipo</th>
                         <th>Tipo Unidade</th>
                         <th>Qtd Estoque</th>
                         <th>Ações</th>

@@ -13,7 +13,8 @@ tipo = db.Model
 def get_models(tipo: str) -> Type[tipo]:
     
     models = {"equipamentos": ProdutoEPI,
-            "estoque": GradeEPI,
+            "estoque": EstoqueEPI,
+            'grade': GradeEPI,
             "empresas": Empresa,
             "funcionarios": Funcionarios,
             "departamentos": Departamento,

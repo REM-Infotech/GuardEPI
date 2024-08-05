@@ -24,7 +24,8 @@ def getform(form) -> Type[FlaskForm]:
              "empresas": CadastroEmpresa(),
              "estoque": InsertEstoqueForm(),
              "departamentos": CadastroDepartamentos(),
-             "cargos": CadastroCargo()}
+             "cargos": CadastroCargo(),
+             'grade': CadastroGrade()}
 
     return forms[form]
 
@@ -32,10 +33,11 @@ def getform(form) -> Type[FlaskForm]:
 def get_models(tipo) -> Type[tipo]:
 
     models = {"equipamentos": ProdutoEPI,
-              "estoque": GradeEPI,
+              "estoque": EstoqueEPI,
               "empresas": [Empresa, Empresa.nome_empresa],
               "departamentos": [Departamento, Departamento.departamento],
-              "cargos": [Cargos, Cargos.cargo]}
+              "cargos": [Cargos, Cargos.cargo],
+              "grade": [GradeEPI, GradeEPI.grade]}
 
     return models[tipo]
 
@@ -63,7 +65,7 @@ def cadastrar(tipo: str):
                     kwargs.update({"ca": ProdutoEPI.query.filter_by(
                         nome_epi=form.nome_epi.data).first().ca})
 
-            elif any(tipo.lower() == tipos for tipos in ["departamentos", "cargos", "empresas"]):
+            elif any(tipo.lower() == tipos for tipos in ["departamentos", "cargos", "empresas", "grade", "entradas"]):
                 for md in model[0].__table__.columns:
                     form_fld = getattr(form, md.name, None)
                     if form_fld:
@@ -120,13 +122,3 @@ def cadastrar(tipo: str):
         abort(500)
 
     return redirect(f"/{tipo.capitalize()}")
-
-@app.route("/lancamento_produto", methods=["POST"])
-@login_required
-@create_perm
-def lancamento_produto():
-    
-    form = InsertEstoqueForm()
-    
-    if form.validate_on_submit():
-        pass

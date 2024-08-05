@@ -3,9 +3,9 @@
     <div class="mt-4 card mb-4">
 
         <div class="card-header">
-            <h2 class="m-2">Estoque</h1>
+            <h2 class="m-2">Grades</h1>
                 <hr>
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#cadastroEstoque">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#cadastrogrades">
                     <span class="icon text-white-50">
                         <i class="fa-solid fa-plus"></i>
                     </span>
@@ -26,14 +26,12 @@
         </div>
 
         <div class="card-body table-responsive">
-            <table class="table table-striped" id="EstoqueTable">
+            <table class="table table-striped" id="GradeTable">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Produto</th>
-                        <th>Tipo</th>
-                        <th>Tipo Unidade</th>
-                        <th>Qtd Estoque</th>
+                        <th>Grade</th>
+                        <th>Descrição</th> 
                         <th data-sortable="false">Ações</th>
                     </tr>
                 </thead>
@@ -42,10 +40,13 @@
                     {% for item in database %}
                     <tr>
                         <td>{{ item.id }}</td>
-                        <td>{{ item.nome_epi }}</td>
-                        <td>{{ item.tipo_grade }}</td>
-                        <td>{{ item.tipo_qtd }}</td>
-                        <td>{{ item.qtd_estoque }}</td>
+                        <td>{{ item.grade }}</td>
+                        {% if not item.descricao %}
+                        <td>Sem descrição</td>
+                        {% else %}
+                        <td>{{ item.descricao }}</td>
+                        {% endif %}
+                        
                         <td>
                             <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
                                 hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
@@ -71,17 +72,15 @@
                 <tfoot>
                     <tr>
                         <th>#</th>
-                        <th>Produto</th>
-                        <th>Tipo</th>
-                        <th>Tipo Unidade</th>
-                        <th>Qtd Estoque</th>
+                        <th>Grade</th>
+                        <th>Descrição</th> 
                         <th>Ações</th>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
-    {% include 'pages/forms/estoque/cadastro.html' %}
+    {% include 'pages/forms/grade/create.html' %}
     <div id="results">
 
     </div>

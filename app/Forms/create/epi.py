@@ -4,6 +4,45 @@ from wtforms import (StringField, SubmitField, SelectField, TextAreaField,
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length
 
+from app.models.EPI import (GradeEPI, ProdutoEPI)
+
+from app import app
+
+tipo_choices = [
+    ("Peça", "Peça"), 
+    ("Par", "Par"), 
+    ("Unidade", "Unidade"), 
+    ("Dúzia", "Dúzia"),
+    ("Centena", "Centena"),
+    ("Milhar", "Milhar"),
+    ("Litro", "Litro"),
+    ("Quilograma", "Quilograma"),
+    ("Metro", "Metro"),
+    ("Caixa", "Caixa"),
+    ("Pacote", "Pacote"),
+    ("Galão", "Galão"),
+    ("Tonelada", "Tonelada"),
+    ("Barril", "Barril"),
+    ("Conjunto", "Conjunto"),
+    ("Lote", "Lote"),
+    ("Fardo", "Fardo"),
+    ("Não Especificado", "Não Especificado")
+]
+
+def set_choices() -> list[tuple[str, str]]:
+
+    with app.app_context():
+        dbase = ProdutoEPI.query.all()
+
+    return [(epi.nome_epi, epi.nome_epi) for epi in dbase]
+
+def set_choicesGrade() -> list[tuple[str, str]]:
+
+    with app.app_context():
+        dbase = GradeEPI.query.all()
+
+    return [(epi.grade, epi.grade) for epi in dbase]
+
 class CadastroGrade(FlaskForm):
     
     grade = StringField("Grade", validators=[DataRequired()])
@@ -12,12 +51,12 @@ class CadastroGrade(FlaskForm):
 
 class InsertEstoqueForm(FlaskForm):
 
-    nome_epi = SelectField(label='EPI', choices=[("Vazio", "Selecione")], validators=[DataRequired()])
-    tipo_grade = SelectField(label='Grade', choices=[("Vazio", "Selecione")], validators=[DataRequired()])
+    nome_epi = SelectField(label='EPI', choices=set_choices(), validators=[DataRequired()])
+    tipo_grade = SelectField(label='Grade', choices=set_choicesGrade(), validators=[DataRequired()])
     tipo_qtd = SelectField(label='Tipo de Quantidade(Ex.: Peça, Unidade, Par, etc)', 
-                           choices=[("Vazio", "Selecione")], validators=[DataRequired()])
-    
-    qtd_estoque = IntegerField( label='Quantidade em Estoque', validators=[DataRequired()])
+                           choices=tipo_choices, validators=[DataRequired()])
+    qtd_estoque = IntegerField( label='Quantidade a ser adicionada', validators=[DataRequired()])
+    valor_total = StringField(label='Valor Unitário', validators=[DataRequired()])
     submit = SubmitField(label='Salvar')
 
 class CadastroEPIForm(FlaskForm):

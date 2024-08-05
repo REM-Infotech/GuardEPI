@@ -1,18 +1,15 @@
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
 from flask_login import login_required
 from app import app
-from app.models.EPI import GradeEPI, ProdutoEPI, RegistroEntradas, EstoqueEPI
+from app.models.EPI import (GradeEPI, ProdutoEPI, RegistroEntradas, 
+                            EstoqueEPI, EstoqueGrade)
 from app.Forms.globals import IMPORTEPIForm
 from app.Forms.create import InsertEstoqueForm, CadastroGrade
 
 from app.misc import format_currency_brl
-from app.decorators import read_perm, set_endpoint
+from app.decorators import read_perm, set_endpoint, create_perm
 
-def set_choices() -> list[tuple[str, str]]:
-
-    dbase = ProdutoEPI.query.all()
-
-    return [(epi.nome_epi, epi.nome_epi) for epi in dbase]
+from app import db
 
 @app.route("/Estoque")
 @login_required
@@ -20,13 +17,11 @@ def set_choices() -> list[tuple[str, str]]:
 @read_perm
 def Estoque():
 
-    database = GradeEPI.query.all()
+    database = EstoqueEPI.query.all()
     title = request.endpoint.capitalize()
     DataTables = 'js/DataTables/epi/EstoqueTable.js'
     page = f"pages/epi/{request.endpoint.lower()}.html"
     form = InsertEstoqueForm()
-
-    form.nome_epi.choices.extend(set_choices())
 
     importForm = IMPORTEPIForm()
     return render_template("index.html", page=page, title=title, database=database,
@@ -35,6 +30,8 @@ def Estoque():
     
 @app.route("/Grade")
 @login_required
+@set_endpoint
+@read_perm
 def Grade():
     
     title = "Grades"
@@ -42,13 +39,15 @@ def Grade():
     DataTables = 'js/DataTables/epi/grade.js'
     form = CadastroGrade()
     importForm = IMPORTEPIForm()
-    database = EstoqueEPI.query.all()
+    database = GradeEPI.query.all()
     return render_template("index.html", page=page, title=title, database=database,
                            DataTables=DataTables, form=form, importForm=importForm,
                            format_currency_brl=format_currency_brl)
     
 @app.route("/Entradas")
 @login_required
+@set_endpoint
+@read_perm
 def Entradas():
 
     title = "Relação de Entradas EPI"
@@ -58,3 +57,63 @@ def Entradas():
     DataTables = 'js/DataTables/epi/entradas.js'
     return render_template("index.html", page=page, title=title, database=database,
                            DataTables=DataTables, importForm=importForm)
+    
+@app.route("/lancamento_estoque", methods=["POST"])
+@login_required
+@create_perm
+def lancamento_produto():
+    
+    form = InsertEstoqueForm()
+    if form.validate_on_submit():
+        
+        query_Estoque = EstoqueEPI.query
+        query_EstoqueGrade = EstoqueGrade.query
+        
+        dbase_1 = query_EstoqueGrade.filter_by(nome_epi = form.nome_epi.data, 
+                                               grade = form.tipo_grade.data).first()
+        dbase_2 = query_Estoque.filter_by(nome_epi = form.nome_epi.data).first()
+        
+        if not dbase_1:
+            cad_1 = EstoqueGrade(
+                nome_epi=form.nome_epi.data,
+                tipo_qtd=form.tipo_qtd.data,
+                qtd_estoque=form.qtd_estoque.data,
+                grade=form.tipo_grade.data)
+            
+            db.session.add(cad_1)
+            if not dbase_2:
+                cad_2 = EstoqueEPI(
+                    nome_epi=form.nome_epi.data,
+                    tipo_qtd=form.tipo_qtd.data,
+                    qtd_estoque=form.qtd_estoque.data
+                )
+                
+                db.session.add(cad_2)
+            else:
+                dbase_2.qtd_estoque = dbase_2.qtd_estoque + form.qtd_estoque.data
+                
+        else:
+            dbase_1.qtd_estoque = dbase_1.qtd_estoque + form.qtd_estoque.data
+            if not dbase_2:
+                cad_2 = EstoqueEPI(
+                    nome_epi=form.nome_epi.data,
+                    tipo_qtd=form.tipo_qtd.data,
+                    qtd_estoque=form.qtd_estoque.data
+                )
+                db.session.add(cad_2)
+            else:
+                dbase_2.qtd_estoque = dbase_2.qtd_estoque + form.qtd_estoque.data
+        
+        data_insert = float(str(form.valor_total.data).replace(
+        "R$ ", "").replace(".", "").replace(",", "."))
+        EntradaEPI = RegistroEntradas(
+            nome_epi = form.nome_epi.data,
+            tipo_qtd=form.tipo_qtd.data,
+            qtd_entrada=form.qtd_estoque.data,
+            valor_unitario=data_insert)
+        
+        db.session.add(EntradaEPI)        
+                
+        db.session.commit()
+        return redirect(url_for('Estoque'))
+
