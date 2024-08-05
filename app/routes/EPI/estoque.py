@@ -18,7 +18,7 @@ def Estoque():
     title = request.endpoint.capitalize()
     DataTables = 'js/EstoqueTable.js'
     page = "pages/Estoque.html"
-    form = CadastroGradeForm()
+    form = InsertEstoqueForm()
 
     form.nome_epi.choices.extend(set_choices())
 
@@ -30,33 +30,11 @@ def Estoque():
 @app.route("/Grade")
 @login_required
 def Grade():
-
-    database = GradeEPI.query.all()
-    title = request.endpoint.capitalize()
-    DataTables = 'js/EstoqueTable.js'
-    page = "pages/Estoque.html"
-    form = CadastroGradeForm()
-
-    form.nome_epi.choices.extend(set_choices())
-
-    importForm = IMPORTEPIForm()
-    return render_template("index.html", page=page, title=title, database=database,
-                           DataTables=DataTables, form=form, importForm=importForm,
-                           format_currency_brl=format_currency_brl)
+    
+    return render_template("index.html")
     
 @app.route("/Entradas")
 @login_required
 def Entradas():
 
-    database = GradeEPI.query.all()
-    title = request.endpoint.capitalize()
-    DataTables = 'js/EstoqueTable.js'
-    page = "pages/Estoque.html"
-    form = CadastroGradeForm()
-
-    form.nome_epi.choices.extend(set_choices())
-
-    importForm = IMPORTEPIForm()
-    return render_template("index.html", page=page, title=title, database=database,
-                           DataTables=DataTables, form=form, importForm=importForm,
-                           format_currency_brl=format_currency_brl)
+    return render_template("index.html")

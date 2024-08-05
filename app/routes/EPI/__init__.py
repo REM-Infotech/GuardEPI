@@ -7,7 +7,7 @@ from app.misc import *
 from app.routes.CRUD.create import *
 from app.routes.CRUD.update import *
 from app.routes.CRUD.delete import *
-from app.routes.EPI.emitir_cautela import *
+from app.routes.EPI.cautela import *
 
 
 @app.route("/Equipamentos")
@@ -27,21 +27,3 @@ def Equipamentos():
                            DataTables=DataTables, url_image=url)
 
 
-
-
-
-@app.route("/Cautelas")
-@login_required
-def Cautelas():
-
-    page = "pages/Cautelas.html"
-    database = RegistrosEPI.query.all()
-    title = request.endpoint.capitalize()
-    DataTables = 'js/CautelasTable.js'
-    form = Cautela()
-    session["itens_lista_cautela"] = []
-    dbase_produto = ProdutoEPI.query.all()
-    dbase_funcionario = Funcionarios.query.all()
-    form.nome_epi.choices.extend([(epi.nome_epi, epi.nome_epi) for epi in dbase_produto])
-    form.select_funcionario.choices.extend([(epi.nome_funcionario, epi.nome_funcionario) for epi in dbase_funcionario])
-    return render_template("index.html", page=page, title=title, database=database, DataTables=DataTables, form=form)

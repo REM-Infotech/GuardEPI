@@ -8,7 +8,7 @@ from app.misc import *
 from app.routes.CRUD.create import *
 from app.routes.CRUD.update import *
 from app.routes.CRUD.delete import *
-from app.routes.EPI.emitir_cautela import *
+from app.routes.EPI.cautela import *
 from app.routes.Gestao.set import config_form
 from app.decorators import read_perm, set_endpoint
 
