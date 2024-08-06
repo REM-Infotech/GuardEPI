@@ -33,7 +33,8 @@ def Estoque():
 @read_perm
 def Estoque_Grade():
     
-    pass
+    
+    return render_template("index.html")
     
 @app.route("/Entradas")
 @login_required

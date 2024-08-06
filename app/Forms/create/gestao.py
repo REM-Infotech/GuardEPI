@@ -45,6 +45,13 @@ class CadastroFuncionario(FlaskForm):
                                DataRequired()], choices=setChoices_Departamento())
     submit = SubmitField("Salvar alterações")
 
+    def __init__(self, *args, **kwargs):
+        super(CadastroFuncionario, self).__init__(*args, **kwargs)
+        
+        self.empresa.choices.extend(setChoices_Empresa())
+        self.departamento.choices.extend(setChoices_Departamento())
+        self.cargo.choices.extend(setChoices_Cargo())
+        
 class CadastroEmpresa(FlaskForm):
 
     nome_empresa = StringField("Nome da Empresa", validators=[DataRequired()])

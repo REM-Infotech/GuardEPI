@@ -6,6 +6,7 @@ from app.routes import config
 from app.routes.EPI import equipamentos
 from app.routes.EPI import estoque
 from app.routes.EPI import cautela
+from app.routes.EPI import grades
 
 from app.routes.Gestao import cargos
 from app.routes.Gestao import departamentos

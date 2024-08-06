@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.form import _Auto
 from wtforms import (StringField, SubmitField, SelectField, TextAreaField,
                      DateField, IntegerField)
 from flask_wtf.file import FileField, FileAllowed
@@ -53,13 +54,19 @@ class CadastroGrade(FlaskForm):
 
 class InsertEstoqueForm(FlaskForm):
 
-    nome_epi = SelectField(label='EPI', choices=set_choices(), validators=[DataRequired()])
-    tipo_grade = SelectField(label='Grade', choices=set_choicesGrade(), validators=[DataRequired()])
+    nome_epi = SelectField(label='EPI', validators=[DataRequired()], choices=[])
+    tipo_grade = SelectField(label='Grade', validators=[DataRequired()], choices=[])
     tipo_qtd = SelectField(label='Tipo de Quantidade(Ex.: Peça, Unidade, Par, etc)', 
                            choices=tipo_choices, validators=[DataRequired()])
     qtd_estoque = IntegerField( label='Quantidade a ser adicionada', validators=[DataRequired()])
     valor_total = StringField(label='Valor Totalizado', validators=[DataRequired()])
     submit = SubmitField(label='Salvar')
+    
+    def __init__(self, *args, **kwargs):
+        super(InsertEstoqueForm, self).__init__(*args, **kwargs)
+        
+        self.nome_epi.choices.extend(set_choices())
+        self.tipo_grade.choices.extend(set_choicesGrade())
 
 class CadastroEPIForm(FlaskForm):
 
@@ -82,16 +89,22 @@ class CadastroEPIForm(FlaskForm):
 class Cautela(FlaskForm):
 
     select_funcionario = SelectField(label="Selecione o Funcionário", 
-    validators=[DataRequired()], choices=set_ChoicesFuncionario())
+    validators=[DataRequired()], choices=[])
     
     nome_epi = SelectField(id="selectNomeEpi", label="Selecione a EPI", 
-    choices=set_choices())
+    choices=[])
     
     tipo_grade = SelectField(id="selectNomeEpi", label="Selecione a Grade", choices=[])
     
     qtd_entregar = IntegerField(
         label="Quantidade para entregar", validators=[Length(min=1)])
     submit_cautela = SubmitField(id="submit_cautela", label="Emitir documento")
+    
+    def __init__(self, *args, **kwargs):
+        super(Cautela, self).__init__(*args, **kwargs)
+        
+        self.nome_epi.choices.extend(set_choices())
+        self.select_funcionario.choices.extend(set_ChoicesFuncionario())
 
 
 

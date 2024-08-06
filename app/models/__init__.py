@@ -84,6 +84,14 @@ with app.app_context():
                     "DELETE"
                 ]
             },
+            "Estoque_Grade": {
+                "permissoes": [
+                    "CREATE",
+                    "READ",
+                    "UPDATE",
+                    "DELETE"
+                ]
+            },
             "Entradas": {
                 "permissoes": [
                     "CREATE",

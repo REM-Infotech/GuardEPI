@@ -4,6 +4,24 @@ from wtforms import (StringField, SelectField, SubmitField, DateField, FileField
 from wtforms.validators import Length, DataRequired
 from flask_wtf.file import FileField
 
+from app import app
+from app.models import Empresa, Departamento, Cargos
+
+def setChoices_Empresa() -> list[tuple[str, str]]:
+    
+    with app.app_context():
+        return [(query.nome_empresa, query.nome_empresa) for query in Empresa.query.all()]
+    
+def setChoices_Departamento() -> list[tuple[str, str]]:    
+
+    with app.app_context():
+        return [(query.departamento, query.departamento) for query in Departamento.query.all()]
+
+def setChoices_Cargo() -> list[tuple[str, str]]:  
+
+    with app.app_context():
+        return [(query.cargo, query.cargo) for query in Cargos.query.all()]
+
 class EditFuncionario(FlaskForm):
 
     codigo = StringField("Código de Identificação", validators=[DataRequired()])
@@ -16,6 +34,13 @@ class EditFuncionario(FlaskForm):
     cargo = SelectField("Cargo", validators=[DataRequired("Informe um Cargo!")], choices=[])
     departamento = SelectField("Departamento", validators=[DataRequired()], choices=[])
     submit = SubmitField("Salvar alterações")
+    
+    def __init__(self, *args, **kwargs):
+        super(EditFuncionario, self).__init__(*args, **kwargs)
+        
+        self.empresa.choices.extend(setChoices_Empresa())
+        self.departamento.choices.extend(setChoices_Departamento())
+        self.cargo.choices.extend(setChoices_Cargo())
     
 class EditEmpresa(FlaskForm):
     

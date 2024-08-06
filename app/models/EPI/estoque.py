@@ -51,5 +51,5 @@ class RegistroEntradas(db.Model):
 class GradeEPI(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
-    grade = db.Column(db.String(length=6), nullable=False, unique=True)
+    grade = db.Column(db.String(length=32), nullable=False, unique=True)
     descricao = db.Column(db.String(length=512))

@@ -43,16 +43,19 @@
                                 {{ form.nome_epi(type="text", class="form-control", id="nome_epi", placeholder="") }}
                                 {{ form.nome_epi.label(for="nome_epi") }}
                             </div>
-
                         </div>
-
                         <div class="col-md-4">
                             <div class="form-floating mb-3">
                                 {{ form.tipo_epi(type="text", class="form-control", id="tipo_epi", placeholder="") }}
                                 {{ form.tipo_epi.label(for="tipo_epi") }}
                             </div>
                         </div>
-
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                {{ form.vencimento(class="form-control", id="vencimento", placeholder="") }}
+                                {{ form.vencimento.label(for="vencimento") }}
+                            </div>
+                        </div>
                         <div class="col-md-4">
                             <div class="form-floating mb-3">
                                 {{ form.qtd_entregar(type="text", class="form-control", id="qtd_entregar",
@@ -74,20 +77,6 @@
                                 placeholder="",
                                 onkeyup="formatarComoMoeda(this)") }}
                                 {{ form.valor_unitario.label(for="valor_unitario") }}
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                {{ form.data_ultima_troca(class="form-control", id="data_ultima_troca", placeholder="")
-                                }}
-                                {{ form.data_ultima_troca.label(for="data_ultima_troca") }}
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                {{ form.data_proxima_troca(class="form-control", id="data_proxima_troca",
-                                placeholder="") }}
-                                {{ form.data_proxima_troca.label(for="data_proxima_troca") }}
                             </div>
                         </div>
                         <div class="col-md-4">
