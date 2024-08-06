@@ -18,7 +18,6 @@ from app import db
 
 import os
 from typing import Type
-from app.routes.Gestao.set import config_form
 from datetime import datetime
 import requests
 
@@ -64,9 +63,6 @@ def set_editar(tipo: str, item: int):
             continue
         name = getattr(i, "name")
         colunas.append(name)
-    
-    if tipo == "funcionarios":
-        form = config_form(form)
     
     for itens in database:
         for i in colunas:

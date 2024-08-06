@@ -7,7 +7,6 @@ from app.models.Funcionários import Funcionarios
 from app.Forms.globals import IMPORTEPIForm
 
 from app.routes.CRUD.create import CadastroFuncionario
-from app.routes.Gestao.set import config_form
 
 from app.decorators import read_perm, set_endpoint
 
@@ -18,7 +17,7 @@ from app.decorators import read_perm, set_endpoint
 @read_perm
 def funcionarios():
 
-    form = config_form(CadastroFuncionario())
+    form = CadastroFuncionario()
     importForm = IMPORTEPIForm()
     DataTables = f'js/DataTables/Gestao/{request.endpoint.capitalize()}Table.js'
     page = f"pages/Gestao/{request.endpoint.lower()}.html"
