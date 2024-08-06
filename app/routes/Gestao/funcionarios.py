@@ -21,7 +21,7 @@ def funcionarios():
     form = config_form(CadastroFuncionario())
     importForm = IMPORTEPIForm()
     DataTables = f'js/DataTables/Gestao/{request.endpoint.capitalize()}Table.js'
-    page = f"pages/{request.endpoint.lower()}.html"
+    page = f"pages/Gestao/{request.endpoint.lower()}.html"
     database = Funcionarios.query.all()
     return render_template("index.html", page=page, DataTables=DataTables,
                            importForm=importForm, database=database, form=form)

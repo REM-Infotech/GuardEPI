@@ -56,7 +56,8 @@ def Entradas():
     database = RegistroEntradas.query.all()
     DataTables = 'js/DataTables/epi/entradas.js'
     return render_template("index.html", page=page, title=title, database=database,
-                           DataTables=DataTables, importForm=importForm)
+                           DataTables=DataTables, importForm=importForm,
+                           format_currency_brl=format_currency_brl)
     
 @app.route("/lancamento_estoque", methods=["POST"])
 @login_required
@@ -108,9 +109,10 @@ def lancamento_produto():
         "R$ ", "").replace(".", "").replace(",", "."))
         EntradaEPI = RegistroEntradas(
             nome_epi = form.nome_epi.data,
+            grade=form.tipo_grade.data,
             tipo_qtd=form.tipo_qtd.data,
             qtd_entrada=form.qtd_estoque.data,
-            valor_unitario=data_insert)
+            valor_total=data_insert)
         
         db.session.add(EntradaEPI)        
                 

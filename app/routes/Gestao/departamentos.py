@@ -17,7 +17,7 @@ def Departamentos():
 
     importForm = IMPORTEPIForm()
     form = CadastroDepartamentos()
-    page = f"pages/{request.endpoint.lower()}.html"
+    page = f"pages/Gestao/{request.endpoint.lower()}.html"
     database = Departamento.query.all()
     DataTables = f'js/DataTables/Gestao/{request.endpoint.capitalize()}Table.js'
     return render_template("index.html", page=page, form=form, database=database,

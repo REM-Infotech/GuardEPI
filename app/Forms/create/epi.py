@@ -56,7 +56,7 @@ class InsertEstoqueForm(FlaskForm):
     tipo_qtd = SelectField(label='Tipo de Quantidade(Ex.: Peça, Unidade, Par, etc)', 
                            choices=tipo_choices, validators=[DataRequired()])
     qtd_estoque = IntegerField( label='Quantidade a ser adicionada', validators=[DataRequired()])
-    valor_total = StringField(label='Valor Unitário', validators=[DataRequired()])
+    valor_total = StringField(label='Valor Totalizado', validators=[DataRequired()])
     submit = SubmitField(label='Salvar')
 
 class CadastroEPIForm(FlaskForm):

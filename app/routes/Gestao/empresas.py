@@ -20,7 +20,7 @@ def Empresas():
     form = CadastroEmpresa()
     database = Empresa.query.all()
     DataTables = f'js/DataTables/Gestao/{request.endpoint.capitalize()}Table.js'
-    page = f"pages/{request.endpoint.lower()}.html"
+    page = f"pages/Gestao/{request.endpoint.lower()}.html"
     return render_template("index.html", page=page, form=form, DataTables=DataTables,
                            database=database, 
                            importForm=importForm)
