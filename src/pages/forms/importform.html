@@ -7,8 +7,6 @@
             </div>
             <div class="modal-body">
                 {% set action = url_for('import_lotes', tipo = request.endpoint) %}
-                
-
                 <form method="POST" enctype="multipart/form-data" action="{{ action }}">
                     {{ importForm.hidden_tag() }}
                     
@@ -17,10 +15,10 @@
                         {{importForm.arquivo(class="form-control", id="formFile", accept=".xls, .xlsx, .csv")}}
                     </div>
                     <div class="modal-footer">
+                        <a href="{{ url_for('gen_model', model = request.endpoint) }}" class="btn btn-outline-primary"> Gerar Modelo </a>
                         <div class="d-grid gap-2">
                             {{ importForm.submit(class="btn btn-outline-success btn-login text-uppercase fw-bold") }}
                         </div>
-                        <a href="{{ url_for('gen_model', model = request.endpoint) }}" class="btn btn-outline-primary"> Gerar Modelo </a>
                     </div>
                 </form>
             </div>

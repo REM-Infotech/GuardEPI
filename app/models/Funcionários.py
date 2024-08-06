@@ -14,6 +14,21 @@ class Funcionarios(db.Model):
     cargo = db.Column(db.String(length=64))
     departamento = db.Column(db.String(length=64))
     empresa = db.Column(db.String(length=64))
+    
+    def __init__(self, codigo: str, nome_funcionario: str, cpf_funcionario: str,
+                 email_funcionario: str, deficiencia: str, data_admissao: datetime,
+                 cargo: str, departamento: str, empresa: str) -> None:
+        
+        self.codigo = codigo
+        self.nome_funcionario = nome_funcionario
+        self.cpf_funcionario = cpf_funcionario
+        self.email_funcionario = email_funcionario
+        self.deficiencia = deficiencia
+        self.data_admissao = data_admissao
+        self.cargo = cargo
+        self.departamento = departamento
+        self.empresa = empresa
+    
 
 class Cargos(db.Model):
     

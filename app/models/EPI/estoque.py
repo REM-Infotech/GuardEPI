@@ -20,11 +20,13 @@ class EstoqueGrade(db.Model):
     
     id = db.Column(db.Integer, primary_key=True, unique=True)
     nome_epi = db.Column(db.String(length=64), nullable=False)
-    tipo_qtd = db.Column(db.String(length=64), nullable=False)
     grade = db.Column(db.String(length=64), nullable=False)
+    tipo_qtd = db.Column(db.String(length=64), nullable=False)
     qtd_estoque = db.Column(db.Integer, nullable=False)
     
-    def __init__(self, nome_epi: str, tipo_qtd: str, grade: str, qtd_estoque: int) -> None:
+    def __init__(self, nome_epi: str, tipo_qtd: str, 
+                 grade: str, qtd_estoque: int) -> None:
+        
         self.nome_epi = nome_epi
         self.tipo_qtd = tipo_qtd
         self.grade = grade

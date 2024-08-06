@@ -3,15 +3,9 @@
     <div class="mt-4 card mb-4">
 
         <div class="card-header">
-            <h2 class="m-2">Cautelas</h1>
+            <h2 class="m-2">Estoque Grades</h1>
                 <hr>
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#EmissãoCautela">
-                    <span class="icon text-white-50">
-                        <i class="fa-solid fa-file-pdf"></i>
-                    </span>
-                    <span class="text">Emitir Cautela</span>
-                </button>
-                <a class="btn btn-success" href="#!">
+                <a class="btn btn-primary" href="#!">
                     <span class="icon text-white-50">
                         <i class="fa-solid fa-file-csv"></i>
                     </span>
@@ -20,14 +14,14 @@
         </div>
 
         <div class="card-body table-responsive">
-            <table class="table table-striped" id="CautelasTable">
+            <table class="table table-striped" id="EstoqueGrade">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Produto</th>
-                        <th>Funcionário</th>
-                        <th>Data Saída</th>
-                        <th>Cautela</th>
+                        <th>Grade</th>
+                        <th>Qtd. Estoque</th>
+                        <th>Tipo Qtd.</th>
                         <th data-sortable="false">Ações</th>
                     </tr>
                 </thead>
@@ -37,13 +31,9 @@
                     <tr>
                         <td>{{ item.id }}</td>
                         <td>{{ item.nome_epi }}</td>
-                        <td>{{ item.funcionario }}</td>
-                        <td>{{ item.data_solicitacao }}</td>
-                        <td>
-                            <button type="button" class="btn btn-primary btn-sm open-pdf"
-                                data-pdf-url="{{ url_for('serve_pdf', index = item.id, _external=True, _scheme='https') }}">{{ item.doc_cautela}}</button>
-                        </td>
-
+                        <td>{{ item.grade }}</td>
+                        <td>{{ item.qtd_estoque }}</td>
+                        <td>{{ item.tipo_qtd }}</td>
                         <td>
                             <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
                                 hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
@@ -70,23 +60,16 @@
                     <tr>
                         <th>#</th>
                         <th>Produto</th>
-                        <th>Funcionário</th>
-                        <th>Data Saída</th>
-                        <th>Cautela</th>
+                        <th>Grade</th>
+                        <th>Qtd. Estoque</th>
+                        <th>Tipo Qtd.</th>
                         <th>Ações</th>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
-    {% if form %}
-    {% include 'pages/forms/cautelas/emitir.html' %}
-    {% endif %}
-    {% include 'includes/show_pdf_copy.html' %}
     <div id="results">
-
-    </div>
-    <div id="render_pdf_cautela">
 
     </div>
 </div>

@@ -52,4 +52,8 @@ def csp() -> dict[str]:
             'https://cdn.datatables.net',
             'https://unpkg.com',
         ],
+        'frame-src': [
+            '\'self\'',
+            'http://guardepi.robotz.dev',
+        ]
     }

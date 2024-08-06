@@ -80,7 +80,12 @@ def import_lotes(tipo: str):
             df = pd.read_excel(doc_path)
             df.columns = df.columns.str.lower()
             
-            if df.get('data_admissao', None):
+            try:
+                data_admissao = df['data_admissao']
+            except:
+                data_admissao = None
+                
+            if data_admissao is not None:
                 df['data_admissao'] = pd.to_datetime(
                     df['data_admissao'], errors='coerce')
 
@@ -108,4 +113,5 @@ def import_lotes(tipo: str):
         return redirect(url_for(tipo))
 
     except Exception as e:
+        print(e)
         abort(500)

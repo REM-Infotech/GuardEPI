@@ -1,8 +1,4 @@
-{% if url != ""%}
-<script>
-    $('#EmissãoCautela').modal('hide');
-</script>
-<div class="modal fade" id="modal-pdf" tabindex="-1" aria-labelledby="EmissãoCautelaLabel" aria-hidden="true">
+<div class="modal fade" id="ExibirCautela" tabindex="-1" aria-labelledby="EmissãoCautelaLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -17,21 +13,3 @@
 
     </div>
 </div>
-
-<script>
-    $('#modal-pdf').modal('show');
-</script>
-
-{% else %}
-
-<script>
-    $('#EmissãoCautela').modal('hide');
-</script>
-
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<script>$('#modalMessage').modal('show');</script>
-{% endif %}
-{% endwith %}
-
-{% endif %}

@@ -206,7 +206,6 @@ def serve_pdf(index):
 
             with open(original_path, 'wb') as file:
                 file.write(pdf_data)
-
             url = send_from_directory(app.config['Docs_Path'], filename)
 
             return url

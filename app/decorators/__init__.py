@@ -15,8 +15,11 @@ def create_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
         
-        if check_permit(session["groups_usr"], "CREATE") is False:
-            abort(405)    
+        group_usr = session.get("groups_usr", None)
+        if group_usr:
+            if check_permit(group_usr, "CREATE") is False:
+                abort(405)    
+                
         return func(*args, **kwargs)
     return decorated_function
 
@@ -24,8 +27,10 @@ def read_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
         
-        if check_permit(session["groups_usr"], "READ") is False:
-            abort(405)     
+        group_usr = session.get("groups_usr", None)
+        if group_usr:
+            if check_permit(group_usr, "READ") is False:
+                abort(405)     
         
         return func(*args, **kwargs)
     return decorated_function
@@ -34,8 +39,10 @@ def update_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
         
-        if check_permit(session["groups_usr"], "UPDATE") is False:
-            abort(405)
+        group_usr = session.get("groups_usr", None)
+        if group_usr:
+            if check_permit(group_usr, "UPDATE") is False:
+                abort(405)
         
         return func(*args, **kwargs)
     return decorated_function
@@ -44,8 +51,10 @@ def delete_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
         
-        if check_permit(session["groups_usr"], "DELETE") is False:
-            abort(405)
+        group_usr = session.get("groups_usr", None)
+        if group_usr:
+            if check_permit(group_usr, "DELETE") is False:
+                abort(405)
         
         return func(*args, **kwargs)
     return decorated_function

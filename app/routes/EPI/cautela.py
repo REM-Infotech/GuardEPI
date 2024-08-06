@@ -2,7 +2,8 @@ from flask import jsonify, url_for, render_template, session, abort, flash, requ
 from flask_login import login_required
 
 from app.Forms import Cautela
-from app.models import RegistrosEPI, GradeEPI, Funcionarios, Empresa
+from app.models import (RegistrosEPI, ProdutoEPI, EstoqueEPI,
+                        Funcionarios, Empresa, EstoqueGrade)
 
 from app.misc import generate_pid
 from app.misc.generate_doc import (add_watermark, adjust_image_transparency,
@@ -10,6 +11,8 @@ create_EPI_control_sheet, create_watermark_pdf)
 
 import os
 from datetime import datetime
+
+from time import sleep
 
 from app import db
 from app import app
@@ -67,8 +70,9 @@ def get_grade():
     try:
         form = Cautela()
         lista = []
-        for query in GradeEPI.query.filter_by(nome_epi=form.nome_epi.data).all():
-            lista.append((query.tipo_grade, query.tipo_grade))
+        dbase = EstoqueGrade.query.filter_by(nome_epi=form.nome_epi.data).all()
+        for query in dbase:
+            lista.append((query.grade, query.grade))
         form.tipo_grade.choices.extend(lista)
 
         page = 'pages/forms/cautelas/get_grade.html'
@@ -98,15 +102,18 @@ def emitir_cautela():
                     qtd_entregar = epi[epis].split(" - ")[-1]
                     grade = epi[epis].split(" - ")[1]
 
-                    data_estoque = GradeEPI.query.filter(
-                        GradeEPI.nome_epi == epis).first()
-                    estoque_grade = GradeEPI.query.filter(
-                        GradeEPI.nome_epi == epis).first()
+                    ca = ProdutoEPI.query.filter_by(nome_epi = epis).first().ca
+                    
+                    data_estoque = EstoqueEPI.query.filter(
+                        EstoqueEPI.nome_epi == epis).first()
+                    estoque_grade = EstoqueGrade.query.filter(
+                        EstoqueGrade.nome_epi == epis, 
+                        EstoqueGrade.grade == form.tipo_grade.data).first()
 
-                    if estoque_grade and str(estoque_grade.tipo_grade).lower() == str(form.tipo_grade.data).lower():
+                    if estoque_grade:
                         if estoque_grade and estoque_grade.qtd_estoque > 0:
                             list_epis_solict.append([str(data_estoque.id), str(
-                                qtd_entregar), data_estoque.nome_epi, grade, data_estoque.ca])
+                                qtd_entregar), data_estoque.nome_epi, grade, ca])
                             estoque_grade.qtd_estoque = estoque_grade.qtd_estoque - 1
 
                             registrar = RegistrosEPI(
@@ -125,7 +132,10 @@ def emitir_cautela():
 
                     else:
                         flash(f'Produto/Grade não encontrado!', "error")
-                        return jsonify({"Item não encontrado": "error"}), 500
+                        url = ""
+                        item_html = render_template(
+                            'includes/show_pdf.html', url=url)
+                        return item_html
 
             data_funcionario = Funcionarios.query.filter_by(
                 nome_funcionario=funcionario).first()
@@ -173,6 +183,9 @@ def emitir_cautela():
                 }, item_data=item_data, logo_path=adjusted_path)
                 create_watermark_pdf(adjusted_path, temp_watermark_pdf)
                 add_watermark(ctrl_sheet, path_cautela, temp_watermark_pdf)
+                
+                sleep(2)
+                
                 set_cautela = RegistrosEPI.query.filter_by(
                     doc_cautela=nomedoc_cautela).first()
 
@@ -189,13 +202,17 @@ def emitir_cautela():
                 db.session.commit()
 
                 url = url_for(
-                    'serve_pdf', filename=nomedoc_cautela, _external=True)
+                    'serve_pdf', index = set_cautela.id, _external=True, _scheme='https')
                 item_html = render_template('includes/show_pdf.html', url=url)
                 return item_html
 
             except Exception as e:
                 print(e)
-                abort(500)
+                flash("Erro interno", "error")
+                url = ""
+                item_html = render_template(
+                    'includes/show_pdf.html', url=url)
+                return item_html
 
             finally:
 
@@ -205,4 +222,9 @@ def emitir_cautela():
                             os.remove(f"{root}/{file}")
 
     except Exception as e:
-        abort(500)
+        print(e)
+        flash("Erro interno", "error")
+        url = ""
+        item_html = render_template(
+            'includes/show_pdf.html', url=url)
+        return item_html

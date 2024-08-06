@@ -16,9 +16,18 @@
                 <div class="collapse" id="colapse_Tables" aria-labelledby="headingOne"
                     data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="{{ url_for('Equipamentos') }}">Equipamentos</a>
-                        <a class="nav-link" href="{{ url_for('Cautelas') }}">Cautelas</a>
-                        <a class="nav-link" href="{{ url_for('Grade') }}">Grades</a>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ProdutosCollapse"
+                            aria-expanded="false" aria-controls="ProdutosCollapse">
+                            Produtos
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="ProdutosCollapse" aria-labelledby="headingOne"
+                            data-bs-parent="#sidenavAccordionPages">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="{{ url_for('Equipamentos') }}">Equipamentos</a>
+                                <a class="nav-link" href="{{ url_for('Grade') }}">Grades</a>
+                            </nav>
+                        </div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesEstoque"
                             aria-expanded="false" aria-controls="pagesEstoque">
                             Estoque
@@ -27,11 +36,12 @@
                         <div class="collapse" id="pagesEstoque" aria-labelledby="headingOne"
                             data-bs-parent="#sidenavAccordionPages">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="{{ url_for('Estoque') }}">Geral</a>
-                                <a class="nav-link" href="{{ url_for('Estoque_Grade') }}">Estoque Grades</a>
+                                <a class="nav-link" href="{{ url_for('Estoque') }}">Equipamentos</a>
+                                <a class="nav-link" href="{{ url_for('Estoque_Grade') }}">Grades</a>
                                 <a class="nav-link" href="{{ url_for('Entradas') }}">Entradas</a>
                             </nav>
                         </div>
+                        <a class="nav-link" href="{{ url_for('Cautelas') }}">Cautelas</a>
                     </nav>
                 </div>
 

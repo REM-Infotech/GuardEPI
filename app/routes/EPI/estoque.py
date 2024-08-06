@@ -29,12 +29,16 @@ def Estoque():
 
 ## Estoque_Grade    
 @app.route("/Estoque_Grade", methods = ["GET"])
+@login_required
 @set_endpoint
 @read_perm
 def Estoque_Grade():
     
-    
-    return render_template("index.html")
+    database = EstoqueGrade.query.all()
+    DataTables = f'js/DataTables/epi/{request.endpoint.lower()}.js'
+    page = f"pages/epi/{request.endpoint.lower()}.html"
+    return render_template("index.html", page=page, DataTables=DataTables,
+                           database = database)
     
 @app.route("/Entradas")
 @login_required

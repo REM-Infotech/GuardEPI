@@ -47,9 +47,8 @@ tlsm.init_app(app, content_security_policy=csp(),
               strict_transport_security=True,
               strict_transport_security_max_age=age,
               x_content_type_options= True,
-              x_xss_protection=True
-              
-              )
+              x_xss_protection=True)
+
 login_manager.login_view = 'login'
 login_manager.login_message = "Faça login para acessar essa página."
 login_manager.login_message_category = "info"
