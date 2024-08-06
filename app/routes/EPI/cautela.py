@@ -1,8 +1,9 @@
 from flask import jsonify, url_for, render_template, session, abort, flash, request
 from flask_login import login_required
-from app.Forms.create import Cautela
-from app.models.EPI import RegistrosEPI, ProdutoEPI, GradeEPI
-from app.models.Funcionários import Funcionarios, Empresa
+
+from app.Forms import Cautela
+from app.models import RegistrosEPI, GradeEPI, Funcionarios, Empresa
+
 from app.misc import generate_pid
 from app.misc.generate_doc import (add_watermark, adjust_image_transparency,
 create_EPI_control_sheet, create_watermark_pdf)
@@ -27,8 +28,6 @@ def Cautelas():
     DataTables = 'js/DataTables/epi/CautelasTable.js'
     form = Cautela()
     session["itens_lista_cautela"] = []
-    dbase_produto = ProdutoEPI.query.all()
-    dbase_funcionario = Funcionarios.query.all()
     return render_template("index.html", page=page, title=title, database=database, 
                            DataTables=DataTables, form=form)
 

@@ -13,7 +13,6 @@ class Funcionarios(db.Model):
     data_admissao = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Etc/GMT+4')))
     cargo = db.Column(db.String(length=64))
     departamento = db.Column(db.String(length=64))
-    secao = db.Column(db.String(length=64))
     empresa = db.Column(db.String(length=64))
 
 class Cargos(db.Model):

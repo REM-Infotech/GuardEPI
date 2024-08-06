@@ -1,9 +1,9 @@
 from flask import render_template, request
 from flask_login import login_required
 from app import app
-from app.Forms.create import CadastroEPIForm
-from app.Forms.globals import IMPORTEPIForm
-from app.models.EPI import ProdutoEPI
+from app.Forms import CadastroEPIForm
+from app.Forms import IMPORTEPIForm
+from app.models import ProdutoEPI
 from app.misc import format_currency_brl
 
 from app.decorators import read_perm, set_endpoint

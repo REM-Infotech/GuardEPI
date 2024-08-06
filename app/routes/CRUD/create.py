@@ -1,22 +1,26 @@
 from flask_login import login_required
-from flask import redirect, abort, flash
+from flask import redirect, abort, flash, request
 from flask_wtf import FlaskForm
 
 from werkzeug.utils import secure_filename
 from flask_wtf.file import FileField
 from sqlalchemy import LargeBinary
 
-from app.decorators import create_perm
-from app.models import *
-from app.Forms.create import *
-from app import app
-from app import db
-
 import os
 from typing import Type
 
-tipo = db.Model
+from app import app
+from app import db
 
+from app.misc import generate_pid
+from app.decorators import create_perm
+from app.models import (ProdutoEPI, EstoqueEPI, Empresa, 
+                        Cargos, Departamento, Funcionarios, GradeEPI)
+
+from app.Forms import (CadastroCargo, CadastroDepartamentos, InsertEstoqueForm, 
+                       CadastroEmpresa, CadastroEPIForm, CadastroGrade, CadastroFuncionario)
+
+tipo = db.Model
 
 def getform(form) -> Type[FlaskForm]:
 
@@ -25,7 +29,8 @@ def getform(form) -> Type[FlaskForm]:
              "estoque": InsertEstoqueForm(),
              "departamentos": CadastroDepartamentos(),
              "cargos": CadastroCargo(),
-             'grade': CadastroGrade()}
+             'grade': CadastroGrade(),
+             'funcionarios': CadastroFuncionario()}
 
     return forms[form]
 
@@ -37,7 +42,8 @@ def get_models(tipo) -> Type[tipo]:
               "empresas": [Empresa, Empresa.nome_empresa],
               "departamentos": [Departamento, Departamento.departamento],
               "cargos": [Cargos, Cargos.cargo],
-              "grade": [GradeEPI, GradeEPI.grade]}
+              "grade": [GradeEPI, GradeEPI.grade],
+              'funcionarios': [Funcionarios, Funcionarios.nome_funcionario]}
 
     return models[tipo]
 

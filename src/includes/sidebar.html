@@ -18,6 +18,7 @@
                     <nav class="sb-sidenav-menu-nested nav">
                         <a class="nav-link" href="{{ url_for('Equipamentos') }}">Equipamentos</a>
                         <a class="nav-link" href="{{ url_for('Cautelas') }}">Cautelas</a>
+                        <a class="nav-link" href="{{ url_for('Grade') }}">Grades</a>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesEstoque"
                             aria-expanded="false" aria-controls="pagesEstoque">
                             Estoque
@@ -27,7 +28,7 @@
                             data-bs-parent="#sidenavAccordionPages">
                             <nav class="sb-sidenav-menu-nested nav">
                                 <a class="nav-link" href="{{ url_for('Estoque') }}">Geral</a>
-                                <a class="nav-link" href="{{ url_for('Grade') }}">Grades</a>
+                                <a class="nav-link" href="{{ url_for('Estoque_Grade') }}">Estoque Grades</a>
                                 <a class="nav-link" href="{{ url_for('Entradas') }}">Entradas</a>
                             </nav>
                         </div>
