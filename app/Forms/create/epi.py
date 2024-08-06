@@ -5,6 +5,7 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length
 
 from app.models.EPI import (GradeEPI, ProdutoEPI)
+from app.models.Funcionários import Funcionarios
 
 from app import app
 
@@ -29,19 +30,20 @@ tipo_choices = [
     ("Não Especificado", "Não Especificado")
 ]
 
+def set_ChoicesFuncionario() -> list[tuple[str, str]]:
+    
+    with app.app_context():
+        return [(epi.nome_funcionario, epi.nome_funcionario) for epi in Funcionarios.query.all()]
+
 def set_choices() -> list[tuple[str, str]]:
 
     with app.app_context():
-        dbase = ProdutoEPI.query.all()
-
-    return [(epi.nome_epi, epi.nome_epi) for epi in dbase]
+        return [(epi.nome_epi, epi.nome_epi) for epi in ProdutoEPI.query.all()]
 
 def set_choicesGrade() -> list[tuple[str, str]]:
 
     with app.app_context():
-        dbase = GradeEPI.query.all()
-
-    return [(epi.grade, epi.grade) for epi in dbase]
+        return [(epi.grade, epi.grade) for epi in GradeEPI.query.all()]
 
 class CadastroGrade(FlaskForm):
     
@@ -79,12 +81,14 @@ class CadastroEPIForm(FlaskForm):
 
 class Cautela(FlaskForm):
 
-    select_funcionario = SelectField(label="Selecione o Funcionário", validators=[
-                                     DataRequired()], choices=[("Vazio", "Selecione")])
-    nome_epi = SelectField(id="selectNomeEpi", label="Selecione a EPI", choices=[
-                           ("Vazio", "Selecione")])
-    tipo_grade = SelectField(
-        id="selectNomeEpi", label="Selecione a Grade", choices=[])
+    select_funcionario = SelectField(label="Selecione o Funcionário", 
+    validators=[DataRequired()], choices=set_ChoicesFuncionario())
+    
+    nome_epi = SelectField(id="selectNomeEpi", label="Selecione a EPI", 
+    choices=set_choices())
+    
+    tipo_grade = SelectField(id="selectNomeEpi", label="Selecione a Grade", choices=[])
+    
     qtd_entregar = IntegerField(
         label="Quantidade para entregar", validators=[Length(min=1)])
     submit_cautela = SubmitField(id="submit_cautela", label="Emitir documento")
