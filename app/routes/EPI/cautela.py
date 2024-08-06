@@ -13,6 +13,7 @@ import os
 from datetime import datetime
 
 from time import sleep
+import json
 
 from app import db
 from app import app
@@ -97,12 +98,20 @@ def emitir_cautela():
             nomedoc_cautela = f'Cautela - {funcionario} - {
                 datetime.now().strftime("%d-%m-%Y %H-%M-%S")}.pdf'
 
+            count_cautelas = RegistrosEPI.query.all()
+            if not count_cautelas:
+                count_cautelas = 1
+            else:
+                count_cautelas = len(count_cautelas)
+            
+            epis_lista = []
+            valor_calc = 0
             for epis in list_epi:
                 if epis not in form_flask and epis != "csrf_token":
                     qtd_entregar = epi[epis].split(" - ")[-1]
                     grade = epi[epis].split(" - ")[1]
 
-                    ca = ProdutoEPI.query.filter_by(nome_epi = epis).first().ca
+                    equip = ProdutoEPI.query.filter_by(nome_epi = epis).first()
                     
                     data_estoque = EstoqueEPI.query.filter(
                         EstoqueEPI.nome_epi == epis).first()
@@ -111,31 +120,29 @@ def emitir_cautela():
                         EstoqueGrade.grade == form.tipo_grade.data).first()
 
                     if estoque_grade:
-                        if estoque_grade and estoque_grade.qtd_estoque > 0:
+                        if estoque_grade and estoque_grade.qtd_estoque > 0 and data_estoque.qtd_estoque > 0:
+                            
                             list_epis_solict.append([str(data_estoque.id), str(
-                                qtd_entregar), data_estoque.nome_epi, grade, ca])
+                                qtd_entregar), data_estoque.nome_epi, grade, equip.ca])
                             estoque_grade.qtd_estoque = estoque_grade.qtd_estoque - 1
+                            epis_lista.append(epis)
+                            valor_calc += equip.valor_unitario
 
-                            registrar = RegistrosEPI(
-                                nome_epi=estoque_grade.nome_epi,
-                                funcionario=funcionario,
-                                data_solicitacao=datetime.now(),
-                                doc_cautela=nomedoc_cautela
-                            )
+            if len(epis_lista) == 0:
+                flash("EPI's sem Estoque", "error")
+                return render_template('includes/show_pdf.html', url="")
 
-                            db.session.add(registrar)
-                            db.session.commit()
+            to_str = json.dumps(epis_lista).replace("[", "").replace("]", "")
+            registrar = RegistrosEPI(
+                        nome_epis=to_str,
+                        funcionario=funcionario,
+                        data_solicitacao=datetime.now(),
+                        doc_cautela=nomedoc_cautela,
+                        valor_total=valor_calc
+                    )
 
-                        elif estoque_grade and estoque_grade.qtd_estoque == 0 or estoque_grade.qtd_estoque < 1:
-                            flash(
-                                f'Produto "{data_estoque.nome_epi}" sem estoque disponível', "error")
-
-                    else:
-                        flash(f'Produto/Grade não encontrado!', "error")
-                        url = ""
-                        item_html = render_template(
-                            'includes/show_pdf.html', url=url)
-                        return item_html
+            db.session.add(registrar)
+            db.session.commit()
 
             data_funcionario = Funcionarios.query.filter_by(
                 nome_funcionario=funcionario).first()
@@ -145,7 +152,8 @@ def emitir_cautela():
                 'name': data_funcionario.nome_funcionario,
                 'cargo': data_funcionario.cargo,
                 'departamento': data_funcionario.departamento,
-                'registration': data_funcionario.codigo
+                'registration': data_funcionario.codigo,
+                'lancamento_code': str(count_cautelas+1).zfill(6)
             }
 
             item_data = [

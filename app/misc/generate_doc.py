@@ -153,7 +153,7 @@ def create_EPI_control_sheet(filename, employee_data, delivery_data, item_data, 
     # ... Adicione outros detalhes do funcionário
 
     # Desenha a seção "Entrega"
-    c.drawString(0.5 * inch, 8.6 * inch, "ENTREGA 001012")
+    c.drawString(0.5 * inch, 8.6 * inch, f"ENTREGA {employee_data['lancamento_code']}")
     c.drawString(3.7 * inch, 8.6 * inch,
                  F'Data da Entrega: {datetime.now().strftime("%d/%m/%Y")}')
     # Desenha o texto padrão

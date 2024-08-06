@@ -3,7 +3,8 @@ from flask import render_template
 
 from app.decorators import delete_perm
 from app.misc import *
-from app.models import *
+from app.models import (ProdutoEPI, RegistrosEPI, EstoqueEPI, EstoqueGrade, RegistroEntradas,
+                        GradeEPI, Empresa, Funcionarios, Departamento, Cargos)
 from app import db
 from typing import Type
 from app import app
@@ -18,7 +19,10 @@ def get_models(tipo: str) -> Type[tipo]:
             "empresas": Empresa,
             "funcionarios": Funcionarios,
             "departamentos": Departamento,
-            "cargos": Cargos}
+            "cargos": Cargos,
+            "cautelas": RegistrosEPI,
+            "entradas": RegistroEntradas,
+            "estoque_grade": EstoqueGrade}
     
     return models[tipo]
 
@@ -27,7 +31,6 @@ def get_models(tipo: str) -> Type[tipo]:
 def deletar_item(database: str, id: int):
     
     database = database.lower()
-    
     model = get_models(database)
     dbase = model.query.filter(model.id == id).first()
     
