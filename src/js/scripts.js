@@ -1,12 +1,3 @@
-/*!
-    * Start Bootstrap - SB Admin v7.0.7 (https://startbootstrap.com/template/sb-admin)
-    * Copyright 2013-2023 Start Bootstrap
-    * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-sb-admin/blob/master/LICENSE)
-    */
-    // 
-// Scripts
-// 
-
 window.addEventListener('DOMContentLoaded', event => {
 
     // Toggle the side navigation
@@ -23,4 +14,21 @@ window.addEventListener('DOMContentLoaded', event => {
         });
     }
 
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    var forms = document.querySelectorAll('form');
+    
+    forms.forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            $('#loadingModal').modal('show');
+            
+            // Simula o envio do formulário com um timeout
+            setTimeout(function(){
+                $('#loadingModal').modal('hide');
+                alert('Form submitted!');
+            }, 3000); // Simulação de 3 segundos para o envio do formulário
+        });
+    });
 });

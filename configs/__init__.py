@@ -43,7 +43,7 @@ def csp() -> dict[str]:
         'https://cdn.datatables.net',
         'https://unpkg.com',
         'https://cdn-icons-png.flaticon.com',
-        'http: //guardepi.robotz.dev',
+        'http://guardepi.robotz.dev',
     ],
     'connect-src': [
         '\'self\'',
