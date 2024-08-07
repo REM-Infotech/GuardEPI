@@ -98,7 +98,7 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Produto</th>
+                                <th>Produtos</th>
                                 <th>Funcionário</th>
                                 <th>Data Saída</th>
                                 <th data-sortable="false">Cautela</th>
@@ -109,7 +109,7 @@
                             {% for item in database %}
                             <tr>
                                 <td>{{ item.id }}</td>
-                                <td>{{ item.nome_epi }}</td>
+                                <td>{{ item.nome_epis.replace('"', '') }}</td>
                                 <td>{{ item.funcionario }}</td>
                                 <td>{{ item.data_solicitacao.strftime("%d/%m/%Y") }}</td>
                                 <td><a class="btn btn-primary btn-sm" href="{{ url_for('serve_pdf', index = item.id, _external=True) }}">
@@ -121,7 +121,7 @@
                         <tfoot>
                             <tr>
                                 <th>#</th>
-                                <th>Produto</th>
+                                <th>Produtos</th>
                                 <th>Funcionário</th>
                                 <th>Data Saída</th>
                                 <th>Cautela</th>
