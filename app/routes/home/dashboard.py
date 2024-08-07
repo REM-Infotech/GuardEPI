@@ -21,7 +21,7 @@ def dashboard():
     """
     
     dbase = RegistrosEPI.query.all()
-    dbase2 = RegistrosEPI.query.all()
+    dbase2 = RegistroEntradas.query.all()
     
     total_saidas = len(dbase)
     total_entradas = len(dbase2)
@@ -29,7 +29,6 @@ def dashboard():
     
     valor_total = sum(map(lambda item: float(item.valor_total), dbase))
     valor_totalEntradas = sum(map(lambda item: float(item.valor_total), dbase2))
-
     
     database = RegistrosEPI.query.all()
     title = request.endpoint.capitalize()

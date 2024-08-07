@@ -1,42 +1,19 @@
-from flask import (redirect, render_template, abort, flash,
-url_for, request, session)
+from app.routes.config import users
+from app.routes.config import groups
+from app.routes.config import profile
+
+from flask import (redirect, url_for, render_template, flash, request, 
+                   session, abort)
+
 from flask_login import login_required
 
 from app import app
 from app import db
 
-from app.models.users import Users
+from app.Forms import (CreateUserForm, AdmChangeEmail, AdmChangePassWord, 
+                       ChangeEmail, ChangePassWord)
 
-from app.Forms.globals import IMPORTEPIForm
-from app.Forms.create import CreateUserForm
-from app.Forms.edit import (ChangeEmail, ChangePassWord, 
-AdmChangeEmail, AdmChangePassWord)
-
-
-sqlalchemy_excepts = ['AmbiguousForeignKeysError', 'Any', 'ArgumentError', 'AwaitRequired', 'Base20DeprecationWarning', 'CircularDependencyError', 'CompileError', 
-                      'ConstraintColumnNotFoundError', 'DBAPIError', 'DataError', 'DatabaseError', 'DisconnectionError', 'DontWrapMixin', 'DuplicateColumnError', 
-                      'HasDescriptionCode', 'IdentifierError', 'IllegalStateChangeError', 'IntegrityError', 'InterfaceError', 'InternalError', 'InvalidRequestError', 
-                      'InvalidatePoolError', 'LegacyAPIWarning', 'List', 'MissingGreenlet', 'MovedIn20Warning', 'MultipleResultsFound', 'NoForeignKeysError', 
-                      'NoInspectionAvailable', 'NoReferenceError', 'NoReferencedColumnError', 'NoReferencedTableError', 'NoResultFound', 'NoSuchColumnError', 
-                      'NoSuchModuleError', 'NoSuchTableError', 'NotSupportedError', 'ObjectNotExecutableError', 'OperationalError', 'Optional', 'PendingRollbackError', 
-                      'ProgrammingError', 'ResourceClosedError', 'SADeprecationWarning', 'SAPendingDeprecationWarning', 'SATestSuiteWarning', 'SAWarning', 
-                      'SQLAlchemyError', 'StatementError', 'TimeoutError', 'Tuple', 'Type', 'UnboundExecutionError', 'Union', 'UnreflectableTableError', 
-                      'UnsupportedCompilationError']
-
-@app.route('/configurações', methods=["GET"])
-@login_required
-def config():
-    
-    try:
-        importForm = IMPORTEPIForm()
-        query = Users.query.order_by(Users.login_time.desc())
-        database = query.all()
-                
-        page = 'pages/config_page.html'
-        return render_template("index.html", page = page, database = database, importForm = importForm)
-    
-    except Exception as e:
-        abort(500)
+from app.models import Users
 
 @app.route('/caduser_end', methods=["GET", "POST"])
 @login_required
@@ -44,9 +21,7 @@ def caduser_end():
     
     try:
         form = CreateUserForm()
-        
         html = "pages/forms/admin/CreateUserForm.html"
-        
         # if tipo_user == "super_admin":
         #     choices = [("super_admin", "Administrador Root"), ("default_user", "Usuário Padrão")]
             
@@ -74,14 +49,6 @@ def caduser_end():
             except Exception as e:
                 
                 message = "Internal Error"
-                for exce in sqlalchemy_excepts:
-                    name = type(e).__name__ 
-                    if name == exce:
-                        if "UNIQUE" in e.orig.args[0]:
-                            duplicated = str(e.orig.args[0]).split(" ")[-1].split(".")[-1].capitalize()
-                            message = f"Item duplicado: {duplicated}"
-                            break
-                    
                 flash(message, "error")
                 return redirect(url_for('config'))
         

@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import login_required
 from app import app
 from app.models import (RegistroEntradas, EstoqueEPI, EstoqueGrade)
@@ -113,5 +113,7 @@ def lancamento_produto():
         db.session.add(EntradaEPI)        
                 
         db.session.commit()
+        
+        flash("Informações salvas com sucesso!", "success")
         return redirect(url_for('Estoque'))
 

@@ -1,8 +1,9 @@
 {
     "Cautelas": "Cautelas",
+    "Equipamentos": "Equipamentos",
     "Departamentos": "Departamentos",
     "Empresas": "Empresas",
-    "Equipamentos": "Equipamentos",
+    
     "Estoque": "Estoque",
     "add_itens": "add_itens",
     "cadastrar": "cadastrar",
@@ -18,9 +19,6 @@
     "emitir_cautela": "emitir_cautela",
     "funcionarios": "funcionarios",
     "get_grade": "get_grade",
-    "import_lotes": "import_lotes",
-    "importacao_grade": "importacao_grade",
-    "import_lotes": "import_lotes",
     "index": "index",
     "login": "login",
     "logout": "logout",

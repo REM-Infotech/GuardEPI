@@ -190,7 +190,7 @@ def editar(tipo: str | None, id: int):
         print(e)
         abort(500)
 
-@app.route('/pdf/<index>')
+@app.route('/pdf/<index>', methods = ["GET"])
 @login_required
 def serve_pdf(index):
 
@@ -215,7 +215,7 @@ def serve_pdf(index):
         abort(500)
 
 
-@app.route('/img/<filename>/<model>')
+@app.route('/img/<filename>/<model>', methods = ["GET"])
 @login_required
 def serve_img(filename: str, model: str):
 

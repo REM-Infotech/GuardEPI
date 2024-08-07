@@ -41,18 +41,17 @@ app.make_response
 age = timedelta(days=1).max.seconds
 db.init_app(app)
 login_manager.init_app(app)
-tlsm.init_app(app, content_security_policy=csp(),
-              session_cookie_http_only=True,
-              session_cookie_samesite='Lax',
-              strict_transport_security=True,
-              strict_transport_security_max_age=age,
-              x_content_type_options= True,
-              x_xss_protection=True)
+# tlsm.init_app(app, content_security_policy=csp(),
+#               session_cookie_http_only=True,
+#               session_cookie_samesite='Lax',
+#               strict_transport_security=True,
+#               strict_transport_security_max_age=age,
+#               x_content_type_options= True,
+#               x_xss_protection=True)
 
 login_manager.login_view = 'login'
 login_manager.login_message = "Faça login para acessar essa página."
 login_manager.login_message_category = "info"
 
-from app.Forms import *
-from app.routes import *
-from app.models import *
+from app.models import init_database
+from app import routes
