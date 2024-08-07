@@ -98,7 +98,7 @@ def set_editar(tipo: str, item: int):
 
         else:
             url = url_for('serve_img', filename=image_name,
-                          model=tipo, _external=True)
+                          model=tipo, _external=True, _scheme='https')
 
     grade_results = f"pages/forms/{tipo}/edit.html"
 
