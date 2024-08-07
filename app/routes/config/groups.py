@@ -7,6 +7,20 @@ from app.models import Groups
 from app.Forms import CreateGroup
 from app.decorators import read_perm, update_perm, create_perm, set_endpoint
 import json
+import uuid
+import os
+
+@app.before_request
+def setgroups():
+    
+    if request.endpoint == "groups":
+        
+        session["uuid_groups"] = str(uuid.uuid4())
+        pathj = os.path.join(app.config['Temp_Path'], f"{session["uuid_groups"]}.json")
+        json_obj = json.dumps([])
+        
+        with open(pathj, 'w') as f:
+            f.write(json_obj)
 
 @app.route('/groups', methods=["GET"])
 @login_required
@@ -16,7 +30,6 @@ def groups():
 
     try:
 
-        session["groups_lista"] = []
         form = CreateGroup()
         database = Groups.query.all()
         page = f'pages/config/{request.endpoint}.html'
@@ -30,25 +43,40 @@ def groups():
 @app.route('/add_group', methods=['GET', 'POST'])
 @login_required
 def add_group():
+    
+    list = [json.dumps(CreateGroup().users.data), json.dumps(CreateGroup().paginas.data), json.dumps(CreateGroup().permissions.data)]
+    
+    session["uuid_groups"]
+    pathj = os.path.join(app.config['Temp_Path'], f"{session["uuid_groups"]}.json")
+    
+    with open(pathj, 'rb') as f:
+        list_groups = json.load(f)
 
-    form = CreateGroup()
-    session["groups_lista"].append(
-        [json.dumps(form.users.data), json.dumps(form.paginas.data), json.dumps(form.permissions.data)])
+    list_groups.append(list)
+    json_obj = json.dumps(list_groups)
+        
+    with open(pathj, 'w') as f:
+        f.write(json_obj)
 
     item_html = render_template(
-        'includes/add_items.html', item=session["groups_lista"])
+        'includes/add_items.html', item=list_groups)
     return item_html
 
 
 @app.route('/remove-groups', methods=['GET', 'POST'])
 @login_required
 def remove_groups():
-
-    session["groups_lista"] = []
+    
+    pathj = os.path.join(app.config['Temp_Path'], f"{session["uuid_groups"]}.json")
+    json_obj = json.dumps([])
+    
+    with open(pathj, 'w') as f:
+        f.write(json_obj)
+        
     item_html = render_template('includes/add_items.html')
     return item_html
 
-@app.route("/create_group", methods = ["GET"])
+@app.route("/create_group", methods = ["POST"])
 @login_required
 @create_perm
 def create_group():

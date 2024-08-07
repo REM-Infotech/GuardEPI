@@ -4,10 +4,11 @@ from flask_login import login_required
 from app import app
 from app.models.users import Users
 from app.Forms.globals import IMPORTEPIForm
-
+from app.decorators import set_endpoint
 
 @app.route('/users', methods=["GET"])
 @login_required
+@set_endpoint
 def users():
 
     try:

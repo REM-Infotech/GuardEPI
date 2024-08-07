@@ -9,7 +9,7 @@ tradutor = GoogleTranslator(source= "en", target= "pt")
 def handle_http_exception(error):
     
     name = tradutor.translate(error.name)
-    desc = error.description
+    desc = tradutor.translate(error.description)
 
     return render_template("handler/index.html", name=name, 
                            desc=desc, code = error.code), error.code

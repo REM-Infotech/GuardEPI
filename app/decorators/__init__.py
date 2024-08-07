@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import request, abort, session
+from flask import request, abort, session, redirect, url_for
 from app.models import Users, Groups
 import json
 
@@ -18,7 +18,7 @@ def create_perm(func):
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "CREATE") is False:
-                abort(405)    
+                abort(403)    
                 
         return func(*args, **kwargs)
     return decorated_function
@@ -30,7 +30,7 @@ def read_perm(func):
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "READ") is False:
-                abort(405)     
+                abort(403)     
         
         return func(*args, **kwargs)
     return decorated_function
@@ -42,7 +42,7 @@ def update_perm(func):
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "UPDATE") is False:
-                abort(405)
+                abort(403)
         
         return func(*args, **kwargs)
     return decorated_function
@@ -54,7 +54,7 @@ def delete_perm(func):
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "DELETE") is False:
-                abort(405)
+                abort(403)
         
         return func(*args, **kwargs)
     return decorated_function
@@ -69,10 +69,15 @@ def check_permit(groups_usr: list, PERM: str) -> bool:
     
     returns = False
     
+    end = session.get("endpoint", None)
+    
+    if not end:
+        return redirect(url_for("dashboard"))
+    
     for grp in groups_usr:
     
         rotas = query_db(grp)
-        checkroute = rotas.get(str(session["endpoint"]), None)
+        checkroute = rotas.get(str(end), None)
         if not checkroute:
             continue
         

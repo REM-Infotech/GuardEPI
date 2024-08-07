@@ -9,57 +9,70 @@ from flask_login import login_required
 
 from app import app
 from app import db
-
 from app.Forms import (CreateUserForm, AdmChangeEmail, AdmChangePassWord, 
                        ChangeEmail, ChangePassWord)
 
 from app.models import Users
+from app.decorators import delete_perm, create_perm, update_perm
+
+import json
+from deep_translator import GoogleTranslator
+
+tradutor = GoogleTranslator(source= "en", target= "pt")
 
 @app.route('/caduser_end', methods=["GET", "POST"])
 @login_required
+@create_perm
 def caduser_end():
     
-    try:
-        form = CreateUserForm()
+    form = CreateUserForm()
+    if request.method == "GET" and request.headers.get('HX-Request') == 'true':
+        
+        
         html = "pages/forms/admin/CreateUserForm.html"
-        # if tipo_user == "super_admin":
-        #     choices = [("super_admin", "Administrador Root"), ("default_user", "Usuário Padrão")]
-            
-        # elif tipo_user == "admin":
-        #     choices = [("admin", "Administrador"), ("default_user", "Usuário Padrão")]
-
-        # for choice in choices:
-        #     form.tipo_user.choices.append(choice)
-        
-        if form.validate_on_submit():
-                
-            usuario = Users(
-                login = form.login.data,
-                nome_usuario = form.nome.data,
-                senhacrip = form.password.data,
-                email = form.email.data
-            )
-            
-            try:
-                db.session.add(usuario)
-                db.session.commit()
-                
-                flash("Usuário criado com sucesso!", "success")
-                return redirect(url_for('config'))
-            except Exception as e:
-                
-                message = "Internal Error"
-                flash(message, "error")
-                return redirect(url_for('config'))
-        
-        
         return render_template(html, form = form)
     
-    except Exception as e:
-        abort(500)
+    
+    elif request.method == "POST" and form.validate_on_submit():
+        
+        usuario = Users(
+            login = form.login.data,
+            nome_usuario = form.nome.data,
+            email = form.email.data,
+            grupos=json.dumps(["Default"])
+        )
+        
+        usuario.senhacrip = form.password.data
+        
+        try:
+            db.session.add(usuario)
+            db.session.commit()
+            
+            flash("Usuário criado com sucesso!", "success")
+            return redirect(url_for('users'))
+        except Exception as e:
+            
+            message = e.orig.args[-1]
+            
+            if not "duplicate" in str(message).lower():
+                message = "Internal Error"
+            
+            message = tradutor.translate(message) 
+            flash(message, "error")
+            return redirect(url_for('users'))
+        
+        
+    else:
+        if form.errors:
+            pass
+        
+        else:
+            return redirect(url_for('users'))
+
 
 @app.route('/changepw_end', methods=["GET", "POST"])
 @login_required
+@update_perm
 def changepw_end():
     
     try:
@@ -74,7 +87,7 @@ def changepw_end():
         if form.validate_on_submit():
             if form.new_password.data != form.repeat_password.data:
                 flash("Senhas não coincidem")
-                return redirect(url_for("config"))
+                return redirect(url_for('users'))
             
             login_usr = form.data.get("user_to_change", session.get("login"))
             password = Users.query.filter_by(login = login_usr).first()
@@ -82,7 +95,7 @@ def changepw_end():
             db.session.commit()
                 
             flash("Senha alterada com sucesso!", "success")
-            return redirect(url_for('config'))
+            return redirect(url_for('users'))
         
         
         return render_template(html, form = form)
@@ -93,6 +106,7 @@ def changepw_end():
 
 @app.route('/changemail_end', methods=["GET", "POST"])
 @login_required
+@update_perm
 def changemail_end():
     
     try:
@@ -110,13 +124,13 @@ def changemail_end():
             mail = Users.query.filter_by(login = login_usr).first()
             if form.new_email.data != form.repeat_email.data:
                 flash("E-mails não coincidem")
-                return redirect(url_for("config"))
+                return redirect(url_for('users'))
             
             mail.email = form.new_email.data
             db.session.commit()
             
             flash("E-mail alterado com sucesso!", "success")
-            return redirect(url_for('config'))
+            return redirect(url_for('users'))
         
         return render_template(html, form = form)
     
@@ -125,6 +139,7 @@ def changemail_end():
 
 @app.route('/delete_user/<usuario>', methods=['GET'])
 @login_required
+@delete_perm
 def delete_user(usuario: str):
 
     try:
