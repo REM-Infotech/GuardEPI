@@ -133,6 +133,14 @@ def init_database() -> None:
                         "UPDATE",
                         "DELETE"
                     ]
+                },
+                "groups": {
+                    "permissoes": [
+                        "CREATE",
+                        "READ",
+                        "UPDATE",
+                        "DELETE"
+                    ]
                 }
             }))
             to_add.append(grp)

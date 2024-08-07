@@ -1,24 +1,29 @@
 from flask_wtf import FlaskForm
 from wtforms import (StringField, SubmitField, SelectField,
                      PasswordField, BooleanField, SelectMultipleField)
-from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms.validators import DataRequired, Length
+from app.models import Users
 
 endpoints = [
-    ("registros", "registros"),
-    ("users", "users"),
-    ("groups", "groups"),
+    ("registros", "Registros"),
+    ("users", "Usuários"),
+    ("groups", "Grupos"),
     ("Equipamentos", "Equipamentos"),
     ("Estoque", "Estoque"),
-    ("Estoque_Grade", "Estoque_Grade"),
-    ("Entradas", "Entradas")
-    ("Cautelas", "Cautelas")
-    ("Grade", "Grade")
-    ("cargos", "cargos")
-    ("Empresas", "Empresas")
-    ("funcionarios", "funcionarios")
+    ("Estoque_Grade", "Estoque de grades"),
+    ("Entradas", "Entradas"),
+    ("Cautelas", "Cautelas"),
+    ("Grade", "Grade"),
+    ("cargos", "Cargos"),
+    ("Empresas", "Empresas"),
+    ("funcionarios", "Funcionários"),
     ("Departamentos", "Departamentos")
 ]
+
+
+def set_choicesUsers() -> list[tuple[str, str]]:
+
+    return [(item.login, item.nome_usuario) for item in Users.query.all()]
 
 
 class CreateUserForm(FlaskForm):
@@ -35,11 +40,20 @@ class CreateUserForm(FlaskForm):
 class CreateGroup(FlaskForm):
 
     nome = StringField(label="Nome do Grupo", validators=[DataRequired()])
-    paginas = SelectField(label="Selecione a página", validators=[
-                          DataRequired()], choices=endpoints)
+    paginas = SelectField(label="Selecione a página", choices=endpoints)
 
-    permisions = SelectMultipleField("Selecione as permissões", choices=[
+    permissions = SelectMultipleField("Selecione as permissões", choices=[
         ("CREATE", "Criar"),
         ("READ", "Visualizar",),
         ("UPDATE", "Editar"),
         ("DELETE", "Deletar")])
+
+    users = SelectMultipleField(
+        "Selecione os Usuários", validators=[DataRequired()], choices=[])
+    
+    submit = SubmitField("Criar Grupo")
+    
+    def __init__(self, *args, **kwargs):
+        super(CreateGroup, self).__init__(*args, **kwargs)
+        
+        self.users.choices.extend(set_choicesUsers())

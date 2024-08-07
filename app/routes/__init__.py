@@ -17,6 +17,8 @@ from app.routes.CRUD import create
 from app.routes.CRUD import update
 from app.routes.CRUD import delete
 
+from app.routes import handler
+
 # from app import app
 # import json
 # import os

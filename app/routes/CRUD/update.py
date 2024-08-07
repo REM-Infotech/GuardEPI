@@ -1,6 +1,6 @@
 from flask_login import login_required
 from flask import redirect, url_for, render_template, session, abort, flash, send_from_directory
-from flask_wtf import FlaskForm
+from flask_wtf import Form, FlaskForm
 
 from werkzeug.utils import secure_filename
 from flask_wtf.file import FileField

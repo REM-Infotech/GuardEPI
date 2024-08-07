@@ -17,3 +17,4 @@ PyPDF2
 reportlab
 pillow
 pandas
+deep-translator

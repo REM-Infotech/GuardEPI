@@ -1,0 +1,79 @@
+<div class="container-fluid px-4">
+
+    <div class="mt-4 card mb-4">
+
+        <div class="card-header">
+            <h2 class="m-2">Cautelas</h1>
+                <hr>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#CreateGroup">
+                    <span class="icon text-white-50">
+                        <i class="fa-solid fa-plus"></i>
+                    </span>
+                    <span class="text">Adicionar Grupo</span>
+                </button>
+                <a class="btn btn-primary" href="#!">
+                    <span class="icon text-white-50">
+                        <i class="fa-solid fa-file-csv"></i>
+                    </span>
+                    <span class="text">Gerar Relatório</span>
+                </a>
+        </div>
+
+        <div class="card-body table-responsive">
+            <table class="table table-striped" id="CautelasTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Membros</th>
+                        <th data-sortable="false">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if database %}
+                    {% for item in database %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.name_group }}</td>
+                        <td>{{ item.members.replace('[', '').replace(']', '').replace('"', '') }}</td>
+                        <td>
+                            <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
+                                hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
+                                hx-trigger="click" hx-target="#results">
+                                <span class="icon text-white-50">
+                                    <i class="fa-solid fa-trash"></i>
+                                </span>
+                                <span class="text">Deletar</span>
+                            </button>
+                            <button type="button" id="EditEstoqueButton" class="btn btn-warning btn-sm mb-2"
+                                hx-get="{{ url_for('set_editar', tipo = request.endpoint, item = item.id) }}"
+                                hx-target="#results">
+                                <span class="icon text-white-50">
+                                    <i class="fa-solid fa-pen"></i>
+                                </span>
+                                <span class="text">Editar</span>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>#</th>
+                        <th>Nome</th>
+                        <th>Membros</th>
+                        <th>Ações</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    {% if form %}
+    {% include 'pages/forms/'+ request.endpoint + "/criar.html"   %}
+        
+    {% endif %}
+    <div id="results">
+
+    </div>
+</div>

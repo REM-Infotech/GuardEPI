@@ -72,7 +72,7 @@ def check_permit(groups_usr: list, PERM: str) -> bool:
     for grp in groups_usr:
     
         rotas = query_db(grp)
-        checkroute = dict(rotas.get(str(session["endpoint"]), None))
+        checkroute = rotas.get(str(session["endpoint"]), None)
         if not checkroute:
             continue
         
