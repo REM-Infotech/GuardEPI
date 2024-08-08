@@ -52,7 +52,6 @@ def groups():
 def permissions():
 
     try:
-
         form = SetPermsGroups()
         page = f'pages/config/{request.endpoint}.html'
         database = EndPoints.query.all()
@@ -62,11 +61,12 @@ def permissions():
     except Exception as e:
         abort(500)
         
-@app.route("/set_editarPerms/<endpoint>", methods = ["GET"])
+@app.route("/set_editarPerms/<endpoints>", methods = ["GET"])
 @update_perm
-def set_editarPerms(endpoint: str):
+def set_editarPerms(endpoints: str):
     
-    item_html = render_template(f'pages/forms/{endpoint}.html')
+    form = SetPermsGroups()
+    item_html = render_template(f'pages/forms/{endpoints}.html', form=form)
     return item_html
 
 # @app.route('/add_group', methods=['GET', 'POST'])

@@ -24,13 +24,27 @@
                                 <tbody>
                                     {% if database %}
                                     {% for item in database %}
+
+                                    {% if item.endpoint == "set1"%}
+                                    <tr class="bg-secondary">
+                                        <td class="text-white">...</td>
+                                        <td class="text-white">{{ item.displayName }}</td>
+                                        <td class="text-white">...</td>
+                                    </tr>
+                                    {% elif item.endpoint == "set2"  %}
+                                    <tr class="bg-secondary">
+                                        <td class="text-white">...</td>
+                                        <td class="text-white">{{ item.displayName }}</td>
+                                        <td class="text-white">...</td>
+                                    </tr>
+                                    {% else %}
                                     <tr>
                                         <td>{{ item.id }}</td>
                                         <td>{{ item.displayName }}</td>
                                         <td>
                                         <button type="button" id="EditEstoqueButton" class="btn btn-warning btn-sm mb-2"
-                                            hx-get="{{ url_for('set_editarPerms', tipo = request.endpoint, item = item.id) }}"
-                                            hx-target="#results">
+                                            hx-get="{{ url_for('set_editarPerms', endpoints = request.endpoint) }}"
+                                            hx-target="#setEditForm">
                                             <span class="icon text-white-50">
                                                 <i class="fa-solid fa-pen"></i>
                                             </span>
@@ -38,6 +52,7 @@
                                         </button>
                                         </td>
                                     </tr>
+                                    {% endif %}
                                     {% endfor %}
                                     {% endif %}
                                 </tbody>
