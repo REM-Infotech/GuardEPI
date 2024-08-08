@@ -16,3 +16,7 @@ window.addEventListener('DOMContentLoaded', event => {
 
 });
 
+document.addEventListener("htmx:afterRequest", function() {
+    var element = document.getElementById("scrollHere");
+    element.scrollIntoView();
+})

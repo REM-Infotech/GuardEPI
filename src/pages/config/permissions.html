@@ -1,10 +1,10 @@
-<div class="container-fluid px-4">
+<div class="container-fluid px-4" id="scrollHere" >
     <div class="mt-4 card mb-4">
         <div class="card-header">
             <h2 class="m-2">Configurações de Permissões</h1>
         </div>
 
-        <div class="card-body bg-secondary bg-opacity-25 ">
+        <div class="card-body bg-secondary bg-opacity-25">
             <div class="row">
                 <div class="col-xl-6">
                     <div class="card">
@@ -27,15 +27,15 @@
 
                                     {% if item.endpoint == "set1"%}
                                     <tr class="bg-secondary">
-                                        <td class="text-white">...</td>
-                                        <td class="text-white">{{ item.displayName }}</td>
-                                        <td class="text-white">...</td>
+                                        <td class="text-white fw-bold">. . .</td>
+                                        <td class="text-white fw-bold">{{ item.displayName }}</td>
+                                        <td class="text-white fw-bold">. . .</td>
                                     </tr>
                                     {% elif item.endpoint == "set2"  %}
                                     <tr class="bg-secondary">
-                                        <td class="text-white">...</td>
-                                        <td class="text-white">{{ item.displayName }}</td>
-                                        <td class="text-white">...</td>
+                                        <td class="text-white fw-bold">. . .</td>
+                                        <td class="text-white fw-bold">{{ item.displayName }}</td>
+                                        <td class="text-white fw-bold">. . .</td>
                                     </tr>
                                     {% else %}
                                     <tr>
@@ -43,7 +43,7 @@
                                         <td>{{ item.displayName }}</td>
                                         <td>
                                         <button type="button" id="EditEstoqueButton" class="btn btn-warning btn-sm mb-2"
-                                            hx-get="{{ url_for('set_editarPerms', endpoints = request.endpoint) }}"
+                                            hx-get="{{ url_for('SetEditPerms', endpoints = request.endpoint, item = item.displayName) }}"
                                             hx-target="#setEditForm">
                                             <span class="icon text-white-50">
                                                 <i class="fa-solid fa-pen"></i>
@@ -59,6 +59,7 @@
                                 <tfoot>
                                     <tr>
                                         <th>#</th>
+                                        <th>Página</th>
                                         <th>Ações</th>
                                     </tr>
                                 </tfoot>
@@ -75,7 +76,7 @@
                             Editar Configurações
 
                         </div>
-                        <div class="card-body" id="setEditForm">
+                        <div class="card-body" id="setEditForm" onchange="ScrollToDiv(this)">
 
                             <p>Selecione um dos itens para editar</p>
 

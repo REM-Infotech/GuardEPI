@@ -61,14 +61,29 @@ def permissions():
     except Exception as e:
         abort(500)
         
-@app.route("/set_editarPerms/<endpoints>", methods = ["GET"])
+@app.route("/editPerms", methods = ["GET", "POST"])
 @update_perm
-def set_editarPerms(endpoints: str):
+def editPerms():
     
     form = SetPermsGroups()
-    item_html = render_template(f'pages/forms/{endpoints}.html', form=form)
-    return item_html
+    if request.method == "POST" and form.validate_on_submit():
+        
+        return redirect(url_for('permissions', _scheme="https"))
+    
+    return redirect(url_for('permissions', _scheme="https"))
 
+@app.route("/SetEditPerms/<endpoints>/<item>", methods = ["GET", "POST"])
+@update_perm
+def SetEditPerms(endpoints: str, item: str):
+    
+    form = SetPermsGroups()
+    hx = request.headers.get('HX-Request')
+    if request.method == "GET" and hx == 'true':
+        
+        item_html = render_template(f'pages/forms/{endpoints}.html', form=form, displayName = item)
+        return item_html
+
+    
 # @app.route('/add_group', methods=['GET', 'POST'])
 # @login_required
 # def add_group():

@@ -67,6 +67,7 @@ def init_database() -> None:
                 members=json.dumps(["nicholas@robotz.dev"]),
                 perms=json.dumps(perms_default)
             )
+            to_add.append(grp)
 
         for endpoint, displayName in endpoints:
 

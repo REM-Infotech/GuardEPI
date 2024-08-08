@@ -71,14 +71,6 @@ perms_root = {
             "DELETE"
         ]
     },
-    "config": {
-        "permissoes": [
-            "CREATE",
-            "READ",
-            "UPDATE",
-            "DELETE"
-        ]
-    },
     "funcionarios": {
         "permissoes": [
             "CREATE",
@@ -157,19 +149,11 @@ perms_default = {
         "permissoes": [
             "READ"]
     },
-    "config": {
-        "permissoes": [
-            "READ"]
-    },
     "funcionarios": {
         "permissoes": [
             "READ"]
     },
     "registros": {
-        "permissoes": [
-            "READ"]
-    },
-    "groups": {
         "permissoes": [
             "READ"]
     }

@@ -1,15 +1,17 @@
-<form id="cautela-form" action="#!" method="post">
+<h6 class="text mb-1">Editando <b>{{displayName}}</b></h6>
+<hr class="mb-3">
+<form id="cautela-form" action="{{ url_for('editPerms') }}" method="post">
     {{ form.hidden_tag() }}
     
     <div class="row g-3">
 
-        <div class="col-12 mb-3">
-            <div class="form-group">
-                {{form.selectgrupo.label(for="selectgrupo", class="form-label")}}
-                {{form.selectgrupo(class="form-control", id="selectgrupo")}}
+        <div class="col-12">
+            <div class="form-floating mb-3" id="TablePagesColumn">
+                {{form.selectgrupo(class="form-control", id="selectgrupo", placeholder="...")}}
+                {{form.selectgrupo.label(for="selectgrupo")}}
             </div>
-            <div class="col-12 mb-3">
-                <div class="form-group">
+            <div class="col-12" id="EditFormColumn">
+                <div class="form-group mb-3 mt-4">
                     {{form.selectRules.label(for="selectRules", class="form-label")}}
                     {{form.selectRules(class="form-control", id="selectRules")}}
                 </div>
