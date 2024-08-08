@@ -42,7 +42,7 @@
                             <hr>
                             <button type="button" id="addEpiButton" class="btn btn-outline-warning" hx-post="{{ url_for('add_group') }}"
                                 hx-trigger="click" hx-target="#entregas-table">Adicionar</button>
-                            <button type="button" id="addEpiButton" class="btn btn-outline-danger" hx-post="/remove-itens"
+                            <button type="button" id="addEpiButton" class="btn btn-outline-danger" hx-post="{{ url_for('remove_groups') }}"
                                 hx-trigger="click" hx-target="#entregas-table">Limpar
                                 Lista</button>
                             <hr>

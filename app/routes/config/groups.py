@@ -18,6 +18,10 @@ def setgroups():
             
             session["uuid_groups"] = str(uuid.uuid4())
             pathj = os.path.join(app.config['Temp_Path'], f"{session["uuid_groups"]}.json")
+            
+            if os.path.exists(pathj):
+                os.remove(pathj)
+            
             json_obj = json.dumps([])
             
             with open(pathj, 'w') as f:
@@ -60,7 +64,7 @@ def add_group():
         f.write(json_obj)
 
     item_html = render_template(
-        'includes/add_items.html', item=list_groups)
+        'includes/add_groups.html', item=list_groups)
     return item_html
 
 
@@ -74,7 +78,7 @@ def remove_groups():
     with open(pathj, 'w') as f:
         f.write(json_obj)
         
-    item_html = render_template('includes/add_items.html')
+    item_html = render_template('includes/add_groups.html')
     return item_html
 
 @app.route("/create_group", methods = ["POST"])

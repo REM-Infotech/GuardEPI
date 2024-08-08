@@ -1,14 +1,10 @@
-import os
-from dotenv import load_dotenv
-load_dotenv()
-import json
+## Arquivo Configurações
 
-def debugmode() -> bool:
+### Defina o dominio do cliente onde estiver 'https://domain.cliente.com'
 
-    debug = os.getenv('DEBUG', 'False').lower() in (
-        'true', '1', 't', 'y', 'yes')
-    return debug
+#### Exemplo:
 
+```python
 
 def csp() -> dict[str]:
 
@@ -57,4 +53,29 @@ def csp() -> dict[str]:
         'https://domain.cliente.com',
     ]
 }
-    return csp_vars
+
+
+```
+
+### A def "debugmode" fica inalterada, as configurações dela são feitas via arquivo `.env` 
+
+#### Exemplo
+
+```python
+
+def debugmode() -> bool:
+
+    debug = os.getenv('DEBUG', 'False').lower() in (
+        'true', '1', 't', 'y', 'yes')
+    return debug
+
+```
+
+```.env
+
+DEBUG = True 
+
+
+## DEBUG MODE EM PROD TEM QUE SER FALSE!!!
+
+```

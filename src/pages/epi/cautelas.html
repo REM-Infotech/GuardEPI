@@ -27,7 +27,6 @@
                         <th>Produto</th>
                         <th>Funcionário</th>
                         <th>Data Saída</th>
-                        <th>Cautela</th>
                         <th data-sortable="false">Ações</th>
                     </tr>
                 </thead>
@@ -40,11 +39,12 @@
                         <td>{{ item.funcionario }}</td>
                         <td>{{ item.data_solicitacao }}</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-sm open-pdf"
-                                data-pdf-url="{{ url_for('serve_pdf', index = item.id, _external=True, _scheme='https') }}">{{ item.doc_cautela}}</button>
-                        </td>
-
-                        <td>
+                            <button type="button" class="btn btn-primary btn-sm  mb-2 open-pdf" name="{{ item.doc_cautela}}"
+                                data-pdf-url="{{ url_for('serve_pdf', index = item.id, _external=True, _scheme='https') }}"><span
+                                    class="icon text-white-50">
+                                    <i class="fa-solid fa-file-pdf"></i>
+                                </span>
+                                <span cl<span class="text">Ver PDF</span></button>
                             <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
                                 hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
                                 hx-trigger="click" hx-target="#results">
@@ -72,7 +72,6 @@
                         <th>Produto</th>
                         <th>Funcionário</th>
                         <th>Data Saída</th>
-                        <th>Cautela</th>
                         <th>Ações</th>
                     </tr>
                 </tfoot>

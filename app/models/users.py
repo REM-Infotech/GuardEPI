@@ -53,7 +53,8 @@ class Groups(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     name_group = db.Column(db.String(length=30), nullable=False, unique=True)
-    members = db.Column(db.String(length=1024), nullable=False)
-    perms = db.Column(db.String(length=1024), nullable=False)
+    desc = db.Column(db.Text)
+    members = db.Column(db.Text)
+    perms = db.Column(db.Text)
     
     

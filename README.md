@@ -39,16 +39,14 @@ ou
 
 - [`APP`](./app/): É a pasta onde fica centralizado rotas, formulários e models do Flask
 
+- [`app.py`](./app/__init__.py): Arquivo de configuração do APP
+
 #### A partir de `/app`, teremos:
 - [`Models`](./app/models/): Onde ficam os models e bind's do SQL.
-    - [`Bases`](./app/models/Bases/): Onde ficam as bases para evitar criação de base para cada SGBD diferente
-    - `sqlite3/`, `mysqld/`, `oracle/`, etc: Onde ficam as binds para os databases respectivos
 
-- [`Forms`](./app/Forms/): Formulários do projeto, sempre mantendo separados por funções, como, por exemplo:
-    - ``
+- [`Forms`](./app/Forms/): Formulários do projeto, sempre mantendo separados por funções.
 
-- [`Routes`](./app/routes/): Formulários do projeto, sempre mantendo separados por funções, como, por exemplo:
-    - pass
+- [`Routes`](./app/routes/): Formulários do projeto, sempre mantendo separados por funções.
 
 ``` Python
 
