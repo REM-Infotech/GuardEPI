@@ -7,7 +7,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="cautela-form" action="{{ url_for('create_group') }}", method="post">
+                <form id="cautela-form" action="#!" method="post">
                     {{ form.hidden_tag() }}
                     <div class="row g-3">
                         <div class="col-12 mb-3">
@@ -16,36 +16,11 @@
                                 {{form.nome(class="form-control", id="nome")}}
                             </div>
                         </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                {{form.users.label(for="users", class="form-label")}}
-                                {{form.users(id="users", class="form-control")}}
-                            </div>
-                        </div>
-                        <div class="col-12 mb-3"">
-                            <div class="form-group">
-                                {{form.paginas.label(for="paginas", class="form-label")}}
-                                {{form.paginas(id="paginas", class="form-control")}}
-                            </div>
-                        </div>
                         <div class="col-12 mb-3">
                             <div class="form-group">
-                                {{form.permissions.label(for="permissions", class="form-label")}}
-                                {{form.permissions(id="permissions", class="form-control")}}
+                                {{form.desc.label(for="desc", class="form-label")}}
+                                {{form.desc(class="form-control", id="desc")}}
                             </div>
-                        </div>
-                        <div class="col-12">
-                            <ul id="entregas-table" class="list-group">
-                            </ul>
-                        </div>
-                        <div class="col-12 m-1">
-                            <hr>
-                            <button type="button" id="addEpiButton" class="btn btn-outline-warning" hx-post="{{ url_for('add_group') }}"
-                                hx-trigger="click" hx-target="#entregas-table">Adicionar</button>
-                            <button type="button" id="addEpiButton" class="btn btn-outline-danger" hx-post="{{ url_for('remove_groups') }}"
-                                hx-trigger="click" hx-target="#entregas-table">Limpar
-                                Lista</button>
-                            <hr>
                         </div>
                     </div>
                     <div class="card-footer d-grid gap-2">

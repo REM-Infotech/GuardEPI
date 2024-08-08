@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import (StringField, SubmitField, SelectField,
-                     PasswordField, BooleanField, SelectMultipleField)
+                     PasswordField, BooleanField, SelectMultipleField, TextAreaField)
 from wtforms.validators import DataRequired, Length
 from app.models import Users
 
@@ -40,18 +40,7 @@ class CreateUserForm(FlaskForm):
 class CreateGroup(FlaskForm):
 
     nome = StringField(label="Nome do Grupo", validators=[DataRequired()])
-    paginas = SelectField(label="Selecione a página", choices=endpoints)
-
-    permissions = SelectMultipleField("Selecione as permissões", choices=[
-        ("CREATE", "Criar"),
-        ("READ", "Visualizar",),
-        ("UPDATE", "Editar"),
-        ("DELETE", "Deletar")])
-
-    users = SelectMultipleField(
-        "Selecione os Usuários", validators=[DataRequired()], choices=[])
-    
-    submit = SubmitField("Criar Grupo")
+    desc = TextAreaField("Descrição (Opcional)")
     
     def __init__(self, *args, **kwargs):
         super(CreateGroup, self).__init__(*args, **kwargs)

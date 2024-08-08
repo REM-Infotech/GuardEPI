@@ -56,5 +56,16 @@ class Groups(db.Model):
     desc = db.Column(db.Text)
     members = db.Column(db.Text)
     perms = db.Column(db.Text)
+
+class EndPoints(db.Model):
     
+    id = db.Column(db.Integer, primary_key=True)
+    endpoint = db.Column(db.String(length=30), nullable=False, unique=True)
+    displayName = db.Column(db.Text)
+    
+    def __init__(self, endpoint: str, displayName: str) -> None:
+        
+        self.endpoint = endpoint
+        self.displayName = displayName
+
     
