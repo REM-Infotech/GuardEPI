@@ -4,7 +4,7 @@ from flask import render_template
 from app.decorators import delete_perm
 from app.misc import *
 from app.models import (ProdutoEPI, RegistrosEPI, EstoqueEPI, EstoqueGrade, RegistroEntradas,
-                        GradeEPI, Empresa, Funcionarios, Departamento, Cargos)
+                        GradeEPI, Empresa, Funcionarios, Departamento, Cargos, Groups)
 from app import db
 from typing import Type
 from app import app
@@ -22,7 +22,10 @@ def get_models(tipo: str) -> Type[tipo]:
             "cargos": Cargos,
             "cautelas": RegistrosEPI,
             "entradas": RegistroEntradas,
-            "estoque_grade": EstoqueGrade}
+            "estoque_grade": EstoqueGrade,
+            'groups': Groups
+            
+            }
     
     return models[tipo]
 

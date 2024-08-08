@@ -14,13 +14,14 @@ import os
 def setgroups():
     
     if request.endpoint == "groups":
-        
-        session["uuid_groups"] = str(uuid.uuid4())
-        pathj = os.path.join(app.config['Temp_Path'], f"{session["uuid_groups"]}.json")
-        json_obj = json.dumps([])
-        
-        with open(pathj, 'w') as f:
-            f.write(json_obj)
+        if not session.get("uuid_groups", None):
+            
+            session["uuid_groups"] = str(uuid.uuid4())
+            pathj = os.path.join(app.config['Temp_Path'], f"{session["uuid_groups"]}.json")
+            json_obj = json.dumps([])
+            
+            with open(pathj, 'w') as f:
+                f.write(json_obj)
 
 @app.route('/groups', methods=["GET"])
 @login_required
@@ -83,5 +84,12 @@ def create_group():
     
     form = CreateGroup()
     form_request = request.form
+    
+    mutable = {}
+    
+    for item in form_request:
+        
+        value = form_request[item]
+        mutable.update({item: value})
     
     return redirect(url_for("groups", _scheme = 'https'))
