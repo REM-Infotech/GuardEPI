@@ -1,0 +1,79 @@
+<div class="container-fluid px-4">
+    <div class="mt-4 card mb-4">
+        <div class="card-header">
+            <h2 class="m-2">Configurações de Permissões</h1>
+        </div>
+
+        <div class="card-body bg-secondary bg-opacity-25 ">
+            <div class="row">
+                <div class="col-xl-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fa-solid fa-table"></i>
+                            Tabela de Páginas
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="table table-striped" id="CautelasTable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Página</th>
+                                        <th data-sortable="false">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if database %}
+                                    {% for item in database %}
+                                    <tr>
+                                        <td>{{ item.id }}</td>
+                                        <td>{{ item.displayName }}</td>
+                                        <td>
+                                        <button type="button" id="EditEstoqueButton" class="btn btn-warning btn-sm mb-2"
+                                            hx-get="{{ url_for('set_editarPerms', tipo = request.endpoint, item = item.id) }}"
+                                            hx-target="#results">
+                                            <span class="icon text-white-50">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </span>
+                                            <span class="text">Editar</span>
+                                        </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    
+
+                </div>
+                <div class="col-xl-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fa-brands fa-wpforms"></i>
+                            Editar Configurações
+
+                        </div>
+                        <div class="card-body" id="setEditForm">
+
+                            <p>Selecione um dos itens para editar</p>
+
+                        </div>
+                    </div>
+
+                    
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+</div>

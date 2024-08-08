@@ -48,6 +48,7 @@ def groups():
 @app.route('/permissions', methods=["GET"])
 @login_required
 @set_endpoint
+@read_perm
 def permissions():
 
     try:
@@ -60,6 +61,13 @@ def permissions():
 
     except Exception as e:
         abort(500)
+        
+@app.route("/set_editarPerms/<endpoint>", methods = ["GET"])
+@update_perm
+def set_editarPerms(endpoint: str):
+    
+    item_html = render_template(f'pages/forms/{endpoint}.html')
+    return item_html
 
 # @app.route('/add_group', methods=['GET', 'POST'])
 # @login_required

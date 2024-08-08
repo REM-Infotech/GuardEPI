@@ -1,0 +1,36 @@
+<div class="modal fade" data-modal_edit="ChangePerms" id="ChangePerms" tabindex="-1" aria-labelledby="ChangePermsLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="m-0 font-weight-bold text-primary">Criar Grupo</h6>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="cautela-form" action="#!" method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="row g-3">
+                        <div class="col-12 mb-3">
+                            <div class="form-group">
+                                {{form.nome.label(for="nome", class="form-label")}}
+                                {{form.nome(class="form-control", id="nome")}}
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div class="form-group">
+                                {{form.desc.label(for="desc", class="form-label")}}
+                                {{form.desc(class="form-control", id="desc")}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer d-grid gap-2">
+                        {{ form.submit( class="btn btn-outline-success text-uppercase" ) }}
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename = 'js/setEdit.js') }}"></script>

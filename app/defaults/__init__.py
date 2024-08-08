@@ -110,6 +110,14 @@ perms_root = {
             "UPDATE",
             "DELETE"
         ]
+    },
+    "permissions": {
+        "permissoes": [
+            "CREATE",
+            "READ",
+            "UPDATE",
+            "DELETE"
+        ]
     }
 }
 perms_default = {
