@@ -60,7 +60,7 @@ class AddUsersGroup(FlaskForm):
 
 class SetPermsGroups(FlaskForm):
     
-    selectgrupo = SelectField("Selecione o Grupo", validators=[DataRequired()], choices=[])
+    selectgrupo = SelectMultipleField("Selecione os Grupos", validators=[DataRequired()], choices=[])
     selectRules = SelectMultipleField("Selecione as Permissões", validators=[DataRequired()], choices=[])
     submit = SubmitField("Salvar Alterações")
     
