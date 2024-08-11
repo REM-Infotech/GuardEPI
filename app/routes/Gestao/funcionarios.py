@@ -19,7 +19,7 @@ def funcionarios():
 
     form = CadastroFuncionario()
     importForm = IMPORTEPIForm()
-    DataTables = f'js/DataTables/Gestao/{request.endpoint.capitalize()}Table.js'
+    DataTables = f'js/DataTables/gestao/{request.endpoint.capitalize()}Table.js'
     page = f"pages/Gestao/{request.endpoint.lower()}.html"
     database = Funcionarios.query.all()
     return render_template("index.html", page=page, DataTables=DataTables,

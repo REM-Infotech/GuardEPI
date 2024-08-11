@@ -19,7 +19,7 @@ def Departamentos():
     form = CadastroDepartamentos()
     page = f"pages/Gestao/{request.endpoint.lower()}.html"
     database = Departamento.query.all()
-    DataTables = f'js/DataTables/Gestao/{request.endpoint.capitalize()}Table.js'
+    DataTables = f'js/DataTables/gestao/{request.endpoint.capitalize()}Table.js'
     return render_template("index.html", page=page, form=form, database=database,
                            DataTables=DataTables,
                            importForm=importForm)
