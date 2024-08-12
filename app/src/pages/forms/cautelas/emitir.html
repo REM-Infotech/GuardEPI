@@ -41,7 +41,8 @@
                     </div>
                     <div class="card-footer d-grid gap-2">
                         {{ form.submit_cautela(**{"hx-post": "/emitir_cautela", "hx-target": "#render_pdf_cautela",
-                        "hx-trigger": "click", "id":"submit_cautela", "class":"btn btn btn-outline-success btn-login text-uppercase fw-bold"
+                        "hx-trigger": "click", "id":"submit_cautela", "class":"btn btn btn-outline-success btn-login text-uppercase fw-bold",
+                        "onclick": "waitEmissao(this)"
                         }) }}
                     </div>
                 </form>

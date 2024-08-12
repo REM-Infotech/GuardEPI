@@ -7,9 +7,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+
+                {% set messageText = "Emitindo Cautela" %}
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
-                {{ messages[0]}}
+                {% set messageText = messages[0] %}
+                {{ messageText }}
                 {% endif %}
                 {% endwith %}
                 <div class="modal-footer">

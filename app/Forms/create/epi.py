@@ -103,7 +103,10 @@ class Cautela(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(Cautela, self).__init__(*args, **kwargs)
         
+        self.nome_epi.choices.append(("Selecione", "Selecione"))
         self.nome_epi.choices.extend(set_choices())
+        
+        self.select_funcionario.choices.append(("Selecione", "Selecione"))
         self.select_funcionario.choices.extend(set_ChoicesFuncionario())
 
 

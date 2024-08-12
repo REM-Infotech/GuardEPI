@@ -39,3 +39,9 @@ function formatDocument(element) {
     };
     element.value = value;
 }
+
+function waitEmissao() {
+
+    $('#modalMessage').modal('show');
+    
+}

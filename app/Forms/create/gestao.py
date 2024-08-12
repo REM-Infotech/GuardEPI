@@ -29,14 +29,14 @@ def setChoices_Cargo() -> list[tuple[str, str]]:
 class CadastroFuncionario(FlaskForm):
 
     codigo = StringField("Código de Identificação",
-                         validators=[DataRequired()])
+                         validators=[DataRequired(), Length(max=6)])
     nome_funcionario = StringField("Nome do funcionário", validators=[
                                    DataRequired("Informe o nome!")])
     cpf_funcionario = StringField("CPF do Funcionário", validators=[
                                   Length(min=11, max=14), DataRequired("Informe o CPF!")])
     email_funcionario = EmailField("Email")
     deficiencia = StringField("Deficiência")
-    data_admissao = DateField("Data Admissão", format=['%d-%m-%Y'])
+    data_admissao = DateField("Data Admissão")
     empresa = SelectField("Empresa", validators=[
                           DataRequired("Informe uma empresa!")], choices=setChoices_Empresa())
     cargo = SelectField("Cargo", validators=[

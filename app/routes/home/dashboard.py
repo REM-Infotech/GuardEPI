@@ -5,8 +5,9 @@ from app.models.EPI import RegistrosEPI, RegistroEntradas
 from app.decorators import set_endpoint
 from app.misc import format_currency_brl
 
+from collections import Counter
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import extract
 
 @app.route("/dashboard", methods = ["GET"])
@@ -51,11 +52,23 @@ def dashboard():
 @app.route("/saidasEquipamento", methods = ["GET"])
 def saidasEquipamento():
     
-    
+    current_date = datetime.now().date()
+
+    # Calculando o início e o fim da semana atual, começando no domingo
+    start_of_week = current_date - timedelta(days=current_date.weekday() + 1)  # Domingo
+    end_of_week = start_of_week + timedelta(days=6)  # Sábado
     
     data = {"dias_semana": ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"],
             "Saidas":  [5, 10 , 3, 25, 15],
             "media": 30}
+    
+    # Consulta os dados do banco de dados filtrando pelo mês e ano atuais
+    entregas = RegistrosEPI.query.filter(
+        RegistrosEPI.data_solicitacao >= start_of_week,
+        RegistrosEPI.data_solicitacao <= end_of_week
+    ).all()
+    
+    contar = Counter(entregas)
     
     return jsonify(data)
 

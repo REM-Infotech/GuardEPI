@@ -14,13 +14,14 @@ from app import db
 
 from app.misc import generate_pid
 from app.decorators import create_perm
-from app.models import (ProdutoEPI, EstoqueEPI, Empresa, 
+from app.models import (ProdutoEPI, EstoqueEPI, Empresa,
                         Cargos, Departamento, Funcionarios, GradeEPI)
 
-from app.Forms import (CadastroCargo, CadastroDepartamentos, InsertEstoqueForm, 
+from app.Forms import (CadastroCargo, CadastroDepartamentos, InsertEstoqueForm,
                        CadastroEmpresa, CadastroEPIForm, CadastroGrade, CadastroFuncionario)
 
 tipo = db.Model
+
 
 def getform(form) -> Type[FlaskForm]:
 
@@ -53,7 +54,9 @@ def get_models(tipo) -> Type[tipo]:
 @create_perm
 def cadastrar(tipo: str):
 
+    without_lower = tipo
     tipo = tipo.lower()
+
     try:
         form = getform(tipo)
         model = get_models(tipo.replace("edit_", ""))
@@ -71,7 +74,10 @@ def cadastrar(tipo: str):
                     kwargs.update({"ca": ProdutoEPI.query.filter_by(
                         nome_epi=form.nome_epi.data).first().ca})
 
-            elif any(tipo.lower() == tipos for tipos in ["departamentos", "cargos", "empresas", "grade", "entradas"]):
+            elif any(tipo.lower() == tipos for tipos in [
+                "departamentos", "cargos", "empresas", "grade",
+                "entradas", "funcionarios"
+            ]):
                 for md in model[0].__table__.columns:
                     form_fld = getattr(form, md.name, None)
                     if form_fld:
@@ -127,4 +133,4 @@ def cadastrar(tipo: str):
     except Exception as e:
         abort(500)
 
-    return redirect(f"/{tipo.capitalize()}")
+    return redirect(f"/{without_lower}")

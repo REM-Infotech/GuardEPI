@@ -125,6 +125,8 @@ def emitir_cautela():
                             list_epis_solict.append([str(data_estoque.id), str(
                                 qtd_entregar), data_estoque.nome_epi, grade, equip.ca])
                             estoque_grade.qtd_estoque = estoque_grade.qtd_estoque - 1
+                            data_estoque.qtd_estoque = data_estoque.qtd_estoque - 1
+                            
                             epis_lista.append(epis)
                             valor_calc += equip.valor_unitario
 
