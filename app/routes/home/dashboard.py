@@ -5,6 +5,10 @@ from app.models.EPI import RegistrosEPI, RegistroEntradas
 from app.decorators import set_endpoint
 from app.misc import format_currency_brl
 
+import pandas as pd
+from datetime import datetime
+from sqlalchemy import extract
+
 @app.route("/dashboard", methods = ["GET"])
 @login_required
 @set_endpoint
@@ -44,17 +48,45 @@ def dashboard():
 
     return resp
     
-@app.route("/registros_saidas", methods = ["GET"])
-def registros():
+@app.route("/saidasEquipamento", methods = ["GET"])
+def saidasEquipamento():
     
-    """_summary_
-
-    Returns:
-        _type_: _description_
-    """
+    
     
     data = {"dias_semana": ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"],
             "Saidas":  [5, 10 , 3, 25, 15],
             "media": 30}
     
     return jsonify(data)
+
+@app.route("/saidasFuncionario", methods = ["GET"])
+def saidasFuncionario():
+    
+    # Obtendo o mês e ano atuais
+    now = datetime.now()
+    current_month = now.month
+    current_year = now.year
+
+    # Consulta os dados do banco de dados filtrando pelo mês e ano atuais
+    entregas = RegistrosEPI.query.filter(
+        extract('month', RegistrosEPI.data_solicitacao) == current_month,
+        extract('year', RegistrosEPI.data_solicitacao) == current_year
+    ).all()
+
+    # Construa o DataFrame
+    data = {
+        'Funcionario': [entrega.funcionario for entrega in entregas],
+        'Valor': [entrega.valor_total for entrega in entregas]
+    }
+    df = pd.DataFrame(data)
+
+    # Agrupando por 'Funcionario' e somando os valores
+    df_grouped = df.groupby('Funcionario').sum().reset_index()
+
+    # Convertendo os dados para JSON
+    chart_data = {
+        'labels': df_grouped['Funcionario'].tolist(),
+        'values': df_grouped['Valor'].tolist()
+    }
+
+    return jsonify(chart_data)
