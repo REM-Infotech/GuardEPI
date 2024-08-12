@@ -23,22 +23,24 @@ def login():
     
     if not session.get('next'):
         session["next"] = request.args.get("next", url_for("dashboard"))
-        
+    
     location = session["next"]    
     form = LoginForm()
     if form.validate_on_submit():
         
         user = Users.query.filter_by(login = form.login.data).first()
-        if user:
-            check_pw = user.converte_senha(form.password.data)
-            if check_pw:
-                session["groups_usr"] = json.loads(user.grupos)
-                session["nome_usuario"] = user.nome_usuario
-                session.pop("next")
-                login_user(user, remember=form.keep_login.data)
-                flash("Login Efetuado com sucesso!", "success")
-                return redirect(location)
-    
+        
+        if user and user.converte_senha(form.password.data):
+            
+            session["groups_usr"] = json.loads(user.grupos)
+            session["nome_usuario"] = user.nome_usuario
+            session.pop("next")
+            login_user(user, remember=form.keep_login.data)
+            flash("Login Efetuado com sucesso!", "success")
+            return redirect(location)
+
+        flash("Usuário/Senha Incorretos!", "error")
+        
     return render_template("login.html", form = form)
 
 @app.route("/logout", methods = ["GET"])
