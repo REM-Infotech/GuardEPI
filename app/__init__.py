@@ -15,7 +15,7 @@ csv_path = os.path.join(temp_path, "csv")
 for paths in [docs_path, temp_path, image_temp, csv_path]:
     os.makedirs(paths, exist_ok=True)
 
-files_render = os.path.join(os.getcwd(), "src")
+files_render = os.path.join(os.getcwd(), "app", "src")
 app = Flask(__name__, template_folder = files_render, static_folder = files_render)
 db = SQLAlchemy()
 login_manager = LoginManager()
