@@ -6,9 +6,9 @@
     <div class="row g-3">
 
         <div class="col-12">
-            <div class="form-floating mb-3" id="TablePagesColumn">
-                {{form.selectgrupo(class="form-control", id="selectgrupo", placeholder="...")}}
-                {{form.selectgrupo.label(for="selectgrupo")}}
+            <div class="form-group mb-3 mt-4">
+                {{form.selectgrupo.label(for="selectgrupo", class="form-label")}}
+                {{form.selectgrupo(class="form-control", id="selectgrupo")}}
             </div>
             <div class="col-12" id="EditFormColumn">
                 <div class="form-group mb-3 mt-4">

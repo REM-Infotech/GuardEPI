@@ -25,7 +25,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
-                                    {{ form.cpf_funcionario(class="form-control", id="cpf_funcionario", placeholder="...") }}
+                                    {{ form.cpf_funcionario(class="form-control", id="cpf_funcionario", placeholder="...", oninput="formatDocument(this)") }}
                                     {{ form.cpf_funcionario.label(for="cpf_funcionario") }}
                                 </div>
                             </div>

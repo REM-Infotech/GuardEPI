@@ -78,7 +78,7 @@ class CadastroEPIForm(FlaskForm):
         label='Valor Unitário', validators=[DataRequired()])
     qtd_entregar = IntegerField(label='Quantidade a Entregar')
     periodicidade_item = IntegerField(label='Periodicidade do Item')
-    vencimento = DateField(label='Vencimento', format='%d-%m-%Y')
+    vencimento = DateField(label='Vencimento')
     fornecedor = StringField(label='Fornecedor')
     marca = StringField(label='Marca')
     modelo = StringField(label='Modelo')
