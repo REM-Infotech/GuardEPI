@@ -18,3 +18,4 @@ reportlab
 pillow
 pandas
 deep-translator
+

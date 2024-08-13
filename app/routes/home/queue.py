@@ -91,7 +91,9 @@ def import_lotes(tipo: str):
 
             data = []
             for _, row in df.iterrows():
+                row = row.dropna()
                 data_info = row.to_dict()
+                
                 appends = model(**data_info)
                 data.append(appends)
                 
@@ -115,3 +117,4 @@ def import_lotes(tipo: str):
     except Exception as e:
         print(e)
         abort(500)
+
