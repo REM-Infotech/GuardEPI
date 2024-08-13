@@ -22,8 +22,7 @@ class ProdutoEPI(db.Model):
     
     def __init__(self, ca: str, cod_ca: int, nome_epi: str, tipo_epi: str,
                  valor_unitario: float, qtd_entregar: int, periodicidade_item: int,
-                 vencimento: datetime, fornecedor: str, marca: str, modelo: str,
-                 imagem: str, blob_imagem: bytes) -> None:
+                 vencimento: datetime, fornecedor: str, marca: str, modelo: str) -> None:
         
         self.ca = ca
         self.cod_ca = cod_ca
@@ -36,6 +35,4 @@ class ProdutoEPI(db.Model):
         self.fornecedor = fornecedor
         self.marca = marca
         self.modelo = modelo
-        self.imagem = imagem
-        self.blob_imagem = blob_imagem
         
