@@ -7,7 +7,7 @@ class Funcionarios(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     codigo = db.Column(db.String(length=6), nullable=False, unique=True)
     nome_funcionario = db.Column(db.String(length=64), nullable=False)
-    cpf_funcionario = db.Column(db.String(length=14), nullable=False, unique=True)
+    cpf_funcionario = db.Column(db.String(length=14), unique=True)
     email_funcionario = db.Column(db.String(length=64))
     deficiencia = db.Column(db.String(length=64))
     data_admissao = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Etc/GMT+4')))
