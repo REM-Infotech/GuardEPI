@@ -128,7 +128,7 @@ def emitir_cautela():
                             data_estoque.qtd_estoque = data_estoque.qtd_estoque - 1
                             
                             epis_lista.append(epis)
-                            valor_calc += equip.valor_unitario
+                            valor_calc = equip.valor_unitario * int(qtd_entregar)
 
             if len(epis_lista) == 0:
                 flash("EPI's sem Estoque", "error")

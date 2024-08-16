@@ -24,9 +24,19 @@ def dashboard():
         DataTables: JS Datatables para a página
         
     """
+    now = datetime.now()
+    current_day = now.day
+    current_month = now.month
     
-    dbase = RegistrosEPI.query.all()
-    dbase2 = RegistroEntradas.query.all()
+    dbase = RegistrosEPI.query.filter(
+        extract('day', RegistrosEPI.data_solicitacao) == current_day,
+        extract('month', RegistrosEPI.data_solicitacao) == current_month
+    ).all()
+    
+    dbase2 = RegistroEntradas.query.filter(
+        extract('day', RegistroEntradas.data_entrada) == current_day,
+        extract('month', RegistroEntradas.data_entrada) == current_month
+    ).all()
     
     total_saidas = len(dbase)
     total_entradas = len(dbase2)
@@ -75,31 +85,44 @@ def saidasEquipamento():
 @app.route("/saidasFuncionario", methods = ["GET"])
 def saidasFuncionario():
     
+    chart_data = {
+        'labels': [],
+        'values': [],
+        'media': 0
+    }
+    
     # Obtendo o mês e ano atuais
     now = datetime.now()
+    current_day = now.day
     current_month = now.month
-    current_year = now.year
 
     # Consulta os dados do banco de dados filtrando pelo mês e ano atuais
     entregas = RegistrosEPI.query.filter(
-        extract('month', RegistrosEPI.data_solicitacao) == current_month,
-        extract('year', RegistrosEPI.data_solicitacao) == current_year
+        extract('day', RegistrosEPI.data_solicitacao) == current_day,
+        extract('month', RegistrosEPI.data_solicitacao) == current_month
     ).all()
 
-    # Construa o DataFrame
-    data = {
-        'Funcionario': [entrega.funcionario for entrega in entregas],
-        'Valor': [entrega.valor_total for entrega in entregas]
-    }
-    df = pd.DataFrame(data)
+    if entregas:
+        
+        # Construa o DataFrame
+        data = {
+            'Funcionario': [entrega.funcionario for entrega in entregas],
+            'Valor': [entrega.valor_total for entrega in entregas]
+        }
+        df = pd.DataFrame(data)
 
-    # Agrupando por 'Funcionario' e somando os valores
-    df_grouped = df.groupby('Funcionario').sum().reset_index()
+        # Agrupando por 'Funcionario' e somando os valores
+        df_grouped = df.groupby('Funcionario').sum().reset_index()
 
-    # Convertendo os dados para JSON
-    chart_data = {
-        'labels': df_grouped['Funcionario'].tolist(),
-        'values': df_grouped['Valor'].tolist()
-    }
+        media_old = int(sorted(df_grouped['Valor'].tolist())[-1])
+        # Calcula a diferença
+        media = media_old + ((media_old // 100 + 1) * 100 - media_old)
+        
+        # Convertendo os dados para JSON
+        chart_data = {
+            'labels': df_grouped['Funcionario'].tolist(),
+            'values': df_grouped['Valor'].tolist(),
+            'media': media
+        }
 
     return jsonify(chart_data)

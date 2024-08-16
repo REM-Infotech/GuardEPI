@@ -39,6 +39,7 @@ class RegistroEntradas(db.Model):
     grade = db.Column(db.String(length=64), nullable=False)
     tipo_qtd = db.Column(db.String(length=64), nullable=False)
     qtd_entrada = db.Column(db.Integer, nullable=False)
+    data_entrada = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Etc/GMT+4')))
     valor_total = db.Column(db.Float, nullable=False)
     
     def __init__(self, nome_epi: str, tipo_qtd: str, grade: str,
