@@ -16,7 +16,7 @@
                 </span>
                 <span class="text">Import em lotes</span>
             </button>
-            <a class="btn btn-primary" href="#!">
+            <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}" class="btn btn-primary btn-icon-split">
                 <span class="icon text-white-50">
                     <i class="fa-solid fa-file-csv"></i>
                 </span>

@@ -1,7 +1,7 @@
 from app.routes.home import login
-from app.routes.home import dashboard
 from app.routes.home import queue
-from app.routes import config
+from app.routes.home import dashboard
+from app.routes.home import relatorio
 
 from app.routes.EPI import equipamentos
 from app.routes.EPI import estoque
@@ -18,6 +18,7 @@ from app.routes.CRUD import update
 from app.routes.CRUD import delete
 
 from app.routes import handler
+from app.routes import config
 
 # from app import app
 # import json

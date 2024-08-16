@@ -26,7 +26,8 @@
                 aria-labelledby="nav_tables-groups-tab" tabindex="0">
                 {% if session['tipo-usuario'] == "super_admin" %}
                 <div class="card-header bg-white rounded">
-                    <a href="/gerar_relatorio/users" class="btn btn-success btn-icon-split">
+                    <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}"
+                        class="btn btn-primary btn-icon-split">
                         <span class="icon text-white-50">
                             <i class="fa-solid fa-file-csv"></i>
                         </span>

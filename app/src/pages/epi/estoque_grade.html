@@ -5,12 +5,12 @@
         <div class="card-header">
             <h2 class="m-2">Estoque Grades</h1>
                 <hr>
-                <a class="btn btn-primary" href="#!">
-                    <span class="icon text-white-50">
-                        <i class="fa-solid fa-file-csv"></i>
-                    </span>
-                    <span class="text">Gerar Relatório</span>
-                </a>
+                <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}" class="btn btn-primary btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-file-csv"></i>
+                </span>
+                <span class="text">Gerar Relatório</span>
+            </a>
         </div>
 
         <div class="card-body table-responsive">

@@ -11,12 +11,12 @@
                     </span>
                     <span class="text">Emitir Cautela</span>
                 </button>
-                <a class="btn btn-primary" href="#!">
-                    <span class="icon text-white-50">
-                        <i class="fa-solid fa-file-csv"></i>
-                    </span>
-                    <span class="text">Gerar Relatório</span>
-                </a>
+                <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}" class="btn btn-primary btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-file-csv"></i>
+                </span>
+                <span class="text">Gerar Relatório</span>
+            </a>
         </div>
 
         <div class="card-body table-responsive">
@@ -39,7 +39,8 @@
                         <td>{{ item.funcionario }}</td>
                         <td>{{ item.data_solicitacao }}</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-sm  mb-2 open-pdf" name="{{ item.doc_cautela}}"
+                            <button type="button" class="btn btn-primary btn-sm  mb-2 open-pdf"
+                                name="{{ item.doc_cautela}}"
                                 data-pdf-url="{{ url_for('serve_pdf', index = item.id, _external=True, _scheme='https') }}"><span
                                     class="icon text-white-50">
                                     <i class="fa-solid fa-file-pdf"></i>
