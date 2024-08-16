@@ -41,13 +41,7 @@ class Users(db.Model, UserMixin):
 
     def converte_senha(self, senha_texto_claro) -> bool:
         return bcrypt.checkpw(senha_texto_claro.encode("utf-8"), self.password.encode("utf-8"))
-    
-    def __init__(self, login: str, nome_usuario: str, email: str, grupos: str) -> None:
-        
-        self.grupos = grupos
-        self.login = login
-        self.nome_usuario = nome_usuario
-        self.email = email
+
         
 class Groups(db.Model):
     
@@ -62,10 +56,6 @@ class EndPoints(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     endpoint = db.Column(db.String(length=30), nullable=False, unique=True)
     displayName = db.Column(db.Text)
-    
-    def __init__(self, endpoint: str, displayName: str) -> None:
-        
-        self.endpoint = endpoint
-        self.displayName = displayName
+
 
     

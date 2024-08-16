@@ -19,20 +19,3 @@ class ProdutoEPI(db.Model):
     modelo = db.Column(db.String(length=64))
     imagem = db.Column(db.String(length=128))
     blob_imagem = db.Column(db.LargeBinary)
-    
-    def __init__(self, ca: str, cod_ca: int, nome_epi: str, tipo_epi: str,
-                 valor_unitario: float, qtd_entregar: int, periodicidade_item: int,
-                 vencimento: datetime, fornecedor: str, marca: str, modelo: str) -> None:
-        
-        self.ca = ca
-        self.cod_ca = cod_ca
-        self.nome_epi = nome_epi
-        self.tipo_epi = tipo_epi
-        self.valor_unitario = valor_unitario
-        self.qtd_entregar = qtd_entregar
-        self.periodicidade_item = periodicidade_item
-        self.vencimento = vencimento
-        self.fornecedor = fornecedor
-        self.marca = marca
-        self.modelo = modelo
-        
