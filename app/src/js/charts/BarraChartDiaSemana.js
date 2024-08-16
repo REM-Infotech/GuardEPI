@@ -32,16 +32,7 @@ $(document).ready(function () {
                 maxTicksLimit: 6
               }
             }],
-            yAxes: [{
-              ticks: {
-                min: 0,
-                max: 2500,
-                maxTicksLimit: 5
-              },
-              gridLines: {
-                display: true
-              }
-            }],
+            
           },
           legend: {
             display: false
