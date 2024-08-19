@@ -10,6 +10,8 @@ from app.models.Funcionários import Funcionarios
 
 from app import app
 
+permited_file = FileAllowed(['pdf'], 'Apenas arquivos ".pdf" são permitidos!')
+
 tipo_choices = [
     ("Peça", "Peça"), 
     ("Par", "Par"), 
@@ -60,11 +62,12 @@ class InsertEstoqueForm(FlaskForm):
                            choices=tipo_choices, validators=[DataRequired()])
     qtd_estoque = IntegerField( label='Quantidade a ser adicionada', validators=[DataRequired()])
     valor_total = StringField(label='Valor Totalizado', validators=[DataRequired()])
+    nota_fiscal = FileField(label="Nota Fiscal", validators=[DataRequired(), permited_file])
     submit = SubmitField(label='Salvar')
     
     def __init__(self, *args, **kwargs):
-        super(InsertEstoqueForm, self).__init__(*args, **kwargs)
         
+        super(InsertEstoqueForm, self).__init__(*args, **kwargs)
         self.nome_epi.choices.extend(set_choices())
         self.tipo_grade.choices.extend(set_choicesGrade())
 

@@ -18,4 +18,4 @@ class ProdutoEPI(db.Model):
     marca = db.Column(db.String(length=64))
     modelo = db.Column(db.String(length=64))
     imagem = db.Column(db.String(length=128))
-    blob_imagem = db.Column(db.LargeBinary)
+    blob_imagem = db.Column(db.LargeBinary(length=(2**32)-1))

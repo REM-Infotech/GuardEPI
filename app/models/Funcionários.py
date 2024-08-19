@@ -18,7 +18,7 @@ class Funcionarios(db.Model):
 class Cargos(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
-    cargo = db.Column(db.String, nullable=False, unique=True)
+    cargo = db.Column(db.String(length=64), nullable=False, unique=True)
     descricao = db.Column(db.String(length=512))
     
 class Departamento(db.Model):
@@ -35,4 +35,4 @@ class Empresa(db.Model):
     nome_empresa = db.Column(db.String(length=64))
     cnpj_empresa = db.Column(db.String(length=64))
     imagem = db.Column(db.String(length=128))
-    blob_imagem = db.Column(db.LargeBinary)
+    blob_imagem = db.Column(db.LargeBinary(length=(2**32)-1))

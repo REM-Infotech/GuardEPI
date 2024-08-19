@@ -53,10 +53,10 @@ ou
 ## .env
 
 DEBUG = True
-DBLogin = ""
-DBPassword = ""
-DBHost = ""
-Database = ""
+login = ""
+password = ""
+host = ""
+database = ""
 
 
 ``` 

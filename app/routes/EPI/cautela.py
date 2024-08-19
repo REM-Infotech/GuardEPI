@@ -95,8 +95,7 @@ def emitir_cautela():
             epi = request.form
             list_epi = list(epi)
             funcionario = form.select_funcionario.data
-            nomedoc_cautela = f'Cautela - {funcionario} - {
-                datetime.now().strftime("%d-%m-%Y %H-%M-%S")}.pdf'
+            nomedoc_cautela = f'Cautela - {funcionario} - {datetime.now().strftime("%d-%m-%Y %H-%M-%S")}.pdf'
 
             count_cautelas = RegistrosEPI.query.all()
             if not count_cautelas:

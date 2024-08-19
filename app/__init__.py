@@ -21,10 +21,10 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 tlsm = Talisman()
 
-login_db = dotenv_values()['DBLogin']
-passwd_db = dotenv_values()['DBPassword']
-host_db = dotenv_values()['DBHost']
-database_name = dotenv_values()['Database']
+login_db = dotenv_values()['login']
+passwd_db = dotenv_values()['password']
+host_db = dotenv_values()['host']
+database_name = dotenv_values()['database']
 
 database_uri = f"mysql://{login_db}:{passwd_db}@{host_db}/{database_name}"
 app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
