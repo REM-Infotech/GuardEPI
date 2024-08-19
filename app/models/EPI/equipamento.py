@@ -19,3 +19,28 @@ class ProdutoEPI(db.Model):
     modelo = db.Column(db.String(length=64))
     filename = db.Column(db.String(length=128))
     blob_doc = db.Column(db.LargeBinary(length=(2**32)-1))
+
+class Fornecedores(db.Model):
+    
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    fornecedor = db.Column(db.String(length=64), nullable=False, unique=True)
+    descricao = db.Column(db.String(length=512))
+    
+class Marcas(db.Model):
+    
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    marca = db.Column(db.String(length=64), nullable=False, unique=True)
+    descricao = db.Column(db.String(length=512))
+class ModelosEPI(db.Model):
+    
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    modelo = db.Column(db.String(length=64), nullable=False, unique=True)
+    descricao = db.Column(db.String(length=512))
+    
+    
+class ClassesEPI(db.Model):
+    
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    classe = db.Column(db.String(length=64), nullable=False, unique=True)
+    descricao = db.Column(db.String(length=512))
+    

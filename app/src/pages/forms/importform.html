@@ -15,9 +15,9 @@
                         {{importForm.arquivo(class="form-control", id="formFile", accept=".xls, .xlsx, .csv")}}
                     </div>
                     <div class="modal-footer">
-                        <a href="{{ url_for('gen_model', model = request.endpoint) }}" class="btn btn-outline-primary"> Gerar Modelo </a>
+                        <a href="{{ url_for('gen_model', model = request.endpoint) }}" class="btn btn-primary text-uppercase fw-bold"> Gerar Modelo </a>
                         <div class="d-grid gap-2">
-                            {{ importForm.submit(class="btn btn-outline-success btn-login text-uppercase fw-bold") }}
+                            {{ importForm.submit(class="btn btn-success btn-login text-uppercase fw-bold") }}
                         </div>
                     </div>
                 </form>

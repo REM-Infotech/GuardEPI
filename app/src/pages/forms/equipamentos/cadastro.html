@@ -7,7 +7,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ url_for('cadastrar', tipo = request.endpoint) }}" enctype="multipart/form-data" class="form-floating">
+                <form method="POST" action="{{ url_for('cadastrar', tipo = request.endpoint) }}"
+                    enctype="multipart/form-data" class="form-floating">
                     {{ form.hidden_tag() }}
 
                     <div class="row g-3">
@@ -43,43 +44,6 @@
                             </div>
 
                         </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                {{ form.tipo_epi(type="text", class="form-control", id="tipo_epi", placeholder="") }}
-                                {{ form.tipo_epi.label(for="tipo_epi") }}
-                            </div>
-                        </div>
-                        
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                {{ form.vencimento(class="form-control", id="vencimento", placeholder="") }}
-                                {{ form.vencimento.label(for="vencimento") }}
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                {{ form.qtd_entregar(type="text", class="form-control", id="qtd_entregar",
-                                placeholder="") }}
-                                {{ form.qtd_entregar.label(for="qtd_entregar") }}
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                {{ form.periodicidade_item(type="text", class="form-control", id="periodicidade_item",
-                                placeholder="") }}
-                                {{ form.periodicidade_item.label(for="periodicidade_item") }}
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
-                                {{ form.valor_unitario(type="text", class="form-control", id="valor_unitario",
-                                placeholder="",
-                                onkeyup="formatarComoMoeda(this)") }}
-                                {{ form.valor_unitario.label(for="valor_unitario") }}
-                            </div>
-                        </div>
                         <div class="col-md-4">
                             <div class="form-floating mb-3">
                                 {{ form.fornecedor(class="form-control", id="fornecedor", placeholder="") }}
@@ -98,6 +62,42 @@
                                 {{ form.modelo.label(for="modelo") }}
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                {{ form.tipo_epi(type="text", class="form-control", id="tipo_epi", placeholder="") }}
+                                {{ form.tipo_epi.label(for="tipo_epi") }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                {{ form.valor_unitario(type="text", class="form-control", id="valor_unitario",
+                                placeholder="",
+                                onkeyup="formatarComoMoeda(this)") }}
+                                {{ form.valor_unitario.label(for="valor_unitario") }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                {{ form.qtd_entregar(type="text", class="form-control", id="qtd_entregar",
+                                placeholder="") }}
+                                {{ form.qtd_entregar.label(for="qtd_entregar") }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                {{ form.vencimento(class="form-control", id="vencimento", placeholder="") }}
+                                {{ form.vencimento.label(for="vencimento") }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                {{ form.periodicidade_item(type="text", class="form-control", id="periodicidade_item",
+                                placeholder="") }}
+                                {{ form.periodicidade_item.label(for="periodicidade_item") }}
+                            </div>
+                        </div>
+                        
+
                     </div>
                     <div class="footer">
                         <div class="d-grid gap-2">
@@ -110,4 +110,3 @@
         </div>
     </div>
 </div>
-

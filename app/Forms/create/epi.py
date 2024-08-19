@@ -1,7 +1,10 @@
 """
 ## Formulários para controle de EPI
 """
-
+from app.Forms.choices import (set_ChoicesFuncionario, set_choices, 
+                               set_choicesGrade, set_choicesClasseEPI, 
+                               set_choicesFornecedor, set_choicesMarca, 
+                               set_choicesModelo)
 
 from flask_wtf import FlaskForm
 from flask_wtf.form import _Auto
@@ -38,25 +41,6 @@ tipo_choices = [
     ("Não Especificado", "Não Especificado")
 ]
 
-
-def set_ChoicesFuncionario() -> list[tuple[str, str]]:
-
-    with app.app_context():
-        return [(epi.nome_funcionario, epi.nome_funcionario) for epi in Funcionarios.query.all()]
-
-
-def set_choices() -> list[tuple[str, str]]:
-
-    with app.app_context():
-        return [(epi.nome_epi, epi.nome_epi) for epi in ProdutoEPI.query.all()]
-
-
-def set_choicesGrade() -> list[tuple[str, str]]:
-
-    with app.app_context():
-        return [(epi.grade, epi.grade) for epi in GradeEPI.query.all()]
-
-
 class CadastroGrade(FlaskForm):
 
     grade = StringField("Grade", validators=[DataRequired()])
@@ -70,21 +54,12 @@ class InsertEstoqueForm(FlaskForm):
     ### Formulário de inserção de produto no Estoque
     """
 
-    nome_epi = SelectField(label='EPI', validators=[
-                           DataRequired()], choices=[])
-    tipo_grade = SelectField(label='Grade', validators=[
-                             DataRequired()], choices=[])
-    tipo_qtd = SelectField(label='Tipo de Quantidade(Ex.: Peça, Unidade, Par, etc)',
-                           choices=tipo_choices, validators=[DataRequired()])
-    qtd_estoque = IntegerField(
-        label='Quantidade a ser adicionada', validators=[DataRequired()])
-    valor_total = StringField(label='Valor Totalizado',
-                              validators=[DataRequired()])
-    
-    
-    nota_fiscal = FileField(label="Nota Fiscal", validators=[
-                            DataRequired(), permited_file])
-    
+    nome_epi = SelectField(label='EPI', validators=[DataRequired()], choices=[])
+    tipo_grade = SelectField(label='Grade', validators=[DataRequired()], choices=[])
+    tipo_qtd = SelectField(label='Tipo de Quantidade(Ex.: Peça, Unidade, Par, etc)', choices=tipo_choices, validators=[DataRequired()])
+    qtd_estoque = IntegerField(label='Quantidade a ser adicionada', validators=[DataRequired()])
+    valor_total = StringField(label='Valor Totalizado',validators=[DataRequired()])
+    nota_fiscal = FileField(label="Nota Fiscal", validators=[DataRequired(), permited_file])
     cod_notafiscal = StringField(label="Cód. Nota Fiscal", validators=[DataRequired()])
     
     submit = SubmitField(label='Salvar')
@@ -94,8 +69,6 @@ class InsertEstoqueForm(FlaskForm):
         super(InsertEstoqueForm, self).__init__(*args, **kwargs)
         self.nome_epi.choices.extend(set_choices())
         self.tipo_grade.choices.extend(set_choicesGrade())
-        
-        nota_fiscal = self.nota_fiscal
 
 
 class CadastroEPIForm(FlaskForm):
@@ -103,19 +76,27 @@ class CadastroEPIForm(FlaskForm):
     ca = StringField(label='CA', validators=[DataRequired()])
     cod_ca = IntegerField(label='Cod CA', validators=[DataRequired()])
     nome_epi = StringField(label='Nome do EPI', validators=[DataRequired()])
-    tipo_epi = StringField(label='Tipo do EPI', validators=[DataRequired()])
+    tipo_epi = SelectField(label='Tipo do EPI', validators=[DataRequired()], choices=[])
     valor_unitario = StringField(
         label='Valor Unitário', validators=[DataRequired()])
     qtd_entregar = IntegerField(label='Quantidade a Entregar')
     periodicidade_item = IntegerField(label='Periodicidade do Item')
     vencimento = DateField(label='Vencimento')
-    fornecedor = StringField(label='Fornecedor')
-    marca = StringField(label='Marca')
-    modelo = StringField(label='Modelo')
+    fornecedor = SelectField(label='Fornecedor', choices=[])
+    marca = SelectField(label='Marca', choices=[])
+    modelo = SelectField(label='Modelo', choices=[])
     filename = FileField(label='Foto do EPI', id="imagem", validators=[
                        FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     submit = SubmitField(label='Salvar')
 
+    def __init__(self, *args, **kwargs):
+
+        super(CadastroEPIForm, self).__init__(*args, **kwargs)
+        self.fornecedor.choices.extend(set_choicesFornecedor())
+        self.marca.choices.extend(set_choicesMarca())
+        self.modelo.choices.extend(set_choicesModelo())
+        self.tipo_epi.choices.extend(set_choicesClasseEPI())
+        
 
 class Cautela(FlaskForm):
 

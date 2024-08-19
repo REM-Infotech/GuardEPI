@@ -25,5 +25,23 @@ def Equipamentos():
                            importForm=importForm, database=database,
                            format_currency_brl=format_currency_brl,
                            DataTables=DataTables, url_image=url)
+    
+@app.route("/Fornecedores", methods = ["GET"])   
+def Fornecedores():
 
+    return render_template("index.html")
 
+@app.route("/Marcas", methods = ["GET"]) 
+def Marcas():
+    
+    return render_template("index.html")
+    
+@app.route("/Modelos", methods = ["GET"])   
+def Modelos():
+    
+    return render_template("index.html")
+    
+@app.route("/Classes", methods = ["GET"]) 
+def Classes():
+
+    return render_template("index.html")
