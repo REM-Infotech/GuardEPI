@@ -12,6 +12,7 @@ docs_path = os.path.join(os.getcwd(), "Docs")
 temp_path = os.path.join(os.getcwd(), "Temp")
 image_temp = os.path.join(temp_path, "IMG")
 csv_path = os.path.join(temp_path, "csv")
+pdf_path = os.path.join(temp_path, "pdf")
 for paths in [docs_path, temp_path, image_temp, csv_path]:
     os.makedirs(paths, exist_ok=True)
 
@@ -36,6 +37,7 @@ app.config['Docs_Path'] = docs_path
 app.config['Temp_Path'] = temp_path
 app.config['IMAGE_TEMP_PATH'] = image_temp
 app.config['CSV_TEMP_PATH'] = csv_path
+app.config['PDF_TEMP_PATH'] = pdf_path
 app.secret_key = generate_pid()
 app.make_response
 age = timedelta(days=1).max.seconds

@@ -80,8 +80,13 @@ class InsertEstoqueForm(FlaskForm):
         label='Quantidade a ser adicionada', validators=[DataRequired()])
     valor_total = StringField(label='Valor Totalizado',
                               validators=[DataRequired()])
+    
+    
     nota_fiscal = FileField(label="Nota Fiscal", validators=[
                             DataRequired(), permited_file])
+    
+    cod_notafiscal = StringField(label="Cód. Nota Fiscal", validators=[DataRequired()])
+    
     submit = SubmitField(label='Salvar')
 
     def __init__(self, *args, **kwargs):
@@ -89,6 +94,8 @@ class InsertEstoqueForm(FlaskForm):
         super(InsertEstoqueForm, self).__init__(*args, **kwargs)
         self.nome_epi.choices.extend(set_choices())
         self.tipo_grade.choices.extend(set_choicesGrade())
+        
+        nota_fiscal = self.nota_fiscal
 
 
 class CadastroEPIForm(FlaskForm):

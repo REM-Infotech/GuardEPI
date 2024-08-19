@@ -7,11 +7,24 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ url_for('lancamento_produto') }}" enctype="multipart/form-data" class="form-floating">
+                <form method="POST" action="{{ url_for('lancamento_produto') }}" enctype="multipart/form-data"
+                    class="form-floating">
                     {{ form.hidden_tag() }}
 
                     <div class="row g-3">
-
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.nota_fiscal.label(for="formFile", class="form-label") }}
+                                {{ form.nota_fiscal(class="form-control", type="file", id="formFile",
+                                onchange="previewImage(event, 'preview')") }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating mb-3">
+                                {{ form.cod_notafiscal(class="form-control", id="cod_notafiscal", placeholder="") }}
+                                {{ form.cod_notafiscal.label(for="cod_notafiscal") }}
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-floating mb-3">
                                 {{ form.nome_epi(class="form-control", id="nome_epi", placeholder="") }}
@@ -38,10 +51,11 @@
                         </div>
                         <div class="col-12">
                             <div class="form-floating mb-3">
-                                {{ form.valor_total(class="form-control", id="valor_total", placeholder="", onkeyup="formatarComoMoeda(this)") }}
+                                {{ form.valor_total(class="form-control", id="valor_total", placeholder="",
+                                onkeyup="formatarComoMoeda(this)") }}
                                 {{ form.valor_total.label(for="valor_total") }}
                             </div>
-                            
+
                         </div>
 
                     </div>

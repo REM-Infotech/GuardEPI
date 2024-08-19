@@ -1,6 +1,9 @@
 from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import login_required
+from werkzeug.utils import secure_filename
+
 from app import app
+from app import db
 from app.models import (RegistroEntradas, EstoqueEPI, EstoqueGrade)
 from app.Forms import IMPORTEPIForm
 from app.Forms import InsertEstoqueForm
@@ -8,7 +11,8 @@ from app.Forms import InsertEstoqueForm
 from app.misc import format_currency_brl
 from app.decorators import read_perm, set_endpoint, create_perm
 
-from app import db
+import os
+
 
 @app.route("/Estoque")
 @login_required
@@ -100,6 +104,10 @@ def lancamento_produto():
                 db.session.add(cad_2)
             else:
                 dbase_2.qtd_estoque = dbase_2.qtd_estoque + form.qtd_estoque.data
+        
+        file_nf = form.nota_fiscal.data
+        
+        file_path = os.path.join(app.config['PDF_TEMP_PATH'], secure_filename(file_nf.filename))
         
         data_insert = float(str(form.valor_total.data).replace(
         "R$ ", "").replace(".", "").replace(",", "."))
