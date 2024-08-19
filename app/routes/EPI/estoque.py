@@ -108,6 +108,7 @@ def lancamento_produto():
         file_nf = form.nota_fiscal.data
         
         file_path = os.path.join(app.config['PDF_TEMP_PATH'], secure_filename(file_nf.filename))
+        file_nf.save(file_path)
         with open(file_path, 'rb') as f:
             blob_doc = f.read()
         data_insert = float(str(form.valor_total.data).replace(
