@@ -12,14 +12,14 @@
                     {{ form.hidden_tag() }}
 
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-12">
                             <div class="mb-3">
                                 {{ form.nota_fiscal.label(for="formFile", class="form-label") }}
                                 {{ form.nota_fiscal(class="form-control", type="file", id="formFile",
                                 onchange="previewImage(event, 'preview')") }}
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-12">
                             <div class="form-floating mb-3">
                                 {{ form.cod_notafiscal(class="form-control", id="cod_notafiscal", placeholder="") }}
                                 {{ form.cod_notafiscal.label(for="cod_notafiscal") }}
