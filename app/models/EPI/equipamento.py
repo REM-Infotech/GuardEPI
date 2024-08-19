@@ -17,5 +17,5 @@ class ProdutoEPI(db.Model):
     fornecedor = db.Column(db.String(length=64))
     marca = db.Column(db.String(length=64))
     modelo = db.Column(db.String(length=64))
-    imagem = db.Column(db.String(length=128))
-    blob_imagem = db.Column(db.LargeBinary(length=(2**32)-1))
+    filename = db.Column(db.String(length=128))
+    blob_doc = db.Column(db.LargeBinary(length=(2**32)-1))

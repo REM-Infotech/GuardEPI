@@ -1,5 +1,6 @@
 from flask_login import login_required
-from flask import redirect, url_for, render_template, session, abort, flash, send_from_directory
+from flask import (redirect, url_for, render_template, session,
+                   abort, flash, send_from_directory, make_response)
 from flask_wtf import Form, FlaskForm
 
 from werkzeug.utils import secure_filename
@@ -10,7 +11,7 @@ from sqlalchemy import Float
 
 from app.decorators import update_perm
 from app.misc import format_currency_brl, generate_pid
-from app.models.EPI import ProdutoEPI, GradeEPI, RegistrosEPI
+from app.models.EPI import ProdutoEPI, GradeEPI, RegistrosEPI, RegistroEntradas
 from app.models.Funcionários import Empresa, Funcionarios, Cargos, Departamento
 from app.Forms.edit import *
 from app import app
@@ -47,6 +48,7 @@ def get_models(tipo: str) -> Type[tipo]:
 
     return models[tipo]
 
+
 @app.route("/set_editar/<tipo>/<item>", methods=["GET"])
 @login_required
 def set_editar(tipo: str, item: int):
@@ -63,7 +65,7 @@ def set_editar(tipo: str, item: int):
             continue
         name = getattr(i, "name")
         colunas.append(name)
-    
+
     for itens in database:
         for i in colunas:
             for column in itens.__table__.columns:
@@ -90,11 +92,11 @@ def set_editar(tipo: str, item: int):
     url = ""
     if any(tipo == tipos for tipos in ["empresas", "equipamentos"]):
 
-        image_name = form.imagem.data
+        image_name = form.filename.data
         if image_name is None:
 
             url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
-            form.imagem.data = url
+            form.filename.data = url
 
         else:
             url = url_for('serve_img', filename=image_name,
@@ -190,24 +192,39 @@ def editar(tipo: str | None, id: int):
         print(e)
         abort(500)
 
-@app.route('/pdf/<index>', methods = ["GET"])
+
+@app.route('/pdf/<index>/<md>', methods=["GET"])
 @login_required
-def serve_pdf(index):
+def serve_pdf(index: int, md: str):
 
     try:
         index = int(index)
         with app.app_context():
 
-            dbase = RegistrosEPI.query.filter_by(id = index).first()
-            filename = dbase.doc_cautela
-            pdf_data = dbase.blob_cautela
+            if md.lower() == "estoque":
+                dbase = RegistroEntradas.query.filter_by(id=index).first()
+
+            elif md.lower() == "dashboard":
+                
+                dbase = RegistrosEPI.query.filter_by(id=index).first()
+            
+            else:
+                model = get_models(md.lower())
+                dbase = model.query.filter_by(id=index).first()
+
+            filename = dbase.filename
+            pdf_data = dbase.blob_doc
 
             original_path = os.path.join(app.config['Docs_Path'], filename)
 
             with open(original_path, 'wb') as file:
                 file.write(pdf_data)
             url = send_from_directory(app.config['Docs_Path'], filename)
+            # Crie a resposta usando make_response
+            response = make_response(url)
 
+            # Defina o tipo MIME como application/pdf
+            response.headers['Content-Type'] = 'application/pdf'
             return url
 
     except Exception as e:
@@ -215,7 +232,7 @@ def serve_pdf(index):
         abort(500)
 
 
-@app.route('/img/<filename>/<model>', methods = ["GET"])
+@app.route('/img/<filename>/<model>', methods=["GET"])
 @login_required
 def serve_img(filename: str, model: str):
 
@@ -225,7 +242,7 @@ def serve_img(filename: str, model: str):
             dbase = get_models(model.lower())
             image_data = dbase.query.filter_by(imagem=filename).first()
 
-            image_data = image_data.blob_imagem
+            image_data = image_data.blob_doc
             now = generate_pid()
             filename = f"{now}.png"
             original_path = os.path.join(

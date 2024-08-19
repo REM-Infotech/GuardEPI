@@ -95,7 +95,7 @@ def emitir_cautela():
             epi = request.form
             list_epi = list(epi)
             funcionario = form.select_funcionario.data
-            nomedoc_cautela = f'Cautela - {funcionario} - {datetime.now().strftime("%d-%m-%Y %H-%M-%S")}.pdf'
+            nomefilename = f'Cautela - {funcionario} - {datetime.now().strftime("%d-%m-%Y %H-%M-%S")}.pdf'
 
             count_cautelas = RegistrosEPI.query.all()
             if not count_cautelas:
@@ -138,7 +138,7 @@ def emitir_cautela():
                         nome_epis=to_str,
                         funcionario=funcionario,
                         data_solicitacao=datetime.now(),
-                        doc_cautela=nomedoc_cautela,
+                        filename=nomefilename,
                         valor_total=valor_calc
                     )
 
@@ -168,7 +168,7 @@ def emitir_cautela():
             num = generate_pid()
             dbase = Empresa.query.filter(
                 Empresa.nome_empresa == data_funcionario.empresa).first()
-            image_data = dbase.blob_imagem
+            image_data = dbase.blob_doc
             original_path = os.path.join(
                 app.config['IMAGE_TEMP_PATH'], "logo.png")
             with open(original_path, 'wb') as file:
@@ -182,7 +182,7 @@ def emitir_cautela():
             try:
 
                 path_cautela = os.path.join(
-                    app.config['Docs_Path'], nomedoc_cautela)
+                    app.config['Docs_Path'], nomefilename)
 
                 ctrl_sheet = os.path.join(
                     app.config['Docs_Path'], f"EPI_control_sheet{num}.pdf")
@@ -196,7 +196,7 @@ def emitir_cautela():
                 sleep(2)
                 
                 set_cautela = RegistrosEPI.query.filter_by(
-                    doc_cautela=nomedoc_cautela).first()
+                    filename=nomefilename).first()
 
                 if set_cautela is None:
                     url = ""
@@ -207,7 +207,7 @@ def emitir_cautela():
                 with open(path_cautela, 'rb') as file:
                     cautela_data = file.read()
 
-                set_cautela.blob_cautela = cautela_data
+                set_cautela.blob_doc = cautela_data
                 db.session.commit()
 
                 url = url_for(

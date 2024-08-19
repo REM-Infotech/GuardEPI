@@ -27,8 +27,8 @@ class RegistroEntradas(db.Model):
     qtd_entrada = db.Column(db.Integer, nullable=False)
     data_entrada = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Etc/GMT+4')))
     valor_total = db.Column(db.Float, nullable=False)
-    nota_fiscal = db.Column(db.String(length=128))
-    blob_nota_fiscal = db.Column(db.LargeBinary(length=(2**32)-1))
+    filename = db.Column(db.String(length=128))
+    blob_doc = db.Column(db.LargeBinary(length=(2**32)-1))
 
 class GradeEPI(db.Model):
     

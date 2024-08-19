@@ -112,7 +112,7 @@ class CadastroEPIForm(FlaskForm):
     fornecedor = StringField(label='Fornecedor')
     marca = StringField(label='Marca')
     modelo = StringField(label='Modelo')
-    imagem = FileField(label='Foto do EPI', id="imagem", validators=[
+    filename = FileField(label='Foto do EPI', id="imagem", validators=[
                        FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     submit = SubmitField(label='Salvar')
 

@@ -15,7 +15,7 @@
                             {% if total_saidas == 0 %}
                             <h3 class="text">Sem registro</h3>
                             {% else %}
-                            <h3 class="text">{{ total_saidas }}</h3> 
+                            <h3 class="text">{{ total_saidas }}</h3>
                             {% endif %}
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
@@ -112,8 +112,16 @@
                                 <td>{{ item.nome_epis.replace('"', '') }}</td>
                                 <td>{{ item.funcionario }}</td>
                                 <td>{{ item.data_solicitacao.strftime("%d/%m/%Y") }}</td>
-                                <td><a class="btn btn-primary btn-sm" href="{{ url_for('serve_pdf', index = item.id, _external=True) }}">
-                                    Ver PDF</a></td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm  mb-2 open-pdf"
+                                        name="{{ item.filename}}"
+                                        data-pdf-url="{{ url_for('serve_pdf', index = item.id, md = request.endpoint, _external=True, _scheme='https') }}"><span
+                                            class="icon text-white-50">
+                                            <i class="fa-solid fa-file-pdf"></i>
+                                        </span>
+                                        <span cl<span class="text">Ver PDF</span>
+                                    </button>
+                                </td>
                             </tr>
                             {% endfor %}
                             {% endif %}
@@ -137,3 +145,4 @@
 
 
 </div>
+{% include 'includes/show_pdf_copy.html' %}

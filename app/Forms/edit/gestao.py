@@ -47,7 +47,7 @@ class EditEmpresa(FlaskForm):
     
     nome_empresa = StringField("Nome da Empresa",validators=[DataRequired()])
     cnpj_empresa = StringField("CNPJ empresa", validators=[Length(min=14, max=18), DataRequired()])
-    imagem = FileField("LOGO Da Empresa")
+    filename = FileField("LOGO Da Empresa")
     submit = SubmitField("Salvar alterações")
     
 class EditCargo(FlaskForm):

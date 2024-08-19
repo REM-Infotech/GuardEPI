@@ -10,5 +10,5 @@ class RegistrosEPI(db.Model):
     valor_total = db.Column(db.Float, nullable=False)
     funcionario = db.Column(db.String(length=64), nullable=False)
     data_solicitacao = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Etc/GMT+4')))
-    doc_cautela = db.Column(db.String(length=64), nullable=False)
-    blob_cautela = db.Column(db.LargeBinary(length=(2**32)-1))
+    filename = db.Column(db.String(length=64), nullable=False)
+    blob_doc = db.Column(db.LargeBinary(length=(2**32)-1))
