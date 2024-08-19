@@ -25,7 +25,7 @@ class Departamento(db.Model):
     
     __tablename__ = "departamentos"
     id = db.Column(db.Integer, primary_key=True)
-    departamento = db.Column(db.String(length=6), nullable=False, unique=True)
+    departamento = db.Column(db.String(length=64), nullable=False, unique=True)
     descricao = db.Column(db.String(length=512))
 
 class Empresa(db.Model):

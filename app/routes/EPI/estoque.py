@@ -108,7 +108,8 @@ def lancamento_produto():
         file_nf = form.nota_fiscal.data
         
         file_path = os.path.join(app.config['PDF_TEMP_PATH'], secure_filename(file_nf.filename))
-        
+        with open(file_path, 'rb') as f:
+            blob_doc = f.read()
         data_insert = float(str(form.valor_total.data).replace(
         "R$ ", "").replace(".", "").replace(",", "."))
         EntradaEPI = RegistroEntradas(
@@ -116,10 +117,11 @@ def lancamento_produto():
             grade=form.tipo_grade.data,
             tipo_qtd=form.tipo_qtd.data,
             qtd_entrada=form.qtd_estoque.data,
+            nota_fiscal = secure_filename(file_nf.filename),
+            blob_nota_fiscal = blob_doc,
             valor_total=data_insert)
         
         db.session.add(EntradaEPI)        
-                
         db.session.commit()
         
         flash("Informações salvas com sucesso!", "success")

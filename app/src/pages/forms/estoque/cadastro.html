@@ -13,10 +13,9 @@
 
                     <div class="row g-3">
                         <div class="col-12">
-                            <div class="mb-3">
+                            <div class="mb-3 bg-secondary bg-opacity-25">
                                 {{ form.nota_fiscal.label(for="formFile", class="form-label") }}
-                                {{ form.nota_fiscal(class="form-control", type="file", id="formFile",
-                                onchange="previewImage(event, 'preview')") }}
+                                {{ form.nota_fiscal(class="form-control", type="file", id="formFile", accept=".pdf")}}
                             </div>
                         </div>
                         <div class="col-12">
