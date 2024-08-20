@@ -80,9 +80,12 @@
         </div>
     </div>
     {% if form %}
+    
     {% include 'pages/forms/cautelas/emitir.html' %}
     {% endif %}
     {% include 'includes/show_pdf_copy.html' %}
+    {% include 'includes/loading.html' %}
+    
     <div id="results">
 
     </div>

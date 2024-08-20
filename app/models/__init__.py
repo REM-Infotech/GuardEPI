@@ -58,6 +58,9 @@ def init_database() -> None:
                 members=json.dumps(["root", "nicholas@robotz.dev"]),
                 perms=json.dumps(perms_root))
             to_add.append(grp)
+            
+        else:
+            group.perms = json.dumps(perms_root)
 
         group = Groups.query.filter(Groups.name_group == "Default").first()
 
@@ -68,6 +71,9 @@ def init_database() -> None:
                 perms=json.dumps(perms_default)
             )
             to_add.append(grp)
+            
+        else:
+            group.perms = json.dumps(perms_root)
 
         for endpoint, displayName in endpoints:
 
@@ -84,5 +90,7 @@ def init_database() -> None:
                 
                 to_add.append(add)
 
-        db.session.add_all(to_add)
+        if len(to_add) > 0:
+            db.session.add_all(to_add)
+            
         db.session.commit()

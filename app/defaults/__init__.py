@@ -142,6 +142,11 @@ perms_root = {
             "UPDATE",
             "DELETE"
         ]
+    },
+    "Registro_Saidas":{
+        "permissoes": [
+            "READ"
+        ]
     }
 }
 perms_default = {
@@ -207,6 +212,11 @@ perms_default = {
         ]
     },
     "Classes": {
+        "permissoes": [
+            "READ"
+        ]
+    },
+    "Registro_Saidas":{
         "permissoes": [
             "READ"
         ]

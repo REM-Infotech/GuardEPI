@@ -1,0 +1,49 @@
+<div class="container-fluid px-4">
+
+    <div class="mt-4 card mb-4">
+
+        <div class="card-header">
+            <h2 class="m-2">Saidas</h1>
+                <hr>
+                <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}" class="btn btn-primary btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-file-csv"></i>
+                </span>
+                <span class="text">Gerar Relatório</span>
+            </a>
+        </div>
+
+        <div class="card-body table-responsive">
+            <table class="table table-striped" id="SaidasTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Produto</th>
+                        <th>Qtd. Saída</th>
+                        <th>Valor Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if database %}
+                    {% for item in database %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.nome_epi }}</td>
+                        <td>{{ item.qtd_saida }}</td>
+                        <td>{{ format_currency_brl(item.valor_total) }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>#</th>
+                        <th>Produto</th>
+                        <th>Qtd. Saída</th>
+                        <th>Valor Total</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>

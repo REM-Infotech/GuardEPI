@@ -64,7 +64,11 @@ def dashboard():
 @app.route("/saidasEquipamento", methods = ["GET"])
 def saidasEquipamento():
     
-    current_date = datetime.now().date()
+    chart_data = {
+        'labels': [],
+        'values': [],
+        'media': 0
+    }
 
     # Obtendo o mês e ano atuais
     now = datetime.now()

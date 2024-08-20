@@ -16,32 +16,28 @@ window.addEventListener('DOMContentLoaded', event => {
 
 });
 
-document.addEventListener("htmx:afterRequest", function() {
+document.addEventListener("htmx:afterRequest", function () {
     var element = document.getElementById("scrollHere");
-    element.scrollIntoView();
+    if (element !== null) {
+        element.scrollIntoView();
+    }
 })
 
 function formatDocument(element) {
-    
+
     let value = element.value.replace(/\D/g, '');
 
     // Se o valor tem 11 dígitos, é um CPF
     if (value.length <= 11) {
         // Adiciona a formatação de CPF
-        value = value.replace(/(\d{3})(\d{3})?(\d{3})?(\d{2})?/, function(_, p1, p2, p3, p4) {
+        value = value.replace(/(\d{3})(\d{3})?(\d{3})?(\d{2})?/, function (_, p1, p2, p3, p4) {
             return `${p1}${p2 ? '.' + p2 : ''}${p3 ? '.' + p3 : ''}${p4 ? '-' + p4 : ''}`;
         });
     } else {
         // Adiciona a formatação de CNPJ
-        value = value.replace(/(\d{2})(\d{4})(\d{4})(\d{2})/, function(_, p1, p2, p3, p4) {
+        value = value.replace(/(\d{2})(\d{4})(\d{4})(\d{2})/, function (_, p1, p2, p3, p4) {
             return `${p1}.${p2}/${p3}-${p4}`;
         });
     };
     element.value = value;
-}
-
-function waitEmissao() {
-
-    $('#modalMessage').modal('show');
-    
 }

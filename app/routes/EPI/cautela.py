@@ -1,4 +1,5 @@
-from flask import jsonify, url_for, render_template, session, abort, flash, request
+from flask import (jsonify, url_for, render_template, 
+                   session, abort, flash, request, get_flashed_messages)
 from flask_login import login_required
 
 from app.Forms import Cautela
@@ -20,7 +21,20 @@ from app import app
 
 from app.decorators import read_perm, set_endpoint, create_perm
 
-@app.route("/Cautelas")
+@app.route("/Registro_Saidas", methods = ["GET"])
+@login_required
+@set_endpoint
+@read_perm
+def Registro_Saidas():
+    
+    page = f"pages/epi/{request.endpoint.lower()}.html"
+    database = RegistroSaidas.query.all()
+    title = request.endpoint.capitalize().replace("_", " ")
+    DataTables = 'js/DataTables/DataTables.js'
+    return render_template("index.html", page=page, title=title, database=database, 
+                           DataTables=DataTables)
+
+@app.route("/Cautelas", methods = ["GET"])
 @login_required
 @set_endpoint
 @read_perm
@@ -101,10 +115,23 @@ def emitir_cautela():
             epi = request.form
             list_epi = list(epi)
             
-            
+            ## Query Funcionário
             funcionario = form.select_funcionario.data
+            data_funcionario = Funcionarios.query.filter_by(
+                nome_funcionario=funcionario).first()
+            
+            ## Query Empresa
+            dbase = Empresa.query.filter(
+                Empresa.nome_empresa == data_funcionario.empresa).first()
+            
+            if not dbase:
+                
+                flash("Empresa não cadastrada!", "error")   
+                sleep(1)
+                messages = get_flashed_messages()
+                return render_template('includes/show_pdf.html', url="", messages=messages)
+                    
             nomefilename = f'Cautela - {funcionario} - {datetime.now().strftime("%d-%m-%Y %H-%M-%S")}.pdf'
-
             count_cautelas = RegistrosEPI.query.all()
             if not count_cautelas:
                 count_cautelas = 1
@@ -165,11 +192,7 @@ def emitir_cautela():
             
             db.session.add(registrar)
             db.session.add_all(para_registro)
-            
             db.session.commit()
-
-            data_funcionario = Funcionarios.query.filter_by(
-                nome_funcionario=funcionario).first()
 
             employee_data = {
                 'company': data_funcionario.empresa,
@@ -189,8 +212,7 @@ def emitir_cautela():
                 item_data.append(obj)
 
             num = generate_pid()
-            dbase = Empresa.query.filter(
-                Empresa.nome_empresa == data_funcionario.empresa).first()
+            
             image_data = dbase.blob_doc
             original_path = os.path.join(
                 app.config['IMAGE_TEMP_PATH'], "logo.png")
@@ -239,24 +261,14 @@ def emitir_cautela():
                 return item_html
 
             except Exception as e:
-                print(e)
                 flash("Erro interno", "error")
-                url = ""
-                item_html = render_template(
-                    'includes/show_pdf.html', url=url)
-                return item_html
-
-            finally:
-
-                for root, dirs, files in os.walk(app.config['DOCS_PATH']):
-                    for file in files:
-                        if ".pdf" in file or "adjusted" in file:
-                            os.remove(f"{root}/{file}")
+                sleep(1)
+                messages = get_flashed_messages()
+                return render_template('includes/show_pdf.html', url="", messages=messages)
 
     except Exception as e:
         print(e)
         flash("Erro interno", "error")
-        url = ""
-        item_html = render_template(
-            'includes/show_pdf.html', url=url)
-        return item_html
+        sleep(1)
+        messages = get_flashed_messages()
+        return render_template('includes/show_pdf.html', url="", messages=messages)

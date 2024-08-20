@@ -32,6 +32,12 @@ $(document).ready(function () {
                 maxTicksLimit: 6
               }
             }],
+            yAxes: [{
+              ticks: {
+                min: 0,
+                maxTicksLimit: 5
+              },
+            }],
             
           },
           legend: {

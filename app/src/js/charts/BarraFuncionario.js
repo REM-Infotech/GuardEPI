@@ -26,11 +26,17 @@ $(document).ready(function () {
                 unit: 'day'
               },
               gridLines: {
-                display: false
+                display: true
               },
               ticks: {
                 maxTicksLimit: 6
               }
+            }],
+            yAxes: [{
+              ticks: {
+                min: 0,
+                maxTicksLimit: 5
+              },
             }],
           },
           legend: {
