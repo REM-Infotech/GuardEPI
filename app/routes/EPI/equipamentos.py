@@ -1,8 +1,10 @@
 from flask import render_template, request
 from flask_login import login_required
 from app import app
-from app.Forms import CadastroEPIForm
+from app.Forms import (CadastroEPIForm, CadastroClasses, CadastroFonecedores, 
+                       CadastroMarcas, CadastroModelos)
 from app.Forms import IMPORTEPIForm
+
 from app.models import ProdutoEPI
 from app.misc import format_currency_brl
 
@@ -29,19 +31,31 @@ def Equipamentos():
 @app.route("/Fornecedores", methods = ["GET"])   
 def Fornecedores():
 
-    return render_template("index.html")
+    form = CadastroFonecedores()
+    DataTables = "js/DataTables/DataTables.js"
+    page = f"pages/epi/{request.endpoint.lower()}.html"
+    return render_template("index.html", page=page, form=form, DataTables=DataTables)
 
 @app.route("/Marcas", methods = ["GET"]) 
 def Marcas():
     
-    return render_template("index.html")
+    form = CadastroMarcas()    
+    DataTables = "js/DataTables/DataTables.js"
+    page = f"pages/epi/{request.endpoint.lower()}.html"
+    return render_template("index.html", page=page, form=form, DataTables=DataTables)
     
 @app.route("/Modelos", methods = ["GET"])   
 def Modelos():
     
-    return render_template("index.html")
+    form = CadastroModelos()
+    DataTables = "js/DataTables/DataTables.js"
+    page = f"pages/epi/{request.endpoint.lower()}.html"
+    return render_template("index.html", page=page, form=form, DataTables=DataTables)
     
 @app.route("/Classes", methods = ["GET"]) 
 def Classes():
 
-    return render_template("index.html")
+    form = CadastroClasses()
+    DataTables = "js/DataTables/DataTables.js"
+    page = f"pages/epi/{request.endpoint.lower()}.html"
+    return render_template("index.html", page=page, form=form, DataTables=DataTables)

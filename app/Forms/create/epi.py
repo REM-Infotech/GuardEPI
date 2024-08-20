@@ -13,11 +13,6 @@ from wtforms import (StringField, SubmitField, SelectField, TextAreaField,
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length
 
-from app.models.EPI import (GradeEPI, ProdutoEPI)
-from app.models.Funcionários import Funcionarios
-
-from app import app
-
 permited_file = FileAllowed(['pdf'], 'Apenas arquivos ".pdf" são permitidos!')
 
 tipo_choices = [
@@ -75,7 +70,7 @@ class CadastroEPIForm(FlaskForm):
 
     ca = StringField(label='CA', validators=[DataRequired()])
     cod_ca = IntegerField(label='Cod CA', validators=[DataRequired()])
-    nome_epi = StringField(label='Nome do EPI', validators=[DataRequired()])
+    nome_epi = StringField(label='EPI', validators=[DataRequired()])
     tipo_epi = SelectField(label='Tipo do EPI', validators=[DataRequired()], choices=[])
     valor_unitario = StringField(
         label='Valor Unitário', validators=[DataRequired()])
@@ -96,7 +91,31 @@ class CadastroEPIForm(FlaskForm):
         self.marca.choices.extend(set_choicesMarca())
         self.modelo.choices.extend(set_choicesModelo())
         self.tipo_epi.choices.extend(set_choicesClasseEPI())
-        
+
+class CadastroClasses(FlaskForm):
+
+    classe = StringField("Classificação EPI", validators=[DataRequired()])
+    descricao = TextAreaField("Descrição (Opcional)")
+    submit = SubmitField("Cadastrar")
+    
+class CadastroFonecedores(FlaskForm):
+
+    fornecedor = StringField("Fornecedor", validators=[DataRequired()])
+    descricao = TextAreaField("Descrição (Opcional)")
+    submit = SubmitField("Cadastrar")
+    
+class CadastroMarcas(FlaskForm):
+
+    marca = StringField("Marca", validators=[DataRequired()])
+    descricao = TextAreaField("Descrição (Opcional)")
+    submit = SubmitField("Cadastrar")
+    
+class CadastroModelos(FlaskForm):
+
+    modelo = StringField("Modelo", validators=[DataRequired()])
+    descricao = TextAreaField("Descrição (Opcional)")
+    submit = SubmitField("Cadastrar")
+    
 
 class Cautela(FlaskForm):
 

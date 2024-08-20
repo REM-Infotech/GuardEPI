@@ -70,7 +70,6 @@ class CadastroCargo(FlaskForm):
 
 class CadastroDepartamentos(FlaskForm):
 
-    departamento = StringField(
-        "Nome do departamento", validators=[DataRequired()])
+    departamento = StringField("Nome do departamento", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)")
     submit = SubmitField("Cadastrar!")
