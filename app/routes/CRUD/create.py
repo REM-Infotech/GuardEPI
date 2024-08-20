@@ -19,7 +19,8 @@ from app.models import (ProdutoEPI, EstoqueEPI, Empresa,
                         Fornecedores, Marcas, ModelosEPI, ClassesEPI)
 
 from app.Forms import (CadastroCargo, CadastroDepartamentos, InsertEstoqueForm,
-                       CadastroEmpresa, CadastroEPIForm, CadastroGrade, CadastroFuncionario)
+                       CadastroEmpresa, CadastroEPIForm, CadastroGrade, CadastroFuncionario,
+                       CadastroFonecedores, CadastroClasses, CadastroMarcas, CadastroModelos)
 
 tipo = db.Model
 
@@ -32,7 +33,11 @@ def getform(form) -> Type[FlaskForm]:
              "departamentos": CadastroDepartamentos(),
              "cargos": CadastroCargo(),
              'grade': CadastroGrade(),
-             'funcionarios': CadastroFuncionario()}
+             'funcionarios': CadastroFuncionario(),
+             'fornecedores': CadastroFonecedores(),
+              'marcas': CadastroMarcas(),
+              'modelos': CadastroModelos(),
+              'classes': CadastroClasses()}
 
     return forms[form]
 
