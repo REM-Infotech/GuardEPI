@@ -111,7 +111,7 @@ perms_root = {
             "DELETE"
         ]
     },
-    "fornecedores": {
+    "Fornecedores": {
         "permissoes": [
             "CREATE",
             "READ",
@@ -119,7 +119,7 @@ perms_root = {
             "DELETE"
         ]
     },
-    "marcas": {
+    "Marcas": {
         "permissoes": [
             "CREATE",
             "READ",
@@ -127,7 +127,7 @@ perms_root = {
             "DELETE"
         ]
     },
-    "modelos": {
+    "Modelos": {
         "permissoes": [
             "CREATE",
             "READ",
@@ -135,7 +135,7 @@ perms_root = {
             "DELETE"
         ]
     },
-    "classes": {
+    "Classes": {
         "permissoes": [
             "CREATE",
             "READ",
@@ -189,24 +189,24 @@ perms_default = {
         "permissoes": [
             "READ"]
     },
-    "fornecedores": {
+    "Fornecedores": {
         "permissoes": [
             "READ",
             "UPDATE",
             "DELETE"
         ]
     },
-    "marcas": {
+    "Marcas": {
         "permissoes": [
             "READ"
         ]
     },
-    "modelos": {
+    "Modelos": {
         "permissoes": [
             "READ"
         ]
     },
-    "classes": {
+    "Classes": {
         "permissoes": [
             "READ"
         ]
