@@ -178,11 +178,13 @@ def emitir_cautela():
 
             if len(epis_lista) == 0:
                 flash("EPI's sem Estoque", "error")
-                return render_template('includes/show_pdf.html', url="")
+                sleep(1)
+                messages = get_flashed_messages()
+                return render_template('includes/show_pdf.html', url="", messages=messages)
             
             to_str = json.dumps(epis_lista).replace("[", "").replace("]", "")
             registrar = RegistrosEPI(
-                        nome_epis=to_str,
+                        nome_epis=to_str.encode('utf-8').decode('unicode_escape'),
                         funcionario=funcionario,
                         data_solicitacao=datetime.now(),
                         filename=nomefilename,
@@ -256,7 +258,7 @@ def emitir_cautela():
                 db.session.commit()
 
                 url = url_for(
-                    'serve_pdf', index = set_cautela.id, _external=True, _scheme='https')
+                    'serve_pdf', index = set_cautela.id, md="Cautelas", _external=True, _scheme='https')
                 item_html = render_template('includes/show_pdf.html', url=url)
                 return item_html
 

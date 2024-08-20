@@ -44,7 +44,8 @@ def get_models(tipo: str) -> Type[tipo]:
               "empresas": Empresa,
               "funcionarios": Funcionarios,
               "departamentos": Departamento,
-              "cargos": Cargos}
+              "cargos": Cargos,
+              "cautelas": RegistrosEPI}
 
     return models[tipo]
 

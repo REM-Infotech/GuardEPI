@@ -35,7 +35,7 @@
                     {% for item in database %}
                     <tr>
                         <td>{{ item.id }}</td>
-                        <td>{{ item.nome_epis.replace('"', '') }}</td>
+                        <td>{{ item.nome_epis.replace('"', '').encode('utf-8').decode('unicode_escape') }}</td>
                         <td>{{ item.funcionario }}</td>
                         <td>{{ item.data_solicitacao }}</td>
                         <td>
