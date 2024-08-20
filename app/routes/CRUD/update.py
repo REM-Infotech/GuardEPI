@@ -99,8 +99,8 @@ def set_editar(tipo: str, item: int):
             form.filename.data = url
 
         else:
-            url = url_for('serve_img', filename=image_name,
-                          model=tipo, _external=True, _scheme='https')
+            url = url_for('serve_img', index = item,
+                          md=tipo, _external=True, _scheme='https')
 
     grade_results = f"pages/forms/{tipo}/edit.html"
 
@@ -232,17 +232,25 @@ def serve_pdf(index: int, md: str):
         abort(500)
 
 
-@app.route('/img/<filename>/<model>', methods=["GET"])
+@app.route('/img/<index>/<md>', methods=["GET"])
 @login_required
-def serve_img(filename: str, model: str):
+def serve_img(index: int, md: str):
 
     try:
         with app.app_context():
 
-            dbase = get_models(model.lower())
-            image_data = dbase.query.filter_by(imagem=filename).first()
+            if md.lower() == "estoque":
+                dbase = RegistroEntradas.query.filter_by(id=index).first()
 
-            image_data = image_data.blob_doc
+            elif md.lower() == "dashboard":
+                
+                dbase = RegistrosEPI.query.filter_by(id=index).first()
+            
+            else:
+                model = get_models(md.lower())
+                dbase = model.query.filter_by(id=index).first()
+
+            image_data = dbase.blob_doc
             now = generate_pid()
             filename = f"{now}.png"
             original_path = os.path.join(
@@ -255,5 +263,6 @@ def serve_img(filename: str, model: str):
 
             return url
 
-    except:
+    except Exception as e:
+        print(e)
         abort(500)
