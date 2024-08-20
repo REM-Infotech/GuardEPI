@@ -1,7 +1,7 @@
 from flask import render_template, request, make_response, jsonify
 from flask_login import login_required
 from app import app
-from app.models.EPI import RegistrosEPI, RegistroEntradas
+from app.models.EPI import RegistrosEPI, RegistroEntradas, RegistroSaidas
 from app.decorators import set_endpoint
 from app.misc import format_currency_brl
 
@@ -66,23 +66,41 @@ def saidasEquipamento():
     
     current_date = datetime.now().date()
 
-    # Calculando o início e o fim da semana atual, começando no domingo
-    start_of_week = current_date - timedelta(days=current_date.weekday() + 1)  # Domingo
-    end_of_week = start_of_week + timedelta(days=6)  # Sábado
-    
-    data = {"dias_semana": ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"],
-            "Saidas":  [5, 10 , 3, 25, 15],
-            "media": 30}
+    # Obtendo o mês e ano atuais
+    now = datetime.now()
+    current_day = now.day
+    current_month = now.month
     
     # Consulta os dados do banco de dados filtrando pelo mês e ano atuais
-    entregas = RegistrosEPI.query.filter(
-        RegistrosEPI.data_solicitacao >= start_of_week,
-        RegistrosEPI.data_solicitacao <= end_of_week
+    entregas = RegistroSaidas.query.filter(
+        extract('day', RegistroSaidas.data_saida) == current_day,
+        extract('month', RegistroSaidas.data_saida) == current_month
     ).all()
-    
-    contar = Counter(entregas)
-    
-    return jsonify(data)
+
+    if entregas:
+        
+        data = {
+            'Equipamento': [entrega.nome_epi for entrega in entregas],
+            'Valor': [entrega.valor_total for entrega in entregas]
+        }
+        
+        df = pd.DataFrame(data)
+
+        # Agrupando por 'Equipamento' e somando os valores
+        df_grouped = df.groupby('Equipamento').sum().reset_index()
+
+        media_old = int(sorted(df_grouped['Valor'].tolist())[-1])
+        
+        # Calcula a diferença
+        media = media_old + ((media_old // 100 + 1) * 100 - media_old)
+        
+        # Convertendo os dados para JSON
+        chart_data = {
+            'labels': df_grouped['Equipamento'].tolist(),
+            'values': df_grouped['Valor'].tolist(),
+            'media': media
+        }
+    return jsonify(chart_data)
 
 @app.route("/saidasFuncionario", methods = ["GET"])
 def saidasFuncionario():

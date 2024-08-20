@@ -2,7 +2,7 @@ from flask import jsonify, url_for, render_template, session, abort, flash, requ
 from flask_login import login_required
 
 from app.Forms import Cautela
-from app.models import (RegistrosEPI, ProdutoEPI, EstoqueEPI,
+from app.models import (RegistrosEPI, ProdutoEPI, EstoqueEPI, RegistroSaidas,
                         Funcionarios, Empresa, EstoqueGrade)
 
 from app.misc import generate_pid
@@ -90,10 +90,18 @@ def emitir_cautela():
     try:
         form = Cautela()
         if form.validate_on_submit:
+            
+            ## Lista EPI Solicitadas
             list_epis_solict = []
+            para_registro = []
+            ## Lista Itens Flask Form
             form_flask = list(form.data)
+            
+            ## Itens formulário Avulso (Sem Flask Form)
             epi = request.form
             list_epi = list(epi)
+            
+            
             funcionario = form.select_funcionario.data
             nomefilename = f'Cautela - {funcionario} - {datetime.now().strftime("%d-%m-%Y %H-%M-%S")}.pdf'
 
@@ -105,34 +113,46 @@ def emitir_cautela():
             
             epis_lista = []
             valor_calc = 0
-            for epis in list_epi:
-                if epis not in form_flask and epis != "csrf_token":
-                    qtd_entregar = epi[epis].split(" - ")[-1]
-                    grade = epi[epis].split(" - ")[1]
-
-                    equip = ProdutoEPI.query.filter_by(nome_epi = epis).first()
+            
+            for epi_solicitada in list_epi:
+                if epi_solicitada not in form_flask and epi_solicitada != "csrf_token":
                     
-                    data_estoque = EstoqueEPI.query.filter(
-                        EstoqueEPI.nome_epi == epis).first()
-                    estoque_grade = EstoqueGrade.query.filter(
-                        EstoqueGrade.nome_epi == epis, 
+                    qtd_entregar = epi[epi_solicitada].split(" - ")[-1]
+                    grade = epi[epi_solicitada].split(" - ")[1]
+
+                    equip = ProdutoEPI.query.filter_by(nome_epi = epi_solicitada).first()
+                    
+                    ## Query Estoque geral
+                    data_estoque = EstoqueEPI.query.filter(EstoqueEPI.nome_epi == epi_solicitada).first()
+                    
+                    ## Query Estoque Grades
+                    estoque_grade = EstoqueGrade.query.filter(EstoqueGrade.nome_epi == epi_solicitada, 
                         EstoqueGrade.grade == form.tipo_grade.data).first()
 
+                    
                     if estoque_grade:
                         if estoque_grade and estoque_grade.qtd_estoque > 0 and data_estoque.qtd_estoque > 0:
                             
-                            list_epis_solict.append([str(data_estoque.id), str(
-                                qtd_entregar), data_estoque.nome_epi, grade, equip.ca])
+                            list_epis_solict.append([str(data_estoque.id), str(qtd_entregar), data_estoque.nome_epi, grade, equip.ca])
                             estoque_grade.qtd_estoque = estoque_grade.qtd_estoque - 1
                             data_estoque.qtd_estoque = data_estoque.qtd_estoque - 1
                             
-                            epis_lista.append(epis)
+                            epis_lista.append(epi_solicitada)
+                            
+                            para_registro.append(RegistroSaidas(
+                                
+                                nome_epi=epi_solicitada,
+                                qtd_saida=int(qtd_entregar),
+                                valor_total = equip.valor_unitario * int(qtd_entregar)
+                                
+                            ))
+                            
                             valor_calc = equip.valor_unitario * int(qtd_entregar)
 
             if len(epis_lista) == 0:
                 flash("EPI's sem Estoque", "error")
                 return render_template('includes/show_pdf.html', url="")
-
+            
             to_str = json.dumps(epis_lista).replace("[", "").replace("]", "")
             registrar = RegistrosEPI(
                         nome_epis=to_str,
@@ -142,7 +162,10 @@ def emitir_cautela():
                         valor_total=valor_calc
                     )
 
+            
             db.session.add(registrar)
+            db.session.add_all(para_registro)
+            
             db.session.commit()
 
             data_funcionario = Funcionarios.query.filter_by(
