@@ -50,13 +50,15 @@ def dashboard():
     page = "pages/dashboard.html"
     DataTables = 'js/DataTables/DashboardTable.js'
     
+    today = datetime.now().strftime("%d/%m/%Y")
     resp = make_response(render_template("index.html", page = page, title = title, 
                            database = database, DataTables = DataTables, 
                            total_saidas = total_saidas, valor_total = valor_total,
                            format_currency_brl = format_currency_brl, 
-                           valor_totalEntradas = valor_totalEntradas, total_entradas = total_entradas))
+                           valor_totalEntradas = valor_totalEntradas, 
+                           total_entradas = total_entradas,
+                           today=today))
     
-
     return resp
     
 @app.route("/saidasEquipamento", methods = ["GET"])
