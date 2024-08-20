@@ -51,10 +51,10 @@ def get_models(tipo) -> Type[tipo]:
               "cargos": [Cargos, Cargos.cargo],
               "grade": [GradeEPI, GradeEPI.grade],
               'funcionarios': [Funcionarios, Funcionarios.nome_funcionario],
-              'fornecedores': Fornecedores,
-              'marcas': Marcas,
-              'modelos': ModelosEPI,
-              'classes': ClassesEPI}
+              'fornecedores': [Fornecedores, Fornecedores.fornecedor],
+              'marcas': [Marcas, Marcas.marca],
+              'modelos': [ModelosEPI, ModelosEPI.modelo],
+              'classes': [ClassesEPI, ClassesEPI.classe]}
 
     return models[tipo]
 
