@@ -28,7 +28,10 @@ def Equipamentos():
                            format_currency_brl=format_currency_brl,
                            DataTables=DataTables, url_image=url)
     
-@app.route("/Fornecedores", methods = ["GET"])   
+@app.route("/Fornecedores", methods = ["GET"])
+@login_required
+@set_endpoint
+@read_perm
 def Fornecedores():
 
     form = CadastroFonecedores()
@@ -36,7 +39,10 @@ def Fornecedores():
     page = f"pages/epi/{request.endpoint.lower()}.html"
     return render_template("index.html", page=page, form=form, DataTables=DataTables)
 
-@app.route("/Marcas", methods = ["GET"]) 
+@app.route("/Marcas", methods = ["GET"])
+@login_required
+@set_endpoint
+@read_perm
 def Marcas():
     
     form = CadastroMarcas()    
@@ -44,7 +50,10 @@ def Marcas():
     page = f"pages/epi/{request.endpoint.lower()}.html"
     return render_template("index.html", page=page, form=form, DataTables=DataTables)
     
-@app.route("/Modelos", methods = ["GET"])   
+@app.route("/Modelos", methods = ["GET"])
+@login_required
+@set_endpoint
+@read_perm
 def Modelos():
     
     form = CadastroModelos()
@@ -52,7 +61,10 @@ def Modelos():
     page = f"pages/epi/{request.endpoint.lower()}.html"
     return render_template("index.html", page=page, form=form, DataTables=DataTables)
     
-@app.route("/Classes", methods = ["GET"]) 
+@app.route("/Classes", methods = ["GET"])
+@login_required
+@set_endpoint
+@read_perm
 def Classes():
 
     form = CadastroClasses()

@@ -110,6 +110,38 @@ perms_root = {
             "UPDATE",
             "DELETE"
         ]
+    },
+    "fornecedores": {
+        "permissoes": [
+            "CREATE",
+            "READ",
+            "UPDATE",
+            "DELETE"
+        ]
+    },
+    "marcas": {
+        "permissoes": [
+            "CREATE",
+            "READ",
+            "UPDATE",
+            "DELETE"
+        ]
+    },
+    "modelos": {
+        "permissoes": [
+            "CREATE",
+            "READ",
+            "UPDATE",
+            "DELETE"
+        ]
+    },
+    "classes": {
+        "permissoes": [
+            "CREATE",
+            "READ",
+            "UPDATE",
+            "DELETE"
+        ]
     }
 }
 perms_default = {
@@ -156,5 +188,27 @@ perms_default = {
     "registros": {
         "permissoes": [
             "READ"]
+    },
+    "fornecedores": {
+        "permissoes": [
+            "READ",
+            "UPDATE",
+            "DELETE"
+        ]
+    },
+    "marcas": {
+        "permissoes": [
+            "READ"
+        ]
+    },
+    "modelos": {
+        "permissoes": [
+            "READ"
+        ]
+    },
+    "classes": {
+        "permissoes": [
+            "READ"
+        ]
     }
 }

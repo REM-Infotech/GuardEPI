@@ -15,7 +15,8 @@ from app import db
 from app.misc import generate_pid
 from app.decorators import create_perm
 from app.models import (ProdutoEPI, EstoqueEPI, Empresa,
-                        Cargos, Departamento, Funcionarios, GradeEPI)
+                        Cargos, Departamento, Funcionarios, GradeEPI,
+                        Fornecedores, Marcas, ModelosEPI, ClassesEPI)
 
 from app.Forms import (CadastroCargo, CadastroDepartamentos, InsertEstoqueForm,
                        CadastroEmpresa, CadastroEPIForm, CadastroGrade, CadastroFuncionario)
@@ -44,7 +45,11 @@ def get_models(tipo) -> Type[tipo]:
               "departamentos": [Departamento, Departamento.departamento],
               "cargos": [Cargos, Cargos.cargo],
               "grade": [GradeEPI, GradeEPI.grade],
-              'funcionarios': [Funcionarios, Funcionarios.nome_funcionario]}
+              'funcionarios': [Funcionarios, Funcionarios.nome_funcionario],
+              'fornecedores': Fornecedores,
+              'marcas': Marcas,
+              'modelos': ModelosEPI,
+              'classes': ClassesEPI}
 
     return models[tipo]
 
@@ -76,7 +81,8 @@ def cadastrar(tipo: str):
 
             elif any(tipo.lower() == tipos for tipos in [
                 "departamentos", "cargos", "empresas", "grade",
-                "entradas", "funcionarios"
+                "entradas", "funcionarios", "fornecedores", "marcas",
+                "modelos", "classes"
             ]):
                 for md in model[0].__table__.columns:
                     form_fld = getattr(form, md.name, None)
