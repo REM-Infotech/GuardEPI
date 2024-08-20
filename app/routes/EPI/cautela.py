@@ -19,6 +19,7 @@ import json
 from app import db
 from app import app
 
+from app.misc import format_currency_brl
 from app.decorators import read_perm, set_endpoint, create_perm
 
 @app.route("/Registro_Saidas", methods = ["GET"])
@@ -32,7 +33,7 @@ def Registro_Saidas():
     title = request.endpoint.capitalize().replace("_", " ")
     DataTables = 'js/DataTables/DataTables.js'
     return render_template("index.html", page=page, title=title, database=database, 
-                           DataTables=DataTables)
+                           DataTables=DataTables, format_currency_brl=format_currency_brl)
 
 @app.route("/Cautelas", methods = ["GET"])
 @login_required
