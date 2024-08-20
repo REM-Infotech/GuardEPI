@@ -10,8 +10,8 @@ from typing import Type
 import pandas as pd
 
 from app.Forms.globals import IMPORTEPIForm
-from app.models.Funcionários import *
-from app.models.EPI import *
+from app.models import Funcionarios, Empresa, Cargos, Departamento
+from app.models import EstoqueEPI, GradeEPI, ProdutoEPI, EstoqueGrade
 
 tipo = db.Model
 
@@ -25,7 +25,8 @@ def getModel(tipo: str) -> Type[tipo]:
         'cargos': Cargos,
         'estoque': EstoqueEPI,
         'grade': GradeEPI,
-        'equipamentos': ProdutoEPI
+        'equipamentos': ProdutoEPI,
+        "estoque_grade": EstoqueGrade
     }
 
     return model[tipo]
@@ -103,10 +104,12 @@ def import_lotes(tipo: str):
                     data_info = row.to_dict()
                     d = data_info.get("grade")
                     
-                    data_info.update({"grade": str(d)})
+                    check_entry = model.query.filter_by(grade = d).first()
                     
-                    appends = model(**data_info)
-                    data.append(appends)
+                    if not check_entry:
+                        data_info.update({"grade": str(d)})
+                        appends = model(**data_info)
+                        data.append(appends)
 
             db.session.add_all(data)
             db.session.commit()

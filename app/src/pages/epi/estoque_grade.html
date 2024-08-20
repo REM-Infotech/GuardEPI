@@ -11,6 +11,14 @@
                 </span>
                 <span class="text">Gerar Relatório</span>
             </a>
+            {% if session["nome_usuario"] == "Root" %}
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#importarquivo">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-file-import"></i>
+                </span>
+                <span class="text">Import em lotes</span>
+            </button>
+            {% endif %}
         </div>
 
         <div class="card-body table-responsive">
@@ -22,7 +30,6 @@
                         <th>Grade</th>
                         <th>Qtd. Estoque</th>
                         <th>Tipo Qtd.</th>
-                        <th data-sortable="false">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,24 +41,6 @@
                         <td>{{ item.grade }}</td>
                         <td>{{ item.qtd_estoque }}</td>
                         <td>{{ item.tipo_qtd }}</td>
-                        <td>
-                            <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
-                                hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
-                                hx-trigger="click" hx-target="#results">
-                                <span class="icon text-white-50">
-                                    <i class="fa-solid fa-trash"></i>
-                                </span>
-                                <span class="text">Deletar</span>
-                            </button>
-                            <button type="button" id="EditEstoqueButton" class="btn btn-warning btn-sm mb-2"
-                                hx-get="{{ url_for('set_editar', tipo = request.endpoint, item = item.id) }}"
-                                hx-target="#results">
-                                <span class="icon text-white-50">
-                                    <i class="fa-solid fa-pen"></i>
-                                </span>
-                                <span class="text">Editar</span>
-                            </button>
-                        </td>
                     </tr>
                     {% endfor %}
                     {% endif %}
@@ -63,7 +52,6 @@
                         <th>Grade</th>
                         <th>Qtd. Estoque</th>
                         <th>Tipo Qtd.</th>
-                        <th>Ações</th>
                     </tr>
                 </tfoot>
             </table>

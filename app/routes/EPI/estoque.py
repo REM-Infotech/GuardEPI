@@ -41,8 +41,9 @@ def Estoque_Grade():
     database = EstoqueGrade.query.all()
     DataTables = f'js/DataTables/epi/{request.endpoint.lower()}.js'
     page = f"pages/epi/{request.endpoint.lower()}.html"
+    importForm = IMPORTEPIForm()
     return render_template("index.html", page=page, DataTables=DataTables,
-                           database = database)
+                           database = database, importForm=importForm)
     
 @app.route("/Entradas")
 @login_required

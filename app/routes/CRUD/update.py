@@ -201,7 +201,7 @@ def serve_pdf(index: int, md: str):
         index = int(index)
         with app.app_context():
 
-            if md.lower() == "estoque":
+            if md.lower() == "entradas":
                 dbase = RegistroEntradas.query.filter_by(id=index).first()
 
             elif md.lower() == "dashboard":
@@ -239,7 +239,7 @@ def serve_img(index: int, md: str):
     try:
         with app.app_context():
 
-            if md.lower() == "estoque":
+            if md.lower() == "entradas":
                 dbase = RegistroEntradas.query.filter_by(id=index).first()
 
             elif md.lower() == "dashboard":
