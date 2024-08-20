@@ -17,7 +17,7 @@ import os
 #         if not session.get("uuid_groups", None):
             
 #             session["uuid_groups"] = str(uuid.uuid4())
-#             pathj = os.path.join(app.config['Temp_Path'], f"{session["uuid_groups"]}.json")
+#             pathj = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_groups"]}.json")
             
 #             if os.path.exists(pathj):
 #                 os.remove(pathj)
@@ -91,7 +91,7 @@ def SetEditPerms(endpoints: str, item: str):
 #     list = [json.dumps(CreateGroup().users.data), json.dumps(CreateGroup().paginas.data), json.dumps(CreateGroup().permissions.data)]
     
 #     session["uuid_groups"]
-#     pathj = os.path.join(app.config['Temp_Path'], f"{session["uuid_groups"]}.json")
+#     pathj = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_groups"]}.json")
     
 #     with open(pathj, 'rb') as f:
 #         list_groups = json.load(f)
@@ -111,7 +111,7 @@ def SetEditPerms(endpoints: str, item: str):
 # @login_required
 # def remove_groups():
     
-#     pathj = os.path.join(app.config['Temp_Path'], f"{session["uuid_groups"]}.json")
+#     pathj = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_groups"]}.json")
 #     json_obj = json.dumps([])
     
 #     with open(pathj, 'w') as f:

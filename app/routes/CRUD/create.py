@@ -113,7 +113,7 @@ def cadastrar(tipo: str):
                             now = generate_pid()
                             filename = f"{now}{docname}"
                             path_img = os.path.join(
-                                app.config['Temp_Path'], filename)
+                                app.config['TEMP_PATH'], filename)
                             file.save(path_img)
                             kwargs[column.name] = filename
 

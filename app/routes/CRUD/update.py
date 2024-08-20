@@ -215,11 +215,11 @@ def serve_pdf(index: int, md: str):
             filename = dbase.filename
             pdf_data = dbase.blob_doc
 
-            original_path = os.path.join(app.config['Docs_Path'], filename)
+            original_path = os.path.join(app.config['DOCS_PATH'], filename)
 
             with open(original_path, 'wb') as file:
                 file.write(pdf_data)
-            url = send_from_directory(app.config['Docs_Path'], filename)
+            url = send_from_directory(app.config['DOCS_PATH'], filename)
             # Crie a resposta usando make_response
             response = make_response(url)
 

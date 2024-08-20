@@ -4,17 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 from app.misc import *
 from configs import csp
-from dotenv import dotenv_values
 from datetime import timedelta
 import os
 
-docs_path = os.path.join(os.getcwd(), "Docs")
-temp_path = os.path.join(os.getcwd(), "Temp")
-image_temp = os.path.join(temp_path, "IMG")
-csv_path = os.path.join(temp_path, "csv")
-pdf_path = os.path.join(temp_path, "pdf")
-for paths in [docs_path, temp_path, image_temp, csv_path, pdf_path]:
-    os.makedirs(paths, exist_ok=True)
 
 files_render = os.path.join(os.getcwd(), "app", "src")
 app = Flask(__name__, template_folder = files_render, static_folder = files_render)
@@ -22,22 +14,8 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 tlsm = Talisman()
 
-login_db = dotenv_values()['login']
-passwd_db = dotenv_values()['password']
-host_db = dotenv_values()['host']
-database_name = dotenv_values()['database']
+app.config.from_object("app.default_config")
 
-database_uri = f"mysql://{login_db}:{passwd_db}@{host_db}/{database_name}"
-app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False   
-app.config['PREFERRED_URL_SCHEME'] = "https"
-app.config['SESSION_COOKIE_HTTPONLY'] = False
-app.config['SESSION_COOKIE_SECURE'] = True
-app.config['Docs_Path'] = docs_path
-app.config['Temp_Path'] = temp_path
-app.config['IMAGE_TEMP_PATH'] = image_temp
-app.config['CSV_TEMP_PATH'] = csv_path
-app.config['PDF_TEMP_PATH'] = pdf_path
 app.secret_key = generate_pid()
 app.make_response
 age = timedelta(days=1).max.seconds
