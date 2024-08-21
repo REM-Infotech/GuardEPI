@@ -44,7 +44,7 @@ def install_cloudflared() -> str:
 
 def configure_tunnel(token, binary_name: str):
     print("Configurando o Cloudflared Tunnel...")
-    subprocess.run([f'./{binary_name}', 'service', 'install', token])
+    subprocess.run([f'{binary_name}', 'service', 'install', token])
 
 if __name__ == "__main__":
     
