@@ -54,6 +54,7 @@ class InsertEstoqueForm(FlaskForm):
     tipo_qtd = SelectField(label='Tipo de Quantidade(Ex.: Peça, Unidade, Par, etc)', choices=tipo_choices, validators=[DataRequired()])
     qtd_estoque = IntegerField(label='Quantidade a ser adicionada', validators=[DataRequired()])
     valor_total = StringField(label='Valor Totalizado',validators=[DataRequired()])
+    vencimento = DateField(label='Vencimento do lote')
     nota_fiscal = FileField(label="Nota Fiscal", validators=[DataRequired(), permited_file])
     cod_notafiscal = StringField(label="Cód. Nota Fiscal", validators=[DataRequired()])
     
@@ -76,7 +77,6 @@ class CadastroEPIForm(FlaskForm):
         label='Valor Unitário', validators=[DataRequired()])
     qtd_entregar = IntegerField(label='Quantidade a Entregar')
     periodicidade_item = IntegerField(label='Periodicidade do Item')
-    vencimento = DateField(label='Vencimento')
     fornecedor = SelectField(label='Fornecedor', choices=[])
     marca = SelectField(label='Marca', choices=[])
     modelo = SelectField(label='Modelo', choices=[])

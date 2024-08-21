@@ -29,12 +29,10 @@ def dashboard():
     current_month = now.month
     
     dbase = RegistrosEPI.query.filter(
-        extract('day', RegistrosEPI.data_solicitacao) == current_day,
         extract('month', RegistrosEPI.data_solicitacao) == current_month
     ).all()
     
     dbase2 = RegistroEntradas.query.filter(
-        extract('day', RegistroEntradas.data_entrada) == current_day,
         extract('month', RegistroEntradas.data_entrada) == current_month
     ).all()
     
@@ -77,7 +75,6 @@ def saidasEquipamento():
     
     # Consulta os dados do banco de dados filtrando pelo mês e ano atuais
     entregas = RegistroSaidas.query.filter(
-        extract('day', RegistroSaidas.data_saida) == current_day,
         extract('month', RegistroSaidas.data_saida) == current_month
     ).all()
 
@@ -122,7 +119,6 @@ def saidasFuncionario():
 
     # Consulta os dados do banco de dados filtrando pelo mês e ano atuais
     entregas = RegistrosEPI.query.filter(
-        extract('day', RegistrosEPI.data_solicitacao) == current_day,
         extract('month', RegistrosEPI.data_solicitacao) == current_month
     ).all()
 

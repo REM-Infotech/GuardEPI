@@ -1,7 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import (StringField, SubmitField, IntegerField, DateField, FileField)
-from flask_wtf.file import FileField, FileAllowed
+from wtforms import (StringField, SubmitField, IntegerField, SelectField, FileField)
+from flask_wtf.file import FileField, FileAllowed, DataRequired
 
+from app.Forms.choices import (set_choicesClasseEPI, 
+                               set_choicesFornecedor, set_choicesMarca, 
+                               set_choicesModelo)
 
 class EditSaldoGrade(FlaskForm):
 
@@ -13,19 +16,27 @@ class EditSaldoGrade(FlaskForm):
 
 class EditItemProdutoForm(FlaskForm):
 
-    ca = StringField(label='CA')
-    cod_ca = IntegerField(label='Cod CA')
-    nome_epi = StringField(label='Nome do EPI')
-    tipo_epi = StringField(label='Tipo do EPI')
-    valor_unitario = StringField(label='Valor Unitário')
+    ca = StringField(label='CA', validators=[DataRequired()])
+    cod_ca = IntegerField(label='Cod CA', validators=[DataRequired()])
+    nome_epi = StringField(label='EPI', validators=[DataRequired()])
+    tipo_epi = SelectField(label='Tipo do EPI', validators=[DataRequired()], choices=[])
+    valor_unitario = StringField(
+        label='Valor Unitário', validators=[DataRequired()])
     qtd_entregar = IntegerField(label='Quantidade a Entregar')
     periodicidade_item = IntegerField(label='Periodicidade do Item')
-    vencimento = DateField(label='Vencimento')
-    fornecedor = StringField(label='Fornecedor')
-    marca = StringField(label='Marca')
-    modelo = StringField(label='Modelo')
+    fornecedor = SelectField(label='Fornecedor', choices=[])
+    marca = SelectField(label='Marca', choices=[])
+    modelo = SelectField(label='Modelo', choices=[])
     filename = FileField(label='Foto do EPI', id="imagem", validators=[
                        FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     submit = SubmitField(label='Salvar')
+
+    def __init__(self, *args, **kwargs):
+
+        super(EditItemProdutoForm, self).__init__(*args, **kwargs)
+        self.fornecedor.choices.extend(set_choicesFornecedor())
+        self.marca.choices.extend(set_choicesMarca())
+        self.modelo.choices.extend(set_choicesModelo())
+        self.tipo_epi.choices.extend(set_choicesClasseEPI())
 
 

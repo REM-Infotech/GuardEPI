@@ -39,6 +39,7 @@ class RegistroSaidas(db.Model):
     qtd_saida = db.Column(db.Integer, nullable=False)
     data_saida = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Etc/GMT+4')))
     valor_total = db.Column(db.Float, nullable=False)
+    vencimento = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Etc/GMT+4')))
     
     def __init__(self, nome_epi: str = None, qtd_saida: int = 1,
                  data_saida: Type[datetime] = datetime.now(), 
