@@ -26,10 +26,14 @@ $(document).ready(function () {
                 unit: 'day'
               },
               gridLines: {
-                display: true
+                display: false
               },
               ticks: {
-                maxTicksLimit: 6
+                maxTicksLimit: 6,
+                callback: function (value) {
+                  // Limita os rótulos a 10 caracteres
+                  return value.length > 10 ? value.substr(0, 10) + '...' : value;
+                }
               }
             }],
             yAxes: [{
@@ -44,6 +48,10 @@ $(document).ready(function () {
           },
           tooltips: {
             callbacks: {
+              title: function (tooltipItems, data) {
+                // Retorna o texto completo do rótulo
+                return data.labels[tooltipItems[0].index];
+              },
               label: (tooltipItem, data) => {
                 return formatMoney(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
               },

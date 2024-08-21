@@ -29,7 +29,10 @@ $(document).ready(function () {
                 display: false
               },
               ticks: {
-                maxTicksLimit: 6
+                maxTicksLimit: 6,
+                callback: function (value) {
+                  return value.length > 15 ? value.substr(0, 15) + '...' : value;
+                }
               }
             }],
             yAxes: [{
@@ -38,13 +41,22 @@ $(document).ready(function () {
                 maxTicksLimit: 5
               },
             }],
-            
+
           },
           legend: {
             display: false
+          },
+          tooltips: {
+            callbacks: {
+              title: function (tooltipItems, data) {
+                // Retorna o texto completo do rótulo
+                return data.labels[tooltipItems[0].index];
+              }
+            }
           }
         }
       });
-    }});
+    }
   });
+});
 
