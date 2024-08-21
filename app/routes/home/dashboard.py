@@ -28,8 +28,13 @@ def dashboard():
     current_day = now.day
     current_month = now.month
     
-    dbase = RegistrosEPI.query.filter(
-        extract('month', RegistrosEPI.data_solicitacao) == current_month
+    valor_total = 0
+    valor_totalEntradas = 0
+    total_entradas = 0
+    total_saidas = 0
+    
+    dbase = RegistroSaidas.query.filter(
+        extract('month', RegistroSaidas.data_saida) == current_month
     ).all()
     
     dbase2 = RegistroEntradas.query.filter(
@@ -37,11 +42,17 @@ def dashboard():
     ).all()
     
     total_saidas = len(dbase)
-    total_entradas = len(dbase2)
-    valor_total = 0
     
-    valor_total = sum(map(lambda item: float(item.valor_total), dbase))
-    valor_totalEntradas = sum(map(lambda item: float(item.valor_total), dbase2))
+    for item in dbase2:
+        total_entradas += int(item.qtd_entrada)
+        valor_totalEntradas += float(item.valor_total)
+        
+    for item in dbase:
+        total_saidas += int(item.qtd_saida)
+        valor_total += float(item.valor_total) 
+        
+    # valor_total = sum(map(lambda item: float(item.valor_total), dbase))
+    # valor_totalEntradas = sum(map(lambda item: float(item.valor_total), dbase2))
     
     database = RegistrosEPI.query.all()
     title = request.endpoint.capitalize()

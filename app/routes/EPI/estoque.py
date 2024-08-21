@@ -127,8 +127,8 @@ def lancamento_produto():
             grade=form.tipo_grade.data,
             tipo_qtd=form.tipo_qtd.data,
             qtd_entrada=form.qtd_estoque.data,
-            nota_fiscal=secure_filename(file_nf.filename),
-            blob_nota_fiscal=blob_doc,
+            filename=secure_filename(file_nf.filename),
+            blob_doc=blob_doc,
             valor_total=data_insert,
             vencimento=form.vencimento.data)
 
