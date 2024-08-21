@@ -19,7 +19,7 @@ class EditItemProdutoForm(FlaskForm):
     ca = StringField(label='CA', validators=[DataRequired()])
     cod_ca = IntegerField(label='Cod CA', validators=[DataRequired()])
     nome_epi = StringField(label='EPI', validators=[DataRequired()])
-    tipo_epi = SelectField(label='Tipo do EPI', validators=[DataRequired()], choices=[])
+    tipo_epi = SelectField(label='Tipo do EPI', choices=[])
     valor_unitario = StringField(
         label='Valor Unitário', validators=[DataRequired()])
     qtd_entregar = IntegerField(label='Quantidade a Entregar')
@@ -32,11 +32,37 @@ class EditItemProdutoForm(FlaskForm):
     submit = SubmitField(label='Salvar')
 
     def __init__(self, *args, **kwargs):
-
+        
         super(EditItemProdutoForm, self).__init__(*args, **kwargs)
-        self.fornecedor.choices.extend(set_choicesFornecedor())
-        self.marca.choices.extend(set_choicesMarca())
-        self.modelo.choices.extend(set_choicesModelo())
-        self.tipo_epi.choices.extend(set_choicesClasseEPI())
+        
+        
+        ## Eu deixei com underline pra nao conflitar com os declarados
+        ## do formulário
+        
+        ## :D
+        
+        fornecedor_ = [kwargs.get('fornecedor_selected')]
+        marca_ = [kwargs.get('marca_selected')]
+        modelo_ = [kwargs.get('modelo_selected')]
+        tipoepi_ = [kwargs.get('tipoepi_selected')]
+        
+        fornecedor_choices = set_choicesFornecedor()
+        marca_choices = set_choicesMarca()
+        modelo_choices = set_choicesModelo()
+        tipo_epi_choices = set_choicesClasseEPI()
+        
+        fornecedor_choices.extend(fornecedor_)
+        marca_choices.extend(marca_)
+        modelo_choices.extend(modelo_)
+        tipo_epi_choices.extend(tipoepi_)
+        
+        self.fornecedor.choices.extend(fornecedor_choices)
+        self.marca.choices.extend(marca_choices)
+        self.modelo.choices.extend(modelo_choices)
+        self.tipo_epi.choices.extend(tipo_epi_choices)
+        
+        
+        
+        
 
 

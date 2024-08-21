@@ -1,7 +1,11 @@
-from flask import render_template, request
+from flask import render_template, request, url_for
 from flask_login import login_required
 
 from typing import Type
+from datetime import datetime
+from wtforms import DateField, SelectField
+from sqlalchemy import LargeBinary
+from sqlalchemy import Float
 
 from app import app
 from app import db
@@ -15,7 +19,7 @@ from app.models import ModelosEPI
 from app.Forms import (CadastroEPIForm, CadastroClasses, CadastroFonecedores, 
                        CadastroMarcas, CadastroModelos)
 
-from app.Forms import IMPORTEPIForm
+from app.Forms import IMPORTEPIForm, EditItemProdutoForm
 
 from app.models import ProdutoEPI
 from app.misc import format_currency_brl
@@ -50,7 +54,49 @@ def Equipamentos():
                            importForm=importForm, database=database,
                            format_currency_brl=format_currency_brl,
                            DataTables=DataTables, url_image=url)
+
+@app.route("/SetEditarEPI/<item>", methods=["GET"])
+@login_required
+def SetEditarEPI(item: int):
     
+    form = EditItemProdutoForm
+    model = ProdutoEPI
+    database = model.query.filter(model.id == item).first()
+    route = request.referrer.replace("https://", "").replace("http://", "")
+    route = route.split("/")[1]
+    
+    if "?" in route:
+        route = route.split("?")[0]
+
+    form = form(**{
+        'nome_epi': database.nome_epi,
+        'ca': database.ca,
+        'cod_ca': database.cod_ca,
+        'valor_unitario': format_currency_brl(database.valor_unitario),
+        'periodicidade_item': database.periodicidade_item,
+        'qtd_entregar': database.qtd_entregar,
+        'fornecedor_selected': (database.fornecedor, database.fornecedor, {}, True),
+        'marca_selected': (database.marca, database.marca, {}, True),
+        'modelo_selected': (database.modelo, database.modelo, {}, True),
+        'tipoepi_selected': (database.tipo_epi, database.tipo_epi, {}, True),
+    })
+        
+    url = ""
+    if any(route == tipos for tipos in ["empresas", "equipamentos"]):
+
+        image_name = form.filename.data
+        if image_name is None:
+
+            url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
+            form.filename.data = url
+
+        else:
+            url = url_for('serve_img', index = item,
+                          md=route, _external=True, _scheme='https')
+
+    grade_results = f"pages/forms/{route}/edit.html"
+    return render_template(grade_results, form=form,  url=url, tipo=route, id=item)
+
 @app.route("/Fornecedores", methods = ["GET"])
 @login_required
 @set_endpoint

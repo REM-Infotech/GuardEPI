@@ -24,7 +24,7 @@ def login():
     if not session.get('next'):
         session["next"] = request.args.get("next", url_for("dashboard"))
     
-    location = session["next"]    
+    location = str(session.get("next")) 
     form = LoginForm()
     if form.validate_on_submit():
         
@@ -37,6 +37,10 @@ def login():
             session.pop("next")
             login_user(user, remember=form.keep_login.data)
             flash("Login Efetuado com sucesso!", "success")
+            
+            if "?" in location:
+                location = location.split("?")[0]
+            
             return redirect(location)
 
         flash("Usuário/Senha Incorretos!", "error")

@@ -1,7 +1,9 @@
 from flask_login import login_required
 from flask import (redirect, url_for, render_template, session,
-                   abort, flash, send_from_directory, make_response)
-from flask_wtf import Form, FlaskForm
+                   abort, flash, send_from_directory, 
+                   make_response, request)
+
+from flask_wtf import FlaskForm
 
 from werkzeug.utils import secure_filename
 from flask_wtf.file import FileField
@@ -13,7 +15,8 @@ from app.decorators import update_perm
 from app.misc import format_currency_brl, generate_pid
 from app.models.EPI import ProdutoEPI, GradeEPI, RegistrosEPI, RegistroEntradas
 from app.models.Funcionários import Empresa, Funcionarios, Cargos, Departamento
-from app.Forms.edit import *
+from app.Forms.edit import (EditItemProdutoForm, EditSaldoGrade, EditFuncionario,
+                            EditEmpresa, EditDepartamentos, EditCargo)
 from app import app
 from app import db
 
@@ -113,81 +116,76 @@ def set_editar(tipo: str, item: int):
 @update_perm
 def editar(tipo: str | None, id: int):
 
+    tipo = tipo.lower()
     form = getform(f"edit_{tipo}")
     model = get_models(tipo)
 
     try:
-        if form.validate_on_submit():
+        
+        kwargs = {}
+        for i in model.__table__.columns:
+            name = getattr(i, "name")
+            kwargs[name] = ""
 
-            kwargs = {}
-            for i in model.__table__.columns:
-                name = getattr(i, "name")
-                kwargs[name] = ""
+        itens = model.query.filter_by(id=int(id)).first()
+        for i in kwargs:
+            for column in itens.__table__.columns:
+                if i == column.name:
+                    form_field = getattr(form, f"{column.name}", None)
+                    if form_field:
 
-            itens = model.query.filter_by(id=int(id)).first()
-            for i in kwargs:
-                for column in itens.__table__.columns:
-                    if i == column.name:
-                        form_field = getattr(form, f"{column.name}", None)
-                        if form_field:
-
-                            data_insert = form_field.data
-                            if data_insert is None:
-                                if isinstance(form_field, FileField):
-                                    file_column = column
-                                continue
-
+                        data_insert = form_field.data
+                        if data_insert is None:
                             if isinstance(form_field, FileField):
                                 file_column = column
+                            continue
 
-                            if isinstance(data_insert, str) and "R$" in data_insert:
+                        if isinstance(form_field, FileField):
+                            file_column = column
 
-                                data_insert = form.valor_unitario.data.encode(
-                                    'latin-1', 'ignore').decode('latin-1')
-                                data_insert = data_insert.replace(r"R$\xa", "").replace(
-                                    "R$ ", "").replace(".", "").replace(",", ".")
-                                data_insert = float(data_insert)
-                            setattr(itens, column.name, data_insert)
+                        if isinstance(data_insert, str) and "R$" in data_insert:
 
-                        if isinstance(column.type, LargeBinary):
-                            for form_field in form:
-                                if isinstance(form_field, FileField):
-                                    file = form_field.data
-                                    set_data = getattr(itens, column.name)
-                                    if file:
-                                        docname = secure_filename(
-                                            file.filename)
-                                        now = generate_pid()
-                                        filename = f"{now}{docname}"
-                                        path_img = os.path.join(
-                                            app.config['IMAGE_TEMP_PATH'], filename)
-                                        file.save(path_img)
-                                        with open(path_img, 'rb') as file:
-                                            setattr(itens, column.name,
-                                                    file.read())
-                                        setattr(
-                                            itens, file_column.name, filename)
-                                    elif set_data is None:
-                                        image_url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
-                                        img_data = requests.get(image_url)
+                            data_insert = form.valor_unitario.data.encode(
+                                'latin-1', 'ignore').decode('latin-1')
+                            data_insert = data_insert.replace(r"R$\xa", "").replace(
+                                "R$ ", "").replace(".", "").replace(",", ".")
+                            data_insert = float(data_insert)
+                        setattr(itens, column.name, data_insert)
+
+                    if isinstance(column.type, LargeBinary):
+                        for form_field in form:
+                            if isinstance(form_field, FileField):
+                                file = form_field.data
+                                set_data = getattr(itens, column.name)
+                                if file:
+                                    docname = secure_filename(
+                                        file.filename)
+                                    now = generate_pid()
+                                    filename = f"{now}{docname}"
+                                    path_img = os.path.join(
+                                        app.config['IMAGE_TEMP_PATH'], filename)
+                                    file.save(path_img)
+                                    with open(path_img, 'rb') as file:
                                         setattr(itens, column.name,
-                                                img_data.content)
-                                        cod = generate_pid()
-                                        now = datetime.now().strftime("%d%m%Y%H%M%S")
-                                        filename = f"{now}{cod}.png"
-                                        setattr(
-                                            itens, file_column.name, filename)
-                                    break
+                                                file.read())
+                                    setattr(
+                                        itens, file_column.name, filename)
+                                elif set_data is None:
+                                    image_url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
+                                    img_data = requests.get(image_url)
+                                    setattr(itens, column.name,
+                                            img_data.content)
+                                    cod = generate_pid()
+                                    now = datetime.now().strftime("%d%m%Y%H%M%S")
+                                    filename = f"{now}{cod}.png"
+                                    setattr(
+                                        itens, file_column.name, filename)
+                                break
 
-            db.session.commit()
-            flash("Edições salvas com sucesso!", "success")
-            return redirect(f"/{tipo.capitalize()}")
+        db.session.commit()
+        flash("Edições salvas com sucesso!", "success")
+        return redirect(f"/{tipo.capitalize()}")
 
-        if form.errors:
-
-            for erros in list(form.errors):
-                message = form.errors[erros][0]
-                flash(message, "error")
 
     except Exception as e:
         print(e)
