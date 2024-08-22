@@ -1,6 +1,7 @@
 # GuardEPI - Sistema de Gerenciamento do EPI
-[![licence mit](https://img.shields.io/badge/licence-MIT-blue.svg)](./LICENSE)
-[![Python 3.11](https://shields.io/badge/python-3.11%20-green?logo=python)](https://python.org/downloads/release/python-3119/)
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![BootStrap](https://img.shields.io/badge/Bootstrap-20232A?style=for-the-badge&logo=bootstrap&logoColor=61DAFB)](https://getbootstrap.com/)
+[![Flask](https://img.shields.io/badge/Flask-092E20?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/en/3.0.x/)
 
 ## Requisitos para rodar o projeto
 
@@ -46,7 +47,7 @@ ou
 ## Parâmetro necessário para executar o sistema no modo Debug
 DEBUG = True
 
-## Configurações do banco de dados
+## Configurações do banco de dados MySQL
 login = ""
 password = ""
 host = ""
