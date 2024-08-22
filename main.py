@@ -27,17 +27,14 @@ def install_cloudflared() -> str:
     os_name = platform.system().lower()
     print("Detectado Linux.")
     url = "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb"
-    install_command = 'sudo dpkg -i cloudflared-linux-amd64.deb'
+    install_command = 'apt install ./cloudflared-linux-amd64.deb'
     binary_name = 'cloudflared'
 
     print(f"Baixando o Cloudflared para {os_name}...")
-    subprocess.run(['curl', '-L', url, '-o', binary_name])
+    subprocess.run(['curl', '-L', url, '-o', "cloudflared-linux-amd64.deb"])
 
     print(f"Instalando o Cloudflared para {os_name}...")
     subprocess.run(install_command, shell=True)
-
-    if os_name in ['linux', 'darwin']:
-        subprocess.run(['chmod', '+x', binary_name])
 
     print("Cloudflared instalado com sucesso.")
     return binary_name
