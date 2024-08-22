@@ -14,49 +14,11 @@ from app import db
 
 from app.misc import generate_pid
 from app.decorators import create_perm
-from app.models import (ProdutoEPI, EstoqueEPI, Empresa,
-                        Cargos, Departamento, Funcionarios, GradeEPI,
-                        Fornecedores, Marcas, ModelosEPI, ClassesEPI)
+from app.models import ProdutoEPI
+from app.routes.CRUD.miscs import get_models, getformCad
 
-from app.Forms import (CadastroCargo, CadastroDepartamentos, InsertEstoqueForm,
-                       CadastroEmpresa, CadastroEPIForm, CadastroGrade, CadastroFuncionario,
-                       CadastroFonecedores, CadastroClasses, CadastroMarcas, CadastroModelos)
 
 tipo = db.Model
-
-
-def getform(form) -> Type[FlaskForm]:
-
-    forms = {"equipamentos": CadastroEPIForm(),
-             "empresas": CadastroEmpresa(),
-             "estoque": InsertEstoqueForm(),
-             "departamentos": CadastroDepartamentos(),
-             "cargos": CadastroCargo(),
-             'grade': CadastroGrade(),
-             'funcionarios': CadastroFuncionario(),
-             'fornecedores': CadastroFonecedores(),
-              'marcas': CadastroMarcas(),
-              'modelos': CadastroModelos(),
-              'classes': CadastroClasses()}
-
-    return forms[form]
-
-
-def get_models(tipo) -> Type[tipo]:
-
-    models = {"equipamentos": ProdutoEPI,
-              "estoque": EstoqueEPI,
-              "empresas": [Empresa, Empresa.nome_empresa],
-              "departamentos": [Departamento, Departamento.departamento],
-              "cargos": [Cargos, Cargos.cargo],
-              "grade": [GradeEPI, GradeEPI.grade],
-              'funcionarios': [Funcionarios, Funcionarios.nome_funcionario],
-              'fornecedores': [Fornecedores, Fornecedores.fornecedor],
-              'marcas': [Marcas, Marcas.marca],
-              'modelos': [ModelosEPI, ModelosEPI.modelo],
-              'classes': [ClassesEPI, ClassesEPI.classe]}
-
-    return models[tipo]
 
 
 @app.route("/cadastrar/<tipo>", methods=["POST"])
@@ -68,7 +30,7 @@ def cadastrar(tipo: str):
     tipo = tipo.lower()
 
     try:
-        form = getform(tipo)
+        form = getformCad(tipo)
         model = get_models(tipo.replace("edit_", ""))
         if form.validate_on_submit():
             kwargs = {}

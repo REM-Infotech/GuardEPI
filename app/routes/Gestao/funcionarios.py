@@ -4,9 +4,7 @@ from app import app
 
 
 from app.models.Funcionários import Funcionarios
-from app.Forms.globals import IMPORTEPIForm
-
-from app.routes.CRUD.create import CadastroFuncionario
+from app.Forms import IMPORTEPIForm, CadastroFuncionario
 
 from app.decorators import read_perm, set_endpoint
 

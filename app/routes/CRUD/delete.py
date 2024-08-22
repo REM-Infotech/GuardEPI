@@ -4,30 +4,15 @@ from flask import render_template
 from app.decorators import delete_perm
 from app.misc import *
 from app.models import (ProdutoEPI, RegistrosEPI, EstoqueEPI, EstoqueGrade, RegistroEntradas,
-                        GradeEPI, Empresa, Funcionarios, Departamento, Cargos, Groups)
+                        GradeEPI, Empresa, Funcionarios, Departamento, Cargos, Groups,
+                        ClassesEPI, ModelosEPI, Marcas, Fornecedores, Users)
 from app import db
 from typing import Type
 from app import app
+from app.routes.CRUD.miscs import get_models
 
 tipo = db.Model
 
-def get_models(tipo: str) -> Type[tipo]:
-    
-    models = {"equipamentos": ProdutoEPI,
-            "estoque": EstoqueEPI,
-            'grade': GradeEPI,
-            "empresas": Empresa,
-            "funcionarios": Funcionarios,
-            "departamentos": Departamento,
-            "cargos": Cargos,
-            "cautelas": RegistrosEPI,
-            "entradas": RegistroEntradas,
-            "estoque_grade": EstoqueGrade,
-            'groups': Groups
-            
-            }
-    
-    return models[tipo]
 
 @app.route("/deletar_item/<database>/<id>", methods = ["POST"])
 @delete_perm

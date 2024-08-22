@@ -1,5 +1,4 @@
-<div class="modal fade" id="cadastrofornecedor" tabindex="-1" aria-labelledby="cadastrofornecedorLabel"
-    aria-hidden="true">
+<div class="modal fade" data-modal_edit="edit" id="cadastrofornecedor" tabindex="-1" aria-labelledby="cadastrofornecedorLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,8 +6,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ url_for('cadastrar', tipo = request.endpoint) }}" method="post"
-                    enctype="multipart/form-data">
+                <form action="{{ url_for('cadastrar', tipo = request.endpoint) }}" method="post" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
                     <div class="row">
                         <div class="col-12">
@@ -35,3 +33,4 @@
         </div>
     </div>
 </div>
+<script src="{{ url_for('static', filename = 'js/setEdit.js') }}"></script>

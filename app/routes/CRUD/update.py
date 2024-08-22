@@ -15,8 +15,8 @@ from app.decorators import update_perm
 from app.misc import format_currency_brl, generate_pid
 from app.models.EPI import ProdutoEPI, GradeEPI, RegistrosEPI, RegistroEntradas
 from app.models.Funcionários import Empresa, Funcionarios, Cargos, Departamento
-from app.Forms.edit import (EditItemProdutoForm, EditSaldoGrade, EditFuncionario,
-                            EditEmpresa, EditDepartamentos, EditCargo)
+from app.routes.CRUD.miscs import get_models, getform
+
 from app import app
 from app import db
 
@@ -26,31 +26,6 @@ from datetime import datetime
 import requests
 
 tipo = db.Model
-
-
-def getform(form) -> Type[FlaskForm]:
-
-    forms = {"edit_equipamentos": EditItemProdutoForm(),
-             "edit_estoque": EditSaldoGrade(),
-             'edit_funcionarios': EditFuncionario(),
-             'edit_empresas': EditEmpresa(),
-             'edit_departamentos': EditDepartamentos(),
-             'edit_cargos': EditCargo()}
-
-    return forms[form]
-
-
-def get_models(tipo: str) -> Type[tipo]:
-
-    models = {"equipamentos": ProdutoEPI,
-              "estoque": GradeEPI,
-              "empresas": Empresa,
-              "funcionarios": Funcionarios,
-              "departamentos": Departamento,
-              "cargos": Cargos,
-              "cautelas": RegistrosEPI}
-
-    return models[tipo]
 
 
 @app.route("/set_editar/<tipo>/<item>", methods=["GET"])
