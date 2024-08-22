@@ -35,6 +35,32 @@ ou
 - `python -m pip install -r requirements.txt`
 
 
+#### Arquivo `.env`
+
+> Crie um arquivo .env com esses parametros. Remova os comentários para evitar erros
+
+``` Python
+
+## .env
+
+## Parâmetro necessário para executar o sistema no modo Debug
+DEBUG = True
+
+## Configurações do banco de dados
+login = ""
+password = ""
+host = ""
+database = ""
+
+## Token Cloudflared. Ele será útil apenas em um sistema linux
+## Pois ele fará a configuração automatica do tunnel Cloudflare.
+## Útil para casos de Deploy em Production
+CLOUDFLARED_TOKEN = "SEU_TOKEN_AQUI"
+
+
+``` 
+
+
 ## Estrutura do projeto
 
 - [`APP`](./app/): É a pasta onde fica centralizado rotas, formulários e models do Flask
@@ -48,15 +74,4 @@ ou
 
 - [`Routes`](./app/routes/): Formulários do projeto, sempre mantendo separados por funções.
 
-``` Python
 
-## .env
-
-DEBUG = True
-login = ""
-password = ""
-host = ""
-database = ""
-
-
-``` 

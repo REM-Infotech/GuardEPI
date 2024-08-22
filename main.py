@@ -33,7 +33,6 @@ if __name__ == "__main__":
         
         if not token:
             print("Token não encontrado. Verifique se o arquivo .env está configurado corretamente.")
-            sys.exit(1)
 
         configure_tunnel(token, install_cloudflared())
         
