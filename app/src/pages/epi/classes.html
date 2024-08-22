@@ -30,7 +30,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Grade</th>
+                        <th>Classe EPI</th>
                         <th>Descrição</th> 
                         <th data-sortable="false">Ações</th>
                     </tr>
@@ -40,7 +40,7 @@
                     {% for item in database %}
                     <tr>
                         <td>{{ item.id }}</td>
-                        <td>{{ item.grade }}</td>
+                        <td>{{ item.classe }}</td>
                         {% if not item.descricao %}
                         <td>Sem descrição</td>
                         {% else %}
@@ -72,7 +72,7 @@
                 <tfoot>
                     <tr>
                         <th>#</th>
-                        <th>Grade</th>
+                        <th>Classe EPI</th>
                         <th>Descrição</th> 
                         <th>Ações</th>
                     </tr>

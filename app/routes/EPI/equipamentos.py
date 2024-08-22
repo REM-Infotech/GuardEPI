@@ -75,10 +75,10 @@ def SetEditarEPI(item: int):
         'valor_unitario': format_currency_brl(database.valor_unitario),
         'periodicidade_item': database.periodicidade_item,
         'qtd_entregar': database.qtd_entregar,
-        'fornecedor_selected': (database.fornecedor, database.fornecedor, {}, True),
-        'marca_selected': (database.marca, database.marca, {}, True),
-        'modelo_selected': (database.modelo, database.modelo, {}, True),
-        'tipoepi_selected': (database.tipo_epi, database.tipo_epi, {}, True),
+        'fornecedor': database.fornecedor,
+        'marca': database.marca,
+        'modelo': database.modelo,
+        'tipo_epi': database.tipo_epi,
     })
         
     url = ""

@@ -34,35 +34,12 @@ class EditItemProdutoForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         
         super(EditItemProdutoForm, self).__init__(*args, **kwargs)
-        
-        
-        ## Eu deixei com underline pra nao conflitar com os declarados
-        ## do formulário
-        
-        ## :D
-        
-        fornecedor_ = [kwargs.get('fornecedor_selected')]
-        marca_ = [kwargs.get('marca_selected')]
-        modelo_ = [kwargs.get('modelo_selected')]
-        tipoepi_ = [kwargs.get('tipoepi_selected')]
-        
         fornecedor_choices = set_choicesFornecedor()
         marca_choices = set_choicesMarca()
         modelo_choices = set_choicesModelo()
         tipo_epi_choices = set_choicesClasseEPI()
         
-        fornecedor_choices.extend(fornecedor_)
-        marca_choices.extend(marca_)
-        modelo_choices.extend(modelo_)
-        tipo_epi_choices.extend(tipoepi_)
-        
         self.fornecedor.choices.extend(fornecedor_choices)
         self.marca.choices.extend(marca_choices)
         self.modelo.choices.extend(modelo_choices)
         self.tipo_epi.choices.extend(tipo_epi_choices)
-        
-        
-        
-        
-
-
