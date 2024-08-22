@@ -58,9 +58,9 @@
                                 </span>
                                 <span class="text">Deletar</span>
                             </button>
-                            <button type="button" id="EditEstoqueButton" class="btn btn-warning btn-sm mb-2"
+                            <button type="button" id="EditInfo" class="btn btn-warning btn-sm mb-2"
                                 hx-get="{{ url_for('set_editar', tipo = request.endpoint, item = item.id) }}"
-                                hx-target="#results">
+                                hx-target="#results" onclick="showLoad()">
                                 <span class="icon text-white-50">
                                     <i class="fa-solid fa-pen"></i>
                                 </span>

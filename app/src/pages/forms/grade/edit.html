@@ -1,53 +1,39 @@
-<div class="modal fade" data-modal_edit="editEquipamento" id="editEquipamento" tabindex="-1" aria-labelledby="editEquipamentoLabel" aria-hidden="true">
+<script src="{{ url_for('static', filename='js/hideLoad.js') }}"></script>
+<div class="modal fade" data-modal_edit="editEquipamento" id="cadastrogrades" tabindex="-1"
+    aria-labelledby="cadastrogradesLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="m-0 font-weight-bold text-primary">Editar Estoque</h6>
+                <h4 class="m-0 font-weight-bold text-primary">Cadastrar grade</h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ url_for('editar', tipo = tipo, id = id) }}" enctype="multipart/form-data"
-                    class="form-floating">
+                <form action="{{ url_for('cadastrar', tipo = request.endpoint) }}" method="post"
+                    enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
-
-                    <div class="row g-3">
-
-                        <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-12">
                             <div class="form-floating mb-3">
-                                {{ form.nome_epi(class="form-control", id="nome_epi", placeholder="...") }}
-                                {{ form.nome_epi.label(for="nome_epi") }}
+                                {{ form.grade(class="form-control", id="grade", placeholder="...") }}
+                                {{ form.grade.label(for="grade") }}
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-12">
                             <div class="form-floating mb-3">
-                                {{ form.tipo_grade(class="form-control", id="tipo_grade", placeholder="...") }}
-                                {{ form.tipo_grade.label(for="tipo_grade") }}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                {{ form.tipo_qtd(type="text", class="form-control", id="tipo_qtd", placeholder="...") }}
-                                {{ form.tipo_qtd.label(for="tipo_qtd") }}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
-                                {{ form.qtd_estoque(class="form-control", id="qtd_estoque", placeholder="...") }}
-                                {{ form.qtd_estoque.label(for="qtd_estoque") }}
+                                {{ form.descricao(class="form-control", id="desc", placeholder="...") }}
+                                {{ form.descricao.label(for="desc") }}
                             </div>
                         </div>
 
-                    </div>
-                    <div class="footer">
-                        <div class="d-grid gap-2">
-                            {{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
+                        <div class="footer">
+                            <div class="d-grid gap-2">
+                                {{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
-
         </div>
-
     </div>
 </div>
 <script src="{{ url_for('static', filename = 'js/setEdit.js') }}"></script>

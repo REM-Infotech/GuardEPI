@@ -82,7 +82,7 @@ def set_editar(tipo: str, item: int):
                           md=tipo, _external=True, _scheme='https')
 
     grade_results = f"pages/forms/{tipo}/edit.html"
-
+    form.submit.label.text = "Salvar Alterações"
     return render_template(grade_results, form=form,  url=url, tipo=tipo, id=item)
 
 

@@ -66,6 +66,7 @@ def getform(form: str) -> Type[FlaskForm]:
         'edit_fornecedores': CadastroFonecedores(),
         'edit_marcas': CadastroMarcas(),
         'edit_modelos': CadastroModelos(),
-        'edit_classes': CadastroClasses()}
+        'edit_classes': CadastroClasses(),
+        'edit_grade': CadastroGrade()}
 
     return forms[form]
