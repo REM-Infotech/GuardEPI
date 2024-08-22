@@ -5,12 +5,13 @@
         <div class="card-header">
             <h2 class="m-2">Entradas</h1>
                 <hr>
-                <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}" class="btn btn-primary btn-icon-split">
-                <span class="icon text-white-50">
-                    <i class="fa-solid fa-file-csv"></i>
-                </span>
-                <span class="text">Gerar Relatório</span>
-            </a>
+                <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}"
+                    class="btn btn-primary btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fa-solid fa-file-csv"></i>
+                    </span>
+                    <span class="text">Gerar Relatório</span>
+                </a>
         </div>
 
         <div class="card-body table-responsive">
@@ -44,10 +45,10 @@
                                 </span>
                                 <span class="text">Ver PDF</span>
                             </button>
-                        </td>  
+                        </td>
                         {% else %}
                         <td>Inserido via importação</td>
-                        {% endif %} 
+                        {% endif %}
                     </tr>
                     {% endfor %}
                     {% endif %}
@@ -66,7 +67,7 @@
         </div>
     </div>
     {% include 'includes/show_pdf_copy.html' %}
-    <div id="results">
+</div>
+<div id="results">
 
-    </div>
 </div>

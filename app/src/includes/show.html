@@ -1,24 +1,24 @@
-<div class="modal fade" id="deleteUserMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="ModalMessageDelete" tabindex="-1" role="dialog" aria-labelledby="ModalMessageDeletelabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Mensagem</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="reloadPage()"></button>
+                <h5 class="modal-title">Mensagem</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 {{ message }}
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="reloadPage()">Recarregar Página</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal"
+                        onclick="reloadPage()">Recarregar Página</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</div>
 <script>
-    $(document).ready(function () {
-        $('#deleteUserMessage').modal('show');
-    });
+    $('#ModalMessageDelete').modal('show');
     function reloadPage() {
         window.location.reload();
     }

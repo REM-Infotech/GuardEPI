@@ -5,7 +5,8 @@
         <div class="card-header">
             <h2 class="m-2">Fornecedores</h1>
                 <hr>
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#cadastrofornecedor">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                    data-bs-target="#cadastrofornecedor">
                     <span class="icon text-white-50">
                         <i class="fa-solid fa-plus"></i>
                     </span>
@@ -17,12 +18,13 @@
                     </span>
                     <span class="text">Import em lotes</span>
                 </button>
-                <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}" class="btn btn-primary btn-icon-split">
-                <span class="icon text-white-50">
-                    <i class="fa-solid fa-file-csv"></i>
-                </span>
-                <span class="text">Gerar Relatório</span>
-            </a>
+                <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}"
+                    class="btn btn-primary btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fa-solid fa-file-csv"></i>
+                    </span>
+                    <span class="text">Gerar Relatório</span>
+                </a>
         </div>
 
         <div class="card-body table-responsive">
@@ -31,7 +33,7 @@
                     <tr>
                         <th>#</th>
                         <th>Fornecedor</th>
-                        <th>Descrição</th> 
+                        <th>Descrição</th>
                         <th data-sortable="false">Ações</th>
                     </tr>
                 </thead>
@@ -46,7 +48,7 @@
                         {% else %}
                         <td>{{ item.descricao }}</td>
                         {% endif %}
-                        
+
                         <td>
                             <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
                                 hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
@@ -73,15 +75,15 @@
                     <tr>
                         <th>#</th>
                         <th>Fornecedor</th>
-                        <th>Descrição</th> 
+                        <th>Descrição</th>
                         <th>Ações</th>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
-    {% include 'pages/forms/' + request.endpoint.lower() + '/create.html' %}
-    <div id="results">
+</div>
+{% include 'pages/forms/' + request.endpoint.lower() + '/create.html' %}
+<div id="results">
 
-    </div>
 </div>

@@ -6,7 +6,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ url_for('cadastrar', tipo = request.endpoint) }}" method="post" enctype="multipart/form-data">
+                <form action="{{ url_for('cadastrar', tipo = request.endpoint) }}" method="post"
+                    enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
                     <div class="row">
                         <div class="col-12">
@@ -27,6 +28,7 @@
                                 {{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
                             </div>
                         </div>
+                    </div>
                 </form>
             </div>
         </div>
