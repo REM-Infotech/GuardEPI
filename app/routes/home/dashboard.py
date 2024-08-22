@@ -10,6 +10,8 @@ import pandas as pd
 from datetime import datetime, timedelta
 from sqlalchemy import extract
 
+import pytz
+
 @app.route("/dashboard", methods = ["GET"])
 @login_required
 @set_endpoint
@@ -24,9 +26,13 @@ def dashboard():
         DataTables: JS Datatables para a página
         
     """
-    now = datetime.now()
-    current_day = now.day
+    now = datetime.now(pytz.timezone('Etc/GMT+4'))
     current_month = now.month
+    month = str(now.month)
+    year = str(now.year)
+    
+    if len(month) == 1:
+        month = f"0{month}"
     
     valor_total = 0
     valor_totalEntradas = 0
@@ -66,7 +72,7 @@ def dashboard():
                            format_currency_brl = format_currency_brl, 
                            valor_totalEntradas = valor_totalEntradas, 
                            total_entradas = total_entradas,
-                           today=today))
+                           month=month, year=year))
     
     return resp
     
