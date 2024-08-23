@@ -55,7 +55,7 @@ def dashboard():
         
     for item in dbase:
         total_saidas += int(item.qtd_saida)
-        valor_total += float(item.valor_total) 
+        valor_total += float(item.valor_total) * item.qtd_saida
         
     # valor_total = sum(map(lambda item: float(item.valor_total), dbase))
     # valor_totalEntradas = sum(map(lambda item: float(item.valor_total), dbase2))
