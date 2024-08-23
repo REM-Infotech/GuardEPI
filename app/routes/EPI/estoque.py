@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 
 from app import app
 from app import db
-from app.models import (RegistroEntradas, EstoqueEPI, EstoqueGrade)
+from app.models import (RegistroEntradas, EstoqueEPI, EstoqueGrade, ProdutoEPI)
 from app.Forms import IMPORTEPIForm
 from app.Forms import InsertEstoqueForm
 
@@ -133,6 +133,10 @@ def lancamento_produto():
             EntradaEPI.filename = secure_filename(file_nf.filename)
             EntradaEPI.blob_doc=blob_doc
 
+        new_valor_unitario = data_insert // form.qtd_estoque.data
+        dbase_produto = ProdutoEPI.query.filter_by(nome_epi=form.nome_epi.data).first()
+        dbase_produto.valor_unitario = new_valor_unitario
+        
         db.session.add(EntradaEPI)
         db.session.commit()
 
