@@ -1,10 +1,13 @@
 """
 ## Formulários para controle de EPI
 """
+
+
+
 from app.Forms.choices import (set_ChoicesFuncionario, set_choices, 
                                set_choicesGrade, set_choicesClasseEPI, 
                                set_choicesFornecedor, set_choicesMarca, 
-                               set_choicesModelo)
+                               set_choicesModelo, set_EpiCautelaChoices)
 
 from flask_wtf import FlaskForm
 from flask_wtf.form import _Auto
@@ -55,8 +58,8 @@ class InsertEstoqueForm(FlaskForm):
     qtd_estoque = IntegerField(label='Quantidade a ser adicionada', validators=[DataRequired()])
     valor_total = StringField(label='Valor Totalizado',validators=[DataRequired()])
     vencimento = DateField(label='Vencimento do lote')
-    nota_fiscal = FileField(label="Nota Fiscal", validators=[DataRequired(), permited_file])
-    cod_notafiscal = StringField(label="Cód. Nota Fiscal", validators=[DataRequired()])
+    nota_fiscal = FileField(label="Nota Fiscal", validators=[permited_file])
+    cod_notafiscal = StringField(label="Cód. Nota Fiscal")
     
     submit = SubmitField(label='Salvar')
 
@@ -136,7 +139,7 @@ class Cautela(FlaskForm):
         super(Cautela, self).__init__(*args, **kwargs)
 
         self.nome_epi.choices.append(("Selecione", "Selecione"))
-        self.nome_epi.choices.extend(set_choices())
+        self.nome_epi.choices.extend(set_EpiCautelaChoices())
 
         self.select_funcionario.choices.append(("Selecione", "Selecione"))
         self.select_funcionario.choices.extend(set_ChoicesFuncionario())
