@@ -14,7 +14,8 @@ from datetime import datetime
 num = random.randint(100, 900)
 
 
-def create_watermark_pdf(image_path, output_pdf):
+def create_watermark_pdf(image_path: str, output_pdf: str):
+    
     c = canvas.Canvas(output_pdf, pagesize=letter)
     # Dimensões da página (em pontos, 1 ponto = 1/72 polegadas)
     width, height = letter
@@ -37,7 +38,8 @@ def create_watermark_pdf(image_path, output_pdf):
     c.save()
 
 
-def add_watermark(input_pdf, output_pdf, watermark_pdf):
+def add_watermark(input_pdf: str, output_pdf: str, watermark_pdf: str):
+    
     input_file = open(input_pdf, 'rb')
     watermark_file = open(watermark_pdf, 'rb')
 
@@ -59,7 +61,7 @@ def add_watermark(input_pdf, output_pdf, watermark_pdf):
     watermark_file.close()
 
 
-def adjust_image_transparency(image_path, output_path, transparency):
+def adjust_image_transparency(image_path: str, output_path: str, transparency):
 
     img = Image.open(image_path)
     img = img.convert("RGBA")
