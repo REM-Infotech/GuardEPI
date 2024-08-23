@@ -46,16 +46,12 @@ def cadastrar(tipo: str):
                     kwargs.update({"ca": ProdutoEPI.query.filter_by(
                         nome_epi=form.nome_epi.data).first().ca})
 
-            elif any(tipo.lower() == tipos for tipos in [
-                "departamentos", "cargos", "empresas", "grade",
-                "entradas", "funcionarios", "fornecedores", "marcas",
-                "modelos", "classes"
-            ]):
-                for md in model[0].__table__.columns:
+            else:
+                for md in model.__table__.columns:
                     form_fld = getattr(form, md.name, None)
                     if form_fld:
                         cln = md.name
-                        itens = model[0].query.filter_by(
+                        itens = model.query.filter_by(
                             **{f"{cln}": form_fld.data}).first()
                         break
 
