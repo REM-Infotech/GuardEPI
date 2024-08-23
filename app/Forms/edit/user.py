@@ -1,6 +1,23 @@
 from flask_wtf import FlaskForm
+from flask_wtf.form import _Auto
 from wtforms import (StringField, SubmitField, EmailField,PasswordField)
 from wtforms.validators import Length, DataRequired
+from flask_wtf.file import FileField, FileAllowed
+
+file_allowed = FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')
+
+class ProfileEditForm(FlaskForm):
+    
+    login = StringField(label="Usuário", validators=[DataRequired()])
+    nome_usuario = StringField(label="Nome Completo", validators=[DataRequired()])
+    old_password = PasswordField(label="Senha atual", validators=[DataRequired(), Length(min=8, max=62)])
+    new_password = PasswordField(label="Nova senha", validators=[DataRequired(), Length(min=8, max=62)])
+    email = EmailField(label="E-mail atual")
+    filename = FileField(label='Foto de perfil', id="imagem", validators=[file_allowed])
+    submit = SubmitField(label="Salvar Alterações")
+    
+    def __init__(self, *args, **kwargs):
+        super(ProfileEditForm, self).__init__(*args, **kwargs)
 
 class AdmChangePassWord(FlaskForm):
     
