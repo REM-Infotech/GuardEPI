@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 
 from app import app
 from app import db
-from app.models import (RegistroEntradas, EstoqueEPI, EstoqueGrade)
+from app.models import (RegistroEntradas, EstoqueEPI, EstoqueGrade, ProdutoEPI)
 from app.Forms import IMPORTEPIForm
 from app.Forms import InsertEstoqueForm
 
@@ -111,13 +111,6 @@ def lancamento_produto():
             else:
                 dbase_2.qtd_estoque = dbase_2.qtd_estoque + form.qtd_estoque.data
 
-        file_nf = form.nota_fiscal.data
-
-        file_path = os.path.join(
-            app.config['PDF_TEMP_PATH'], secure_filename(file_nf.filename))
-        file_nf.save(file_path)
-        with open(file_path, 'rb') as f:
-            blob_doc = f.read()
         data_insert = float(str(form.valor_total.data).replace(
             "R$ ", "").replace(".", "").replace(",", "."))
         
@@ -127,13 +120,30 @@ def lancamento_produto():
             grade=form.tipo_grade.data,
             tipo_qtd=form.tipo_qtd.data,
             qtd_entrada=form.qtd_estoque.data,
-            filename=secure_filename(file_nf.filename),
-            blob_doc=blob_doc,
             valor_total=data_insert,
             vencimento=form.vencimento.data)
+        
+        file_nf = form.nota_fiscal.data
+        if file_nf:
+            file_path = os.path.join(
+                app.config['PDF_TEMP_PATH'], secure_filename(file_nf.filename))
+            file_nf.save(file_path)
+            with open(file_path, 'rb') as f:
+                blob_doc = f.read()
+            EntradaEPI.filename = secure_filename(file_nf.filename)
+            EntradaEPI.blob_doc=blob_doc
 
+        new_valor_unitario = data_insert // form.qtd_estoque.data
+        dbase_produto = ProdutoEPI.query.filter_by(nome_epi=form.nome_epi.data).first()
+        dbase_produto.valor_unitario = new_valor_unitario
+        
         db.session.add(EntradaEPI)
         db.session.commit()
 
         flash("Informações salvas com sucesso!", "success")
+        return redirect(url_for('Estoque'))
+
+    if form.errors:
+        
+        flash("Campos Obrigatórios não preenchidos!")
         return redirect(url_for('Estoque'))

@@ -32,6 +32,7 @@ def login():
         
         if user and user.converte_senha(form.password.data):
             
+            session["username"] = form.login.data
             session["groups_usr"] = json.loads(user.grupos)
             session["nome_usuario"] = user.nome_usuario
             session.pop("next")

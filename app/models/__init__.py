@@ -37,13 +37,19 @@ def init_database() -> None:
         usr = Users.query.filter_by(login="root").first()
 
         if usr is None:
-
+            
+            filename = "favicon.png"
+            path_img = os.path.join("app/src/assets/img", filename)
+            with open(path_img, 'rb') as file:
+                blob_doc = file.read()
             usr = Users(
 
                 grupos=json.dumps(["Grupo Root"]),
                 login="root",
                 nome_usuario="Root",
-                email="nicholas@robotz.dev",)
+                email="nicholas@robotz.dev",
+                blob_doc = blob_doc,
+                filename = filename)
             root_pw = generate_pid(10)
             usr.senhacrip = root_pw
             print(f"* Root Pw: {root_pw}")
