@@ -8,10 +8,10 @@ file_allowed = FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')
 
 class ProfileEditForm(FlaskForm):
     
-    login = StringField(label="Usuário", validators=[DataRequired()])
-    nome_usuario = StringField(label="Nome Completo", validators=[DataRequired()])
-    old_password = PasswordField(label="Senha atual", validators=[DataRequired(), Length(min=8, max=62)])
-    new_password = PasswordField(label="Nova senha", validators=[DataRequired(), Length(min=8, max=62)])
+    login = StringField(label="Usuário")
+    nome_usuario = StringField(label="Nome Completo")
+    old_password = PasswordField(label="Senha atual")
+    new_password = PasswordField(label="Nova senha")
     email = EmailField(label="E-mail atual")
     filename = FileField(label='Foto de perfil', id="imagem", validators=[file_allowed])
     submit = SubmitField(label="Salvar Alterações")

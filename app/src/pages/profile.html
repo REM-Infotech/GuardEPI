@@ -5,7 +5,7 @@
         <div class="card-header">
             <h4>Configurações do Perfil</h4>
         </div>
-        <form method="POST" action="#" enctype="multipart/form-data" class="form-floating card-body  bg-secondary">
+        <form method="POST" action="#" enctype="multipart/form-data" class="form-floating card-body bg-secondary bg-opacity-25">
             {{ form.hidden_tag() }}
             <div class="row">
                 <div class="card col m-3 p-3">
@@ -41,6 +41,20 @@
                     </div>
 
                     <div class="card-body">
+                        {% if session["username"] == "root"%}
+                        <div class="form-floating mb-3">
+                            {{ form.login(type="text", class="form-control", id="login", placeholder="", disabled = "True") }}
+                            {{ form.login.label(for="login") }}
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form.nome_usuario(type="text", class="form-control", id="nome_usuario", placeholder="", disabled = "True")}}
+                            {{ form.nome_usuario.label(for="nome_usuario") }}
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form.email(type="text", class="form-control", id="email", placeholder="", disabled = "True") }}
+                            {{ form.email.label(for="email") }}
+                        </div>
+                        {% else %}
                         <div class="form-floating mb-3">
                             {{ form.login(type="text", class="form-control", id="login", placeholder="") }}
                             {{ form.login.label(for="login") }}
@@ -54,6 +68,7 @@
                             {{ form.email(type="text", class="form-control", id="email", placeholder="") }}
                             {{ form.email.label(for="email") }}
                         </div>
+                        {% endif %}
                         <div class="form-floating mb-3">
                             {{ form.old_password(class="form-control", id="old_password", placeholder="") }}
                             {{ form.old_password.label(for="old_password") }}
