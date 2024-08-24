@@ -1,5 +1,4 @@
-<div class="modal fade" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="modalMessage"
-    aria-hidden="true">
+<div class="modal fade" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="modalMessage" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -7,26 +6,28 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                
-                {% if messages %}
+                <span class="mb-4">
+                    {% if messages %}
                     {% set messageText = messages[0] %}
-                    
-                {% elif not messages %}
+
+                    {% elif not messages %}
                     {% set messageText = "Emitindo Cautela" %}
-                    
-                {% else %}
+
+                    {% else %}
 
                     {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                        {% set messageText = messages[0] %}
-                
-                        {% endif %}
+                    {% if messages %}
+                    {% set messageText = messages[0] %}
+
+                    {% endif %}
                     {% endwith %}
 
-                {% endif %}
-                {{ messageText }}
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    {% endif %}
+                    {{ messageText }}
+                </span>
+
+                <div class="modal-footer mt-5">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>

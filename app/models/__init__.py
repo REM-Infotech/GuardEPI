@@ -61,7 +61,7 @@ def init_database() -> None:
 
             grp = Groups(
                 name_group="Grupo Root",
-                members=json.dumps(["root", "nicholas@robotz.dev"]),
+                members=json.dumps(["root", "nicholas@robotz.dev", "nicholas.silva"]),
                 perms=json.dumps(perms_root))
             to_add.append(grp)
             
@@ -98,5 +98,8 @@ def init_database() -> None:
 
         if len(to_add) > 0:
             db.session.add_all(to_add)
-            
-        db.session.commit()
+        
+        try:
+            db.session.commit()
+        except:
+            pass

@@ -31,42 +31,66 @@ def profile():
         )
         
         if form.validate_on_submit():
-        
-            user = Users.query.filter_by(login = form.login.data).first()
             
-            if user.converte_senha(form.old_password.data):
+            username = str(session["username"])
+            full_name = str(session["nome_usuario"])
+            
+            if username == "root":
+                return redirect
+            
+            user = Users.query.filter_by(login = username).first()
+            
+            if username != form.login.data:
                 
-                user.login = form.login.data
-                user.nome_usuario = form.nome_usuario.data
-                user.senhacrip = form.new_password.data
-                user.email = form.email.data
+                if not username == "root":
+                    user.login = form.login.data
+                    session["username"] = form.login.data
                 
-                if form.filename.data:
+            if full_name != form.nome_usuario.data:
                 
-                    file_pic = form.filename.data
+                if not username == "root":
+                    user.nome_usuario = form.nome_usuario.data
+                    session["nome_usuario"] = form.nome_usuario.data
+            
+            if user.email != form.email.data:
+                if not username == "root":
+                    user.email = form.email.data
+                
+            if form.new_password.data:
+                
+                if user.converte_senha(form.old_password.data):
+                    user.senhacrip = form.new_password.data
                     
-                    filename = secure_filename(file_pic.filename)
-                    filename = f"{generate_pid()}{filename}.png"
-                    original_path = os.path.join(
-                        app.config['IMAGE_TEMP_PATH'], filename)
+                else:
+                    flash("Senha Incorreta!", "error")
+                    return redirect(url_for('profile')) 
                     
-                    file_pic.save(original_path)
+            if form.filename.data:
+            
+                file_pic = form.filename.data
+                
+                filename = secure_filename(file_pic.filename)
+                filename = f"{generate_pid()}{filename}.png"
+                original_path = os.path.join(
+                    app.config['IMAGE_TEMP_PATH'], filename)
+                
+                file_pic.save(original_path)
 
-                    with open(original_path, 'wb') as file:
-                        image_data = file.read()
-                        
-                    user.filename = filename
-                    user.blob_doc = image_data 
+                with open(original_path, 'wb') as file:
+                    image_data = file.read()
                     
-                db.session.commit()
+                user.filename = filename
+                user.blob_doc = image_data 
                 
-                flash("Alterações salvas com sucesso!", "success")
-                return redirect(url_for('profile'))
-                
-            else:
-                flash("Senha Incorreta!", "error")
-                
-        
+            db.session.commit()
+            
+            flash("Alterações salvas com sucesso!", "success")
+            return redirect(url_for('profile'))
+            
+        elif form.errors:
+            flash("Erro interno", "error")
+            return redirect(url_for('profile'))
+            
         return render_template("index.html", page=page, form=form, url_image=url_image)
 
     except Exception as e:
