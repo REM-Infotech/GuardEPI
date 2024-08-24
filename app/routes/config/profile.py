@@ -31,7 +31,7 @@ def profile():
         )
         
         if form.validate_on_submit():
-            
+          
             username = str(session["username"])
             full_name = str(session["nome_usuario"])
             
@@ -90,7 +90,6 @@ def profile():
         elif form.errors:
             flash("Erro interno", "error")
             return redirect(url_for('profile'))
-            
         return render_template("index.html", page=page, form=form, url_image=url_image)
 
     except Exception as e:
