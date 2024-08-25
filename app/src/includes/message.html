@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <span class="mb-4">
+                <span>
                     {% if messages %}
                     {% set messageText = messages[0] %}
 
@@ -26,7 +26,7 @@
                     {{ messageText }}
                 </span>
 
-                <div class="modal-footer mt-5">
+                <div class="modal-footer mt-3">
                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 </div>
             </div>

@@ -1,31 +1,17 @@
-from flask import (render_template, abort, session, request, redirect, url_for)
+from flask import (render_template, abort, flash, request, 
+                   redirect, url_for, session)
 from flask_login import login_required
 
 from app import app
+from app import db
 
-from app.models import Groups, EndPoints, Users
-from app.Forms import CreateGroup, SetPermsGroups
-from app.decorators import read_perm, update_perm, create_perm, set_endpoint
+from app.models import Groups, Users
+from app.Forms import CreateGroup
+from app.decorators import (read_perm, set_endpoint, 
+                            create_perm, update_perm)
+
 import json
-import uuid
-import os
 
-# @app.before_request
-# def setgroups():
-    
-#     if request.endpoint == "groups":
-#         if not session.get("uuid_groups", None):
-            
-#             session["uuid_groups"] = str(uuid.uuid4())
-#             pathj = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_groups"]}.json")
-            
-#             if os.path.exists(pathj):
-#                 os.remove(pathj)
-            
-#             json_obj = json.dumps([])
-            
-#             with open(pathj, 'w') as f:
-#                 f.write(json_obj)
 
 @app.route('/groups', methods=["GET"])
 @login_required
@@ -35,7 +21,7 @@ def groups():
 
     try:
 
-        test = SetPermsGroups()
+        session["name_group"] = ""
         form = CreateGroup()
         database = Groups.query.all()
         page = f'pages/config/{request.endpoint}.html'
@@ -45,94 +31,121 @@ def groups():
     except Exception as e:
         abort(500)
 
-@app.route('/permissions', methods=["GET"])
+
+@app.route("/create_group", methods=["POST"])
 @login_required
-@set_endpoint
-@read_perm
-def permissions():
+@create_perm
+def create_group():
 
-    try:
-        form = SetPermsGroups()
-        page = f'pages/config/{request.endpoint}.html'
-        database = EndPoints.query.all()
-        
-        return render_template("index.html", form=form, database=database, page=page)
+    form = CreateGroup()
+    group = Groups.query.filter(Groups.name_group == form.nome.data).first()
 
-    except Exception as e:
-        abort(500)
+    if not group:
+
+        perms_default = {
+            "dashboard": {
+                "permissoes": [
+                    "READ"]
+            }
+        }
+
+        grp = Groups(
+            name_group=form.nome.data,
+            members=json.dumps(form.membros.data),
+            perms=json.dumps(perms_default)
+        )
         
-@app.route("/editPerms", methods = ["GET", "POST"])
+        for usr in form.membros.data:
+            
+            user = Users.query.filter(Users.login == usr).first()
+            list_group = json.loads(user.grupos)
+            
+            for grupo in list_group:
+                if grupo != form.nome.data:
+                    
+                    list_group.append(form.nome.data)
+                    break
+            
+            user.grupos = json.dumps(list_group)
+            
+        db.session.add(grp)
+        db.session.commit()
+        flash("Grupo criado com sucesso!")
+        
+    else:
+        flash("Grupo já existente!", "error")
+
+    return redirect(url_for("groups", _scheme='https'))
+
+@app.route("/setEditGroup/<item>", methods = ["GET"])
+@login_required
 @update_perm
-def editPerms():
+def setEditGroup(item: int):
     
-    form = SetPermsGroups()
-    if request.method == "POST" and form.validate_on_submit():
-        
-        return redirect(url_for('permissions', _scheme="https"))
+    database = Groups.query.filter(Groups.id == item).first()
+    session["name_group"] = database.name_group
+    form = CreateGroup(**{'nome': database.name_group,
+                          'membros': json.loads(database.members)})
     
-    return redirect(url_for('permissions', _scheme="https"))
+    route = request.referrer.replace("https://", "").replace("http://", "")
+    route = route.split("/")[1]
+    
+    grade_results = f"pages/forms/{route}/edit.html"
+    return render_template(grade_results, form=form, tipo=route, id=item)
 
-@app.route("/SetEditPerms/<endpoints>/<item>", methods = ["GET", "POST"])
+
+@app.route("/update_group", methods = ["POST"])
+@login_required
 @update_perm
-def SetEditPerms(endpoints: str, item: str):
+def update_group():
     
-    form = SetPermsGroups()
-    hx = request.headers.get('HX-Request')
-    if request.method == "GET" and hx == 'true':
+    form = CreateGroup()
+    
+    gp_name = form.nome.data
+    
+    if len(form.membros.data) == 0:
+        flash("Grupo requer ao menos 1 usuário", "error")
+        return redirect(url_for("groups", _scheme='https'))
+    
+    ## Query database grupo com o nome que está no Form
+    database = Groups.query.filter(Groups.name_group == gp_name).first()
+    
+    ## Se o nome não foi encontrado, ele foi alterado
+    if not database:
         
-        item_html = render_template(f'pages/forms/{endpoints}.html', form=form, displayName = item)
-        return item_html
-
-    
-# @app.route('/add_group', methods=['GET', 'POST'])
-# @login_required
-# def add_group():
-    
-#     list = [json.dumps(CreateGroup().users.data), json.dumps(CreateGroup().paginas.data), json.dumps(CreateGroup().permissions.data)]
-    
-#     session["uuid_groups"]
-#     pathj = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_groups"]}.json")
-    
-#     with open(pathj, 'rb') as f:
-#         list_groups = json.load(f)
-
-#     list_groups.append(list)
-#     json_obj = json.dumps(list_groups)
+        ## Refaço a busca
+        database = Groups.query.filter(
+            Groups.name_group == session["name_group"]).first()
         
-#     with open(pathj, 'w') as f:
-#         f.write(json_obj)
-
-#     item_html = render_template(
-#         'includes/add_groups.html', item=list_groups)
-#     return item_html
-
-
-# @app.route('/remove-groups', methods=['GET', 'POST'])
-# @login_required
-# def remove_groups():
+    ## Seto as alterações do database
+    database.name_group = gp_name
+    database.members = json.dumps(form.membros.data)
     
-#     pathj = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_groups"]}.json")
-#     json_obj = json.dumps([])
-    
-#     with open(pathj, 'w') as f:
-#         f.write(json_obj)
+    ## Loop for nos membros do grupo
+    for usr in form.membros.data:
         
-#     item_html = render_template('includes/add_groups.html')
-#     return item_html
-
-# @app.route("/create_group", methods = ["POST"])
-# @login_required
-# @create_perm
-# def create_group():
-    
-#     form = CreateGroup()
-#     form_request = request.form
-    
-#     mutable = {}
-    
-#     for item in form_request:
+        user = Users.query.filter(Users.login == usr).first()
+        list_group = json.loads(user.grupos)
         
-#         value = form_request[item]
-#         mutable.update({item: value})
+        ## Se o usuário não está na lista de membros
+        if not usr in form.membros.data:
+            
+            ## Removo da lista de grupos na qual ele faz parte
+            list_group.remove(session["name_group"])
+
+        ## Caso o grupo não esteja na lista de grupos no qual o usuário faz parte
+        elif not form.nome.data in list_group:
+            list_group.append(form.nome.data)
+        
+        ## Caso nome do grupo tenha sido alterado
+        if session["name_group"] != form.nome.data:
+            
+            list_group.remove(session["name_group"])
+            list_group.append(form.nome.data)
+            
+        user.grupos = json.dumps(list_group)
+        
+    db.session.commit()
     
-#     return redirect(url_for("groups", _scheme = 'https'))
+    flash("Alterações salvas com sucesso!")
+    return redirect(url_for("groups", _scheme='https'))

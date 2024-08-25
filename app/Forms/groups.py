@@ -43,32 +43,11 @@ def set_choicesGroups() -> list[tuple[str, str]]:
 class CreateGroup(FlaskForm):
 
     nome = StringField(label="Nome do Grupo", validators=[DataRequired()])
-    desc = TextAreaField("Descrição (Opcional)")
-    submit = SubmitField("Salvar Alterações")
-        
-class AddUsersGroup(FlaskForm):
-    
-    selectgrupo = SelectField("Selecione o Grupo", validators=[DataRequired()], choices=[])
-    selectUsers = SelectMultipleField("Selecione os Usuários", validators=[DataRequired()], choices=[])
+    membros = SelectMultipleField("Selecione os Integrantes", validators=[DataRequired()], choices = [])
     submit = SubmitField("Salvar Alterações")
     
     def __init__(self, *args, **kwargs):
-        super(AddUsersGroup, self).__init__(*args, **kwargs)
+        super(CreateGroup, self).__init__(*args, **kwargs)
         
-        self.selectgrupo.choices.extend(set_choicesGroups())
-        self.selectUsers.choices.extend(set_choicesUsers())
+        self.membros.choices.extend(set_choicesUsers())
 
-class SetPermsGroups(FlaskForm):
-    
-    selectgrupo = SelectMultipleField("Selecione os Grupos", validators=[DataRequired()], choices=[])
-    selectRules = SelectMultipleField("Selecione as Permissões", validators=[DataRequired()], choices=[])
-    submit = SubmitField("Salvar Alterações")
-    
-    def __init__(self, *args, **kwargs):
-        super(SetPermsGroups, self).__init__(*args, **kwargs)
-        
-        self.selectgrupo.choices.extend(set_choicesGroups())
-        self.selectRules.choices.extend(setRules())
-        
-        
-        

@@ -79,7 +79,8 @@ def check_permit(groups_usr: list, PERM: str) -> bool:
         rotas = query_db(grp)
         
         if not rotas:
-            return False
+            returns = False
+            continue
         
         checkroute = rotas.get(str(end), None)
         if not checkroute:
