@@ -66,7 +66,7 @@ CLOUDFLARED_TOKEN = "SEU_TOKEN_AQUI"
 
 - [`APP`](./app/): É a pasta onde fica centralizado rotas, formulários e models do Flask
 
-- [`app.py`](./app/__init__.py): Arquivo de configuração do APP
+- [`Arquivo Config.`](./app/default_config.py): Arquivo de configuração do APP
 
 #### A partir de `/app`, teremos:
 - [`Models`](./app/models/): Onde ficam os models e bind's do SQL.
