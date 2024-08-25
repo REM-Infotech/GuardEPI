@@ -1,4 +1,5 @@
 import os
+import pathlib
 
 from flask import (render_template, url_for, session, redirect, flash,
                    abort, send_from_directory, request)
@@ -105,15 +106,21 @@ def profile_pic():
         user = session["username"]
         dbase = Users.query.filter_by(login=user).first()
 
-        image_data = dbase.blob_doc
-        filename = f"{generate_pid()}.png"
-        original_path = os.path.join(
-            app.config['IMAGE_TEMP_PATH'], filename)
+        if not dbase.blob_doc:
+            filename = "profile.png"
+            original_path = app.config["SRC_IMG_PATH"]
+            
+        else:
+            image_data = dbase.blob_doc
+            filename = f"{generate_pid()}.png"
+            original_path = os.path.join(
+                app.config['IMAGE_TEMP_PATH'])
 
-        with open(original_path, 'wb') as file:
-            file.write(image_data)
-
-        url = send_from_directory(app.config['IMAGE_TEMP_PATH'], filename)
+            with open(os.path.join(original_path, filename), 'wb') as file:
+                file.write(image_data)
+        
+        parent_path = str(os.path.join(original_path))
+        url = send_from_directory(parent_path, filename)
 
         return url
 

@@ -17,6 +17,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 PREFERRED_URL_SCHEME = "https"
 SESSION_COOKIE_HTTPONLY = False
 SESSION_COOKIE_SECURE = True
+SRC_IMG_PATH = os.path.join(os.getcwd(), "app", "src", "assets", "img")
 
 for paths in [DOCS_PATH, TEMP_PATH, IMAGE_TEMP_PATH, CSV_TEMP_PATH, PDF_TEMP_PATH]:
     os.makedirs(paths, exist_ok=True)
