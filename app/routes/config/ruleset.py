@@ -11,7 +11,7 @@ from app.decorators import (read_perm, set_endpoint,
                             create_perm, update_perm, delete_perm)
 
 import json
-
+import logging
 
 @app.route('/groups', methods=["GET"])
 @login_required
@@ -29,6 +29,7 @@ def groups():
         return render_template("index.html", form=form, database=database, page=page)
 
     except Exception as e:
+        logging.exception(str(e))
         abort(500)
 
 

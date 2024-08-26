@@ -12,7 +12,7 @@ from app import db
 from app.Forms import (CreateUserForm, AdmChangeEmail, AdmChangePassWord, 
                        ChangeEmail, ChangePassWord)
 
-from app.models import Users
+from app.models import Users, Groups
 from app.decorators import delete_perm, create_perm, update_perm
 
 import json
@@ -45,6 +45,15 @@ def caduser_end():
         usuario.senhacrip = form.password.data
         
         try:
+            
+            dbase_group = Groups.query.filter(Groups.name_group == "Default").first()
+            if dbase_group:
+                
+                if not dbase_group.members:
+                    dbase_group.members = []
+                    
+                dbase_group.members.append(form.login.data)
+                        
             db.session.add(usuario)
             db.session.commit()
             
