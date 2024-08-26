@@ -14,7 +14,7 @@ from app.Forms import ProfileEditForm
 
 from app.decorators import read_perm
 from app.misc import generate_pid
-
+import logging
 
 @app.route('/profile', methods=["GET", "POST"])
 @login_required
@@ -36,9 +36,6 @@ def profile():
         if form.validate_on_submit():
           
             full_name = str(session["nome_usuario"])  
-            if username == "root":
-                return redirect
-            
             user = Users.query.filter_by(login = username).first()
             
             if username != form.login.data:
@@ -51,13 +48,14 @@ def profile():
                     
                     for grupo in group:
                         
-                        list_members: list = json.loads(grupo.members)
-                        for membro in list_members:
-                            
-                            if username == membro:
-                                list_members.remove(membro)
-                                list_members.append(form.login.data)
-                                break
+                        if grupo.members:
+                            list_members: list = json.loads(grupo.members)
+                            for membro in list_members:
+                                
+                                if username == membro:
+                                    list_members.remove(membro)
+                                    list_members.append(form.login.data)
+                                    break
                             
                         grupo.members = json.dumps(list_members)
                         db.session.commit()
@@ -109,6 +107,7 @@ def profile():
         return render_template("index.html", page=page, form=form, url_image=url_image)
 
     except Exception as e:
+        logging.exception(str(e))
         abort(500)
 
 

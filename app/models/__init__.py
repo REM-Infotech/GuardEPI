@@ -52,7 +52,7 @@ def init_database() -> None:
                 filename = filename)
             root_pw = generate_pid(10)
             usr.senhacrip = root_pw
-            print(f"* Root Pw: {root_pw}")
+            print(f" * Root Pw: {root_pw}")
             to_add.append(usr)
 
         group = Groups.query.filter(Groups.name_group == "Grupo Root").first()
