@@ -1,5 +1,6 @@
 import os
 import pathlib
+import json
 
 from flask import (render_template, url_for, session, redirect, flash,
                    abort, send_from_directory, request)
@@ -8,7 +9,7 @@ from app import app, db
 
 from werkzeug.utils import secure_filename
 
-from app.models import Users
+from app.models import Users, Groups
 from app.Forms import ProfileEditForm
 
 from app.decorators import read_perm
@@ -20,10 +21,11 @@ from app.misc import generate_pid
 def profile():
 
     try:
-        user = session["username"]
-        dbase = Users.query.filter_by(login=user).first()
+        username = str(session["username"])
+        dbase = Users.query.filter_by(login=username).first()
         url_image = url_for('profile_pic')
         page = f'pages/{request.endpoint.lower()}.html'
+        
         form = ProfileEditForm(**{
             "login": dbase.login,
             "nome_usuario": dbase.nome_usuario,
@@ -33,9 +35,7 @@ def profile():
         
         if form.validate_on_submit():
           
-            username = str(session["username"])
-            full_name = str(session["nome_usuario"])
-            
+            full_name = str(session["nome_usuario"])  
             if username == "root":
                 return redirect
             
@@ -46,6 +46,21 @@ def profile():
                 if not username == "root":
                     user.login = form.login.data
                     session["username"] = form.login.data
+                    
+                    group = Groups.query.all()
+                    
+                    for grupo in group:
+                        
+                        list_members: list = json.loads(grupo.members)
+                        for membro in list_members:
+                            
+                            if username == membro:
+                                list_members.remove(membro)
+                                list_members.append(form.login.data)
+                                break
+                            
+                        grupo.members = json.dumps(list_members)
+                        db.session.commit()
                 
             if full_name != form.nome_usuario.data:
                 
