@@ -18,6 +18,7 @@ class ProdutoEPI(db.Model):
     modelo = db.Column(db.String(length=64))
     filename = db.Column(db.String(length=128))
     blob_doc = db.Column(db.LargeBinary(length=(2**32)-1))
+    vencimento = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Etc/GMT+4')))
 
 class Fornecedores(db.Model):
     

@@ -73,6 +73,6 @@ CLOUDFLARED_TOKEN = "SEU_TOKEN_AQUI"
 
 - [`Forms`](./app/Forms/): Formulários do projeto, sempre mantendo separados por funções.
 
-- [`Routes`](./app/routes/): Formulários do projeto, sempre mantendo separados por funções.
+- [`Routes`](./app/routes/): Rotas do projeto, sempre mantendo separados por funções.
 
 

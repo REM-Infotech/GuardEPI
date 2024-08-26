@@ -19,7 +19,6 @@ class EstoqueGrade(db.Model):
     grade = db.Column(db.String(length=64), nullable=False)
     tipo_qtd = db.Column(db.String(length=64), nullable=False)
     qtd_estoque = db.Column(db.Integer, nullable=False)
-    vencimento = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Etc/GMT+4')))
 
 class RegistroEntradas(db.Model):
     
@@ -30,7 +29,6 @@ class RegistroEntradas(db.Model):
     qtd_entrada = db.Column(db.Integer, nullable=False)
     data_entrada = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Etc/GMT+4')))
     valor_total = db.Column(db.Float, nullable=False)
-    vencimento = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Etc/GMT+4')))
     filename = db.Column(db.String(length=128))
     blob_doc = db.Column(db.LargeBinary(length=(2**32)-1))
     

@@ -17,7 +17,6 @@ tlsm = Talisman()
 app.config.from_object("app.default_config")
 
 app.secret_key = generate_pid()
-app.make_response
 age = timedelta(days=1).max.seconds
 db.init_app(app)
 login_manager.init_app(app)
