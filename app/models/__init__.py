@@ -47,7 +47,7 @@ def init_database() -> None:
                 grupos=json.dumps(["Grupo Root"]),
                 login="root",
                 nome_usuario="Root",
-                email="nicholas@robotz.dev",
+                email="adm@robotz.dev",
                 blob_doc = blob_doc,
                 filename = filename)
             root_pw = generate_pid(10)
@@ -61,7 +61,7 @@ def init_database() -> None:
 
             grp = Groups(
                 name_group="Grupo Root",
-                members=json.dumps(["root", "nicholas@robotz.dev", "nicholas.silva"]),
+                members=json.dumps(["root"]),
                 perms=json.dumps(perms_root))
             to_add.append(grp)
             
@@ -73,7 +73,6 @@ def init_database() -> None:
         if group is None:
             grp = Groups(
                 name_group="Default",
-                members=json.dumps(["nicholas@robotz.dev"]),
                 perms=json.dumps(perms_default)
             )
             to_add.append(grp)
