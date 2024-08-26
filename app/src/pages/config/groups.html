@@ -38,7 +38,7 @@
                         <td>{{ item.members.replace('[', '').replace(']', '').replace('"', '') }}</td>
                         <td>
                             <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
-                                hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
+                                hx-post="{{ url_for('deleteGroup', id = item.id) }}"
                                 hx-trigger="click" hx-target="#results">
                                 <span class="icon text-white-50">
                                     <i class="fa-solid fa-trash"></i>

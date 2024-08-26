@@ -8,7 +8,7 @@ from app import db
 from app.models import Groups, Users
 from app.Forms import CreateGroup
 from app.decorators import (read_perm, set_endpoint, 
-                            create_perm, update_perm)
+                            create_perm, update_perm, delete_perm)
 
 import json
 
@@ -149,3 +149,52 @@ def update_group():
     
     flash("Alterações salvas com sucesso!")
     return redirect(url_for("groups", _scheme='https'))
+
+@app.route("/deleteGroup/<id>", methods = ["POST"])
+@login_required
+@delete_perm
+def deleteGroup(id: int):
+    
+    template = "includes/show.html"
+    
+    ## Query do grupo a ser deletado
+    dbase_group = Groups.query.filter(Groups.id == id).first()
+    nome_grupo: str = dbase_group.name_group
+    
+    ## Se o grupo a ser deletado for root, ele vai bloquear
+    if nome_grupo == "Grupo Root":
+        message = "Grupo Root não pode ser deletado!"
+        return render_template(template, message = message)
+    
+    ## Loop for nos membros
+    for user in json.loads(dbase_group.members):
+        
+        ## Query do user
+        query_user = Users.query.filter(Users.login == user).first()
+        
+        ## Se o usuário nao existir, continua
+        if not query_user:
+            continue
+        
+        ## Ver os grupos no qual o usuário está
+        list_grupos = json.loads(query_user.grupos)
+        
+        for grupo in list_grupos:
+            
+            ## Se o grupo a ser deletado estiver na lista
+            if grupo == nome_grupo:
+                
+                ## Remove o grupo da lista de grupos que o usuário faz parte
+                list_grupos.remove(grupo)
+                break
+            
+        ## Atualiza a lista de grupos do usuário
+        query_user.grupos = json.dumps(list_grupos)
+        db.session.commit()
+        
+    db.session.delete(dbase_group)
+    db.session.commit()
+    
+    
+    message = "Grupo deletado com sucesso!"
+    return render_template(template, message = message)
