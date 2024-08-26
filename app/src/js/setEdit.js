@@ -1,9 +1,16 @@
 function SetModalEdit() {
-    
-    var ModalId = document.querySelector("div[data-modal_edit]");
-    $(document).ready(function () {
-        $(ModalId).modal('show');
-    });
+
+    setTimeout(() => {
+        $('#modalLoading').modal('hide');
+    }, 500)
+
+    setTimeout(() => {
+        var ModalId = document.querySelector("div[data-modal_edit]");
+        $(document).ready(function () {
+            $(ModalId).modal('show');
+        });
+    }, 1500)
+
 }
 
 // Chama a função com o valor obtido
