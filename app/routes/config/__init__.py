@@ -49,10 +49,15 @@ def caduser_end():
             dbase_group = Groups.query.filter(Groups.name_group == "Default").first()
             if dbase_group:
                 
-                if not dbase_group.members:
-                    dbase_group.members = []
+                list_groups = dbase_group.members
+                extend_group = [form.login.data]
+                if not list_groups:
+                    dbase_group.members = json.dumps(extend_group)
                     
-                dbase_group.members.append(form.login.data)
+                else:
+                    list_groups = json.loads(dbase_group.members)
+                    list_groups.extend(extend_group)
+                    dbase_group.members = json.dumps(list_groups)
                         
             db.session.add(usuario)
             db.session.commit()
