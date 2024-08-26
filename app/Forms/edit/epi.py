@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import (StringField, SubmitField, IntegerField, SelectField, FileField)
+from wtforms import (StringField, SubmitField, IntegerField, SelectField, 
+                     FileField, DateField)
 from flask_wtf.file import FileField, FileAllowed, DataRequired
 
 from app.Forms.choices import (set_choicesClasseEPI, 
@@ -16,13 +17,14 @@ class EditSaldoGrade(FlaskForm):
 
 class EditItemProdutoForm(FlaskForm):
 
-    ca = StringField(label='CA', validators=[DataRequired()])
+    ca = StringField(label='CA')
     cod_ca = IntegerField(label='Cod CA', validators=[DataRequired()])
     nome_epi = StringField(label='EPI', validators=[DataRequired()])
     tipo_epi = SelectField(label='Tipo do EPI', choices=[])
     valor_unitario = StringField(
         label='Valor Unitário', validators=[DataRequired()])
     qtd_entregar = IntegerField(label='Quantidade a Entregar')
+    vencimento = DateField(label='Vencimento CA')
     periodicidade_item = IntegerField(label='Periodicidade do Item')
     fornecedor = SelectField(label='Fornecedor', choices=[])
     marca = SelectField(label='Marca', choices=[])

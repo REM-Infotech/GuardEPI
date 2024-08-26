@@ -22,7 +22,6 @@
                                 <br>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="mb-3">
                                 {{ form.filename.label(for="formFile", class="form-label") }}
@@ -42,7 +41,12 @@
                                 {{ form.nome_epi(type="text", class="form-control", id="nome_epi", placeholder="") }}
                                 {{ form.nome_epi.label(for="nome_epi") }}
                             </div>
-
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating mb-3">
+                                {{ form.vencimento(class="form-control", id="vencimento", placeholder="") }}
+                                {{ form.vencimento.label(for="vencimento") }}
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating mb-3">
@@ -90,8 +94,6 @@
                                 {{ form.periodicidade_item.label(for="periodicidade_item") }}
                             </div>
                         </div>
-                        
-
                     </div>
                     <div class="footer">
                         <div class="d-grid gap-2">
