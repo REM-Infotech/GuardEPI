@@ -9,22 +9,26 @@ import json
 
 from app.defaults import perms_root, perms_default
 
+
+
 endpoints = [
-    ("registros", "Registros"),
-    ("users", "Usuários"),
-    ("groups", "Grupos"),
-    ("set1", "Produtos"),
-    ("Equipamentos", "Info. Equipamentos"),
-    ("Grade", "Info. Grade"),
-    ("set2", "Estoque"),
-    ("Estoque", "Equipamentos"),
-    ("Estoque_Grade", "Grades"),
+    ("Equipamentos", "Equipamentos"),
+    ("Fornecedores", "Fornecedores"),
+    ("Marcas", "Marcas"),
+    ("Modelos", "Modelos"),
+    ("Classes", "Classes"),
+    ("Estoque", "Estoque"),
+    ("Estoque_Grade", "Estoque_Grade"),
     ("Entradas", "Entradas"),
+    ("Registro_Saidas", "Registro_Saidas"),
     ("Cautelas", "Cautelas"),
-    ("funcionarios", "Funcionários"),
+    ("Grade", "Grade"),
+    ("cargos", "cargos"),
     ("Empresas", "Empresas"),
-    ("cargos", "Cargos"),
-    ("Departamentos", "Departamentos")
+    ("funcionarios", "funcionarios"),
+    ("Departamentos", "Departamentos"),
+    ("users", "users"),
+    ("groups", "groups")
 ]
 
 

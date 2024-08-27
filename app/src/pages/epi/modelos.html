@@ -5,19 +5,19 @@
         <div class="card-header">
             <h2 class="m-2">Modelos</h1>
                 <hr>
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#cadastroModelos">
+                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#cadastroModelos">
                     <span class="icon text-white-50">
                         <i class="fa-solid fa-plus"></i>
                     </span>
                     <span class="text">Cadastrar</span>
                 </button>
-                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#importarquivo">
+                <button type="button" class="btn btn-warning mb-3" data-bs-toggle="modal" data-bs-target="#importarquivo">
                     <span class="icon text-white-50">
                         <i class="fa-solid fa-file-import"></i>
                     </span>
                     <span class="text">Import em lotes</span>
                 </button>
-                <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}" class="btn btn-primary btn-icon-split">
+                <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}" class="btn btn-primary btn-icon-split mb-3">
                 <span class="icon text-white-50">
                     <i class="fa-solid fa-file-csv"></i>
                 </span>
