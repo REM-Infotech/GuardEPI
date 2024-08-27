@@ -79,6 +79,7 @@ def SetEditarEPI(item: int):
         'marca': database.marca,
         'modelo': database.modelo,
         'tipo_epi': database.tipo_epi,
+        'vencimento': database.vencimento
     })
         
     url = ""
