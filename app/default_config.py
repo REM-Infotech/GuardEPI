@@ -1,5 +1,10 @@
 from dotenv import dotenv_values
+from uuid import uuid4
+import subprocess
+import platform
 import os
+
+from datetime import timedelta
 
 login_db = dotenv_values()['login']
 passwd_db = dotenv_values()['password']
@@ -17,7 +22,28 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 PREFERRED_URL_SCHEME = "https"
 SESSION_COOKIE_HTTPONLY = False
 SESSION_COOKIE_SECURE = True
+PERMANENT_SESSION_LIFETIME = timedelta(days=7).max.seconds
 SRC_IMG_PATH = os.path.join(os.getcwd(), "app", "src", "assets", "img")
+SECRET_KEY = str(uuid4())
 
 for paths in [DOCS_PATH, TEMP_PATH, IMAGE_TEMP_PATH, CSV_TEMP_PATH, PDF_TEMP_PATH]:
-    os.makedirs(paths, exist_ok=True)
+    
+    if not os.path.exists(paths):
+        os.makedirs(paths, exist_ok=True)
+        
+    else:
+        
+        plataforma = platform.system()
+        
+        if plataforma == "Linux":
+            path =  f"{paths}/*" 
+            comand = "rm -r " + path
+             
+        
+        elif plataforma == "Windows":
+            path =  f"{paths}\\*" 
+            command = "powershell rm -r " + path
+        
+        os.system(command)
+
+

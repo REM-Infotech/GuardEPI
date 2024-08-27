@@ -50,16 +50,16 @@ def add_itens():
     pathj = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_Cautelas"]}.json")
     
     with open(pathj, 'rb') as f:
-        list_groups = json.load(f)
+        list_epis = json.load(f)
 
-    list_groups.append(list)
-    json_obj = json.dumps(list_groups)
+    list_epis.append(list)
+    json_obj = json.dumps(list_epis)
         
     with open(pathj, 'w') as f:
         f.write(json_obj)
 
     item_html = render_template(
-        'includes/add_items.html', item=list_groups)
+        'includes/add_items.html', item=list_epis)
 
     # Retorna o HTML do item
     return item_html
@@ -75,7 +75,7 @@ def remove_itens():
     with open(pathj, 'w') as f:
         f.write(json_obj)
         
-    item_html = render_template('includes/add_itens.html')
+    item_html = render_template('includes/add_items.html')
     return item_html
 
 @app.route("/Registro_Saidas", methods = ["GET"])
@@ -136,12 +136,6 @@ def emitir_cautela():
             ## Lista EPI Solicitadas
             list_epis_solict = []
             para_registro = []
-            ## Lista Itens Flask Form
-            form_flask = list(form.data)
-            
-            ## Itens formulário Avulso (Sem Flask Form)
-            epi = request.form
-            list_epi = list(epi)
             
             ## Query Funcionário
             funcionario = form.select_funcionario.data
@@ -152,6 +146,18 @@ def emitir_cautela():
             dbase = Empresa.query.filter(
                 Empresa.nome_empresa == data_funcionario.empresa).first()
             
+            path_json = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_Cautelas"]}.json")
+    
+            with open(path_json, 'rb') as f:
+                list_epis: list = json.load(f)
+            
+            if len(list_epis) == 0:
+                
+                flash("Adicione ao menos 1a EPI!", "error")   
+                sleep(1)
+                messages = get_flashed_messages()
+                return render_template('includes/show_pdf.html', url="", messages=messages)
+            
             if not dbase:
                 
                 flash("Empresa não cadastrada!", "error")   
@@ -161,48 +167,45 @@ def emitir_cautela():
                     
             nomefilename = f'Cautela - {funcionario} - {datetime.now().strftime("%d-%m-%Y %H-%M-%S")}.pdf'
             count_cautelas = RegistrosEPI.query.all()
-            if not count_cautelas:
+            if not count_cautelas or len(count_cautelas) == 1:
                 count_cautelas = 1
             else:
-                count_cautelas = len(count_cautelas)
+                count_cautelas = 1
             
             epis_lista = []
             valor_calc = 0
             
-            for epi_solicitada in list_epi:
-                if epi_solicitada not in form_flask and epi_solicitada != "csrf_token":
+            for epi_solicit in list_epis:
+                
+                nome_epi = epi_solicit[0]
+                grade_epi = epi_solicit[1]
+                qtd_entrega = int(epi_solicit[2])
+                if not qtd_entrega or not grade_epi:
+                    continue
+                
+                equip = ProdutoEPI.query.filter_by(nome_epi = nome_epi).first()
+                data_estoque = EstoqueEPI.query.filter(EstoqueEPI.nome_epi == nome_epi).first()
+                estoque_grade = EstoqueGrade.query.filter(EstoqueGrade.nome_epi == nome_epi, 
+                        EstoqueGrade.grade == grade_epi).first()
                     
-                    qtd_entregar = epi[epi_solicitada].split(" - ")[-1]
-                    grade = epi[epi_solicitada].split(" - ")[1]
 
-                    equip = ProdutoEPI.query.filter_by(nome_epi = epi_solicitada).first()
                     
-                    ## Query Estoque geral
-                    data_estoque = EstoqueEPI.query.filter(EstoqueEPI.nome_epi == epi_solicitada).first()
-                    
-                    ## Query Estoque Grades
-                    estoque_grade = EstoqueGrade.query.filter(EstoqueGrade.nome_epi == epi_solicitada, 
-                        EstoqueGrade.grade == form.tipo_grade.data).first()
-
-                    
-                    if estoque_grade:
-                        if estoque_grade and estoque_grade.qtd_estoque > 0 and data_estoque.qtd_estoque > 0:
+                if estoque_grade:
+                    if estoque_grade and estoque_grade.qtd_estoque > 0 and data_estoque.qtd_estoque > 0:
+                        
+                        list_epis_solict.append([str(nome_epi), qtd_entrega, grade_epi, equip.ca])
+                        epis_lista.append(nome_epi)
+                        para_registro.append(RegistroSaidas(
                             
-                            list_epis_solict.append([str(data_estoque.id), str(qtd_entregar), data_estoque.nome_epi, grade, equip.ca])
-                            estoque_grade.qtd_estoque = estoque_grade.qtd_estoque - 1
-                            data_estoque.qtd_estoque = data_estoque.qtd_estoque - 1
+                            nome_epi=nome_epi,
+                            qtd_saida=int(qtd_entrega),
+                            valor_total = equip.valor_unitario * int(qtd_entrega)
                             
-                            epis_lista.append(epi_solicitada)
-                            
-                            para_registro.append(RegistroSaidas(
-                                
-                                nome_epi=epi_solicitada,
-                                qtd_saida=int(qtd_entregar),
-                                valor_total = equip.valor_unitario * int(qtd_entregar)
-                                
-                            ))
-                            
-                            valor_calc = equip.valor_unitario * int(qtd_entregar)
+                        ))
+                        
+                        estoque_grade.qtd_estoque = estoque_grade.qtd_estoque - 1
+                        data_estoque.qtd_estoque = data_estoque.qtd_estoque - 1
+                        valor_calc = equip.valor_unitario * int(qtd_entrega)
 
             if len(epis_lista) == 0:
                 flash("EPI's sem Estoque", "error")
@@ -234,7 +237,7 @@ def emitir_cautela():
             }
 
             item_data = [
-                ["ID", "Qtde", "Descrição", "Grade", "CA"],
+                ["Descrição", "Qtde", "Grade", "CA"],
             ]
 
             for obj in list_epis_solict:
@@ -287,6 +290,14 @@ def emitir_cautela():
 
                 url = url_for(
                     'serve_pdf', index = set_cautela.id, md="Cautelas", _external=True, _scheme='https')
+                
+                pathj = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_Cautelas"]}.json")
+                json_obj = json.dumps([])
+                
+                with open(pathj, 'w') as f:
+                    f.write(json_obj)
+                
+                
                 item_html = render_template('includes/show_pdf.html', url=url)
                 return item_html
 
