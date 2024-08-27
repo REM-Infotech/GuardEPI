@@ -67,22 +67,28 @@ def cadastrar(tipo: str):
                         if isinstance(form_field, FileField):
 
                             file = form_field.data
-                            docname = secure_filename(file.filename)
-                            now = generate_pid()
-                            filename = f"{now}{docname}"
-                            path_img = os.path.join(
-                                app.config['TEMP_PATH'], filename)
-                            file.save(path_img)
-                            kwargs[column.name] = filename
+                            
+                            if file:
+                                docname = secure_filename(file.filename)
+                                now = generate_pid()
+                                filename = f"{now}{docname}"
+                                path_img = os.path.join(
+                                    app.config['TEMP_PATH'], filename)
+                                file.save(path_img)
+                                kwargs[column.name] = filename
 
                         if "R$" in str(data_insert):
                             data_insert = float(str(data_insert).replace(
                                 "R$ ", "").replace(".", "").replace(",", "."))
 
-                        kwargs.setdefault(column.name, data_insert)
+                        if data_insert:
+                            kwargs.setdefault(column.name, data_insert)
+                            
                     if isinstance(column.type, LargeBinary):
-                        with open(path_img, 'rb') as fileimg:
-                            kwargs.setdefault(column.name, fileimg.read())
+                        
+                        if path_img:
+                            with open(path_img, 'rb') as fileimg:
+                                kwargs.setdefault(column.name, fileimg.read())
 
                 new_itens = model(**kwargs)
                 db.session.add(new_itens)

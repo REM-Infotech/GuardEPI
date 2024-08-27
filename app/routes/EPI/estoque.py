@@ -84,8 +84,7 @@ def lancamento_produto():
                 nome_epi=form.nome_epi.data,
                 tipo_qtd=form.tipo_qtd.data,
                 qtd_estoque=form.qtd_estoque.data,
-                grade=form.tipo_grade.data,
-                vencimento=form.vencimento.data)
+                grade=form.tipo_grade.data)
 
             db.session.add(cad_1)
             if not dbase_2:
@@ -120,8 +119,7 @@ def lancamento_produto():
             grade=form.tipo_grade.data,
             tipo_qtd=form.tipo_qtd.data,
             qtd_entrada=form.qtd_estoque.data,
-            valor_total=data_insert,
-            vencimento=form.vencimento.data)
+            valor_total=data_insert)
         
         file_nf = form.nota_fiscal.data
         if file_nf:

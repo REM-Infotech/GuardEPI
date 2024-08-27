@@ -63,7 +63,7 @@ def SetEditarEPI(item: int):
     model = ProdutoEPI
     database = model.query.filter(model.id == item).first()
     route = request.referrer.replace("https://", "").replace("http://", "")
-    route = route.split("/")[1]
+    route = route.split("/")[1].lower()
     
     if "?" in route:
         route = route.split("?")[0]
