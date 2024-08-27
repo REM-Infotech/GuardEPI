@@ -13,7 +13,7 @@ import os
 @app.route('/users', methods=["GET"])
 @login_required
 @set_endpoint
-#@read_perm
+@read_perm
 def users():
 
     try:

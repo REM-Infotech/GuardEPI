@@ -17,7 +17,7 @@ import os
 @app.route("/Estoque")
 @login_required
 @set_endpoint
-#@read_perm
+@read_perm
 def Estoque():
 
     database = EstoqueEPI.query.all()
@@ -37,7 +37,7 @@ def Estoque():
 @app.route("/Estoque_Grade", methods=["GET"])
 @login_required
 @set_endpoint
-#@read_perm
+@read_perm
 def Estoque_Grade():
 
     database = EstoqueGrade.query.all()
@@ -51,7 +51,7 @@ def Estoque_Grade():
 @app.route("/Entradas")
 @login_required
 @set_endpoint
-#@read_perm
+@read_perm
 def Entradas():
 
     title = "Relação de Entradas EPI"

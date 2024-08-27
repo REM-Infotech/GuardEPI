@@ -6,19 +6,24 @@ from wtforms.validators import DataRequired, Length
 from app.models import Users
 
 endpoints = [
-    ("registros", "Registros"),
-    ("users", "Usuários"),
-    ("groups", "Grupos"),
     ("Equipamentos", "Equipamentos"),
-    ("Estoque", "Estoque"),
-    ("Estoque_Grade", "Estoque de grades"),
-    ("Entradas", "Entradas"),
+    ("Grade", "Grades"),
+    ("Fornecedores", "Fornecedores"),
+    ("Marcas", "Marcas"),
+    ("Modelos", "Modelos"),
+    ("Classes", "Classes"),
+    ("Estoque", "Estoque Geral"),
+    ("Estoque_Grade", "Estoque por Grade"),
+    ("Entradas", "Registro Entradas"),
+    ("Registro_Saidas", "Registro Saídas"),
     ("Cautelas", "Cautelas"),
-    ("Grade", "Grade"),
-    ("cargos", "Cargos"),
+    ("funcionarios", "funcionarios"),
     ("Empresas", "Empresas"),
-    ("funcionarios", "Funcionários"),
-    ("Departamentos", "Departamentos")
+    ("cargos", "cargos"),
+    ("Departamentos", "Departamentos"),
+    ("users", "users"),
+    ("groups", "groups"),
+    ("Permissoes", "Permissoes")
 ]
 
 perms = [("CREATE", "Criar e Adicionar Itens"),
@@ -55,9 +60,11 @@ class CreateGroup(FlaskForm):
 
 class CreatePerm(FlaskForm):
     
-    nome = StringField(label="Nome do Grupo", validators=[DataRequired()])
-    grupos = SelectField("Selecione o Grupo", choices=[])
+    name_rule = StringField(label="Nome do Grupo", validators=[DataRequired()])
+    grupos = SelectMultipleField("Selecione os Grupos", choices=[])
+    rota = SelectField("Selecione a Página", choices=endpoints)
     permissoes = SelectMultipleField("Selecione as Permissões", choices=perms)
+    submit = SubmitField("Salvar Alterações")
     
     def __init__(self, *args, **kwargs):
         super(CreatePerm, self).__init__(*args, **kwargs)

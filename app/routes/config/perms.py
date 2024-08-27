@@ -81,7 +81,7 @@ def remove_itens_perms():
 @app.route("/Permissoes", methods = ["GET"])
 @login_required
 @set_endpoint
-#@read_perm
+@read_perm
 def Permissoes():
 
     page = f"pages/config/{request.endpoint.lower()}.html"
