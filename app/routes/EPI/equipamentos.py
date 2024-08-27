@@ -40,7 +40,7 @@ def get_models(tipo) -> Type[tipo]:
 @app.route("/Equipamentos")
 @login_required
 @set_endpoint
-@read_perm
+#@read_perm
 def Equipamentos():
 
     importForm = IMPORTEPIForm()
@@ -101,7 +101,7 @@ def SetEditarEPI(item: int):
 @app.route("/Fornecedores", methods = ["GET"])
 @login_required
 @set_endpoint
-@read_perm
+#@read_perm
 def Fornecedores():
 
     form = CadastroFonecedores()
@@ -114,7 +114,7 @@ def Fornecedores():
 @app.route("/Marcas", methods = ["GET"])
 @login_required
 @set_endpoint
-@read_perm
+#@read_perm
 def Marcas():
     
     form = CadastroMarcas()    
@@ -127,7 +127,7 @@ def Marcas():
 @app.route("/Modelos", methods = ["GET"])
 @login_required
 @set_endpoint
-@read_perm
+#@read_perm
 def Modelos():
     
     form = CadastroModelos()
@@ -140,7 +140,7 @@ def Modelos():
 @app.route("/Classes", methods = ["GET"])
 @login_required
 @set_endpoint
-@read_perm
+#@read_perm
 def Classes():
 
     form = CadastroClasses()

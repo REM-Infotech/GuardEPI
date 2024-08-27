@@ -40,9 +40,9 @@ def setPerms():
             with open(pathj, 'w') as f:
                 f.write(json_obj)
                 
-@app.route('/add_itens', methods=['GET', 'POST'])
+@app.route('/add_itens_perms', methods=['GET', 'POST'])
 @login_required
-def add_itens():
+def add_itens_perms():
     
     form = Cautela()
     list = [form.nome_epi.data, form.tipo_grade.data, form.qtd_entregar.data]
@@ -59,15 +59,15 @@ def add_itens():
         f.write(json_obj)
 
     item_html = render_template(
-        'includes/add_items.html', item=list_epis)
+        'includes/add_itens_perms.html', item=list_epis)
 
     # Retorna o HTML do item
     return item_html
 
 
-@app.route('/remove-itens', methods=['GET', 'POST'])
+@app.route('/remove_itens_perms', methods=['GET', 'POST'])
 @login_required
-def remove_itens():
+def remove_itens_perms():
     
     pathj = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_Permissoes"]}.json")
     json_obj = json.dumps([])
@@ -81,7 +81,7 @@ def remove_itens():
 @app.route("/Permissoes", methods = ["GET"])
 @login_required
 @set_endpoint
-@read_perm
+#@read_perm
 def Permissoes():
 
     page = f"pages/config/{request.endpoint.lower()}.html"

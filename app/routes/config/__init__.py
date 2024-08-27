@@ -1,6 +1,7 @@
 from app.routes.config import users
 from app.routes.config import profile
 from app.routes.config import groups
+from app.routes.config import perms
 
 from flask import (redirect, url_for, render_template, flash, request, 
                    session, abort)

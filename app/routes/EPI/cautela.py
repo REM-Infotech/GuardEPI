@@ -81,7 +81,7 @@ def remove_itens():
 @app.route("/Registro_Saidas", methods = ["GET"])
 @login_required
 @set_endpoint
-@read_perm
+#@read_perm
 def Registro_Saidas():
     
     page = f"pages/epi/{request.endpoint.lower()}.html"
@@ -94,7 +94,7 @@ def Registro_Saidas():
 @app.route("/Cautelas", methods = ["GET"])
 @login_required
 @set_endpoint
-@read_perm
+#@read_perm
 def Cautelas():
 
     page = f"pages/epi/{request.endpoint.lower()}.html"

@@ -147,6 +147,15 @@ perms_root = {
         "permissoes": [
             "READ"
         ]
+    },
+    "Permissoes":{
+        "permissoes": [
+            "CREATE",
+            "READ",
+            "UPDATE",
+            "DELETE"
+        ]
+        
     }
 }
 perms_default = {

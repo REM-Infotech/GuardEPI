@@ -13,7 +13,7 @@ from app.misc import format_currency_brl
 @app.route("/Grade")
 @login_required
 @set_endpoint
-@read_perm
+#@read_perm
 def Grade():
     
     title = "Grades"

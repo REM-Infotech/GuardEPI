@@ -28,7 +28,8 @@ endpoints = [
     ("funcionarios", "funcionarios"),
     ("Departamentos", "Departamentos"),
     ("users", "users"),
-    ("groups", "groups")
+    ("groups", "groups"),
+    ("Permissoes", "Permissoes")
 ]
 
 

@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.form import _Auto
 from wtforms import (StringField, SubmitField, SelectField,
                      PasswordField, BooleanField, SelectMultipleField, TextAreaField)
 from wtforms.validators import DataRequired, Length
@@ -19,6 +20,11 @@ endpoints = [
     ("funcionarios", "Funcionários"),
     ("Departamentos", "Departamentos")
 ]
+
+perms = [("CREATE", "Criar e Adicionar Itens"),
+         ("READ", "Acessar Informações"),
+         ("UPDATE", "Atualizar Informações"),
+         ("DELETE", "Deletar Informações")]
 
 
 def set_choicesUsers() -> list[tuple[str, str]]:
@@ -46,3 +52,14 @@ class CreateGroup(FlaskForm):
         super(CreateGroup, self).__init__(*args, **kwargs)
         
         self.users.choices.extend(set_choicesUsers())
+
+class CreatePerm(FlaskForm):
+    
+    nome = StringField(label="Nome do Grupo", validators=[DataRequired()])
+    grupos = SelectField("Selecione o Grupo", choices=[])
+    permissoes = SelectMultipleField("Selecione as Permissões", choices=perms)
+    
+    def __init__(self, *args, **kwargs):
+        super(CreatePerm, self).__init__(*args, **kwargs)
+    
+    

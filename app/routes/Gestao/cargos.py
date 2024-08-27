@@ -13,7 +13,7 @@ from app.decorators import read_perm, set_endpoint
 @app.route("/cargos")
 @login_required
 @set_endpoint
-@read_perm
+#@read_perm
 def cargos():
 
     importForm = IMPORTEPIForm()
