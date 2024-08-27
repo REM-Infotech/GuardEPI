@@ -51,8 +51,11 @@ $(document).ready(function () {
               title: function (tooltipItems, data) {
                 // Retorna o texto completo do rótulo
                 return data.labels[tooltipItems[0].index];
-              }
-            }
+              },
+              label: (tooltipItem, data) => {
+                return formatMoney(data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index]);
+              },
+            },
           }
         }
       });

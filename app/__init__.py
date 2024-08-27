@@ -30,9 +30,9 @@ login_manager.login_view = 'login'
 login_manager.login_message = "Faça login para acessar essa página."
 login_manager.login_message_category = "info"
 
-# from app.models import init_database
+from app.models import init_database
 
-# init_database()
+init_database()
 
 from app import routes
 
