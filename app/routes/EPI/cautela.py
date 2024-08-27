@@ -11,6 +11,7 @@ from app.misc.generate_doc import (add_watermark, adjust_image_transparency,
 create_EPI_control_sheet, create_watermark_pdf)
 
 import os
+import uuid
 from datetime import datetime
 
 from time import sleep
@@ -21,6 +22,61 @@ from app import app
 
 from app.misc import format_currency_brl
 from app.decorators import read_perm, set_endpoint, create_perm
+
+@app.before_request
+def setgroups():
+    
+    if request.endpoint == "Cautelas":
+        if not session.get("uuid_Cautelas", None):
+            
+            session["uuid_Cautelas"] = str(uuid.uuid4())
+            pathj = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_Cautelas"]}.json")
+            
+            if os.path.exists(pathj):
+                os.remove(pathj)
+            
+            json_obj = json.dumps([])
+            
+            with open(pathj, 'w') as f:
+                f.write(json_obj)
+                
+@app.route('/add_itens', methods=['GET', 'POST'])
+@login_required
+def add_itens():
+    
+    form = Cautela()
+    list = [form.nome_epi.data, form.tipo_grade.data, form.qtd_entregar.data]
+
+    pathj = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_Cautelas"]}.json")
+    
+    with open(pathj, 'rb') as f:
+        list_groups = json.load(f)
+
+    list_groups.append(list)
+    json_obj = json.dumps(list_groups)
+        
+    with open(pathj, 'w') as f:
+        f.write(json_obj)
+
+    item_html = render_template(
+        'includes/add_items.html', item=list_groups)
+
+    # Retorna o HTML do item
+    return item_html
+
+
+@app.route('/remove-itens', methods=['GET', 'POST'])
+@login_required
+def remove_itens():
+    
+    pathj = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_Cautelas"]}.json")
+    json_obj = json.dumps([])
+    
+    with open(pathj, 'w') as f:
+        f.write(json_obj)
+        
+    item_html = render_template('includes/add_itens.html')
+    return item_html
 
 @app.route("/Registro_Saidas", methods = ["GET"])
 @login_required
@@ -49,35 +105,6 @@ def Cautelas():
     session["itens_lista_cautela"] = []
     return render_template("index.html", page=page, title=title, database=database, 
                            DataTables=DataTables, form=form)
-
-
-@app.route('/add-itens', methods=['GET', 'POST'])
-@login_required
-def add_itens():
-
-    form = Cautela()
-
-    session["itens_lista_cautela"].append(
-        [form.nome_epi.data, form.tipo_grade.data, form.qtd_entregar.data])
-
-    item_html = render_template(
-        'includes/add_items.html', item=session["itens_lista_cautela"])
-
-    # Retorna o HTML do item
-    return item_html
-
-
-@app.route('/remove-itens', methods=['GET', 'POST'])
-@login_required
-def remove_itens():
-
-    session["itens_lista_cautela"] = []
-
-    item_html = render_template('includes/add_items.html')
-
-    # Retorna o HTML do item
-    return item_html
-
 
 @app.route("/get-grade", methods=["POST"])
 @login_required

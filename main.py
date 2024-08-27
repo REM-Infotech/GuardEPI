@@ -37,16 +37,11 @@ def configure_tunnel(token: str, binary_name: str):
 
 if __name__ == "__main__":
 
-    if platform.system() == "Linux":
-        load_dotenv()
-        token: str = os.getenv("CLOUDFLARED_TOKEN")
-
-        if token:
-            configure_tunnel(token, install_cloudflared())
-
-        else:
-            print(
-                "Token não encontrado. Verifique se o arquivo .env está configurado corretamente.")
+    load_dotenv()
+    token: str = os.getenv("CLOUDFLARED_TOKEN")
+    if token and platform.system() == "Linux":
+        
+        configure_tunnel(token, install_cloudflared())
 
     from app import app
     from configs import *
