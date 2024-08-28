@@ -1,29 +1,44 @@
 from flask_wtf import FlaskForm
+from flask_wtf.form import _Auto
 from wtforms import (StringField, SubmitField, SelectField,
                      PasswordField, BooleanField, SelectMultipleField, TextAreaField)
 from wtforms.validators import DataRequired, Length
-from app.models import Users
+from app.models import Users, Groups
 
 endpoints = [
-    ("registros", "Registros"),
+    ("Equipamentos", "Equipamentos"),
+    ("Grade", "Grades"),
+    ("Fornecedores", "Fornecedores"),
+    ("Marcas", "Marcas"),
+    ("Modelos", "Modelos"),
+    ("Classes", "Classes"),
+    ("Estoque", "Estoque Geral"),
+    ("Estoque_Grade", "Estoque por Grade"),
+    ("Entradas", "Registro Entradas"),
+    ("Registro_Saidas", "Registro Saídas"),
+    ("Cautelas", "Cautelas"),
+    ("funcionarios", "Funcionarios"),
+    ("Empresas", "Empresas"),
+    ("cargos", "Cargos"),
+    ("Departamentos", "Departamentos"),
     ("users", "Usuários"),
     ("groups", "Grupos"),
-    ("Equipamentos", "Equipamentos"),
-    ("Estoque", "Estoque"),
-    ("Estoque_Grade", "Estoque de grades"),
-    ("Entradas", "Entradas"),
-    ("Cautelas", "Cautelas"),
-    ("Grade", "Grade"),
-    ("cargos", "Cargos"),
-    ("Empresas", "Empresas"),
-    ("funcionarios", "Funcionários"),
-    ("Departamentos", "Departamentos")
+    ("Permissoes", "Permissoes")
 ]
+
+perms = [("CREATE", "Criar e Adicionar Itens"),
+         ("READ", "Acessar Informações"),
+         ("UPDATE", "Atualizar Informações"),
+         ("DELETE", "Deletar Informações")]
 
 
 def set_choicesUsers() -> list[tuple[str, str]]:
 
     return [(item.login, item.nome_usuario) for item in Users.query.all()]
+
+def set_choicesGrupos() -> list[tuple[str, str]]:
+
+    return [(item.name_group, item.name_group) for item in Groups.query.all()]
 
 
 class CreateUserForm(FlaskForm):
@@ -46,3 +61,16 @@ class CreateGroup(FlaskForm):
         super(CreateGroup, self).__init__(*args, **kwargs)
         
         self.users.choices.extend(set_choicesUsers())
+
+class CreatePerm(FlaskForm):
+    
+    name_rule = StringField(label="Nome do Grupo", validators=[DataRequired()])
+    grupos = SelectMultipleField("Selecione os Grupos", choices=[])
+    rota = SelectField("Selecione a Página", choices=endpoints)
+    permissoes = SelectMultipleField("Selecione as Permissões", choices=perms)
+    submit = SubmitField("Salvar Alterações")
+    
+    def __init__(self, *args, **kwargs):
+        super(CreatePerm, self).__init__(*args, **kwargs)
+        self.grupos.choices.extend(set_choicesGrupos())
+    

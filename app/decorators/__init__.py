@@ -1,6 +1,6 @@
 from functools import wraps
 from flask import request, abort, session, redirect, url_for
-from app.models import Users, Groups
+from app.models import Permissions
 import json
 
 def set_endpoint(func):
@@ -59,15 +59,10 @@ def delete_perm(func):
         return func(*args, **kwargs)
     return decorated_function
 
-def query_db(group_usr: str) -> dict:
-    
-    dbase = Groups.query.filter(Groups.name_group == group_usr).first()
-    if dbase: 
-        return json.loads(dbase.perms)
-
 def check_permit(groups_usr: list, PERM: str) -> bool:
     
-    returns = False
+    if session.get("username") == "root":
+        return True
     
     end = session.get("endpoint", None)
     
@@ -75,23 +70,21 @@ def check_permit(groups_usr: list, PERM: str) -> bool:
         return redirect(url_for("dashboard"))
     
     for grp in groups_usr:
-    
-        rotas = query_db(grp)
         
-        if not rotas:
-            returns = False
-            continue
+        rules = Permissions.query.all()
         
-        checkroute = rotas.get(str(end), None)
-        if not checkroute:
-            continue
+        for rule in rules:
         
-        grant = list(checkroute['permissoes'])
-        if any(PERM == perms for perms in grant):
-            returns = True
-            break
-        
-    return returns
+            if any(grp == grupo_membro for grupo_membro in json.loads(rule.groups_members)):
+                
+                perms = json.loads(rule.perms)
+                for rota in perms:
+                    
+                    grant = perms[rota]
+                    if any(PERM == perms and rota == end for perms in grant):
+                        return True
+
+    return False
         
     
             

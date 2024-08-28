@@ -3,13 +3,13 @@
     <div class="mt-4 card mb-4">
 
         <div class="card-header">
-            <h2 class="m-2">Grupos</h1>
+            <h2 class="m-2">Permissões</h2>
                 <hr>
-                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#CreateGroup">
+                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#CreateRuleForm">
                     <span class="icon text-white-50">
                         <i class="fa-solid fa-plus"></i>
                     </span>
-                    <span class="text">Adicionar Grupo</span>
+                    <span class="text">Configurar Nova Regra</span>
                 </button>
                 <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}" class="btn btn-primary btn-icon-split mb-3">
                 <span class="icon text-white-50">
@@ -34,11 +34,11 @@
                     {% for item in database %}
                     <tr>
                         <td>{{ item.id }}</td>
-                        <td>{{ item.name_group }}</td>
-                        {% if not item.members %}
+                        <td>{{ item.name_rule }}</td>
+                        {% if not item.groups_members %}
                         <td>Sem Membros</td>
                         {% else %}
-                        <td>{{ item.members.replace('[', '').replace(']', '').replace('"', '') }}</td>
+                        <td>{{ item.groups_members.replace('[', '').replace(']', '').replace('"', '') }}</td>
                         {% endif %}
                         <td>
                             <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
@@ -74,7 +74,7 @@
         </div>
     </div>
     {% if form %}
-    {% include 'pages/forms/'+ request.endpoint + "/criar.html" %}
+    {% include 'pages/forms/permissions/create.html' %}
 
     {% endif %}
     <div id="results">

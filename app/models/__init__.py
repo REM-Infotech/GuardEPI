@@ -7,24 +7,27 @@ from app import app
 from app.misc import generate_pid
 import json
 
-from app.defaults import perms_root, perms_default
+
 
 endpoints = [
-    ("registros", "Registros"),
-    ("users", "Usuários"),
-    ("groups", "Grupos"),
-    ("set1", "Produtos"),
-    ("Equipamentos", "Info. Equipamentos"),
-    ("Grade", "Info. Grade"),
-    ("set2", "Estoque"),
-    ("Estoque", "Equipamentos"),
-    ("Estoque_Grade", "Grades"),
+    ("Equipamentos", "Equipamentos"),
+    ("Fornecedores", "Fornecedores"),
+    ("Marcas", "Marcas"),
+    ("Modelos", "Modelos"),
+    ("Classes", "Classes"),
+    ("Estoque", "Estoque"),
+    ("Estoque_Grade", "Estoque_Grade"),
     ("Entradas", "Entradas"),
+    ("Registro_Saidas", "Registro_Saidas"),
     ("Cautelas", "Cautelas"),
-    ("funcionarios", "Funcionários"),
+    ("Grade", "Grade"),
+    ("cargos", "cargos"),
     ("Empresas", "Empresas"),
-    ("cargos", "Cargos"),
-    ("Departamentos", "Departamentos")
+    ("funcionarios", "funcionarios"),
+    ("Departamentos", "Departamentos"),
+    ("users", "users"),
+    ("groups", "groups"),
+    ("Permissoes", "Permissoes")
 ]
 
 
@@ -50,6 +53,7 @@ def init_database() -> None:
                 email="adm@robotz.dev",
                 blob_doc = blob_doc,
                 filename = filename)
+            
             root_pw = generate_pid(10)
             usr.senhacrip = root_pw
             print(f" * Root Pw: {root_pw}")
@@ -61,24 +65,16 @@ def init_database() -> None:
 
             grp = Groups(
                 name_group="Grupo Root",
-                members=json.dumps(["root"]),
-                perms=json.dumps(perms_root))
+                members=json.dumps(["root"]))
             to_add.append(grp)
-            
-        else:
-            group.perms = json.dumps(perms_root)
 
         group = Groups.query.filter(Groups.name_group == "Default").first()
 
         if group is None:
             grp = Groups(
-                name_group="Default",
-                perms=json.dumps(perms_default)
+                name_group="Default"
             )
             to_add.append(grp)
-            
-        else:
-            group.perms = json.dumps(perms_root)
 
         for endpoint, displayName in endpoints:
 

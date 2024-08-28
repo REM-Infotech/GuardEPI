@@ -49,8 +49,14 @@ class Groups(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     name_group = db.Column(db.String(length=30), nullable=False, unique=True)
-    desc = db.Column(db.Text)
     members = db.Column(db.Text)
+    roles = db.Column(db.Text)
+
+class Permissions(db.Model):
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name_rule= db.Column(db.String(length=30), nullable=False, unique=True)
+    groups_members = db.Column(db.Text)
     perms = db.Column(db.Text)
 
 class EndPoints(db.Model):
