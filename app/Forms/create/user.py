@@ -3,7 +3,7 @@ from flask_wtf.form import _Auto
 from wtforms import (StringField, SubmitField, SelectField,
                      PasswordField, BooleanField, SelectMultipleField, TextAreaField)
 from wtforms.validators import DataRequired, Length
-from app.models import Users
+from app.models import Users, Groups
 
 endpoints = [
     ("Equipamentos", "Equipamentos"),
@@ -17,12 +17,12 @@ endpoints = [
     ("Entradas", "Registro Entradas"),
     ("Registro_Saidas", "Registro Saídas"),
     ("Cautelas", "Cautelas"),
-    ("funcionarios", "funcionarios"),
+    ("funcionarios", "Funcionarios"),
     ("Empresas", "Empresas"),
-    ("cargos", "cargos"),
+    ("cargos", "Cargos"),
     ("Departamentos", "Departamentos"),
-    ("users", "users"),
-    ("groups", "groups"),
+    ("users", "Usuários"),
+    ("groups", "Grupos"),
     ("Permissoes", "Permissoes")
 ]
 
@@ -35,6 +35,10 @@ perms = [("CREATE", "Criar e Adicionar Itens"),
 def set_choicesUsers() -> list[tuple[str, str]]:
 
     return [(item.login, item.nome_usuario) for item in Users.query.all()]
+
+def set_choicesGrupos() -> list[tuple[str, str]]:
+
+    return [(item.name_group, item.name_group) for item in Groups.query.all()]
 
 
 class CreateUserForm(FlaskForm):
@@ -68,5 +72,5 @@ class CreatePerm(FlaskForm):
     
     def __init__(self, *args, **kwargs):
         super(CreatePerm, self).__init__(*args, **kwargs)
-    
+        self.grupos.choices.extend(set_choicesGrupos())
     

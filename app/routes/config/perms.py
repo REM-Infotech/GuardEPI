@@ -1,19 +1,15 @@
-from flask import (jsonify, url_for, render_template, 
+from flask import (jsonify, url_for, render_template, redirect,
                    session, abort, flash, request, get_flashed_messages)
 from flask_login import login_required
 
-from app.Forms import Cautela
-from app.models import (RegistrosEPI, ProdutoEPI, EstoqueEPI, RegistroSaidas,
-                        Funcionarios, Empresa, EstoqueGrade)
-
-from app.misc import generate_pid
-from app.misc.generate_doc import (add_watermark, adjust_image_transparency,
-create_EPI_control_sheet, create_watermark_pdf)
+from app.Forms import CreatePerm
+from app.models import Permissions
 
 import os
 import uuid
 from datetime import datetime
 
+from typing import Type
 from time import sleep
 import json
 
@@ -44,22 +40,22 @@ def setPerms():
 @login_required
 def add_itens_perms():
     
-    form = Cautela()
-    list = [form.nome_epi.data, form.tipo_grade.data, form.qtd_entregar.data]
+    form = CreatePerm()
+    list = [form.rota.data, form.grupos.data, form.permissoes.data]
 
     pathj = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_Permissoes"]}.json")
     
     with open(pathj, 'rb') as f:
-        list_epis = json.load(f)
+        list_rules = json.load(f)
 
-    list_epis.append(list)
-    json_obj = json.dumps(list_epis)
+    list_rules.append(list)
+    json_obj = json.dumps(list_rules)
         
     with open(pathj, 'w') as f:
         f.write(json_obj)
 
     item_html = render_template(
-        'includes/add_itens_perms.html', item=list_epis)
+        'includes/add_itens_perms.html', item=list_rules)
 
     # Retorna o HTML do item
     return item_html
@@ -84,7 +80,59 @@ def remove_itens_perms():
 @read_perm
 def Permissoes():
 
+    form = CreatePerm()
     page = f"pages/config/{request.endpoint.lower()}.html"
     title = request.endpoint.capitalize()
-    return render_template("index.html", page=page, title=title)
+    return render_template("index.html", page=page, title=title, form=form)
+
+
+@app.route("/create_role", methods = ["POST"])
+@login_required
+@create_perm
+def create_role():
+    
+    form = CreatePerm()
+    perms = {}
+    
+    pathj = os.path.join(app.config['TEMP_PATH'], f"{session["uuid_Permissoes"]}.json")
+    
+    with open(pathj, 'rb') as f:
+        list_rules = json.load(f)
+        
+    if len(list_rules) == 0:
+        flash("Adicione ao menos uma regra!", "error")
+        return redirect(url_for("Permissoes"))
+    
+    if form.validate_on_submit():
+        
+        rule_name = form.name_rule.data
+        
+        for rulecfg in list_rules:
+            
+            rota = rulecfg[0]
+            rules = rulecfg[1]
+            perms.update({rota: rules})
+            
+        dbase = Permissions.query.filter(Permissions.name_rule == form.name_rule.data).first()
+        
+        if not dbase:
+            
+            rule = Permissions(
+                
+                name_rule = rule_name,
+                groups_members = json.dumps(form.grupos.raw_data),
+                perms = json.dumps(perms)
+            )
+            
+            db.session.add(rule)
+            db.session.commit()
+            
+            flash("Regra criada com sucesso!", "success")
+            return redirect(url_for("Permissoes"))
+
+        flash("Regra com o mesmo nome já existe!", "error")
+    
+    return redirect(url_for("Permissoes"))
+    
+    
 
