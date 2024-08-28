@@ -83,7 +83,8 @@ def Permissoes():
     form = CreatePerm()
     page = f"pages/config/{request.endpoint.lower()}.html"
     title = request.endpoint.capitalize()
-    return render_template("index.html", page=page, title=title, form=form)
+    database = Permissions.query.all()
+    return render_template("index.html", page=page, title=title, form=form, database=database)
 
 
 @app.route("/create_role", methods = ["POST"])
@@ -110,7 +111,7 @@ def create_role():
         for rulecfg in list_rules:
             
             rota = rulecfg[0]
-            rules = rulecfg[1]
+            rules = rulecfg[2]
             perms.update({rota: rules})
             
         dbase = Permissions.query.filter(Permissions.name_rule == form.name_rule.data).first()

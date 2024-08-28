@@ -34,11 +34,11 @@
                     {% for item in database %}
                     <tr>
                         <td>{{ item.id }}</td>
-                        <td>{{ item.name_group }}</td>
-                        {% if not item.members %}
+                        <td>{{ item.name_rule }}</td>
+                        {% if not item.groups_members %}
                         <td>Sem Membros</td>
                         {% else %}
-                        <td>{{ item.members.replace('[', '').replace(']', '').replace('"', '') }}</td>
+                        <td>{{ item.groups_members.replace('[', '').replace(']', '').replace('"', '') }}</td>
                         {% endif %}
                         <td>
                             <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
