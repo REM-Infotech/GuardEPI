@@ -10,7 +10,6 @@ from app.Forms.choices import (set_ChoicesFuncionario, set_choices,
                                set_choicesModelo, set_EpiCautelaChoices)
 
 from flask_wtf import FlaskForm
-from flask_wtf.form import _Auto
 from wtforms import (StringField, SubmitField, SelectField, TextAreaField,
                      DateField, IntegerField)
 from flask_wtf.file import FileField, FileAllowed
@@ -83,6 +82,7 @@ class CadastroEPIForm(FlaskForm):
     fornecedor = SelectField(label='Fornecedor', choices=[])
     marca = SelectField(label='Marca', choices=[])
     modelo = SelectField(label='Modelo', choices=[])
+    descricao = TextAreaField("Descrição (Opcional)")
     filename = FileField(label='Foto do EPI', id="imagem", validators=[
                        FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     submit = SubmitField(label='Salvar')

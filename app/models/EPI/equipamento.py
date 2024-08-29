@@ -19,6 +19,10 @@ class ProdutoEPI(db.Model):
     filename = db.Column(db.String(length=128))
     blob_doc = db.Column(db.LargeBinary(length=(2**32)-1))
     vencimento = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Etc/GMT+4')))
+    descricao = db.Column(db.Text, default="Sem Descrição")
+    
+    def __init__(self, *args, **kwargs) -> None:
+        super(ProdutoEPI, self).__init__(*args, **kwargs)
 
 class Fornecedores(db.Model):
     
