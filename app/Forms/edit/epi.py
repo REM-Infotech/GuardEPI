@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import (StringField, SubmitField, IntegerField, SelectField, 
-                     FileField, DateField)
+                     FileField, DateField, TextAreaField)
 from flask_wtf.file import FileField, FileAllowed, DataRequired
 
 from app.Forms.choices import (set_choicesClasseEPI, 
@@ -29,6 +29,7 @@ class EditItemProdutoForm(FlaskForm):
     fornecedor = SelectField(label='Fornecedor', choices=[])
     marca = SelectField(label='Marca', choices=[])
     modelo = SelectField(label='Modelo', choices=[])
+    descricao = TextAreaField("Descrição (Opcional)")
     filename = FileField(label='Foto do EPI', id="imagem", validators=[
                        FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     submit = SubmitField(label='Salvar')

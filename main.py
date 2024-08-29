@@ -46,4 +46,4 @@ if __name__ == "__main__":
     from app import app
     from configs import *
 
-    app.run("0.0.0.0", 5002, debugmode())
+    app.run("0.0.0.0", 5002, debugmode(), True)
