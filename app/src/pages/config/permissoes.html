@@ -20,7 +20,7 @@
         </div>
 
         <div class="card-body table-responsive">
-            <table class="table table-striped" id="CautelasTable">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -48,14 +48,6 @@
                                     <i class="fa-solid fa-trash"></i>
                                 </span>
                                 <span class="text">Deletar</span>
-                            </button>
-                            <button type="button" id="EditEstoqueButton" class="btn btn-warning btn-sm mb-2"
-                                hx-get="{{ url_for('setEditGroup', item = item.id) }}"
-                                hx-target="#results" onclick="showLoad()">
-                                <span class="icon text-white-50">
-                                    <i class="fa-solid fa-pen"></i>
-                                </span>
-                                <span class="text">Editar</span>
                             </button>
                         </td>
                     </tr>

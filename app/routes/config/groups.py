@@ -43,17 +43,9 @@ def create_group():
 
     if not group:
 
-        perms_default = {
-            "dashboard": {
-                "permissoes": [
-                    "READ"]
-            }
-        }
-
         grp = Groups(
             name_group=form.nome.data,
-            members=json.dumps(form.membros.data),
-            perms=json.dumps(perms_default)
+            members=json.dumps(form.membros.data)
         )
         
         for usr in form.membros.data:
@@ -85,8 +77,14 @@ def setEditGroup(item: int):
     
     database = Groups.query.filter(Groups.id == item).first()
     session["name_group"] = database.name_group
+    
+    membros = []
+    
+    if database.members:
+        membros = json.loads(database.members)
+        
     form = CreateGroup(**{'nome': database.name_group,
-                          'membros': json.loads(database.members)})
+                          'membros': membros})
     
     route = request.referrer.replace("https://", "").replace("http://", "")
     route = route.split("/")[1]

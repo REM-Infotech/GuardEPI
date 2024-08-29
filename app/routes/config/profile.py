@@ -90,7 +90,7 @@ def profile():
                 
                 file_pic.save(original_path)
 
-                with open(original_path, 'wb') as file:
+                with open(original_path, 'rb') as file:
                     image_data = file.read()
                     
                 user.filename = filename
