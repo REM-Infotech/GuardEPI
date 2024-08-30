@@ -44,6 +44,7 @@ if __name__ == "__main__":
         configure_tunnel(token, install_cloudflared())
 
     from app import app
-    from configs import *
+    debug = os.getenv('DEBUG', 'False').lower() in (
+        'true', '1', 't', 'y', 'yes')
 
-    app.run("0.0.0.0", 5002, debugmode(), True)
+    app.run("0.0.0.0", 5002, debug, True)

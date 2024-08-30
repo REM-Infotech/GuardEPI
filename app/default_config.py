@@ -1,4 +1,4 @@
-from dotenv import dotenv_values
+from dotenv import load_dotenv
 from uuid import uuid4
 import subprocess
 import platform
@@ -6,10 +6,12 @@ import os
 
 from datetime import timedelta
 
-login_db = dotenv_values()['login']
-passwd_db = dotenv_values()['password']
-host_db = dotenv_values()['host']
-database_name = dotenv_values()['database']
+load_dotenv()
+
+login_db = os.getenv('login')
+passwd_db = os.getenv('password')
+host_db = os.getenv('host')
+database_name = os.getenv('database')
 
 ## PARAMETROS PARA O APP FLASK
 DOCS_PATH = os.path.join(os.getcwd(), "Docs")
