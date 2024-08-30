@@ -43,9 +43,13 @@ jobs:
           echo "CLOUDFLARED_TOKEN=$CLOUDFLARED_TOKEN" >> .env
           
       # Login to GCP
-      - uses: google-github-actions/setup-gcloud@v0.2.0
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
         with:
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - uses: google-github-actions/setup-gcloud@v2
+        with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       # gcloud configure docker
