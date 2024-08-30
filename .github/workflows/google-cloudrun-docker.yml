@@ -22,12 +22,12 @@ jobs:
         env:
 
           login: ${{ secrets.logindb_prd }}
-          password: = ${{ secrets.passworddb_prd }}
-          host: = ${{ secrets.hostdb_prd }}
-          database: = ${{ secrets.database_prd }}
+          password: ${{ secrets.passworddb_prd }}
+          host: ${{ secrets.hostdb_prd }}
+          database: ${{ secrets.database_prd }}
 
-          username_api: = ${{ secrets.username_api }}
-          password_api: = ${{ secrets.password_api }}
+          username_api: ${{ secrets.username_api }}
+          password_api: ${{ secrets.password_api }}
 
           url_api: ${{secrets.url_api}}
           CLOUDFLARED_TOKEN: ${{ secrets.CLOUDFLARED_TOKEN_PRD  }}
@@ -66,7 +66,7 @@ jobs:
 
       # deploy image
       - name: Deploy Docker image
-        run: gcloud run deploy prd_guardepi --image $IMAGE_NAME --region us-central1 --memory 512Mi --port 5002 --min-instances 0 --max-instances 1 --platform managed --allow-unauthenticated
+        run: gcloud run deploy prdguardepi --image $IMAGE_NAME --region us-central1 --memory 512Mi --port 5002 --min-instances 0 --max-instances 1 --platform managed --allow-unauthenticated
   
   deploy_preview:
     name: Setup Gcloud Account
@@ -86,12 +86,12 @@ jobs:
         env:
 
           login: ${{ secrets.logindb_preview }}
-          password: = ${{ secrets.passworddb_preview }}
-          host: = ${{ secrets.hostdb_preview }}
-          database: = ${{ secrets.database_preview }}
+          password: ${{ secrets.passworddb_preview }}
+          host: ${{ secrets.hostdb_preview }}
+          database: ${{ secrets.database_preview }}
 
-          username_api: = ${{ secrets.username_api }}
-          password_api: = ${{ secrets.password_api }}
+          username_api: ${{ secrets.username_api }}
+          password_api: ${{ secrets.password_api }}
 
           url_api: ${{secrets.url_api}}
           CLOUDFLARED_TOKEN: ${{ secrets.CLOUDFLARED_TOKEN_PREVIEW  }}
