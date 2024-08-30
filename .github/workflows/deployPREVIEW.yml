@@ -1,0 +1,71 @@
+on:
+    release:
+        types: [published]
+  
+jobs:
+      
+    deploy_preview:
+      name: Setup Gcloud Account
+      runs-on: ubuntu-latest
+  
+  
+      env:
+        IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/site:latest
+      steps:
+  
+        
+        # Git checkout
+        - name: Checkout
+          uses: actions/checkout@v2
+        
+        - name: Set environment variables
+          env:
+  
+            login: ${{ secrets.logindb_preview }}
+            password: ${{ secrets.passworddb_preview }}
+            host: ${{ secrets.hostdb_preview }}
+            database: ${{ secrets.database_preview }}
+  
+            username_api: ${{ secrets.username_api }}
+            password_api: ${{ secrets.password_api }}
+  
+            url_api: ${{secrets.url_api}}
+            CLOUDFLARED_TOKEN: ${{ secrets.CLOUDFLARED_TOKEN_PREVIEW  }}
+  
+          run: |
+            echo "login=$login" >> .env
+            echo "password=$password" >> .env
+            echo "host=$host" >> .env
+            echo "database=$database" >> .env
+            echo "username_api=$username_api" >> .env
+            echo "password_api=$password_api" >> .env
+            echo "url_api=$url_api" >> .env
+            echo "CLOUDFLARED_TOKEN=$CLOUDFLARED_TOKEN" >> .env
+        
+        # Login to GCP
+        - id: 'auth'
+          uses: 'google-github-actions/auth@v2'
+          with:
+            credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+  
+        - uses: google-github-actions/setup-gcloud@v2
+          with:
+            project_id: ${{ secrets.GCP_PROJECT_ID }}
+  
+  
+        # gcloud configure docker
+        - name: Configure Docker
+          run: gcloud auth configure-docker --quiet
+  
+        # build image
+        - name: Build Docker image
+          run: docker build -t $IMAGE_NAME .
+  
+        # push image to registry
+        - name: Push Docker image
+          run: docker push $IMAGE_NAME
+  
+        # deploy image
+        - name: Deploy Docker image
+          run: gcloud run deploy preview --image $IMAGE_NAME --region us-central1 --memory 512Mi --port 5002 --min-instances 0 --max-instances 1 --platform managed --allow-unauthenticated
+  
