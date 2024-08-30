@@ -1,5 +1,3 @@
-name: GCP
-
 on:
   release:
       types: [published]
