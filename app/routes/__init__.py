@@ -20,6 +20,8 @@ from app.routes.CRUD import delete
 from app.routes import handler
 from app.routes import config
 
+from app.routes import terms_policy
+
 # from app import app
 # import json
 # import os

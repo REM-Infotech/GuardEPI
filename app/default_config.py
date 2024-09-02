@@ -14,6 +14,7 @@ host_db = os.getenv('host')
 database_name = os.getenv('database')
 
 ## PARAMETROS PARA O APP FLASK
+PDF_PATH = os.path.join(os.getcwd(), "PDF")
 DOCS_PATH = os.path.join(os.getcwd(), "Docs")
 TEMP_PATH = os.path.join(os.getcwd(), "Temp")
 IMAGE_TEMP_PATH = os.path.join(TEMP_PATH, "IMG")
