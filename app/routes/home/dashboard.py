@@ -47,8 +47,6 @@ def dashboard():
         extract('month', RegistroEntradas.data_entrada) == current_month
     ).all()
     
-    total_saidas = len(dbase)
-    
     for item in dbase2:
         total_entradas += int(item.qtd_entrada)
         valor_totalEntradas += float(item.valor_total)

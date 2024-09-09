@@ -91,10 +91,10 @@ def draw_table(c, x, y, data, max_width=5.5*inch, min_font_size=4):
     for row in data:
         new_row = []
         for index, item in enumerate(row):
-            p = Paragraph(item, style)
+            p = Paragraph(str(item), style)
             new_row.append(p)
             text_width = stringWidth(
-                item, style.fontName, style.fontSize) + 10  # Adiciona um buffer
+                str(item), style.fontName, style.fontSize) + 10  # Adiciona um buffer
             if text_width > col_widths[index]:
                 col_widths[index] = text_width
         data2.append(new_row)
@@ -108,7 +108,7 @@ def draw_table(c, x, y, data, max_width=5.5*inch, min_font_size=4):
         while total_width > max_width and style.fontSize > min_font_size:
             style.fontSize -= 1
             total_width = sum(stringWidth(
-                item, style.fontName, style.fontSize) + 10 for item in row for row in data2)
+                str(item), style.fontName, style.fontSize) + 10 for item in row for row in data2)
 
     table = Table(data2, colWidths=col_widths)
     table.setStyle(TableStyle([

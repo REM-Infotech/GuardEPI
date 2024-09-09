@@ -41,3 +41,11 @@ function formatDocument(element) {
     };
     element.value = value;
 }
+
+document.querySelectorAll('.open-pdf').forEach(button => {
+    button.addEventListener('click', function () {
+        const pdfUrl = button.getAttribute('data-pdf-url');
+        document.getElementById('pdfFrame').src = pdfUrl;
+        $('#ExibirPDF').modal('show');
+    });
+});

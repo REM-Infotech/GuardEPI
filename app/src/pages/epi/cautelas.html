@@ -37,7 +37,7 @@
                         <td>{{ item.id }}</td>
                         <td>{{ item.nome_epis.replace('"', '') }}</td>
                         <td>{{ item.funcionario }}</td>
-                        <td>{{ item.data_solicitacao }}</td>
+                        <td>{{ item.data_solicitacao.strftime("%d/%m/%Y") }}</td>
                         <td>
                             <button type="button" class="btn btn-danger btn-sm  mb-2 open-pdf"
                                 name="{{ item.filename}}"

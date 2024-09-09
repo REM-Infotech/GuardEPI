@@ -20,7 +20,16 @@ TEMP_PATH = os.path.join(os.getcwd(), "Temp")
 IMAGE_TEMP_PATH = os.path.join(TEMP_PATH, "IMG")
 CSV_TEMP_PATH = os.path.join(TEMP_PATH, "csv")
 PDF_TEMP_PATH = os.path.join(TEMP_PATH, "pdf")
-SQLALCHEMY_DATABASE_URI = f"mysql://{login_db}:{passwd_db}@{host_db}/{database_name}"
+
+debug = os.getenv('DEBUG', 'False').lower() in (
+        'true', '1', 't', 'y', 'yes')
+
+database_uri = f"mysql://{login_db}:{passwd_db}@{host_db}/{database_name}"
+if debug is True:
+    database_uri = "sqlite:///project.db"
+
+SQLALCHEMY_DATABASE_URI = database_uri
+
 SQLALCHEMY_TRACK_MODIFICATIONS = False   
 PREFERRED_URL_SCHEME = "https"
 SESSION_COOKIE_HTTPONLY = False

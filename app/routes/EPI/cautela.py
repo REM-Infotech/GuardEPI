@@ -166,11 +166,11 @@ def emitir_cautela():
                 return render_template('includes/show_pdf.html', url="", messages=messages)
                     
             nomefilename = f'Cautela - {funcionario} - {datetime.now().strftime("%d-%m-%Y %H-%M-%S")}.pdf'
-            count_cautelas = RegistrosEPI.query.all()
-            if not count_cautelas or len(count_cautelas) == 1:
+            count_ = RegistrosEPI.query.all()
+            count_cautelas = len(count_)
+            if not count_:
                 count_cautelas = 1
-            else:
-                count_cautelas = 1
+                
             
             epis_lista = []
             valor_calc = 0
@@ -228,12 +228,12 @@ def emitir_cautela():
             db.session.commit()
 
             employee_data = {
-                'company': data_funcionario.empresa,
-                'name': data_funcionario.nome_funcionario,
-                'cargo': data_funcionario.cargo,
-                'departamento': data_funcionario.departamento,
-                'registration': data_funcionario.codigo,
-                'lancamento_code': str(count_cautelas+1).zfill(6)
+                'company': str(data_funcionario.empresa),
+                'name': str(data_funcionario.nome_funcionario),
+                'cargo': str(data_funcionario.cargo),
+                'departamento': str(data_funcionario.departamento),
+                'registration': str(data_funcionario.codigo).zfill(6),
+                'lancamento_code': str(str(count_cautelas+1).zfill(6))
             }
 
             item_data = [

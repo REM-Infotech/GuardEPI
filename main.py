@@ -28,12 +28,19 @@ def configure_tunnel(token: str, binary_name: str):
     print("Configurando o Cloudflared Tunnel...")
     
     try:
-        subprocess.run([f'{binary_name}', 'service', 'uninstall'])
-    except:
-        pass
+        # Tentativa de desinstalação do serviço, captura a saída e exibe
+        result_uninstall = subprocess.run([f'{binary_name}', 'service', 'uninstall'], capture_output=True, text=True)
+        print(f"Saída do comando de desinstalação:\n{result_uninstall.stdout}")
+        if result_uninstall.stderr:
+            print(f"Erros:\n{result_uninstall.stderr}")
+    except Exception as e:
+        print(f"Falha ao desinstalar o serviço: {e}")
         
-    subprocess.run([f'{binary_name}', 'service', 'install', token])
-
+    # Instalação do serviço, captura a saída e exibe
+    result_install = subprocess.run([f'{binary_name}', 'service', 'install', token], capture_output=True, text=True)
+    print(f"Saída do comando de instalação:\n{result_install.stdout}")
+    if result_install.stderr:
+        print(f"Erros:\n{result_install.stderr}")
 
 if __name__ == "__main__":
 
