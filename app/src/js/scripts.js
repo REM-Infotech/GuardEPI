@@ -61,8 +61,7 @@ if (selectors.length > 0) {
         theme: "bootstrap-5",
         width: $(element).data('width') ? $(element).data('width') : $(element).hasClass('w-100') ? '100%' : 'style',
         placeholder: $(element).data('placeholder'),
-        dropdownParent: $(element).closest('.modal').length ? $(element).closest('.modal') : null, // Verifica se o select está em um modal
-        messa
+        dropdownParent: $(element).closest('.modal').length ? $(element).closest('.modal') : null // Verifica se o select está em um modal
     });
     });
   }
