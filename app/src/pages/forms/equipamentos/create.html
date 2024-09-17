@@ -10,7 +10,7 @@
                 <form method="POST" action="{{ url_for('cadastrarEPI') }}"
                     enctype="multipart/form-data" class="form-floating">
                     {{ form.hidden_tag() }}
-                    <div class="row g-3">
+                    <div class="row g-3 justify-content-center p-3">
                         <div class="col-md-6 mb-3">
                             <div class="d-flex justify-content-center align-items-center">
                                 <br>
@@ -47,31 +47,32 @@
                                 {{ form.vencimento.label(for="vencimento") }}
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
+                        <div class="col-md-6">
+                            <div class="mb-3 border border-black p-2 border-2 rounded">
+                                {{ form.fornecedor.label(class="form-label") }}
                                 {{ form.fornecedor(class="form-control", id="fornecedor", placeholder="") }}
-                                {{ form.fornecedor.label(for="fornecedor") }}
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
+                        <div class="col-md-6">
+                            <div class="mb-3 border border-black p-2 border-2 rounded">
+                                {{ form.marca.label(class="form-label") }}
                                 {{ form.marca(class="form-control", id="marca", placeholder="") }}
-                                {{ form.marca.label(for="marca") }}
+                                
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
+                        <div class="col-md-6">
+                            <div class="mb-3 border border-black p-2 border-2 rounded">
+                                {{ form.modelo.label(class="form-label") }}
                                 {{ form.modelo(class="form-control", id="modelo", placeholder="") }}
-                                {{ form.modelo.label(for="modelo") }}
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating mb-3">
+                        <div class="col-md-6">
+                            <div class="mb-3 border border-black p-2 border-2 rounded">
+                                {{ form.tipo_epi.label(class="form-label") }}
                                 {{ form.tipo_epi(type="text", class="form-control", id="tipo_epi", placeholder="") }}
-                                {{ form.tipo_epi.label(for="tipo_epi") }}
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating mb-3">
                                 {{ form.valor_unitario(type="text", class="form-control", id="valor_unitario",
                                 placeholder="",
@@ -79,7 +80,7 @@
                                 {{ form.valor_unitario.label(for="valor_unitario") }}
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating mb-3">
                                 {{ form.qtd_entregar(type="text", class="form-control", id="qtd_entregar",
                                 placeholder="") }}

@@ -11,7 +11,7 @@
                     class="form-floating">
                     {{ form.hidden_tag() }}
 
-                    <div class="row g-3">
+                    <div class="row g-3 justify-content-center p-3">
                         <div class="col-12 border border-black p-2 border-2 rounded">
                             <div class="mb-3">
                                 {{ form.nota_fiscal.label(for="formFile", class="form-label") }}
@@ -24,25 +24,25 @@
                                 {{ form.cod_notafiscal.label(for="cod_notafiscal") }}
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
+                        <div class="col-md-4">
+                            <div class="mb-3 border border-black p-2 border-2 rounded">
+                                {{ form.nome_epi.label(class="form-label") }}
                                 {{ form.nome_epi(class="form-control", id="nome_epi", placeholder="") }}
-                                {{ form.nome_epi.label(for="nome_epi") }}
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
+                        <div class="col-md-4">
+                            <div class="mb-3 border border-black p-2 border-2 rounded">
+                                {{ form.tipo_grade.label(class="form-label") }}
                                 {{ form.tipo_grade(class="form-control", id="tipo_grade", placeholder="") }}
-                                {{ form.tipo_grade.label(for="tipo_grade") }}
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-floating mb-3">
+                        <div class="col-md-4">
+                            <div class="mb-3 border border-black p-2 border-2 rounded">
+                                {{ form.tipo_qtd.label(class="form-label") }}
                                 {{ form.tipo_qtd(type="text", class="form-control", id="tipo_qtd", placeholder="") }}
-                                {{ form.tipo_qtd.label(for="tipo_qtd") }}
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-12">
                             <div class="form-floating mb-3">
                                 {{ form.qtd_estoque(class="form-control", id="qtd_estoque", placeholder="") }}
                                 {{ form.qtd_estoque.label(for="qtd_estoque") }}

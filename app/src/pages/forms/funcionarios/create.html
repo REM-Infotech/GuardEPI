@@ -49,21 +49,20 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="form-floating mb-3">
-
-                                    {{ form.empresa(class="form-control") }}
-                                    {{ form.empresa.label(for="empresa") }} 
+                                <div class="mb-3 border border-black p-2 border-2 rounded">
+                                    {{ form.empresa.label(class="form-label") }}
+                                    {{ form.empresa(class="form-control", id="empresa", placeholder="...") }}
                                 </div>
                             </div>
 
                         </div>
-                        <div class="form-floating mb-3">
-                            {{ form.cargo(class="form-control") }}
-                            {{ form.cargo.label(for="cargo") }} 
+                        <div class="mb-3 border border-black p-2 border-2 rounded">
+                            {{ form.cargo.label(class="form-label") }} 
+                            {{ form.cargo(class="form-control", placeholder=form.cargo.label.text) }}
                         </div>
-                        <div class="form-floating mb-3">
+                        <div class="mb-3 border border-black p-2 border-2 rounded"">
+                            {{ form.departamento.label(class="form-label") }} 
                             {{ form.departamento(class="form-control") }}
-                            {{ form.departamento.label(for="departamento") }} 
                         </div>
                         <div class="footer m-3">
                             <div class="d-grid gap-2">

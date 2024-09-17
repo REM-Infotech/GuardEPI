@@ -53,16 +53,20 @@ document.querySelectorAll('.open-pdf').forEach(button => {
 var selectors = document.getElementsByTagName("select");
 
 if (selectors.length > 0) {
-  for (let element of selectors) {  // Mudança aqui, para usar 'for...of' em vez de 'for...in'
+    for (let element of selectors) {  // Mudança aqui, para usar 'for...of' em vez de 'for...in'
 
-    $(document).ready(function () {
-      // Aqui podemos usar jQuery diretamente, pois estamos aplicando ao próprio elemento
-      $(element).select2({
-        theme: "bootstrap-5",
-        width: $(element).data('width') ? $(element).data('width') : $(element).hasClass('w-100') ? '100%' : 'style',
-        placeholder: $(element).data('placeholder'),
-        dropdownParent: $(element).closest('.modal').length ? $(element).closest('.modal') : null // Verifica se o select está em um modal
-    });
-    });
-  }
+        $(document).ready(function () {
+            // Aqui podemos usar jQuery diretamente, pois estamos aplicando ao próprio elemento
+            $(element).select2({
+                theme: "bootstrap-5",
+                width: $(element).data('width') ? $(element).data('width') : $(element).hasClass('w-100') ? '100%' : 'style',
+                placeholder: $(element).data('placeholder'),
+                dropdownParent: $(element).closest('.modal').length ? $(element).closest('.modal') : null // Verifica se o select está em um modal
+            }).on('change', function (e) {
+                // Dispara o evento change para o htmx
+                this.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        });
+    };
 }
+

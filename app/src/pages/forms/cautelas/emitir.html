@@ -16,7 +16,8 @@
                                 {{form.select_funcionario(class="form-control", id="select_funcionario")}}
                             </div>
                         </div>
-                        <div class="col-12">
+
+                        <div class="mb-3 border border-black p-2 border-2 rounded">
                             {{form.nome_epi.label(for="selectNomeEpi", class="form-label")}}
                             {{form.nome_epi(**{"hx-post": "/get-grade", "hx-target": "#gradeContainer",
                             "hx-trigger": "change", "id":"selectNomeEpi", "class":"form-control" })}}
