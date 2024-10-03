@@ -1,4 +1,3 @@
-<script src="{{ url_for('static', filename='js/hideLoad.js') }}"></script>
 <div class="modal fade" data-modal_edit="editProduto" id="editProduto" tabindex="-1" aria-labelledby="editProdutoLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -15,8 +14,7 @@
                         <div class="col-md-6 mb-3">
                             <div class="d-flex justify-content-center align-items-center">
                                 <br>
-                                {% set url_image = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png" %}
-                                <img id="preview" src="{{ url_image }}" alt="Image preview"
+                                <img id="preview" src="{{ url }}" alt="Image preview"
                                     class="img-fluid border border-primary border-5 rounded-3 "
                                     style="max-width: 300px; max-height: 300px; align-items: center; width: 300px; height: 300px;">
                                 <br>
@@ -112,5 +110,5 @@
         </div>
     </div>
 </div>
-<script> hide</script>
+<script src="{{ url_for('static', filename='js/hideLoad.js') }}"></script>
 <script src="{{ url_for('static', filename = 'js/setEdit.js') }}"></script>

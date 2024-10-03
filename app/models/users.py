@@ -1,7 +1,7 @@
 from datetime import datetime
 import bcrypt
 from app import db
-from app.misc import *
+from app.misc import generate_pid
 import pytz
 salt = bcrypt.gensalt()
 

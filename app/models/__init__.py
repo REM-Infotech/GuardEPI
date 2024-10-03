@@ -1,7 +1,10 @@
-from app.models.Funcionários import *
-from app.models.users import *
-from app.models.EPI import *
+from app.models.Funcionários import Funcionarios, Empresa, Cargos, Departamento
+from app.models.users import Users, Groups, Permissions, EndPoints
+from app.models.EPI import (ProdutoEPI, EstoqueEPI, EstoqueGrade,  Marcas,
+                            GradeEPI, ClassesEPI, ModelosEPI, Fornecedores,
+                            RegistroEntradas, RegistroSaidas, RegistrosEPI)
 
+import os
 from app import db
 from app import app
 from app.misc import generate_pid

@@ -1,5 +1,5 @@
 from app import app
-from app.models import (ProdutoEPI, Funcionarios, GradeEPI, Fornecedores, 
+from app.models import (ProdutoEPI, Funcionarios, GradeEPI, Fornecedores, Marcas,
                         Marcas, ModelosEPI, ClassesEPI, EstoqueGrade)
 from collections import Counter
 

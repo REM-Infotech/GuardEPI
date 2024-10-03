@@ -47,4 +47,9 @@ class ClassesEPI(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
     classe = db.Column(db.String(length=64), nullable=False, unique=True)
     descricao = db.Column(db.String(length=512))
+
+class GradeEPI(db.Model):
     
+    id = db.Column(db.Integer, primary_key=True)
+    grade = db.Column(db.String(length=32), nullable=False, unique=True)
+    descricao = db.Column(db.String(length=512))

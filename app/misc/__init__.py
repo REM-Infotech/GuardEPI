@@ -2,7 +2,7 @@ import random
 import string
 import bcrypt
 import unicodedata
-from app.misc.generate_doc import *
+from app.misc.generate_doc import create_EPI_control_sheet, create_watermark_pdf, add_watermark, adjust_image_transparency
 
 # Função para formatar como moeda brasileira
 import babel.numbers as numbers

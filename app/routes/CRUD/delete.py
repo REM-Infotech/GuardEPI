@@ -2,7 +2,6 @@ from flask_login import login_required
 from flask import render_template
 
 from app.decorators import delete_perm
-from app.misc import *
 from app.models import (ProdutoEPI, RegistrosEPI, EstoqueEPI, EstoqueGrade, RegistroEntradas,
                         GradeEPI, Empresa, Funcionarios, Departamento, Cargos, Groups,
                         ClassesEPI, ModelosEPI, Marcas, Fornecedores, Users)

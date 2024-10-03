@@ -83,19 +83,17 @@ def SetEditarEPI(item: int):
         'modelo': database.modelo,
         'tipo_epi': database.tipo_epi,
         'vencimento': database.vencimento,
-        'descricao': database.descricao
+        'descricao': database.descricao,
+        'filename': database.filename
     })
 
     url = ""
     if any(route == tipos for tipos in ["empresas", "equipamentos"]):
 
-        image_name = form.filename.data
-        if image_name is None:
-
-            url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
-            form.filename.data = url
-
-        else:
+        image_name = database.filename
+        url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
+        form.filename.data = url
+        if image_name:
             url = url_for('serve_img', index=item,
                           md=route, _external=True, _scheme='https')
 
@@ -189,12 +187,12 @@ def cadastrarEPI():
 
             filename = secure_filename(img_epi.filename)
             path_img = os.path.join(app.config["IMAGE_TEMP_PATH"], filename)
-
+            img_epi.save(path_img)
             with open(path_img, "rb")as f:
                 img_data = f.read()
 
-            epi_insert.filename = filename,
-            epi_insert.blob_doc = img_data,
+            epi_insert.filename = filename
+            epi_insert.blob_doc = img_data
 
         
         db.session.add(epi_insert)

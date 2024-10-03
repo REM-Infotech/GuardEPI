@@ -37,7 +37,6 @@ def create_watermark_pdf(image_path: str, output_pdf: str):
                 height=new_height, mask='auto')
     c.save()
 
-
 def add_watermark(input_pdf: str, output_pdf: str, watermark_pdf: str):
     
     input_file = open(input_pdf, 'rb')
@@ -60,7 +59,6 @@ def add_watermark(input_pdf: str, output_pdf: str, watermark_pdf: str):
     input_file.close()
     watermark_file.close()
 
-
 def adjust_image_transparency(image_path: str, output_path: str, transparency):
 
     img = Image.open(image_path)
@@ -77,7 +75,6 @@ def adjust_image_transparency(image_path: str, output_path: str, transparency):
 
     # Salva a imagem ajustada
     img.save(output_path, "PNG")
-
 
 def draw_table(c, x, y, data, max_width=5.5*inch, min_font_size=4):
     styles = getSampleStyleSheet()
@@ -120,7 +117,6 @@ def draw_table(c, x, y, data, max_width=5.5*inch, min_font_size=4):
 
     table.wrapOn(c, x, y)
     table.drawOn(c, x, y - table._height)
-
 
 def create_EPI_control_sheet(filename, employee_data, delivery_data, item_data, logo_path):
     c = canvas.Canvas(filename, pagesize=letter)
