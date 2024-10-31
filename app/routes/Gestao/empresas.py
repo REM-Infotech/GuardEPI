@@ -19,9 +19,13 @@ def Empresas():
     importForm = IMPORTEPIForm()
     form = CadastroEmpresa()
     database = Empresa.query.all()
-    DataTables = f'js/DataTables/gestao/{request.endpoint.capitalize()}Table.js'
+    DataTables = f"js/DataTables/gestao/{request.endpoint.capitalize()}Table.js"
     page = f"pages/Gestao/{request.endpoint.lower()}.html"
-    return render_template("index.html", page=page, form=form, DataTables=DataTables,
-                           database=database, 
-                           importForm=importForm)
-
+    return render_template(
+        "index.html",
+        page=page,
+        form=form,
+        DataTables=DataTables,
+        database=database,
+        importForm=importForm,
+    )

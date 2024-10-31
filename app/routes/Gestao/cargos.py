@@ -9,7 +9,6 @@ from app.models.Funcionários import Cargos
 from app.decorators import read_perm, set_endpoint
 
 
-
 @app.route("/cargos")
 @login_required
 @set_endpoint
@@ -19,7 +18,13 @@ def cargos():
     importForm = IMPORTEPIForm()
     page = f"pages/Gestao/{request.endpoint.lower()}.html"
     database = Cargos.query.all()
-    DataTables = f'js/DataTables/gestao/{request.endpoint.capitalize()}Table.js'
+    DataTables = f"js/DataTables/gestao/{request.endpoint.capitalize()}Table.js"
     form = CadastroCargo()
-    return render_template("index.html", page=page, form=form, database=database,
-                           DataTables=DataTables, importForm=importForm)
+    return render_template(
+        "index.html",
+        page=page,
+        form=form,
+        database=database,
+        DataTables=DataTables,
+        importForm=importForm,
+    )
