@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "guardepi"
+version = "0.1.0"
+description = "Gerenciamento de EPI"
+authors = ["Robotz213 <nicholas@robotz.dev>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+flask = "^3.0.3"
+flask-mysqldb = "^2.0.0"
+flask-mail = "^0.10.0"
+python-dotenv = "^1.0.1"
+flask-wtf = "^1.2.2"
+flask-login = "^0.6.3"
+flask-sqlalchemy = "^3.1.1"
+openpyxl = "^3.1.5"
+pypdf2 = "^3.0.1"
+reportlab = "^4.2.5"
+bcrypt = "^4.2.0"
+babel = "^2.16.0"
+pytz = "^2024.2"
+requests = "^2.32.3"
+flask-talisman = "^1.1.0"
+pillow = "^11.0.0"
+pandas = "^2.2.3"
+deep-translator = "^1.11.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
