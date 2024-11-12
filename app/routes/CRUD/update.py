@@ -214,8 +214,7 @@ def editar(tipo: str | None, id: int):
                 flash(message, "error")
 
     except Exception as e:
-        print(e)
-        abort(500)
+        abort(500, description=str(e))
 
 
 @app.route("/pdf/<index>", methods=["GET"])
@@ -230,17 +229,16 @@ def serve_pdf(index):
             filename = dbase.doc_cautela
             pdf_data = dbase.blob_cautela
 
-            original_path = os.path.join(app.config["Docs_Path"], filename)
+            original_path = os.path.join(app.config["DOCS_PATH"], filename)
 
             with open(original_path, "wb") as file:
                 file.write(pdf_data)
-            url = send_from_directory(app.config["Docs_Path"], filename)
+            url = send_from_directory(app.config["DOCS_PATH"], filename)
 
             return url
 
     except Exception as e:
-        print(e)
-        abort(500)
+        abort(500, description=str(e))
 
 
 @app.route("/img/<filename>/<model>", methods=["GET"])

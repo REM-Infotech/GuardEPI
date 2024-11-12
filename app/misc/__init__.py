@@ -2,23 +2,39 @@ import random
 import string
 import bcrypt
 import unicodedata
-from app.misc.generate_doc import *
+from app.misc.generate_doc import (
+    create_watermark_pdf,
+    add_watermark,
+    adjust_image_transparency,
+    draw_table,
+    create_EPI_control_sheet,
+)
 
 # Função para formatar como moeda brasileira
 import babel.numbers as numbers
 from babel.dates import format_date
 
+__all__ = [
+    create_watermark_pdf,
+    add_watermark,
+    adjust_image_transparency,
+    draw_table,
+    create_EPI_control_sheet,
+]
+salt = bcrypt.gensalt()
+
+
 def format_currency_brl(value) -> str:
-    
-    number = numbers.format_currency(value, 'BRL', locale='pt_BR')
+
+    number = numbers.format_currency(value, "BRL", locale="pt_BR")
     number = unicodedata.normalize("NFKD", number)
     return number
 
+
 # Função para formatar a data e obter o nome do mês em português
 def format_date_brl(date):
-    return format_date(date, format='MMMM', locale='pt_BR').capitalize()
+    return format_date(date, format="MMMM", locale="pt_BR").capitalize()
 
-salt = bcrypt.gensalt()
 
 def generate_pid(count: int = 6) -> str:
     while True:
@@ -27,14 +43,15 @@ def generate_pid(count: int = 6) -> str:
         digits = random.sample(string.digits, 6)
 
         # Intercalar letras e dígitos
-        pid = ''.join([letters[i//2] if i % 2 == 0 else digits[i//2] for i in range(count)])
+        pid = "".join(
+            [letters[i // 2] if i % 2 == 0 else digits[i // 2] for i in range(count)]
+        )
 
         # Verificar se a string gerada não contém sequências do tipo "AABB"
         if not any(pid[i] == pid[i + 1] for i in range(len(pid) - 1)):
             return pid
-        
-        
-def hash_str() -> str:
-    
-    return bcrypt.hashpw(generate_pid().encode(), salt).decode("utf-8")
 
+
+def hash_str() -> str:
+
+    return bcrypt.hashpw(generate_pid().encode(), salt).decode("utf-8")

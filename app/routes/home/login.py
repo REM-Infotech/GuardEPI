@@ -7,31 +7,32 @@ from app.models.users import Users
 import json
 
 
-@app.route("/", methods = ["GET"])
+@app.route("/", methods=["GET"])
 def index():
-    
-    if session.get('_user_id', None) is not None:
+
+    if session.get("_user_id", None) is not None:
         return redirect(url_for("dashboard"))
-    
+
     return redirect(url_for("login"))
 
-@app.route("/login", methods = ["GET", "POST"])
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    
-    if session.get('_user_id', None) is not None:
+
+    if session.get("_user_id", None) is not None:
         return redirect(url_for("dashboard"))
-    
-    if not session.get('next'):
+
+    if not session.get("next"):
         session["next"] = request.args.get("next", url_for("dashboard"))
-    
-    location = session["next"]    
+
+    location = session["next"]
     form = LoginForm()
     if form.validate_on_submit():
-        
-        user = Users.query.filter_by(login = form.login.data).first()
-        
+
+        user = Users.query.filter_by(login=form.login.data).first()
+
         if user and user.converte_senha(form.password.data):
-            
+
             session["groups_usr"] = json.loads(user.grupos)
             session["nome_usuario"] = user.nome_usuario
             session.pop("next")
@@ -40,12 +41,13 @@ def login():
             return redirect(location)
 
         flash("Usuário/Senha Incorretos!", "error")
-        
-    return render_template("login.html", form = form)
 
-@app.route("/logout", methods = ["GET"])
+    return render_template("login.html", form=form)
+
+
+@app.route("/logout", methods=["GET"])
 def logout():
-    
+
     logout_user()
     flash("Sessão encerrada", "info")
     location = url_for("login")

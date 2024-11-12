@@ -58,7 +58,7 @@ def gen_model(model: str):
 
     # Salvando o DataFrame em uma planilha
     filename = f"{str_model}.xlsx"
-    file_path = os.path.join(app.config["Temp_Path"], filename)
+    file_path = os.path.join(app.config["TEMP_PATH"], filename)
 
     with pd.ExcelWriter(file_path, engine="auto") as writer:
         df.to_excel(writer, index=False, sheet_name="Sheet1")

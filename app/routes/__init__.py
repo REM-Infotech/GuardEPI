@@ -20,6 +20,26 @@ from app.routes.CRUD import delete
 from app.routes import handler
 from app.routes import config
 
+__all__ = [
+    login,
+    queue,
+    dashboard,
+    relatorio,
+    equipamentos,
+    estoque,
+    cautela,
+    grades,
+    cargos,
+    departamentos,
+    empresas,
+    funcionarios,
+    create,
+    update,
+    delete,
+    config,
+    handler,
+]
+
 # from app import app
 # import json
 # import os
@@ -27,18 +47,17 @@ from app.routes import config
 
 # @app.before_request
 # def save_endpoints():
-    
+
 #     rar = request.url_rule.map._rules
-    
+
 #     endpoints = {}
 #     for item in rar:
-        
+
 #         endpoints.update({item.endpoint: item.endpoint})
-        
+
 #     json_object = json.dumps(endpoints, indent=4)
 #     with open("myJsn.json", "w") as outfile:
 #         outfile.write(json_object)
-        
-        
-    
+
+
 #     pass

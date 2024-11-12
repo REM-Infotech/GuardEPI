@@ -1,61 +1,65 @@
+import os
+import importlib
+from pathlib import Path
 from flask import Flask
+from flask_talisman import Talisman
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from flask_talisman import Talisman
-from app.misc import *
+
 from configs import csp
-from dotenv import dotenv_values
 from datetime import timedelta
-import os
 
-docs_path = os.path.join(os.getcwd(), "Docs")
-temp_path = os.path.join(os.getcwd(), "Temp")
-image_temp = os.path.join(temp_path, "IMG")
-csv_path = os.path.join(temp_path, "csv")
-for paths in [docs_path, temp_path, image_temp, csv_path]:
-    os.makedirs(paths, exist_ok=True)
 
-files_render = os.path.join(os.getcwd(), "app", "src")
-app = Flask(__name__, template_folder = files_render, static_folder = files_render)
-db = SQLAlchemy()
-login_manager = LoginManager()
-tlsm = Talisman()
+app = None
+db = None
+login_manager = None
 
-login_db = dotenv_values()['login']
-passwd_db = dotenv_values()['password']
-host_db = dotenv_values()['host']
-database_name = dotenv_values()['database']
 
-database_uri = f"mysql://{login_db}:{passwd_db}@{host_db}/{database_name}"
-app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False   
-app.config['PREFERRED_URL_SCHEME'] = "https"
-app.config['SESSION_COOKIE_HTTPONLY'] = False
-app.config['SESSION_COOKIE_SECURE'] = True
-app.config['Docs_Path'] = docs_path
-app.config['Temp_Path'] = temp_path
-app.config['IMAGE_TEMP_PATH'] = image_temp
-app.config['CSV_TEMP_PATH'] = csv_path
-app.secret_key = generate_pid()
-app.make_response
-age = timedelta(days=1).max.seconds
-db.init_app(app)
-login_manager.init_app(app)
-tlsm.init_app(app, content_security_policy=csp(),
-              session_cookie_http_only=True,
-              session_cookie_samesite='Lax',
-              strict_transport_security=True,
-              strict_transport_security_max_age=age,
-              x_content_type_options= True,
-              x_xss_protection=True)
+class AppFactory:
 
-login_manager.login_view = 'login'
-login_manager.login_message = "Faça login para acessar essa página."
-login_manager.login_message_category = "info"
+    def init_extensions(self, app: Flask):
 
-from app.models import init_database
+        global db, login_manager
+        db = SQLAlchemy()
+        login_manager = LoginManager()
+        tlsm = Talisman()
 
-init_database()
+        db.init_app(app)
+        login_manager.init_app(app)
+        tlsm.init_app(
+            app,
+            content_security_policy=csp(),
+            session_cookie_http_only=True,
+            session_cookie_samesite="Lax",
+            strict_transport_security=True,
+            strict_transport_security_max_age=timedelta(days=1).max.seconds,
+            x_content_type_options=True,
+            x_xss_protection=True,
+        )
 
-from app import routes
+        login_manager.login_view = "login"
+        login_manager.login_message = "Faça login para acessar essa página."
+        login_manager.login_message_category = "info"
 
+        if not Path("dbinit.txt").exists():
+            with app.app_context():
+                from app.models import init_database
+
+                init_database(app)
+
+                with open("dbinit.txt", "w") as f:
+                    f.write("TRUE")
+
+    def create_app(self):
+
+        global app
+        files_render = os.path.join(os.getcwd(), "app", "src")
+        app = Flask(__name__, template_folder=files_render, static_folder=files_render)
+        app.config.from_object("app.default_config")
+        self.init_extensions(app)
+        importlib.import_module("app.routes", __name__)
+
+        return app
+
+
+create_app = AppFactory().create_app

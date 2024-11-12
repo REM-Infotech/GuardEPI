@@ -1,6 +1,6 @@
 from flask_login import login_required
 from flask import redirect, abort, flash, request
-from flask_wtf import Form, FlaskForm
+from flask_wtf import FlaskForm
 
 from werkzeug.utils import secure_filename
 from flask_wtf.file import FileField
@@ -102,7 +102,7 @@ def cadastrar(tipo: str):
                             now = generate_pid()
                             filename = f"{now}{docname}"
                             path_img = os.path.join(
-                                app.config['Temp_Path'], filename)
+                                app.config['TEMP_PATH'], filename)
                             file.save(path_img)
                             kwargs[column.name] = filename
 
@@ -131,6 +131,6 @@ def cadastrar(tipo: str):
                 flash(message, "success")
 
     except Exception as e:
-        abort(500)
+        abort(500, description=str(e))
 
     return redirect(f"/{without_lower}")

@@ -208,18 +208,18 @@ def emitir_cautela():
                 file.write(image_data)
 
             adjusted_path = os.path.join(
-                app.config["Docs_Path"], f"GuardEPI_adjusted{num}.png"
+                app.config["DOCS_PATH"], f"GuardEPI_adjusted{num}.png"
             )
             temp_watermark_pdf = os.path.join(
-                app.config["Docs_Path"], f"{num} marca_dagua.pdf"
+                app.config["DOCS_PATH"], f"{num} marca_dagua.pdf"
             )
 
             try:
 
-                path_cautela = os.path.join(app.config["Docs_Path"], nomedoc_cautela)
+                path_cautela = os.path.join(app.config["DOCS_PATH"], nomedoc_cautela)
 
                 ctrl_sheet = os.path.join(
-                    app.config["Docs_Path"], f"EPI_control_sheet{num}.pdf"
+                    app.config["DOCS_PATH"], f"EPI_control_sheet{num}.pdf"
                 )
 
                 adjust_image_transparency(original_path, adjusted_path, 1)
@@ -265,7 +265,7 @@ def emitir_cautela():
 
             finally:
 
-                for root, dirs, files in os.walk(app.config["Docs_Path"]):
+                for root, dirs, files in os.walk(app.config["DOCS_PATH"]):
                     for file in files:
                         if ".pdf" in file or "adjusted" in file:
                             os.remove(f"{root}/{file}")

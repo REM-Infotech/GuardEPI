@@ -1,7 +1,6 @@
-from app import app
-from configs import debugmode
-
+from app import create_app
 
 if __name__ == "__main__":
 
-    app.run("0.0.0.0", 5002, debugmode())
+    app = create_app()
+    app.run(port=5000)

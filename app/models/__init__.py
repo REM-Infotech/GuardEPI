@@ -1,9 +1,18 @@
-from app.models.Funcionários import *
-from app.models.users import *
-from app.models.EPI import *
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-from app import db
-from app import app
+
+from .Funcionários import Funcionarios, Cargos, Departamento, Empresa
+from .users import Users, Groups, EndPoints
+from .EPI import (
+    RegistrosEPI,
+    ProdutoEPI,
+    EstoqueEPI,
+    EstoqueGrade,
+    GradeEPI,
+    RegistroEntradas,
+)
+
 from app.misc import generate_pid
 import json
 
@@ -24,11 +33,27 @@ endpoints = [
     ("funcionarios", "Funcionários"),
     ("Empresas", "Empresas"),
     ("cargos", "Cargos"),
-    ("Departamentos", "Departamentos")
+    ("Departamentos", "Departamentos"),
+]
+
+__all__ = [
+    Funcionarios,
+    Departamento,
+    Cargos,
+    Empresa,
+    Users,
+    Groups,
+    EndPoints,
+    RegistrosEPI,
+    ProdutoEPI,
+    EstoqueEPI,
+    EstoqueGrade,
+    GradeEPI,
+    RegistroEntradas,
 ]
 
 
-def init_database() -> None:
+def init_database(app: Flask, db: SQLAlchemy) -> None:
 
     with app.app_context():
 
@@ -39,11 +64,11 @@ def init_database() -> None:
         if usr is None:
 
             usr = Users(
-
                 grupos=json.dumps(["Grupo Root"]),
                 login="root",
                 nome_usuario="Root",
-                email="nicholas@robotz.dev",)
+                email="nicholas@robotz.dev",
+            )
             root_pw = generate_pid(10)
             usr.senhacrip = root_pw
             print(f"* Root Pw: {root_pw}")
@@ -56,7 +81,8 @@ def init_database() -> None:
             grp = Groups(
                 name_group="Grupo Root",
                 members=json.dumps(["root", "nicholas@robotz.dev"]),
-                perms=json.dumps(perms_root))
+                perms=json.dumps(perms_root),
+            )
             to_add.append(grp)
 
         group = Groups.query.filter(Groups.name_group == "Default").first()
@@ -65,23 +91,18 @@ def init_database() -> None:
             grp = Groups(
                 name_group="Default",
                 members=json.dumps(["nicholas@robotz.dev"]),
-                perms=json.dumps(perms_default)
+                perms=json.dumps(perms_default),
             )
             to_add.append(grp)
 
         for endpoint, displayName in endpoints:
 
-            checkend = EndPoints.query.filter(
-                EndPoints.endpoint == endpoint).first()
+            checkend = EndPoints.query.filter(EndPoints.endpoint == endpoint).first()
 
             if not checkend:
 
-                add = EndPoints(
+                add = EndPoints(endpoint=endpoint, displayName=displayName)
 
-                    endpoint=endpoint,
-                    displayName=displayName
-                )
-                
                 to_add.append(add)
 
         db.session.add_all(to_add)
