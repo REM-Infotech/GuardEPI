@@ -73,7 +73,7 @@ def init_database() -> None:
         if usr is None:
 
             filename = "favicon.png"
-            path_img = os.path.join("app/src/assets/img", filename)
+            path_img = os.path.join("app", "src", "assets", "img", filename)
             with open(path_img, "rb") as file:
                 blob_doc = file.read()
             usr = Users(

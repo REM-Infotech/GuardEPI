@@ -47,5 +47,7 @@ SECRET_KEY = str(uuid4())
 
 for paths in [DOCS_PATH, TEMP_PATH, IMAGE_TEMP_PATH, CSV_TEMP_PATH, PDF_TEMP_PATH]:
 
-    shutil.rmtree(paths)
+    if Path(paths).exists():
+        shutil.rmtree(paths)
+
     Path(paths).mkdir(exist_ok=True)

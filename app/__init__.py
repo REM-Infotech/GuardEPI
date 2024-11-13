@@ -6,6 +6,7 @@ from datetime import timedelta
 
 
 from flask import Flask
+from flask_mail import Mail
 from flask_talisman import Talisman
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -14,6 +15,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = None
 db = None
 login_manager = None
+mail = None
 
 
 class AppFactory:
@@ -32,7 +34,8 @@ class AppFactory:
 
     def init_extensions(self, app: Flask):
 
-        global db, login_manager
+        global db, login_manager, mail
+        mail = Mail()
         db = SQLAlchemy()
         login_manager = LoginManager()
         tlsm = Talisman()
