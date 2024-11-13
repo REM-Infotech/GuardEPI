@@ -1,9 +1,14 @@
 from flask_login import login_required
-from flask import (redirect, url_for, render_template, session,
-                   abort, flash, send_from_directory, 
-                   make_response, request)
-
-from flask_wtf import FlaskForm
+from flask import (
+    redirect,
+    url_for,
+    render_template,
+    session,
+    abort,
+    flash,
+    send_from_directory,
+    make_response,
+)
 
 from werkzeug.utils import secure_filename
 from flask_wtf.file import FileField
@@ -13,15 +18,13 @@ from sqlalchemy import Float
 
 from app.decorators import update_perm
 from app.misc import format_currency_brl, generate_pid
-from app.models.EPI import ProdutoEPI, GradeEPI, RegistrosEPI, RegistroEntradas
-from app.models.Funcionários import Empresa, Funcionarios, Cargos, Departamento
+from ...models.EPI import RegistrosEPI, RegistroEntradas
 from app.routes.CRUD.miscs import get_models, getform
 
 from app import app
 from app import db
 
 import os
-from typing import Type
 from datetime import datetime
 import requests
 
@@ -61,7 +64,8 @@ def set_editar(tipo: str, item: int):
 
                         if isinstance(form_field, DateField):
                             set_data = datetime.strptime(
-                                set_data.strftime("%d-%m-%Y"), "%d-%m-%Y").date()
+                                set_data.strftime("%d-%m-%Y"), "%d-%m-%Y"
+                            ).date()
                             form_field.data = set_data
 
                         if not form_field.data:
@@ -78,12 +82,13 @@ def set_editar(tipo: str, item: int):
             form.filename.data = url
 
         else:
-            url = url_for('serve_img', index = item,
-                          md=tipo, _external=True, _scheme='https')
+            url = url_for(
+                "serve_img", index=item, md=tipo, _external=True, _scheme="https"
+            )
 
     grade_results = f"pages/forms/{tipo}/edit.html"
     form.submit.label.text = "Salvar Alterações"
-    return render_template(grade_results, form=form,  url=url, tipo=tipo, id=item)
+    return render_template(grade_results, form=form, url=url, tipo=tipo, id=item)
 
 
 @app.route("/editar/<tipo>/<id>", methods=["POST"])
@@ -96,7 +101,7 @@ def editar(tipo: str | None, id: int):
     model = get_models(tipo)
 
     try:
-        
+
         kwargs = {}
         for i in model.__table__.columns:
             name = getattr(i, "name")
@@ -121,9 +126,14 @@ def editar(tipo: str | None, id: int):
                         if isinstance(data_insert, str) and "R$" in data_insert:
 
                             data_insert = form.valor_unitario.data.encode(
-                                'latin-1', 'ignore').decode('latin-1')
-                            data_insert = data_insert.replace(r"R$\xa", "").replace(
-                                "R$ ", "").replace(".", "").replace(",", ".")
+                                "latin-1", "ignore"
+                            ).decode("latin-1")
+                            data_insert = (
+                                data_insert.replace(r"R$\xa", "")
+                                .replace("R$ ", "")
+                                .replace(".", "")
+                                .replace(",", ".")
+                            )
                             data_insert = float(data_insert)
                         setattr(itens, column.name, data_insert)
 
@@ -133,41 +143,35 @@ def editar(tipo: str | None, id: int):
                                 file = form_field.data
                                 set_data = getattr(itens, column.name)
                                 if file:
-                                    docname = secure_filename(
-                                        file.filename)
+                                    docname = secure_filename(file.filename)
                                     now = generate_pid()
                                     filename = f"{now}{docname}"
                                     path_img = os.path.join(
-                                        app.config['IMAGE_TEMP_PATH'], filename)
+                                        app.config["IMAGE_TEMP_PATH"], filename
+                                    )
                                     file.save(path_img)
-                                    with open(path_img, 'rb') as file:
-                                        setattr(itens, column.name,
-                                                file.read())
-                                    setattr(
-                                        itens, file_column.name, filename)
+                                    with open(path_img, "rb") as file:
+                                        setattr(itens, column.name, file.read())
+                                    setattr(itens, file_column.name, filename)
                                 elif set_data is None:
                                     image_url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
                                     img_data = requests.get(image_url)
-                                    setattr(itens, column.name,
-                                            img_data.content)
+                                    setattr(itens, column.name, img_data.content)
                                     cod = generate_pid()
                                     now = datetime.now().strftime("%d%m%Y%H%M%S")
                                     filename = f"{now}{cod}.png"
-                                    setattr(
-                                        itens, file_column.name, filename)
+                                    setattr(itens, file_column.name, filename)
                                 break
 
         db.session.commit()
         flash("Edições salvas com sucesso!", "success")
         return redirect(f"/{tipo.capitalize()}")
 
-
     except Exception as e:
-        print(e)
-        abort(500)
+        abort(500, description=str(e))
 
 
-@app.route('/pdf/<index>/<md>', methods=["GET"])
+@app.route("/pdf/<index>/<md>", methods=["GET"])
 @login_required
 def serve_pdf(index: int, md: str):
 
@@ -179,9 +183,9 @@ def serve_pdf(index: int, md: str):
                 dbase = RegistroEntradas.query.filter_by(id=index).first()
 
             elif md.lower() == "dashboard":
-                
+
                 dbase = RegistrosEPI.query.filter_by(id=index).first()
-            
+
             else:
                 model = get_models(md.lower())
                 dbase = model.query.filter_by(id=index).first()
@@ -189,24 +193,23 @@ def serve_pdf(index: int, md: str):
             filename = dbase.filename
             pdf_data = dbase.blob_doc
 
-            original_path = os.path.join(app.config['DOCS_PATH'], filename)
+            original_path = os.path.join(app.config["DOCS_PATH"], filename)
 
-            with open(original_path, 'wb') as file:
+            with open(original_path, "wb") as file:
                 file.write(pdf_data)
-            url = send_from_directory(app.config['DOCS_PATH'], filename)
+            url = send_from_directory(app.config["DOCS_PATH"], filename)
             # Crie a resposta usando make_response
             response = make_response(url)
 
             # Defina o tipo MIME como application/pdf
-            response.headers['Content-Type'] = 'application/pdf'
+            response.headers["Content-Type"] = "application/pdf"
             return url
 
     except Exception as e:
-        print(e)
-        abort(500)
+        abort(500, description=str(e))
 
 
-@app.route('/img/<index>/<md>', methods=["GET"])
+@app.route("/img/<index>/<md>", methods=["GET"])
 @login_required
 def serve_img(index: int, md: str):
 
@@ -217,9 +220,9 @@ def serve_img(index: int, md: str):
                 dbase = RegistroEntradas.query.filter_by(id=index).first()
 
             elif md.lower() == "dashboard":
-                
+
                 dbase = RegistrosEPI.query.filter_by(id=index).first()
-            
+
             else:
                 model = get_models(md.lower())
                 dbase = model.query.filter_by(id=index).first()
@@ -227,16 +230,14 @@ def serve_img(index: int, md: str):
             image_data = dbase.blob_doc
             now = generate_pid()
             filename = f"{now}.png"
-            original_path = os.path.join(
-                app.config['IMAGE_TEMP_PATH'], filename)
+            original_path = os.path.join(app.config["IMAGE_TEMP_PATH"], filename)
 
-            with open(original_path, 'wb') as file:
+            with open(original_path, "wb") as file:
                 file.write(image_data)
 
-            url = send_from_directory(app.config['IMAGE_TEMP_PATH'], filename)
+            url = send_from_directory(app.config["IMAGE_TEMP_PATH"], filename)
 
             return url
 
     except Exception as e:
-        print(e)
-        abort(500)
+        abort(500, description=str(e))

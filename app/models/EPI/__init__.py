@@ -1,3 +1,25 @@
-from app.models.EPI.cautelas import RegistrosEPI
-from app.models.EPI.equipamento import (ModelosEPI, Marcas, ClassesEPI, Fornecedores, ProdutoEPI, GradeEPI)
-from app.models.EPI.estoque import EstoqueEPI, EstoqueGrade, RegistroSaidas, RegistroEntradas
+from .cautelas import RegistrosEPI
+from .equipamento import (
+    ModelosEPI,
+    Marcas,
+    ClassesEPI,
+    Fornecedores,
+    ProdutoEPI,
+    GradeEPI,
+)
+from .estoque import EstoqueEPI, EstoqueGrade, RegistroSaidas, RegistroEntradas
+
+
+__all__ = (
+    RegistrosEPI,
+    ModelosEPI,
+    Marcas,
+    ClassesEPI,
+    Fornecedores,
+    ProdutoEPI,
+    GradeEPI,
+    EstoqueEPI,
+    EstoqueGrade,
+    RegistroSaidas,
+    RegistroEntradas,
+)

@@ -1,28 +1,46 @@
 from app import app
-from app.models import (ProdutoEPI, Funcionarios, GradeEPI, Fornecedores, Marcas,
-                        Marcas, ModelosEPI, ClassesEPI, EstoqueGrade)
+from app.models import (
+    ProdutoEPI,
+    Funcionarios,
+    GradeEPI,
+    Fornecedores,
+    Marcas,
+    ModelosEPI,
+    ClassesEPI,
+    EstoqueGrade,
+)
 from collections import Counter
 
+
 def set_EpiCautelaChoices() -> list[tuple[str, str]]:
-    
+
     with app.app_context():
-        
+
         database = EstoqueGrade.query.order_by(EstoqueGrade.nome_epi.asc()).all()
         epis = [epi.nome_epi for epi in database]
         count = Counter(epis)
         list_itens = [(item, item) for item in count]
         return list_itens
 
+
 def set_ChoicesFuncionario() -> list[tuple[str, str]]:
 
     with app.app_context():
-        return [(epi.nome_funcionario, epi.nome_funcionario) for epi in Funcionarios.query.order_by(Funcionarios.nome_funcionario.asc()).all()]
+        return [
+            (epi.nome_funcionario, epi.nome_funcionario)
+            for epi in Funcionarios.query.order_by(
+                Funcionarios.nome_funcionario.asc()
+            ).all()
+        ]
 
 
 def set_choices() -> list[tuple[str, str]]:
 
     with app.app_context():
-        return [(epi.nome_epi, epi.nome_epi) for epi in ProdutoEPI.query.order_by(ProdutoEPI.nome_epi.asc()).all()]
+        return [
+            (epi.nome_epi, epi.nome_epi)
+            for epi in ProdutoEPI.query.order_by(ProdutoEPI.nome_epi.asc()).all()
+        ]
 
 
 def set_choicesGrade() -> list[tuple[str, str]]:

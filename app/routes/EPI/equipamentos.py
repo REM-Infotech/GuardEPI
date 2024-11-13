@@ -16,8 +16,13 @@ from app.models import ClassesEPI
 from app.models import ModelosEPI
 
 
-from app.Forms import (CadastroEPIForm, CadastroClasses, CadastroFonecedores,
-                       CadastroMarcas, CadastroModelos)
+from app.Forms import (
+    CadastroEPIForm,
+    CadastroClasses,
+    CadastroFonecedores,
+    CadastroMarcas,
+    CadastroModelos,
+)
 
 from app.Forms import IMPORTEPIForm, EditItemProdutoForm
 
@@ -30,11 +35,13 @@ tipo = db.Model
 
 def get_models(tipo) -> Type[tipo]:
 
-    models = {"equipamentos": ProdutoEPI,
-              'fornecedores': fornecedores,
-              'marcas': marcas,
-              'modelos': ModelosEPI,
-              'classes': ClassesEPI}
+    models = {
+        "equipamentos": ProdutoEPI,
+        "fornecedores": fornecedores,
+        "marcas": marcas,
+        "modelos": ModelosEPI,
+        "classes": ClassesEPI,
+    }
 
     return models[tipo]
 
@@ -50,12 +57,19 @@ def Equipamentos():
     page = f"pages/epi/{request.endpoint.lower()}.html"
     title = request.endpoint.capitalize()
     database = get_models(request.endpoint.lower()).query.all()
-    DataTables = 'js/DataTables/epi/EquipamentosTable.js'
+    DataTables = "js/DataTables/epi/EquipamentosTable.js"
     url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
-    return render_template("index.html", page=page, title=title, form=form,
-                           importForm=importForm, database=database,
-                           format_currency_brl=format_currency_brl,
-                           DataTables=DataTables, url_image=url)
+    return render_template(
+        "index.html",
+        page=page,
+        title=title,
+        form=form,
+        importForm=importForm,
+        database=database,
+        format_currency_brl=format_currency_brl,
+        DataTables=DataTables,
+        url_image=url,
+    )
 
 
 @app.route("/SetEditarEPI/<item>", methods=["GET"])
@@ -71,21 +85,23 @@ def SetEditarEPI(item: int):
     if "?" in route:
         route = route.split("?")[0]
 
-    form = form(**{
-        'nome_epi': database.nome_epi,
-        'ca': database.ca,
-        'cod_ca': database.cod_ca,
-        'valor_unitario': format_currency_brl(database.valor_unitario),
-        'periodicidade_item': database.periodicidade_item,
-        'qtd_entregar': database.qtd_entregar,
-        'fornecedor': database.fornecedor,
-        'marca': database.marca,
-        'modelo': database.modelo,
-        'tipo_epi': database.tipo_epi,
-        'vencimento': database.vencimento,
-        'descricao': database.descricao,
-        'filename': database.filename
-    })
+    form = form(
+        **{
+            "nome_epi": database.nome_epi,
+            "ca": database.ca,
+            "cod_ca": database.cod_ca,
+            "valor_unitario": format_currency_brl(database.valor_unitario),
+            "periodicidade_item": database.periodicidade_item,
+            "qtd_entregar": database.qtd_entregar,
+            "fornecedor": database.fornecedor,
+            "marca": database.marca,
+            "modelo": database.modelo,
+            "tipo_epi": database.tipo_epi,
+            "vencimento": database.vencimento,
+            "descricao": database.descricao,
+            "filename": database.filename,
+        }
+    )
 
     url = ""
     if any(route == tipos for tipos in ["empresas", "equipamentos"]):
@@ -94,11 +110,12 @@ def SetEditarEPI(item: int):
         url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
         form.filename.data = url
         if image_name:
-            url = url_for('serve_img', index=item,
-                          md=route, _external=True, _scheme='https')
+            url = url_for(
+                "serve_img", index=item, md=route, _external=True, _scheme="https"
+            )
 
     grade_results = f"pages/forms/{route}/edit.html"
-    return render_template(grade_results, form=form,  url=url, tipo=route, id=item)
+    return render_template(grade_results, form=form, url=url, tipo=route, id=item)
 
 
 @app.route("/cadastrarEPI", methods=["POST"])
@@ -109,10 +126,11 @@ def cadastrarEPI():
     form = CadastroEPIForm()
 
     if form.validate_on_submit():
-        
+
         dbase_tipoepi = ClassesEPI.query.filter(
-            ClassesEPI.classe == form.tipo_epi.data).first()
-        
+            ClassesEPI.classe == form.tipo_epi.data
+        ).first()
+
         args = dotenv_values()
 
         username = args.get("username_api", None)
@@ -121,51 +139,51 @@ def cadastrarEPI():
         url = args.get("url_api", None)
 
         if username and password and url:
-            auth = {
-                "username": username,
-                "password": password
-            }
+            auth = {"username": username, "password": password}
 
             data = requests.post(f"{url}/login", json=auth).json()
 
-            headers = {
-                "Authorization": f"Bearer {data.get('access_token')}"
-            }
+            headers = {"Authorization": f"Bearer {data.get('access_token')}"}
 
             # Faça a requisição GET (ou POST, PUT, etc.) com o cabeçalho
             response = requests.get(
-                f"{url}/consulta_ca/{form.data.get("cod_ca", "99999")}", headers=headers)
+                f"{url}/consulta_ca/{form.data.get("cod_ca", "99999")}", headers=headers
+            )
 
             if response.status_code == 200:
 
                 response = response.json()
 
                 # Formato da string de data
-                date_format = '%a, %d %b %Y %H:%M:%S %Z'
+                date_format = "%a, %d %b %Y %H:%M:%S %Z"
 
                 # Converter para datetime
-                response.update({"validade": datetime.strptime(
-                    response.get("validade"), date_format)})
+                response.update(
+                    {
+                        "validade": datetime.strptime(
+                            response.get("validade"), date_format
+                        )
+                    }
+                )
 
-                form.tipo_epi.data = response['tipo_epi']
+                form.tipo_epi.data = response["tipo_epi"]
                 form.vencimento.data = response["validade"]
-                form.descricao.data = response['aprovado_para']
-                
-        
-        
+                form.descricao.data = response["aprovado_para"]
+
         if not dbase_tipoepi:
-            
-            addClasse = ClassesEPI(
-                classe = response['tipo_epi']
-            )
-            
+
+            addClasse = ClassesEPI(classe=response["tipo_epi"])
+
             db.session.add(addClasse)
 
         if "R$" in str(form.valor_unitario.data):
-            form.valor_unitario.data = float(str(
-                form.valor_unitario.data).replace(
-                "R$ ", "").replace(".", "").replace(",", "."))
-        
+            form.valor_unitario.data = float(
+                str(form.valor_unitario.data)
+                .replace("R$ ", "")
+                .replace(".", "")
+                .replace(",", ".")
+            )
+
         epi_insert = ProdutoEPI(
             ca=form.ca.data,
             cod_ca=form.cod_ca.data,
@@ -178,7 +196,7 @@ def cadastrarEPI():
             marca=form.marca.data,
             modelo=form.modelo.data,
             vencimento=form.vencimento.data,
-            descricao=form.descricao.data
+            descricao=form.descricao.data,
         )
 
         if form.filename.data:
@@ -188,13 +206,12 @@ def cadastrarEPI():
             filename = secure_filename(img_epi.filename)
             path_img = os.path.join(app.config["IMAGE_TEMP_PATH"], filename)
             img_epi.save(path_img)
-            with open(path_img, "rb")as f:
+            with open(path_img, "rb") as f:
                 img_data = f.read()
 
             epi_insert.filename = filename
             epi_insert.blob_doc = img_data
 
-        
         db.session.add(epi_insert)
         db.session.commit()
 
@@ -203,7 +220,7 @@ def cadastrarEPI():
 
     if form.errors:
         pass
-    
+
     return redirect(url_for("Equipamentos"))
 
 
@@ -217,8 +234,9 @@ def Fornecedores():
     DataTables = "js/DataTables/DataTables.js"
     page = f"pages/epi/{request.endpoint.lower()}.html"
     database = get_models(request.endpoint.lower()).query.all()
-    return render_template("index.html", page=page, form=form, DataTables=DataTables,
-                           database=database)
+    return render_template(
+        "index.html", page=page, form=form, DataTables=DataTables, database=database
+    )
 
 
 @app.route("/Marcas", methods=["GET"])
@@ -231,8 +249,9 @@ def Marcas():
     DataTables = "js/DataTables/DataTables.js"
     page = f"pages/epi/{request.endpoint.lower()}.html"
     database = get_models(request.endpoint.lower()).query.all()
-    return render_template("index.html", page=page, form=form, DataTables=DataTables,
-                           database=database)
+    return render_template(
+        "index.html", page=page, form=form, DataTables=DataTables, database=database
+    )
 
 
 @app.route("/Modelos", methods=["GET"])
@@ -245,8 +264,9 @@ def Modelos():
     DataTables = "js/DataTables/DataTables.js"
     page = f"pages/epi/{request.endpoint.lower()}.html"
     database = get_models(request.endpoint.lower()).query.all()
-    return render_template("index.html", page=page, form=form, DataTables=DataTables,
-                           database=database)
+    return render_template(
+        "index.html", page=page, form=form, DataTables=DataTables, database=database
+    )
 
 
 @app.route("/Classes", methods=["GET"])
@@ -259,5 +279,6 @@ def Classes():
     DataTables = "js/DataTables/DataTables.js"
     page = f"pages/epi/{request.endpoint.lower()}.html"
     database = get_models(request.endpoint.lower()).query.all()
-    return render_template("index.html", page=page, form=form, DataTables=DataTables,
-                           database=database)
+    return render_template(
+        "index.html", page=page, form=form, DataTables=DataTables, database=database
+    )

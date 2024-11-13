@@ -22,6 +22,27 @@ from app.routes import config
 
 from app.routes import terms_policy
 
+
+__all__ = [
+    login,
+    queue,
+    dashboard,
+    relatorio,
+    equipamentos,
+    estoque,
+    cautela,
+    grades,
+    cargos,
+    departamentos,
+    empresas,
+    funcionarios,
+    create,
+    update,
+    delete,
+    handler,
+    config,
+    terms_policy,
+]
 # from app import app
 # import json
 # import os
@@ -29,18 +50,17 @@ from app.routes import terms_policy
 
 # @app.before_request
 # def save_endpoints():
-    
+
 #     rar = request.url_rule.map._rules
-    
+
 #     endpoints = {}
 #     for item in rar:
-        
+
 #         endpoints.update({item.endpoint: item.endpoint})
-        
+
 #     json_object = json.dumps(endpoints, indent=4)
 #     with open("myJsn.json", "w") as outfile:
 #         outfile.write(json_object)
-        
-        
-    
+
+
 #     pass

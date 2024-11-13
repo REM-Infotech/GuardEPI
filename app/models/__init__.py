@@ -1,15 +1,24 @@
-from app.models.Funcionários import Funcionarios, Empresa, Cargos, Departamento
-from app.models.users import Users, Groups, Permissions, EndPoints
-from app.models.EPI import (ProdutoEPI, EstoqueEPI, EstoqueGrade,  Marcas,
-                            GradeEPI, ClassesEPI, ModelosEPI, Fornecedores,
-                            RegistroEntradas, RegistroSaidas, RegistrosEPI)
+from .Funcionários import Funcionarios, Empresa, Cargos, Departamento
+from .users import Users, Groups, Permissions, EndPoints
+from .EPI import (
+    ProdutoEPI,
+    EstoqueEPI,
+    EstoqueGrade,
+    Marcas,
+    GradeEPI,
+    ClassesEPI,
+    ModelosEPI,
+    Fornecedores,
+    RegistroEntradas,
+    RegistroSaidas,
+    RegistrosEPI,
+)
 
 import os
 from app import db
 from app import app
 from app.misc import generate_pid
 import json
-
 
 
 endpoints = [
@@ -30,8 +39,27 @@ endpoints = [
     ("Departamentos", "Departamentos"),
     ("users", "users"),
     ("groups", "groups"),
-    ("Permissoes", "Permissoes")
+    ("Permissoes", "Permissoes"),
 ]
+
+__all__ = (
+    Funcionarios,
+    Empresa,
+    Cargos,
+    Departamento,
+    Permissions,
+    ProdutoEPI,
+    EstoqueEPI,
+    EstoqueGrade,
+    Marcas,
+    GradeEPI,
+    ClassesEPI,
+    ModelosEPI,
+    Fornecedores,
+    RegistroEntradas,
+    RegistroSaidas,
+    RegistrosEPI,
+)
 
 
 def init_database() -> None:
@@ -43,20 +71,20 @@ def init_database() -> None:
         usr = Users.query.filter_by(login="root").first()
 
         if usr is None:
-            
+
             filename = "favicon.png"
             path_img = os.path.join("app/src/assets/img", filename)
-            with open(path_img, 'rb') as file:
+            with open(path_img, "rb") as file:
                 blob_doc = file.read()
             usr = Users(
-
                 grupos=json.dumps(["Grupo Root"]),
                 login="root",
                 nome_usuario="Root",
                 email="adm@robotz.dev",
-                blob_doc = blob_doc,
-                filename = filename)
-            
+                blob_doc=blob_doc,
+                filename=filename,
+            )
+
             root_pw = generate_pid(10)
             usr.senhacrip = root_pw
             print(f" * Root Pw: {root_pw}")
@@ -66,38 +94,29 @@ def init_database() -> None:
 
         if group is None:
 
-            grp = Groups(
-                name_group="Grupo Root",
-                members=json.dumps(["root"]))
+            grp = Groups(name_group="Grupo Root", members=json.dumps(["root"]))
             to_add.append(grp)
 
         group = Groups.query.filter(Groups.name_group == "Default").first()
 
         if group is None:
-            grp = Groups(
-                name_group="Default"
-            )
+            grp = Groups(name_group="Default")
             to_add.append(grp)
 
         for endpoint, displayName in endpoints:
 
-            checkend = EndPoints.query.filter(
-                EndPoints.endpoint == endpoint).first()
+            checkend = EndPoints.query.filter(EndPoints.endpoint == endpoint).first()
 
             if not checkend:
 
-                add = EndPoints(
+                add = EndPoints(endpoint=endpoint, displayName=displayName)
 
-                    endpoint=endpoint,
-                    displayName=displayName
-                )
-                
                 to_add.append(add)
 
         if len(to_add) > 0:
             db.session.add_all(to_add)
-        
+
         try:
             db.session.commit()
-        except:
+        except Exception:
             pass
