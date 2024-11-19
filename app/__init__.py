@@ -11,6 +11,7 @@ from flask_talisman import Talisman
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
+from app.logs.setup import initialize_logging
 
 app = None
 db = None
@@ -28,7 +29,7 @@ class AppFactory:
         app.config.from_object("app.default_config")
 
         self.init_extensions(app)
-
+        app.logger = initialize_logging()
         importlib.import_module("app.routes")
         return app
 
