@@ -62,13 +62,15 @@ __all__ = (
 )
 
 
-def init_database() -> None:
+def init_database() -> str:
+
+    root_pw = generate_pid(10)
 
     with app.app_context():
 
         db.create_all()
         to_add = []
-        usr = Users.query.filter_by(login="root").first()
+        usr = db.session.query(Users).filter_by(login="root").first()
 
         if usr is None:
 
@@ -85,9 +87,7 @@ def init_database() -> None:
                 filename=filename,
             )
 
-            root_pw = generate_pid(10)
             usr.senhacrip = root_pw
-            print(f" * Root Pw: {root_pw}")
             to_add.append(usr)
 
         group = Groups.query.filter(Groups.name_group == "Grupo Root").first()
@@ -120,3 +120,5 @@ def init_database() -> None:
             db.session.commit()
         except Exception:
             pass
+
+    return f" * Root Pw: {root_pw}"
