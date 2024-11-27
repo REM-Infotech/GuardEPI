@@ -20,28 +20,32 @@ login_manager = None
 mail = None
 
 
-# def celery_init(app: Flask) -> Celery:
-#     class FlaskTask(Task):
-#         def __call__(self, *args: object, **kwargs: object) -> object:
-#             with app.app_context():
-#                 return self.run(*args, **kwargs)
-
-#     TaskFlask = FlaskTask
-#     celery_app = Celery(app.name, task_cls=TaskFlask)
-#     celery_app.config_from_object(app.config["CELERY"])
-#     celery_app.set_default()
-#     app.extensions["celery"] = celery_app
-#     return celery_app
-
-
 def celery_init(app: Flask) -> Celery:
+    """
+    ## celery_init
 
+    ### Parameters:
+    ####    app (Flask): Flask app
+
+    ### Returns:
+    ####    Celery app (Celery): Aplicação Celery
+
+    """
+
+    """ Instancia do Celery"""
     celery_app = Celery(app.import_name)
+
+    """ Worker Pool usa Threads """
     celery_app.conf.worker_pool = "threads"
 
+    """ Importa configurações """
     celery_app.config_from_object(app.config["CELERY"])
     celery_app.conf.update(broker_connection_retry_on_startup=True)
+
+    """ Define TaskBase """
     TaskBase = celery_app.Task
+
+    """ Class ContextTask """
 
     class ContextTask(TaskBase):
         abstract = True
@@ -50,6 +54,7 @@ def celery_init(app: Flask) -> Celery:
             with app.app_context():
                 return TaskBase.__call__(self, *args, **kwargs)
 
+    """ Redefine property Task """
     celery_app.Task = ContextTask
     return celery_app
 

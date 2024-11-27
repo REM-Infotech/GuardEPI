@@ -32,8 +32,4 @@ def send_email(self, a: int, b: int) -> int:
         msg = Message(assunto, sender=sender_, recipients=copy_content, html=mensagem)
         mail.send(msg)
 
-    app.logger.info(str(a + b))
-
-    print(a + b)
-
     return a + b
