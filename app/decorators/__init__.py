@@ -78,7 +78,7 @@ def check_permit(groups_usr: list, PERM: str) -> bool:
     end = session.get("endpoint", None)
 
     if not end:
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("dash.dashboard"))
 
     for grp in groups_usr:
 

@@ -3,7 +3,7 @@
         <div class="sb-sidenav-menu">
             <div class="nav">
                 <div class="sb-sidenav-menu-heading">EPI</div>
-                <a class="nav-link" href="{{ url_for('dashboard') }}">
+                <a class="nav-link" href="{{ url_for('dash.dashboard') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     Dashboard
                 </a>
@@ -73,7 +73,7 @@
                     <nav class="sb-sidenav-menu-nested nav">
                         <a class="nav-link" href="{{ url_for('funcionarios') }}">Funcionários</a>
                         <a class="nav-link" href="{{ url_for('Empresas') }}">Empresas</a>
-                        <a class="nav-link" href="{{ url_for('cargos') }}">Cargos</a>
+                        <a class="nav-link" href="{{ url_for('cargo_bp.cargos') }}">Cargos</a>
                         <a class="nav-link" href="{{ url_for('Departamentos') }}">Departamentos</a>
                     </nav>
                 </div>

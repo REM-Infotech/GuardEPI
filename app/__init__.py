@@ -1,4 +1,3 @@
-import importlib
 import os
 from datetime import timedelta
 from pathlib import Path
@@ -64,7 +63,9 @@ def create_app():
 
     init_extensions(app)
     app.logger = initialize_logging()
-    importlib.import_module("app.routes")
+    from app.routes import register_blueprint
+
+    register_blueprint(app)
 
     celery_app = celery_init(app)
     celery_app.set_default()

@@ -182,7 +182,7 @@ def serve_pdf(index: int, md: str):
             if md.lower() == "entradas":
                 dbase = RegistroEntradas.query.filter_by(id=index).first()
 
-            elif md.lower() == "dashboard":
+            elif md.lower() == "dash.dashboard":
 
                 dbase = RegistrosEPI.query.filter_by(id=index).first()
 
@@ -219,7 +219,7 @@ def serve_img(index: int, md: str):
             if md.lower() == "entradas":
                 dbase = RegistroEntradas.query.filter_by(id=index).first()
 
-            elif md.lower() == "dashboard":
+            elif md.lower() == "dash.dashboard":
 
                 dbase = RegistrosEPI.query.filter_by(id=index).first()
 

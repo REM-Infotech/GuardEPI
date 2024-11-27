@@ -12,7 +12,7 @@ def handle_http_exception(error):
     desc = tradutor.translate(error.description)
 
     if error.code == 405:
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("dash.dashboard"))
 
     return (
         render_template("handler/index.html", name=name, desc=desc, code=error.code),

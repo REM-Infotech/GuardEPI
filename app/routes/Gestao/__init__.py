@@ -1,4 +1,4 @@
-from . import cargos
+from .. import cargos
 from . import empresas
 from . import funcionarios
 from . import departamentos

@@ -12,7 +12,7 @@ from flask_login import current_user
 def index():
 
     if not current_user.is_authenticated:
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("dash.dashboard"))
 
     return redirect(url_for("login"))
 
@@ -22,10 +22,10 @@ def login():
 
     try:
         if session.get("_user_id", None) is not None:
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("dash.dashboard"))
 
         if not session.get("next"):
-            session["next"] = request.args.get("next", url_for("dashboard"))
+            session["next"] = request.args.get("next", url_for("dash.dashboard"))
 
         location = str(session.get("next"))
         form = LoginForm()

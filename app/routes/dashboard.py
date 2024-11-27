@@ -1,19 +1,22 @@
-from flask import render_template, request, make_response, jsonify, abort
-from flask_login import login_required
-from app import app
-from ...models import RegistrosEPI, RegistroEntradas, RegistroSaidas
-from ...decorators import set_endpoint
-from ...misc import format_currency_brl
-
+from datetime import datetime
 
 import pandas as pd
-from datetime import datetime
+import pytz
+from celery.result import AsyncResult
+from flask import Blueprint, abort, jsonify, make_response, render_template, request
+from flask_login import login_required
 from sqlalchemy import extract
 
-import pytz
+from ..decorators import set_endpoint
+from ..misc import format_currency_brl
+from ..models import RegistroEntradas, RegistroSaidas, RegistrosEPI
+from ..tasks import send_email
 
 
-@app.route("/dashboard", methods=["GET"])
+dash = Blueprint("dash", __name__, template_folder="templates", static_folder="static")
+
+
+@dash.route("/dashboard", methods=["GET"])
 @login_required
 @set_endpoint
 def dashboard():
@@ -88,7 +91,7 @@ def dashboard():
         abort(500, description=str(e))
 
 
-@app.route("/saidasEquipamento", methods=["GET"])
+@dash.route("/saidasEquipamento", methods=["GET"])
 def saidasEquipamento():
 
     chart_data = {"labels": [], "values": [], "media": 0}
@@ -129,7 +132,7 @@ def saidasEquipamento():
     return jsonify(chart_data)
 
 
-@app.route("/saidasFuncionario", methods=["GET"])
+@dash.route("/saidasFuncionario", methods=["GET"])
 def saidasFuncionario():
 
     chart_data = {"labels": [], "values": [], "media": 0}
@@ -168,3 +171,21 @@ def saidasFuncionario():
         }
 
     return jsonify(chart_data)
+
+
+@dash.route("/test_celery", methods=["GET"])
+def test_celery():
+
+    result = send_email.delay(15, 15)
+
+    return jsonify({"result_id": result.id}), 200
+
+
+@dash.route("/result/<id>", methods=["GET"])
+def task_result(id: str) -> dict[str, object]:
+    result = AsyncResult(id)
+    return {
+        "ready": result.ready(),
+        "successful": result.successful(),
+        "value": result.result if result.ready() else None,
+    }

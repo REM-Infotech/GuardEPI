@@ -22,7 +22,7 @@ def getModel(tipo: str) -> Type[tipo]:
         "funcionarios": Funcionarios,
         "empresas": Empresa,
         "departamentos": Departamento,
-        "cargos": Cargos,
+        "cargo_bp.cargos": Cargos,
         "estoque": EstoqueEPI,
         "grade": GradeEPI,
         "equipamentos": ProdutoEPI,
