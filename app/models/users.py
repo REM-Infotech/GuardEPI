@@ -25,19 +25,21 @@ def load_user(user_id):
 class Users(db.Model, UserMixin):
 
     __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True)
-    login = db.Column(db.String(length=30), nullable=False, unique=True)
-    nome_usuario = db.Column(db.String(length=64), nullable=False, unique=True)
-    grupos = db.Column(db.String(length=1024), nullable=False)
-    email = db.Column(db.String(length=50), nullable=False, unique=True)
-    password = db.Column(db.String(length=60), nullable=False)
-    login_time = db.Column(
+    id: int = db.Column(db.Integer, primary_key=True)
+    login: str = db.Column(db.String(length=30), nullable=False, unique=True)
+    nome_usuario: str = db.Column(db.String(length=64), nullable=False, unique=True)
+    grupos: str = db.Column(db.String(length=1024), nullable=False)
+    email: str = db.Column(db.String(length=50), nullable=False, unique=True)
+    password: str = db.Column(db.String(length=60), nullable=False)
+    login_time: datetime = db.Column(
         db.DateTime, default=datetime.now(pytz.timezone("Etc/GMT+4"))
     )
-    verification_code = db.Column(db.String(length=45), unique=True)
-    login_id = db.Column(db.String(length=7), nullable=False, default=generate_pid())
-    filename = db.Column(db.String(length=128))
-    blob_doc = db.Column(db.LargeBinary(length=(2**32) - 1))
+    verification_code: str = db.Column(db.String(length=45), unique=True)
+    login_id: str = db.Column(
+        db.String(length=7), nullable=False, default=generate_pid()
+    )
+    filename: str = db.Column(db.String(length=128))
+    blob_doc: str = db.Column(db.LargeBinary(length=(2**32) - 1))
 
     @property
     def senhacrip(self):

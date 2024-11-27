@@ -3,7 +3,9 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
-from celery import Celery, Task
+from celery import Celery
+
+# from celery.schedules import crontab
 from flask import Flask
 from flask_login import LoginManager
 from flask_mail import Mail
@@ -17,36 +19,73 @@ app = None
 db = None
 login_manager = None
 mail = None
-celery_app = None
 
 
-class AppFactory:
+# def celery_init(app: Flask) -> Celery:
+#     class FlaskTask(Task):
+#         def __call__(self, *args: object, **kwargs: object) -> object:
+#             with app.app_context():
+#                 return self.run(*args, **kwargs)
 
-    def create_app(self):
-        global app
+#     TaskFlask = FlaskTask
+#     celery_app = Celery(app.name, task_cls=TaskFlask)
+#     celery_app.config_from_object(app.config["CELERY"])
+#     celery_app.set_default()
+#     app.extensions["celery"] = celery_app
+#     return celery_app
 
-        files_render = os.path.join(os.getcwd(), "app", "src")
-        app = Flask(__name__, template_folder=files_render, static_folder=files_render)
-        app.config.from_object("app.default_config")
 
-        self.init_extensions(app)
-        app.logger = initialize_logging()
-        importlib.import_module("app.routes")
+def celery_init(app: Flask) -> Celery:
 
-        global celery_app
-        celery_app = self.celery_init_app(app)
+    celery_app = Celery(app.import_name)
+    celery_app.conf.worker_pool = "threads"
 
-        return app
+    celery_app.config_from_object(app.config["CELERY"])
+    celery_app.conf.update(broker_connection_retry_on_startup=True)
+    TaskBase = celery_app.Task
 
-    def init_extensions(self, app: Flask):
+    class ContextTask(TaskBase):
+        abstract = True
 
-        global db, login_manager, mail
-        mail = Mail()
-        db = SQLAlchemy()
-        login_manager = LoginManager()
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+
+    celery_app.Task = ContextTask
+    return celery_app
+
+
+def create_app():
+    global app
+
+    files_render = os.path.join(os.getcwd(), "app", "src")
+    app = Flask(__name__, template_folder=files_render, static_folder=files_render)
+    app.config.from_object("app.default_config")
+
+    init_extensions(app)
+    app.logger = initialize_logging()
+    importlib.import_module("app.routes")
+
+    celery_app = celery_init(app)
+    celery_app.set_default()
+    app.extensions["celery"] = celery_app
+    app.extensions["mail"] = mail
+
+    return app
+
+
+def init_extensions(app: Flask):
+
+    global db, login_manager, mail
+    mail = Mail(app)
+    db = SQLAlchemy()
+    login_manager = LoginManager()
+
+    db.init_app(app)
+    login_manager.init_app(app)
+
+    if not app.debug:
         tlsm = Talisman()
-        db.init_app(app)
-        login_manager.init_app(app)
         tlsm.init_app(
             app,
             content_security_policy=csp(),
@@ -58,29 +97,14 @@ class AppFactory:
             x_xss_protection=True,
         )
 
-        login_manager.login_view = "login"
-        login_manager.login_message = "Faça login para acessar essa página."
-        login_manager.login_message_category = "info"
+    login_manager.login_view = "login"
+    login_manager.login_message = "Faça login para acessar essa página."
+    login_manager.login_message_category = "info"
 
-        with app.app_context():
+    with app.app_context():
 
-            from app.models import init_database
+        from app.models import init_database
 
-            if not Path("is_init.txt").exists():
-                with open("is_init.txt", "w") as f:
-                    f.write(init_database())
-
-    def celery_init_app(self, app: Flask) -> Celery:
-        class FlaskTask(Task):
-            def __call__(self, *args: object, **kwargs: object) -> object:
-                with app.app_context():
-                    return self.run(*args, **kwargs)
-
-        celery_app = Celery(app.name, task_cls=FlaskTask)
-        celery_app.config_from_object(app.config["CELERY"])
-        celery_app.set_default()
-        app.extensions["celery"] = celery_app
-        return celery_app
-
-
-create_app = AppFactory().create_app
+        if not Path("is_init.txt").exists():
+            with open("is_init.txt", "w") as f:
+                f.write(init_database())

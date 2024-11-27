@@ -1,4 +1,4 @@
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 from pathlib import Path
 from uuid import uuid4
 import shutil
@@ -6,12 +6,13 @@ import os
 
 from datetime import timedelta
 
-load_dotenv()
+values = dotenv_values()
 
-login_db = os.getenv("login")
-passwd_db = os.getenv("password")
-host_db = os.getenv("host")
-database_name = os.getenv("database")
+login_db = values.get("LOGIN")
+passwd_db = values.get("PASSWORD")
+host_db = values.get("HOST")
+database_name = values.get("DATABASE")
+
 
 # PARAMETROS PARA O APP FLASK
 DEBUG = True
@@ -21,6 +22,17 @@ TEMP_PATH = os.path.join(os.getcwd(), "Temp")
 IMAGE_TEMP_PATH = os.path.join(TEMP_PATH, "IMG")
 CSV_TEMP_PATH = os.path.join(TEMP_PATH, "csv")
 PDF_TEMP_PATH = os.path.join(TEMP_PATH, "pdf")
+
+MAIL_DEBUG = False
+MAIL_SUPPRESS_SEND = False
+MAIL_ASCII_ATTACHMENTS = False
+MAIL_SERVER = values["MAIL_SERVER"]
+MAIL_PORT = int(values["MAIL_PORT"])
+MAIL_USE_TLS = False
+MAIL_USE_SSL = False
+MAIL_USERNAME = values["MAIL_USERNAME"]
+MAIL_PASSWORD = values["MAIL_PASSWORD"]
+MAIL_DEFAULT_SENDER = values["MAIL_DEFAULT_SENDER"]
 
 
 """SqlAlchemy Config"""
@@ -54,7 +66,7 @@ for paths in [DOCS_PATH, TEMP_PATH, IMAGE_TEMP_PATH, CSV_TEMP_PATH, PDF_TEMP_PAT
 
 
 CELERY = dict(
-    broker_url="redis://localhost",
-    result_backend="redis://localhost",
+    broker_url="redis://:Redis2019!@195.200.1.226/0",
+    result_backend="redis://:Redis2019!@195.200.1.226/1",
     task_ignore_result=True,
 )

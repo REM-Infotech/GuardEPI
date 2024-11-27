@@ -1,34 +1,44 @@
-from app import create_app
-from eventlet.wsgi import server
-from eventlet import listen
-from dotenv import dotenv_values as values
+
 from clear import clear
 
+from app import create_app
+
+clear()
+flask_app = create_app()
+celery_app = flask_app.extensions["celery"]
+
+flask_app.app_context().push()
+
 if __name__ == "__main__":
+    flask_app.run(port=5000, debug=True)
 
-    port = int(values().get("PORT", 5000))
-    debug = values().get("DEBUG", "False").lower() in ("true", "1", "t", "y", "yes")
-    app = create_app()
-    clear()
-    if not debug:
-        # with open(".version", "w") as f:
-        #     from app.misc.checkout import checkout_release_tag
+# if __name__ == "__main__":
 
-        #     version = checkout_release_tag()
-        #     f.write(version)
+#     port = int(values().get("PORT", 5000))
+#     debug = values().get("DEBUG", "False").lower() in ("true", "1", "t", "y", "yes")
+#     clear()
 
-        print("=======================================================\n")
-        print("Executando servidor Flask")
-        # print(f" * Versão: {version}")
-        print(" * Porta: 8000")
-        print("\n=======================================================")
+#     celery.worker_main(argv=["worker", "--loglevel=info"])
 
-        server(listen(("localhost", port)), app, log=app.logger)
+#     if not debug:
+#         # with open(".version", "w") as f:
+#         #     from app.misc.checkout import checkout_release_tag
 
-    elif debug:
-        print("=======================================================\n")
-        print("Executando servidor Flask")
-        print(" * Porta: 8000")
-        print("\n=======================================================")
+#         #     version = checkout_release_tag()
+#         #     f.write(version)
 
-        app.run(port=int(port), debug=debug)
+#         print("=======================================================\n")
+#         print("Executando servidor Flask")
+#         # print(f" * Versão: {version}")
+#         print(" * Porta: 8000")
+#         print("\n=======================================================")
+
+#         server(listen(("localhost", port)), flask_app, log=flask_app.logger)
+
+#     elif debug:
+#         print("=======================================================\n")
+#         print("Executando servidor Flask")
+#         print(" * Porta: 8000")
+#         print("\n=======================================================")
+
+#         flask_app.run(port=int(port), debug=debug)

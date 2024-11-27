@@ -1,27 +1,8 @@
-from app.routes.home import login
-from app.routes.home import queue
-from app.routes.home import dashboard
-from app.routes.home import relatorio
-
-from app.routes.EPI import equipamentos
-from app.routes.EPI import estoque
-from app.routes.EPI import cautela
-from app.routes.EPI import grades
-
-from app.routes.Gestao import cargos
-from app.routes.Gestao import departamentos
-from app.routes.Gestao import empresas
-from app.routes.Gestao import funcionarios
-
-from app.routes.CRUD import create
-from app.routes.CRUD import update
-from app.routes.CRUD import delete
-
-from app.routes import handler
-from app.routes import config
-
-from app.routes import terms_policy
-
+from app.routes import config, handler, terms_policy
+from app.routes.CRUD import create, delete, update
+from app.routes.EPI import cautela, equipamentos, estoque, grades
+from app.routes.Gestao import cargos, departamentos, empresas, funcionarios
+from app.routes.home import dashboard, login, queue, relatorio
 
 __all__ = [
     login,
@@ -63,4 +44,28 @@ __all__ = [
 #         outfile.write(json_object)
 
 
-#     pass
+from celery.result import AsyncResult
+from flask import jsonify
+
+from app import app
+
+with app.app_context():
+    from ..tasks import send_email
+
+
+@app.route("/test_celery", methods=["GET"])
+def test_celery():
+
+    result = send_email.delay(15, 15)
+
+    return jsonify({"result_id": result.id}), 200
+
+
+@app.get("/result/<id>")
+def task_result(id: str) -> dict[str, object]:
+    result = AsyncResult(id)
+    return {
+        "ready": result.ready(),
+        "successful": result.successful(),
+        "value": result.result if result.ready() else None,
+    }

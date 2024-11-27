@@ -1,14 +1,14 @@
 from .cautelas import RegistrosEPI
 from .equipamento import (
-    ModelosEPI,
-    Marcas,
     ClassesEPI,
     Fornecedores,
-    ProdutoEPI,
     GradeEPI,
+    Marcas,
+    ModelosEPI,
+    ProdutoEPI,
 )
-from .estoque import EstoqueEPI, EstoqueGrade, RegistroSaidas, RegistroEntradas
-
+from .estoque import EstoqueEPI, EstoqueGrade, RegistroEntradas, RegistroSaidas
+from .schedule_tasks import TaskNotificacao
 
 __all__ = (
     RegistrosEPI,
@@ -22,4 +22,5 @@ __all__ = (
     EstoqueGrade,
     RegistroSaidas,
     RegistroEntradas,
+    TaskNotificacao,
 )
