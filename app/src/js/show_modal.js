@@ -1,3 +1,3 @@
 $(document).ready(function () {
-    $('#modalMessage').modal('show');
+  $("#modalMessage").modal("show");
 });

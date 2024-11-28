@@ -34,19 +34,24 @@ psycopg2 = "^2.9.10"
 redis = "^5.2.0"
 
 
-# [tool.poetry.group.dev.dependencies]
-# flake8 = "^7.1.1"
-# isort = "^5.13.2"
-# black = "^24.10.0"
-# ruff = "^0.8.0"
-# mypy = "^1.13.0"
-# pre-commit = "^4.0.1"
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.1.1"
+isort = "^5.13.2"
+black = "^24.10.0"
+ruff = "^0.8.0"
+mypy = "^1.13.0"
 pre-commit = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.black]
+line-length = 88
+
 [tool.isort]
-profile = "black" # Garante compatibilidade com Black
-line_length = 88  # O mesmo limite de linha do Black
+profile = 'black'
+
+[tool.pydocstyle]
+convention = "google"
+add-ignore = "D100,D101,D102,D103,D104,D105,D106,D107"
