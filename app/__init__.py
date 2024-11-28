@@ -18,6 +18,7 @@ app = None
 db = None
 login_manager = None
 mail = None
+celery_app = None
 
 
 def celery_init(app: Flask) -> Celery:
@@ -72,6 +73,7 @@ def create_app():
 
     register_blueprint(app)
 
+    global celery_app
     celery_app = celery_init(app)
     celery_app.set_default()
     app.extensions["celery"] = celery_app

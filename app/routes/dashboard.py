@@ -2,7 +2,6 @@ from datetime import datetime
 
 import pandas as pd
 import pytz
-from celery.result import AsyncResult
 from flask import Blueprint, abort, jsonify, make_response, render_template, request
 from flask_login import login_required
 from sqlalchemy import extract
@@ -10,7 +9,6 @@ from sqlalchemy import extract
 from ..decorators import set_endpoint
 from ..misc import format_currency_brl
 from ..models import RegistroEntradas, RegistroSaidas, RegistrosEPI
-from ..tasks import send_email
 
 dash = Blueprint("dash", __name__, template_folder="templates", static_folder="static")
 
@@ -167,18 +165,18 @@ def saidasFuncionario():
     return jsonify(chart_data)
 
 
-@dash.route("/test_celery", methods=["GET"])
-def test_celery():
-    result = send_email.delay(15, 15)
+# @dash.route("/test_celery", methods=["GET"])
+# def test_celery():
+#     result = send_email.delay(15, 15)
 
-    return jsonify({"result_id": result.id}), 200
+#     return jsonify({"result_id": result.id}), 200
 
 
-@dash.route("/result/<id>", methods=["GET"])
-def task_result(id: str) -> dict[str, object]:
-    result = AsyncResult(id)
-    return {
-        "ready": result.ready(),
-        "successful": result.successful(),
-        "value": result.result if result.ready() else None,
-    }
+# @dash.route("/result/<id>", methods=["GET"])
+# def task_result(id: str) -> dict[str, object]:
+#     result = AsyncResult(id)
+#     return {
+#         "ready": result.ready(),
+#         "successful": result.successful(),
+#         "value": result.result if result.ready() else None,
+#     }

@@ -1,32 +1,43 @@
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SelectMultipleField, StringField, SubmitField
+from pytz import all_timezones
+from wtforms import (
+    IntegerField,
+    SelectField,
+    SelectMultipleField,
+    StringField,
+    SubmitField,
+    TimeField,
+)
 from wtforms.validators import DataRequired
 
 
 class TaskNotificacaoForm(FlaskForm):
-    nome_task: StringField = StringField(
+    nome_task = StringField(
         label="Nome da Task", validators=[DataRequired("Informe o nome da Task!!")]
     )
-    periodicidade_dia: IntegerField = IntegerField("Contagem de dias para exeutar")
-    periodicidade_semana: SelectMultipleField = SelectMultipleField(
-        "Selecione os dias da semana",
-        choices=[
-            (1, "Domingo"),
-            (2, "Segunda-Feira"),
-            (3, "Terça-Feira"),
-            (4, "Quarta-Feira"),
-            (5, "Quinta-Feira"),
-            (6, "Sexta-Feira"),
-            (7, "Sábado"),
-        ],
-    )
 
-    contagem_dias_notificacao: IntegerField = IntegerField(
-        "Delta de dias para o inicio da tarefa"
-    )
-
+    hora_execucao = TimeField("Hora/Minuto da Execução")
+    timezone = SelectField("Fuso horário", validators=[DataRequired()], choices=[])
+    days_of_week = SelectMultipleField("Dias da Semana", choices=[])
     submit = SubmitField("Salvar Alterações")
+
+    notify_vencimento = IntegerField(
+        "Delta de dias", validators=[DataRequired()], default=60
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        pass
+
+        timezones = [(timez, timez) for timez in all_timezones]
+        self.timezone.choices.extend(timezones)
+        self.days_of_week.choices.extend(
+            [
+                (0, "Domingo"),
+                (1, "Segunda-Feira"),
+                (2, "Terça-Feira"),
+                (3, "Quarta-Feira"),
+                (4, "Quinta-Feira"),
+                (5, "Sexta-Feira"),
+                (6, "Sábado"),
+            ]
+        )

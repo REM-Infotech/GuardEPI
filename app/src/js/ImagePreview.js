@@ -8,3 +8,4 @@ function previewImage(e, id_element) {
 
     reader.readAsDataURL(file);
 }
+    
