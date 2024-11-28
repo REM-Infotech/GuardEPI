@@ -3,8 +3,8 @@ import secrets
 from datetime import datetime
 
 from PIL import Image
-from PyPDF2 import PdfReader as PdfFileReader
-from PyPDF2 import PdfWriter as PdfFileWriter
+from pypdf import PdfReader as PdfFileReader
+from pypdf import PdfWriter as PdfFileWriter
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
