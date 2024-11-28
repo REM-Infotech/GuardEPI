@@ -34,13 +34,13 @@ psycopg2 = "^2.9.10"
 redis = "^5.2.0"
 
 
-[tool.poetry.group.dev.dependencies]
-flake8 = "^7.1.1"
-isort = "^5.13.2"
-black = "^24.10.0"
-ruff = "^0.8.0"
-mypy = "^1.13.0"
-pre-commit = "^4.0.1"
+# [tool.poetry.group.dev.dependencies]
+# flake8 = "^7.1.1"
+# isort = "^5.13.2"
+# black = "^24.10.0"
+# ruff = "^0.8.0"
+# mypy = "^1.13.0"
+# pre-commit = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core"]
