@@ -1,4 +1,5 @@
 import os
+from contextlib import suppress
 from datetime import datetime
 from typing import Type
 
@@ -6,6 +7,7 @@ import requests
 from dotenv import dotenv_values
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
+from requests.exceptions import ConnectionError, ConnectTimeout
 from werkzeug.utils import secure_filename
 
 from app import app, db
@@ -136,33 +138,49 @@ def cadastrarEPI():
         if username and password and url:
             auth = {"username": username, "password": password}
 
-            data = requests.post(f"{url}/login", json=auth).json()
+            # >> Issue: [B113:request_without_timeout] Call to requests without timeout
+            # Severity: Medium   Confidence: Low
+            # CWE: CWE-400 (https://cwe.mitre.org/data/definitions/400.html)
+            # VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+            # data = requests.post(f"{url}/login", json=auth).json()
 
-            headers = {"Authorization": f"Bearer {data.get('access_token')}"}
+            data = None
+            with suppress(ConnectionError, ConnectTimeout):
+                data = requests.post(f"{url}/login", json=auth, timeout=60)
 
-            # Faça a requisição GET (ou POST, PUT, etc.) com o cabeçalho
-            url_request = f"{url}/consulta_ca/{form.data.get("cod_ca", "99999")}"
-            response = requests.get(url_request, headers=headers)
+            if data is not None:
 
-            if response.status_code == 200:
+                headers = {"Authorization": f"Bearer {data.get('access_token')}"}
 
-                response = response.json()
+                # Faça a requisição GET (ou POST, PUT, etc.) com o cabeçalho
+                url_request = f"{url}/consulta_ca/{form.data.get("cod_ca", "99999")}"
+                response = requests.get(url_request, headers=headers, timeout=60)
 
-                # Formato da string de data
-                date_format = "%a, %d %b %Y %H:%M:%S %Z"
+                # Issue: [B113:request_without_timeout] Call to requests without timeout
+                # Severity: Medium   Confidence: Low
+                # CWE: CWE-400 (https://cwe.mitre.org/data/definitions/400.html)
+                # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+                # response = requests.get(url_request, headers=headers)
 
-                # Converter para datetime
-                response.update(
-                    {
-                        "validade": datetime.strptime(
-                            response.get("validade"), date_format
-                        )
-                    }
-                )
+                if response.status_code == 200:
 
-                form.tipo_epi.data = response["tipo_epi"]
-                form.vencimento.data = response["validade"]
-                form.descricao.data = response["aprovado_para"]
+                    response = response.json()
+
+                    # Formato da string de data
+                    date_format = "%a, %d %b %Y %H:%M:%S %Z"
+
+                    # Converter para datetime
+                    response.update(
+                        {
+                            "validade": datetime.strptime(
+                                response.get("validade"), date_format
+                            )
+                        }
+                    )
+
+                    form.tipo_epi.data = response["tipo_epi"]
+                    form.vencimento.data = response["validade"]
+                    form.descricao.data = response["aprovado_para"]
 
         if not dbase_tipoepi:
 

@@ -144,7 +144,14 @@ def editar(tipo: str | None, id: int):
                                     setattr(itens, file_column.name, filename)
                                 elif set_data is None:
                                     image_url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
-                                    img_data = requests.get(image_url)
+
+                                    # >> Issue: [B113:request_without_timeout] Call to requests without timeout
+                                    # Severity: Medium   Confidence: Low
+                                    # CWE: CWE-400 (https://cwe.mitre.org/data/definitions/400.html)
+                                    # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+                                    # img_data = requests.get(image_url)
+
+                                    img_data = requests.get(image_url, timeout=60)
                                     setattr(itens, column.name, img_data.content)
                                     cod = generate_pid()
                                     now = datetime.now().strftime("%d%m%Y%H%M%S")

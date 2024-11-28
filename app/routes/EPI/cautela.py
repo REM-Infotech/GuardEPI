@@ -144,6 +144,22 @@ def Cautelas():
 @app.route("/get-grade", methods=["POST"])
 @login_required
 def get_grade():
+    # >> Issue: [B110:try_except_pass] Try, Except, Pass detected.
+    # Severity: Low   Confidence: High
+    # CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+    # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+    # try:
+    #     form = Cautela()
+    #     lista = []
+    #     dbase = EstoqueGrade.query.filter_by(nome_epi=form.nome_epi.data).all()
+    #     for query in dbase:
+    #         lista.append((query.grade, query.grade))
+    #     form.tipo_grade.choices.extend(lista)
+
+    #     page = "pages/forms/cautelas/get_grade.html"
+    #     return render_template(page, form=form)
+    # except Exception:
+    #     pass
 
     try:
         form = Cautela()
@@ -155,8 +171,8 @@ def get_grade():
 
         page = "pages/forms/cautelas/get_grade.html"
         return render_template(page, form=form)
-    except Exception:
-        pass
+    except Exception as e:
+        abort(500, description=str(e))
 
 
 @app.route("/emitir_cautela", methods=["POST"])

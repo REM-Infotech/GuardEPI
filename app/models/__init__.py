@@ -109,9 +109,17 @@ def init_database() -> str:
         if len(to_add) > 0:
             db.session.add_all(to_add)
 
+        # Issue: [B110:try_except_pass] Try, Except, Pass detected.
+        # Severity: Low   Confidence: High
+        # CWE: CWE-703 (https://cwe.mitre.org/data/definitions/703.html)
+        # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+        # try:
+        #     db.session.commit()
+        # except Exception:
+        #     pass
         try:
             db.session.commit()
-        except Exception:
-            pass
+        except Exception as e:
+            raise e
 
     return f" * Root Pw: {root_pw}"

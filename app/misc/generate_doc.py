@@ -1,4 +1,5 @@
-import random
+# Fix Error CWE-330
+import secrets
 from datetime import datetime
 
 from PIL import Image
@@ -12,7 +13,18 @@ from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Paragraph, Table, TableStyle
 
-num = random.randint(100, 900)
+# Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+# Severity: Low   Confidence: High
+# CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
+
+# vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+# import random
+# num = random.randint(100, 900)
+
+
+num = secrets.randbelow(801) + 100  # Gera um número entre 100 e 900
+print(num)
 
 
 def create_watermark_pdf(image_path: str, output_pdf: str):
