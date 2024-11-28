@@ -1,25 +1,23 @@
-import os
 import json
+import os
 
 from flask import (
-    render_template,
-    url_for,
-    session,
-    redirect,
-    flash,
     abort,
-    send_from_directory,
+    flash,
+    redirect,
+    render_template,
     request,
+    send_from_directory,
+    session,
+    url_for,
 )
 from flask_login import login_required
-from app import app, db
-
 from werkzeug.utils import secure_filename
 
-from app.models import Users, Groups
+from app import app, db
 from app.Forms import ProfileEditForm
-
 from app.misc import generate_pid
+from app.models import Groups, Users
 
 
 @app.route("/profile", methods=["GET", "POST"])

@@ -1,15 +1,14 @@
 from datetime import datetime
+
 import bcrypt
-from app import db
-from app.misc import generate_pid
 import pytz
+from flask import request
+from flask_login import UserMixin
+
+from app import db, login_manager
+from app.misc import generate_pid
 
 salt = bcrypt.gensalt()
-
-
-from flask_login import UserMixin
-from flask import request
-from app import login_manager
 
 
 @login_manager.user_loader

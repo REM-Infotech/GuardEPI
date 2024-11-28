@@ -1,17 +1,24 @@
-from flask import url_for, abort, flash, redirect, send_file, make_response
-from flask_login import login_required
 import os
-from app import app
-from app import db
+from typing import Type
 
+import pandas as pd
+from flask import abort, flash, make_response, redirect, send_file, url_for
+from flask_login import login_required
 from sqlalchemy import LargeBinary
 from werkzeug.utils import secure_filename
-from typing import Type
-import pandas as pd
 
+from app import app, db
 from app.Forms.globals import IMPORTEPIForm
-from app.models import Funcionarios, Empresa, Cargos, Departamento
-from app.models import EstoqueEPI, GradeEPI, ProdutoEPI, EstoqueGrade
+from app.models import (
+    Cargos,
+    Departamento,
+    Empresa,
+    EstoqueEPI,
+    EstoqueGrade,
+    Funcionarios,
+    GradeEPI,
+    ProdutoEPI,
+)
 
 tipo = db.Model
 

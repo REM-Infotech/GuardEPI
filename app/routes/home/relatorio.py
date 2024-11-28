@@ -1,29 +1,26 @@
-from app import app
-from app import db
-
-
-from flask import make_response, send_file, abort
-from flask_login import login_required
-
 import os
-import pandas as pd
 from datetime import datetime
 from typing import Type
+
+import pandas as pd
+from flask import abort, make_response, send_file
+from flask_login import login_required
 from sqlalchemy import LargeBinary
 
+from app import app, db
 from app.models import (
-    ProdutoEPI,
-    Empresa,
-    Funcionarios,
-    Departamento,
     Cargos,
-    Users,
-    Groups,
-    RegistrosEPI,
-    RegistroEntradas,
+    Departamento,
+    Empresa,
     EstoqueEPI,
     EstoqueGrade,
+    Funcionarios,
     GradeEPI,
+    Groups,
+    ProdutoEPI,
+    RegistroEntradas,
+    RegistrosEPI,
+    Users,
 )
 
 tipo = db.Model

@@ -1,13 +1,11 @@
-from flask import render_template, request, abort
+from flask import abort, render_template, request
 from flask_login import login_required
-
-from app.Forms.globals import IMPORTEPIForm
-from app.Forms.create import CadastroEmpresa
-
-from app.models.Funcionários import Empresa
 
 from app import app
 from app.decorators import read_perm, set_endpoint
+from app.Forms.create import CadastroEmpresa
+from app.Forms.globals import IMPORTEPIForm
+from app.models.Funcionários import Empresa
 
 
 @app.route("/Empresas", methods=["GET"])

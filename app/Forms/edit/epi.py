@@ -1,13 +1,13 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import DataRequired, FileAllowed, FileField
 from wtforms import (
-    StringField,
-    SubmitField,
+    DateField,
     IntegerField,
     SelectField,
-    DateField,
+    StringField,
+    SubmitField,
     TextAreaField,
 )
-from flask_wtf.file import FileField, FileAllowed, DataRequired
 
 from app.Forms.choices import (
     set_choicesClasseEPI,

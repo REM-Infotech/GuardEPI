@@ -1,10 +1,9 @@
-from flask_login import login_required
 from flask import render_template
+from flask_login import login_required
 
+from app import app, db
 from app.decorators import delete_perm
 
-from app import db
-from app import app
 from ..CRUD.miscs import get_models
 
 tipo = db.Model

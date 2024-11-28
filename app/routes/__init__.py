@@ -1,9 +1,7 @@
 from flask import Flask
 
-from app.routes import config, handler, terms_policy
+from app.routes import cargos, config, dashboard, handler, schedule_task, terms_policy
 from app.routes.CRUD import create, delete, update
-from app.routes import cargos
-from app.routes import dashboard
 from app.routes.EPI import cautela, equipamentos, estoque, grades
 from app.routes.Gestao import departamentos, empresas, funcionarios
 from app.routes.home import login, queue, relatorio
@@ -30,7 +28,7 @@ __all__ = [
 
 
 def register_blueprint(app: Flask):
-    blueprints = [dashboard.dash, cargos.cargo_bp]
+    blueprints = [dashboard.dash, cargos.cargo_bp, schedule_task.schedule_bp]
 
     for blueprint in blueprints:
         app.register_blueprint(blueprint)

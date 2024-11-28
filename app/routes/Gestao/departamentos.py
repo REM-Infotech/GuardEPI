@@ -1,12 +1,11 @@
-from flask import render_template, request, abort
+from flask import abort, render_template, request
 from flask_login import login_required
+
 from app import app
-
-from app.Forms.globals import IMPORTEPIForm
-from app.Forms.create import CadastroDepartamentos
-
-from app.models.Funcionários import Departamento
 from app.decorators import read_perm, set_endpoint
+from app.Forms.create import CadastroDepartamentos
+from app.Forms.globals import IMPORTEPIForm
+from app.models.Funcionários import Departamento
 
 
 @app.route("/Departamentos")

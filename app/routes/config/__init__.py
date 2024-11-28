@@ -1,27 +1,20 @@
-from app.routes.config import users
-from app.routes.config import profile
-from app.routes.config import groups
-from app.routes.config import perms
+import json
 
-from flask import redirect, url_for, render_template, flash, request, session, abort
-
+from deep_translator import GoogleTranslator
+from flask import abort, flash, redirect, render_template, request, session, url_for
 from flask_login import login_required
 
-from app import app
-from app import db
+from app import app, db
+from app.decorators import create_perm, delete_perm, update_perm
 from app.Forms import (
-    CreateUserForm,
     AdmChangeEmail,
     AdmChangePassWord,
     ChangeEmail,
     ChangePassWord,
+    CreateUserForm,
 )
-
-from app.models import Users, Groups
-from app.decorators import delete_perm, create_perm, update_perm
-
-import json
-from deep_translator import GoogleTranslator
+from app.models import Groups, Users
+from app.routes.config import groups, perms, profile, users
 
 tradutor = GoogleTranslator(source="en", target="pt")
 __all__ = (users, profile, groups, perms)

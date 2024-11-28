@@ -1,20 +1,18 @@
-from flask import render_template, abort, flash, request, redirect, url_for, session
+import json
+
+from flask import abort, flash, redirect, render_template, request, session, url_for
 from flask_login import login_required
 
-from app import app
-from app import db
-
-from app.models import Groups, Users
-from app.Forms import CreateGroup
+from app import app, db
 from app.decorators import (
+    create_perm,
+    delete_perm,
     read_perm,
     set_endpoint,
-    create_perm,
     update_perm,
-    delete_perm,
 )
-
-import json
+from app.Forms import CreateGroup
+from app.models import Groups, Users
 
 
 @app.route("/groups", methods=["GET"])

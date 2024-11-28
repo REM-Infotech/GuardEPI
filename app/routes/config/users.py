@@ -1,10 +1,10 @@
-from flask import render_template, abort
+from flask import abort, render_template
 from flask_login import login_required
 
 from app import app
-from app.models.users import Users
+from app.decorators import read_perm, set_endpoint
 from app.Forms import IMPORTEPIForm
-from app.decorators import set_endpoint, read_perm
+from app.models.users import Users
 
 
 @app.route("/users", methods=["GET"])

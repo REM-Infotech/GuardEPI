@@ -1,47 +1,47 @@
+from typing import Type
+
 from flask_wtf import FlaskForm
+
+from app import db
 from app.Forms import (
     CadastroCargo,
+    CadastroClasses,
     CadastroDepartamentos,
-    InsertEstoqueForm,
     CadastroEmpresa,
     CadastroEPIForm,
-    CadastroGrade,
-    CadastroFuncionario,
     CadastroFonecedores,
-    CadastroClasses,
+    CadastroFuncionario,
+    CadastroGrade,
     CadastroMarcas,
     CadastroModelos,
+    InsertEstoqueForm,
 )
-
-from app.models import (
-    ProdutoEPI,
-    RegistrosEPI,
-    EstoqueEPI,
-    EstoqueGrade,
-    RegistroEntradas,
-    GradeEPI,
-    Empresa,
-    Funcionarios,
-    Departamento,
-    Cargos,
-    Groups,
-    ClassesEPI,
-    ModelosEPI,
-    Marcas,
-    Fornecedores,
-    Users,
-)
-
 from app.Forms.edit import (
+    EditCargo,
+    EditDepartamentos,
+    EditEmpresa,
+    EditFuncionario,
     EditItemProdutoForm,
     EditSaldoGrade,
-    EditFuncionario,
-    EditEmpresa,
-    EditDepartamentos,
-    EditCargo,
 )
-from app import db
-from typing import Type
+from app.models import (
+    Cargos,
+    ClassesEPI,
+    Departamento,
+    Empresa,
+    EstoqueEPI,
+    EstoqueGrade,
+    Fornecedores,
+    Funcionarios,
+    GradeEPI,
+    Groups,
+    Marcas,
+    ModelosEPI,
+    ProdutoEPI,
+    RegistroEntradas,
+    RegistrosEPI,
+    Users,
+)
 
 tipo = db.Model
 

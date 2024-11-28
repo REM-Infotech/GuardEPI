@@ -1,4 +1,3 @@
-
 from clear import clear
 
 from app import create_app

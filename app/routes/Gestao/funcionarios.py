@@ -1,12 +1,10 @@
-from flask import render_template, request, abort
+from flask import abort, render_template, request
 from flask_login import login_required
+
 from app import app
-
-
-from app.models.Funcionários import Funcionarios
-from app.Forms import IMPORTEPIForm, CadastroFuncionario
-
 from app.decorators import read_perm, set_endpoint
+from app.Forms import CadastroFuncionario, IMPORTEPIForm
+from app.models.Funcionários import Funcionarios
 
 
 @app.route("/funcionarios")

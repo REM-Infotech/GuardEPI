@@ -8,14 +8,13 @@ from .epi import (
     Cautela,
     InsertEstoqueForm,
 )
-
 from .gestao import (
     CadastroCargo,
     CadastroDepartamentos,
     CadastroEmpresa,
     CadastroFuncionario,
 )
-from .user import CreateUserForm, CreatePerm, CreateGroup
+from .user import CreateGroup, CreatePerm, CreateUserForm
 
 __all__ = [
     CadastroClasses,

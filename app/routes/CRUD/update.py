@@ -1,32 +1,29 @@
-from flask_login import login_required
-from flask import (
-    redirect,
-    url_for,
-    render_template,
-    session,
-    abort,
-    flash,
-    send_from_directory,
-    make_response,
-)
-
-from werkzeug.utils import secure_filename
-from flask_wtf.file import FileField
-from wtforms import DateField
-from sqlalchemy import LargeBinary
-from sqlalchemy import Float
-
-from app.decorators import update_perm
-from app.misc import format_currency_brl, generate_pid
-from ...models.EPI import RegistrosEPI, RegistroEntradas
-from app.routes.CRUD.miscs import get_models, getform
-
-from app import app
-from app import db
-
 import os
 from datetime import datetime
+
 import requests
+from flask import (
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    send_from_directory,
+    session,
+    url_for,
+)
+from flask_login import login_required
+from flask_wtf.file import FileField
+from sqlalchemy import Float, LargeBinary
+from werkzeug.utils import secure_filename
+from wtforms import DateField
+
+from app import app, db
+from app.decorators import update_perm
+from app.misc import format_currency_brl, generate_pid
+from app.routes.CRUD.miscs import get_models, getform
+
+from ...models.EPI import RegistroEntradas, RegistrosEPI
 
 tipo = db.Model
 

@@ -1,7 +1,9 @@
-from functools import wraps
-from flask import request, abort, session, redirect, url_for
-from app.models import Permissions
 import json
+from functools import wraps
+
+from flask import abort, redirect, request, session, url_for
+
+from app.models import Permissions
 
 
 def set_endpoint(func):

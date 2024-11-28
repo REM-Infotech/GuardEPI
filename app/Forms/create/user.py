@@ -1,15 +1,16 @@
 from flask_wtf import FlaskForm
 from wtforms import (
+    BooleanField,
+    PasswordField,
+    SelectField,
+    SelectMultipleField,
     StringField,
     SubmitField,
-    SelectField,
-    PasswordField,
-    BooleanField,
-    SelectMultipleField,
     TextAreaField,
 )
 from wtforms.validators import DataRequired, Length
-from app.models import Users, Groups
+
+from app.models import Groups, Users
 
 endpoints = [
     ("Equipamentos", "Equipamentos"),

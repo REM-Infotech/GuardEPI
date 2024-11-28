@@ -1,15 +1,16 @@
+from collections import Counter
+
 from app import app
 from app.models import (
-    ProdutoEPI,
-    Funcionarios,
-    GradeEPI,
-    Fornecedores,
-    Marcas,
-    ModelosEPI,
     ClassesEPI,
     EstoqueGrade,
+    Fornecedores,
+    Funcionarios,
+    GradeEPI,
+    Marcas,
+    ModelosEPI,
+    ProdutoEPI,
 )
-from collections import Counter
 
 
 def set_EpiCautelaChoices() -> list[tuple[str, str]]:

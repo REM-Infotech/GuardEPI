@@ -1,19 +1,16 @@
-from flask_login import login_required
-from flask import redirect, abort, flash, request
-from werkzeug.utils import secure_filename
-from flask_wtf.file import FileField
-from sqlalchemy import LargeBinary
-
 import os
 
-from app import app
-from app import db
+from flask import abort, flash, redirect, request
+from flask_login import login_required
+from flask_wtf.file import FileField
+from sqlalchemy import LargeBinary
+from werkzeug.utils import secure_filename
 
-from app.misc import generate_pid
+from app import app, db
 from app.decorators import create_perm
+from app.misc import generate_pid
 from app.models import ProdutoEPI
 from app.routes.CRUD.miscs import get_models, getformCad
-
 
 tipo = db.Model
 

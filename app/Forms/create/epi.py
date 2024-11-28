@@ -1,25 +1,25 @@
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed, FileField
+from wtforms import (
+    DateField,
+    IntegerField,
+    SelectField,
+    StringField,
+    SubmitField,
+    TextAreaField,
+)
+from wtforms.validators import DataRequired, Length
+
 from app.Forms.choices import (
-    set_ChoicesFuncionario,
     set_choices,
-    set_choicesGrade,
     set_choicesClasseEPI,
     set_choicesFornecedor,
+    set_ChoicesFuncionario,
+    set_choicesGrade,
     set_choicesMarca,
     set_choicesModelo,
     set_EpiCautelaChoices,
 )
-
-from flask_wtf import FlaskForm
-from wtforms import (
-    StringField,
-    SubmitField,
-    SelectField,
-    TextAreaField,
-    DateField,
-    IntegerField,
-)
-from flask_wtf.file import FileField, FileAllowed
-from wtforms.validators import DataRequired, Length
 
 permited_file = FileAllowed(["pdf"], 'Apenas arquivos ".pdf" são permitidos!')
 

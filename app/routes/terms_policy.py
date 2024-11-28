@@ -1,5 +1,6 @@
+from flask import abort, make_response, send_from_directory
+
 from app import app
-from flask import make_response, send_from_directory, abort
 
 
 @app.route("/termos_uso", methods=["GET"])

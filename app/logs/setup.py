@@ -1,8 +1,8 @@
 # Initialize Logging
 import logging
 import os
-from pathlib import Path
 from logging.handlers import RotatingFileHandler
+from pathlib import Path
 
 
 def initialize_logging(

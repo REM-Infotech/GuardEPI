@@ -1,25 +1,24 @@
-from .Funcionários import Funcionarios, Empresa, Cargos, Departamento
-from .users import Users, Groups, Permissions, EndPoints
+import json
+import os
+
+from app import app, db
+from app.misc import generate_pid
+
 from .EPI import (
-    ProdutoEPI,
+    ClassesEPI,
     EstoqueEPI,
     EstoqueGrade,
-    Marcas,
-    GradeEPI,
-    ClassesEPI,
-    ModelosEPI,
     Fornecedores,
+    GradeEPI,
+    Marcas,
+    ModelosEPI,
+    ProdutoEPI,
     RegistroEntradas,
     RegistroSaidas,
     RegistrosEPI,
 )
-
-import os
-from app import db
-from app import app
-from app.misc import generate_pid
-import json
-
+from .Funcionários import Cargos, Departamento, Empresa, Funcionarios
+from .users import EndPoints, Groups, Permissions, Users
 
 endpoints = [
     ("Equipamentos", "Equipamentos"),

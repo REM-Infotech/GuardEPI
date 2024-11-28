@@ -1,19 +1,21 @@
 from celery import shared_task
-from flask import render_template, current_app as app
+from flask import current_app as app
+from flask import render_template
 
 
 @shared_task(bind=True, ignore_result=False)
 def send_email(self, a: int, b: int) -> int:
 
-    from app.models import Users
-    from app import db
-    from flask_mail import Message, Mail
     from dotenv import dotenv_values
+    from flask_mail import Mail, Message
+
+    from app import db
+    from app.models import Users
 
     mail = Mail(app)
 
     users = db.session.query(Users).all()
-    copy_content = []
+    copy_content = ["nicholas@robotz.dev"]
 
     for user in users:
         copy_content.append(user.email)

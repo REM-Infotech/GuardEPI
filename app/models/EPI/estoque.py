@@ -1,9 +1,9 @@
-import pytz
 from datetime import datetime
+from typing import Type
+
+import pytz
 
 from app import db
-
-from typing import Type
 
 
 class EstoqueEPI(db.Model):

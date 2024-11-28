@@ -1,34 +1,29 @@
-from flask import render_template, request, url_for, redirect, flash
-from flask_login import login_required
-
 import os
-import requests
-from typing import Type
 from datetime import datetime
+from typing import Type
+
+import requests
 from dotenv import dotenv_values
+from flask import flash, redirect, render_template, request, url_for
+from flask_login import login_required
 from werkzeug.utils import secure_filename
-from app import app
-from app import db
 
-from app.models import Fornecedores as fornecedores
-from app.models import Marcas as marcas
-from app.models import ClassesEPI
-from app.models import ModelosEPI
-
-
+from app import app, db
+from app.decorators import create_perm, read_perm, set_endpoint
 from app.Forms import (
-    CadastroEPIForm,
     CadastroClasses,
+    CadastroEPIForm,
     CadastroFonecedores,
     CadastroMarcas,
     CadastroModelos,
+    EditItemProdutoForm,
+    IMPORTEPIForm,
 )
-
-from app.Forms import IMPORTEPIForm, EditItemProdutoForm
-
-from app.models import ProdutoEPI
 from app.misc import format_currency_brl
-from app.decorators import read_perm, set_endpoint, create_perm
+from app.models import ClassesEPI
+from app.models import Fornecedores as fornecedores
+from app.models import Marcas as marcas
+from app.models import ModelosEPI, ProdutoEPI
 
 tipo = db.Model
 

@@ -1,17 +1,14 @@
-from flask import render_template, request, redirect, url_for, flash, abort
+import os
+
+from flask import abort, flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from werkzeug.utils import secure_filename
 
-from app import app
-from app import db
-from app.models import RegistroEntradas, EstoqueEPI, EstoqueGrade, ProdutoEPI
-from app.Forms import IMPORTEPIForm
-from app.Forms import InsertEstoqueForm
-
+from app import app, db
+from app.decorators import create_perm, read_perm, set_endpoint
+from app.Forms import IMPORTEPIForm, InsertEstoqueForm
 from app.misc import format_currency_brl
-from app.decorators import read_perm, set_endpoint, create_perm
-
-import os
+from app.models import EstoqueEPI, EstoqueGrade, ProdutoEPI, RegistroEntradas
 
 
 @app.route("/Estoque")

@@ -1,24 +1,14 @@
-from flask import (
-    url_for,
-    render_template,
-    redirect,
-    session,
-    flash,
-    request,
-)
-from flask_login import login_required
-
-from app.Forms import CreatePerm
-from app.models import Permissions
-
+import json
 import os
 import uuid
-import json
 
-from app import db
-from app import app
+from flask import flash, redirect, render_template, request, session, url_for
+from flask_login import login_required
 
-from app.decorators import read_perm, set_endpoint, create_perm
+from app import app, db
+from app.decorators import create_perm, read_perm, set_endpoint
+from app.Forms import CreatePerm
+from app.models import Permissions
 
 
 @app.before_request

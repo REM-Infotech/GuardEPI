@@ -1,6 +1,4 @@
 from .. import cargos
-from . import empresas
-from . import funcionarios
-from . import departamentos
+from . import departamentos, empresas, funcionarios
 
 __all__ = [cargos, empresas, funcionarios, departamentos]

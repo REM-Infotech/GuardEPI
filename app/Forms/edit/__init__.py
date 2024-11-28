@@ -1,11 +1,11 @@
 from .epi import EditItemProdutoForm, EditSaldoGrade
 from .gestao import EditCargo, EditDepartamentos, EditEmpresa, EditFuncionario
 from .user import (
-    ProfileEditForm,
-    ChangeEmail,
-    ChangePassWord,
     AdmChangeEmail,
     AdmChangePassWord,
+    ChangeEmail,
+    ChangePassWord,
+    ProfileEditForm,
 )
 
 __all__ = [

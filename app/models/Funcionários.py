@@ -1,6 +1,8 @@
-from app import db
 from datetime import datetime
+
 import pytz
+
+from app import db
 
 
 class Funcionarios(db.Model):

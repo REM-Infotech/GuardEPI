@@ -12,7 +12,6 @@ from ..misc import format_currency_brl
 from ..models import RegistroEntradas, RegistroSaidas, RegistrosEPI
 from ..tasks import send_email
 
-
 dash = Blueprint("dash", __name__, template_folder="templates", static_folder="static")
 
 

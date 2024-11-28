@@ -1,19 +1,17 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed, FileField, FileRequired
 from wtforms import (
+    DateField,
+    EmailField,
+    SelectField,
     StringField,
     SubmitField,
     TextAreaField,
-    SelectField,
-    EmailField,
-    DateField,
 )
-
-from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms.validators import DataRequired, Length
 
 from app import app
-
-from app.models import Empresa, Departamento, Cargos
+from app.models import Cargos, Departamento, Empresa
 
 permited_file = FileAllowed(
     ["png", "jpg", "jpeg"], "Apenas arquivos de imagem são permitidos!"

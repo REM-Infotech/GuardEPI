@@ -1,20 +1,16 @@
-from PyPDF2 import PdfWriter as PdfFileWriter
+import random
+from datetime import datetime
+
+from PIL import Image
 from PyPDF2 import PdfReader as PdfFileReader
-
-
+from PyPDF2 import PdfWriter as PdfFileWriter
 from reportlab.lib import colors
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.platypus import Table
-from reportlab.platypus import Paragraph
-from reportlab.platypus import TableStyle
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import inch
 from reportlab.pdfbase.pdfmetrics import stringWidth
-
-import random
-from PIL import Image
-from datetime import datetime
+from reportlab.pdfgen import canvas
+from reportlab.platypus import Paragraph, Table, TableStyle
 
 num = random.randint(100, 900)
 

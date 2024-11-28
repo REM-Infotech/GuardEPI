@@ -1,7 +1,8 @@
-from app import app
-from flask import render_template, redirect, url_for
 from deep_translator import GoogleTranslator
+from flask import redirect, render_template, url_for
 from werkzeug.exceptions import HTTPException
+
+from app import app
 
 
 @app.errorhandler(HTTPException)

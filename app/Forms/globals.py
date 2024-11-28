@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed, FileField, FileRequired
 from wtforms import SubmitField
-from flask_wtf.file import FileField, FileRequired, FileAllowed
 
 permited_file = FileAllowed(["xlsx", "xls"], 'Apenas arquivos ".xlsx" são permitidos!')
 

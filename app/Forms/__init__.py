@@ -1,7 +1,4 @@
 from .auth import LoginForm
-from .globals import IMPORTEPIForm
-from .recovery import ForgotPassword, ByPassRecover
-from .create.user import CreateUserForm, CreatePerm, CreateGroup
 from .create.epi import (
     CadastroClasses,
     CadastroEPIForm,
@@ -12,28 +9,29 @@ from .create.epi import (
     Cautela,
     InsertEstoqueForm,
 )
-
 from .create.gestao import (
     CadastroCargo,
     CadastroDepartamentos,
     CadastroEmpresa,
     CadastroFuncionario,
 )
-
+from .create.user import CreateGroup, CreatePerm, CreateUserForm
 from .edit import (
-    EditCargo,
-    EditDepartamentos,
-    EditFuncionario,
-    EditEmpresa,
-    EditItemProdutoForm,
-    EditSaldoGrade,
-    ChangeEmail,
-    ProfileEditForm,
     AdmChangeEmail,
     AdmChangePassWord,
+    ChangeEmail,
     ChangePassWord,
+    EditCargo,
+    EditDepartamentos,
+    EditEmpresa,
+    EditFuncionario,
+    EditItemProdutoForm,
+    EditSaldoGrade,
+    ProfileEditForm,
 )
-
+from .globals import IMPORTEPIForm
+from .recovery import ByPassRecover, ForgotPassword
+from .schedule_task import TaskNotificacaoForm
 
 __all__ = [
     LoginForm,
@@ -68,4 +66,5 @@ __all__ = [
     AdmChangeEmail,
     AdmChangePassWord,
     ChangePassWord,
+    TaskNotificacaoForm,
 ]

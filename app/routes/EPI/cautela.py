@@ -1,45 +1,39 @@
+import json
+import os
+import uuid
+from datetime import datetime
+from time import sleep
+
 from flask import (
-    url_for,
-    render_template,
-    session,
     abort,
     flash,
-    request,
     get_flashed_messages,
+    render_template,
+    request,
+    session,
+    url_for,
 )
 from flask_login import login_required
 
+from app import app, db
+from app.decorators import create_perm, read_perm, set_endpoint
 from app.Forms import Cautela
-from app.models import (
-    RegistrosEPI,
-    ProdutoEPI,
-    EstoqueEPI,
-    RegistroSaidas,
-    Funcionarios,
-    Empresa,
-    EstoqueGrade,
-)
-
-from app.misc import generate_pid
+from app.misc import format_currency_brl, generate_pid
 from app.misc.generate_doc import (
     add_watermark,
     adjust_image_transparency,
     create_EPI_control_sheet,
     create_watermark_pdf,
 )
-
-import os
-import uuid
-from datetime import datetime
-
-from time import sleep
-import json
-
-from app import db
-from app import app
-
-from app.misc import format_currency_brl
-from app.decorators import read_perm, set_endpoint, create_perm
+from app.models import (
+    Empresa,
+    EstoqueEPI,
+    EstoqueGrade,
+    Funcionarios,
+    ProdutoEPI,
+    RegistroSaidas,
+    RegistrosEPI,
+)
 
 
 @app.before_request

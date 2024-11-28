@@ -1,7 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectMultipleField
+from wtforms import SelectMultipleField, StringField, SubmitField
 from wtforms.validators import DataRequired
-from app.models import Users, Groups
+
+from app.models import Groups, Users
 
 endpoints = [
     ("registros", "Registros"),

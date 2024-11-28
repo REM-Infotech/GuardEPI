@@ -1,14 +1,11 @@
-from flask import request, render_template, abort
+from flask import abort, render_template, request
 from flask_login import login_required
 
 from app import app
-from app.decorators import set_endpoint, read_perm
-from app.models import GradeEPI
-
-from app.Forms import IMPORTEPIForm
-from app.Forms import CadastroGrade
-
+from app.decorators import read_perm, set_endpoint
+from app.Forms import CadastroGrade, IMPORTEPIForm
 from app.misc import format_currency_brl
+from app.models import GradeEPI
 
 
 @app.route("/Grade")

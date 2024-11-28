@@ -1,17 +1,17 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField
 from wtforms import (
-    StringField,
-    SelectField,
-    SubmitField,
     DateField,
     EmailField,
+    SelectField,
+    StringField,
+    SubmitField,
     TextAreaField,
 )
-from wtforms.validators import Length, DataRequired
-from flask_wtf.file import FileField
+from wtforms.validators import DataRequired, Length
 
 from app import app
-from app.models import Empresa, Departamento, Cargos
+from app.models import Cargos, Departamento, Empresa
 
 
 def setChoices_Empresa() -> list[tuple[str, str]]:
