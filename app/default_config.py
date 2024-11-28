@@ -12,7 +12,7 @@ login_db = values.get("LOGIN")
 passwd_db = values.get("PASSWORD")
 host_db = values.get("HOST")
 database_name = values.get("DATABASE")
-
+redis_uri = values.get("REDIS_URI")
 
 # PARAMETROS PARA O APP FLASK
 DEBUG = True
@@ -65,7 +65,7 @@ for paths in [DOCS_PATH, TEMP_PATH, IMAGE_TEMP_PATH, CSV_TEMP_PATH, PDF_TEMP_PAT
 
 
 CELERY = dict(
-    broker_url="/0",
-    result_backend="redis://:Redis2019!@195.200.1.226/1",
+    broker_url=f"{redis_uri}/0",
+    result_backend=f"{redis_uri}/1",
     task_ignore_result=True,
 )
