@@ -41,6 +41,7 @@ redis = "^5.2.0"
 # ruff = "^0.8.0"
 # mypy = "^1.13.0"
 # pre-commit = "^4.0.1"
+pre-commit = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core"]
