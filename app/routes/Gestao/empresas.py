@@ -13,7 +13,6 @@ from app.models.Funcionários import Empresa
 @set_endpoint
 @read_perm
 def Empresas():
-
     try:
         importForm = IMPORTEPIForm()
         form = CadastroEmpresa()

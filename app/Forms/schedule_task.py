@@ -4,7 +4,6 @@ from wtforms.validators import DataRequired
 
 
 class TaskNotificacaoForm(FlaskForm):
-
     nome_task: StringField = StringField(
         label="Nome da Task", validators=[DataRequired("Informe o nome da Task!!")]
     )

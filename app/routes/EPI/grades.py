@@ -13,7 +13,6 @@ from app.models import GradeEPI
 @set_endpoint
 @read_perm
 def Grade():
-
     try:
         title = "Grades"
         page = f"pages/epi/{request.endpoint.lower()}.html"

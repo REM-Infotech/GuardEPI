@@ -23,7 +23,6 @@ from app.models import Groups, Users
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
-
     try:
         username = str(session["username"])
         dbase = Users.query.filter_by(login=username).first()
@@ -39,12 +38,10 @@ def profile():
         )
 
         if form.validate_on_submit():
-
             full_name = str(session["nome_usuario"])
             user = Users.query.filter_by(login=username).first()
 
             if username != form.login.data:
-
                 if not username == "root":
                     user.login = form.login.data
                     session["username"] = form.login.data
@@ -52,11 +49,9 @@ def profile():
                     group = Groups.query.all()
 
                     for grupo in group:
-
                         if grupo.members:
                             list_members: list = json.loads(grupo.members)
                             for membro in list_members:
-
                                 if username == membro:
                                     list_members.remove(membro)
                                     list_members.append(form.login.data)
@@ -66,7 +61,6 @@ def profile():
                         db.session.commit()
 
             if full_name != form.nome_usuario.data:
-
                 if not username == "root":
                     user.nome_usuario = form.nome_usuario.data
                     session["nome_usuario"] = form.nome_usuario.data
@@ -76,7 +70,6 @@ def profile():
                     user.email = form.email.data
 
             if form.new_password.data:
-
                 if user.converte_senha(form.old_password.data):
                     user.senhacrip = form.new_password.data
 
@@ -85,7 +78,6 @@ def profile():
                     return redirect(url_for("profile"))
 
             if form.filename.data:
-
                 file_pic = form.filename.data
 
                 filename = secure_filename(file_pic.filename)
@@ -117,9 +109,7 @@ def profile():
 @app.route("/profile_pic", methods=["GET"])
 @login_required
 def profile_pic():
-
     try:
-
         user = session["username"]
         dbase = Users.query.filter_by(login=user).first()
 

@@ -12,9 +12,7 @@ from app.models.users import Users
 @set_endpoint
 @read_perm
 def users():
-
     try:
-
         importForm = IMPORTEPIForm()
         database = Users.query.order_by(Users.login_time.desc()).all()
 

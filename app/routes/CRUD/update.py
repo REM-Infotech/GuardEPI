@@ -31,7 +31,6 @@ tipo = db.Model
 @app.route("/set_editar/<tipo>/<item>", methods=["GET"])
 @login_required
 def set_editar(tipo: str, item: int):
-
     tipo = tipo.lower()
     session["item_edit"] = item
     form = getform(f"edit_{tipo}")
@@ -39,7 +38,6 @@ def set_editar(tipo: str, item: int):
     database = model.query.filter(model.id == item).all()
     colunas = []
     for i in model.__table__.columns:
-
         if isinstance(i.type, LargeBinary):
             continue
         name = getattr(i, "name")
@@ -71,10 +69,8 @@ def set_editar(tipo: str, item: int):
 
     url = ""
     if any(tipo == tipos for tipos in ["empresas", "equipamentos"]):
-
         image_name = form.filename.data
         if image_name is None:
-
             url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
             form.filename.data = url
 
@@ -92,13 +88,11 @@ def set_editar(tipo: str, item: int):
 @login_required
 @update_perm
 def editar(tipo: str | None, id: int):
-
     tipo = tipo.lower()
     form = getform(f"edit_{tipo}")
     model = get_models(tipo)
 
     try:
-
         kwargs = {}
         for i in model.__table__.columns:
             name = getattr(i, "name")
@@ -110,7 +104,6 @@ def editar(tipo: str | None, id: int):
                 if i == column.name:
                     form_field = getattr(form, f"{column.name}", None)
                     if form_field:
-
                         data_insert = form_field.data
                         if data_insert is None:
                             if isinstance(form_field, FileField):
@@ -121,7 +114,6 @@ def editar(tipo: str | None, id: int):
                             file_column = column
 
                         if isinstance(data_insert, str) and "R$" in data_insert:
-
                             data_insert = form.valor_unitario.data.encode(
                                 "latin-1", "ignore"
                             ).decode("latin-1")
@@ -171,16 +163,13 @@ def editar(tipo: str | None, id: int):
 @app.route("/pdf/<index>/<md>", methods=["GET"])
 @login_required
 def serve_pdf(index: int, md: str):
-
     try:
         index = int(index)
         with app.app_context():
-
             if md.lower() == "entradas":
                 dbase = RegistroEntradas.query.filter_by(id=index).first()
 
             elif md.lower() == "dash.dashboard":
-
                 dbase = RegistrosEPI.query.filter_by(id=index).first()
 
             else:
@@ -209,15 +198,12 @@ def serve_pdf(index: int, md: str):
 @app.route("/img/<index>/<md>", methods=["GET"])
 @login_required
 def serve_img(index: int, md: str):
-
     try:
         with app.app_context():
-
             if md.lower() == "entradas":
                 dbase = RegistroEntradas.query.filter_by(id=index).first()
 
             elif md.lower() == "dash.dashboard":
-
                 dbase = RegistrosEPI.query.filter_by(id=index).first()
 
             else:

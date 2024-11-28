@@ -6,7 +6,6 @@ from app import db
 
 
 class Funcionarios(db.Model):
-
     __tablename__ = "funcionarios"
     id = db.Column(db.Integer, primary_key=True)
     codigo = db.Column(db.String(length=6), nullable=False, unique=True)
@@ -23,14 +22,12 @@ class Funcionarios(db.Model):
 
 
 class Cargos(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     cargo = db.Column(db.String(length=64), nullable=False, unique=True)
     descricao = db.Column(db.String(length=512))
 
 
 class Departamento(db.Model):
-
     __tablename__ = "departamentos"
     id = db.Column(db.Integer, primary_key=True)
     departamento = db.Column(db.String(length=64), nullable=False, unique=True)
@@ -38,7 +35,6 @@ class Departamento(db.Model):
 
 
 class Empresa(db.Model):
-
     __tablename__ = "empresa"
     id = db.Column(db.Integer, primary_key=True)
     nome_empresa = db.Column(db.String(length=64))

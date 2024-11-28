@@ -24,7 +24,6 @@ tipo = db.Model
 
 
 def getModel(tipo: str) -> Type[tipo]:
-
     model = {
         "funcionarios": Funcionarios,
         "empresas": Empresa,
@@ -42,7 +41,6 @@ def getModel(tipo: str) -> Type[tipo]:
 @app.route("/gen_model/<model>", methods=["GET"])
 @login_required
 def gen_model(model: str):
-
     str_model = model
     model = getModel(model.lower())
 
@@ -72,12 +70,10 @@ def gen_model(model: str):
 @app.route("/import_lotes/<tipo>", methods=["POST"])
 @login_required
 def import_lotes(tipo: str):
-
     try:
         form = IMPORTEPIForm()
         model = getModel(tipo.lower())
         if form.validate_on_submit():
-
             doc = form.arquivo.raw_data[0]
 
             docname = secure_filename(doc.filename)

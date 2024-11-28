@@ -58,7 +58,6 @@ PERMANENT_SESSION_LIFETIME = timedelta(days=31).max.seconds
 SECRET_KEY = str(uuid4())
 
 for paths in [DOCS_PATH, TEMP_PATH, IMAGE_TEMP_PATH, CSV_TEMP_PATH, PDF_TEMP_PATH]:
-
     if Path(paths).exists():
         shutil.rmtree(paths)
 

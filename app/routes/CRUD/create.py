@@ -19,7 +19,6 @@ tipo = db.Model
 @login_required
 @create_perm
 def cadastrar(tipo: str):
-
     without_lower = tipo
     tipo = tipo.lower()
 
@@ -67,7 +66,6 @@ def cadastrar(tipo: str):
                     if form_field:
                         data_insert = form_field.data
                         if isinstance(form_field, FileField):
-
                             file = form_field.data
 
                             if file:
@@ -92,7 +90,6 @@ def cadastrar(tipo: str):
                             kwargs.setdefault(column.name, data_insert)
 
                     if isinstance(column.type, LargeBinary):
-
                         if path_img:
                             with open(path_img, "rb") as fileimg:
                                 kwargs.setdefault(column.name, fileimg.read())

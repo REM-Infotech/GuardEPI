@@ -5,7 +5,6 @@ from flask import render_template
 
 @shared_task(bind=True, ignore_result=False)
 def send_email(self, a: int, b: int) -> int:
-
     from dotenv import dotenv_values
     from flask_mail import Mail, Message
 
@@ -21,7 +20,6 @@ def send_email(self, a: int, b: int) -> int:
         copy_content.append(user.email)
 
     with app.app_context():
-
         values = dotenv_values()
         sendermail = values["MAIL_DEFAULT_SENDER"]
 

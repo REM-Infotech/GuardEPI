@@ -13,7 +13,6 @@ tipo = db.Model
 @delete_perm
 @login_required
 def deletar_item(database: str, id: int):
-
     database = database.lower()
     model = get_models(database)
     dbase = model.query.filter(model.id == id).first()

@@ -20,9 +20,7 @@ from app.models import Groups, Users
 @set_endpoint
 @read_perm
 def groups():
-
     try:
-
         session["name_group"] = ""
         form = CreateGroup()
         database = Groups.query.all()
@@ -38,22 +36,18 @@ def groups():
 @login_required
 @create_perm
 def create_group():
-
     form = CreateGroup()
     group = Groups.query.filter(Groups.name_group == form.nome.data).first()
 
     if not group:
-
         grp = Groups(name_group=form.nome.data, members=json.dumps(form.membros.data))
 
         for usr in form.membros.data:
-
             user = Users.query.filter(Users.login == usr).first()
             list_group = json.loads(user.grupos)
 
             for grupo in list_group:
                 if grupo != form.nome.data:
-
                     list_group.append(form.nome.data)
                     break
 
@@ -73,7 +67,6 @@ def create_group():
 @login_required
 @update_perm
 def setEditGroup(item: int):
-
     database = Groups.query.filter(Groups.id == item).first()
     session["name_group"] = database.name_group
 
@@ -95,7 +88,6 @@ def setEditGroup(item: int):
 @login_required
 @update_perm
 def update_group():
-
     form = CreateGroup()
 
     gp_name = form.nome.data
@@ -109,7 +101,6 @@ def update_group():
 
     # Se o nome não foi encontrado, ele foi alterado
     if not database:
-
         # Refaço a busca
         database = Groups.query.filter(
             Groups.name_group == session["name_group"]
@@ -121,13 +112,11 @@ def update_group():
 
     # Loop for nos membros do grupo
     for usr in form.membros.data:
-
         user = Users.query.filter(Users.login == usr).first()
         list_group = json.loads(user.grupos)
 
         # Se o usuário não está na lista de membros
         if usr not in form.membros.data:
-
             # Removo da lista de grupos na qual ele faz parte
             list_group.remove(session["name_group"])
 
@@ -137,7 +126,6 @@ def update_group():
 
         # Caso nome do grupo tenha sido alterado
         if session["name_group"] != form.nome.data:
-
             list_group.remove(session["name_group"])
             list_group.append(form.nome.data)
 
@@ -153,7 +141,6 @@ def update_group():
 @login_required
 @delete_perm
 def deleteGroup(id: int):
-
     template = "includes/show.html"
 
     # Query do grupo a ser deletado
@@ -167,7 +154,6 @@ def deleteGroup(id: int):
 
     # Loop for nos membros
     for user in json.loads(dbase_group.members):
-
         # Query do user
         query_user = Users.query.filter(Users.login == user).first()
 
@@ -179,10 +165,8 @@ def deleteGroup(id: int):
         list_grupos = json.loads(query_user.grupos)
 
         for grupo in list_grupos:
-
             # Se o grupo a ser deletado estiver na lista
             if grupo == nome_grupo:
-
                 # Remove o grupo da lista de grupos que o usuário faz parte
                 list_grupos.remove(grupo)
                 break

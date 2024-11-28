@@ -9,7 +9,6 @@ from app.models import Permissions
 def set_endpoint(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
-
         session["endpoint"] = request.endpoint
         return func(*args, **kwargs)
 
@@ -19,7 +18,6 @@ def set_endpoint(func):
 def create_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
-
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "CREATE") is False:
@@ -33,7 +31,6 @@ def create_perm(func):
 def read_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
-
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "READ") is False:
@@ -47,7 +44,6 @@ def read_perm(func):
 def update_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
-
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "UPDATE") is False:
@@ -61,7 +57,6 @@ def update_perm(func):
 def delete_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
-
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "DELETE") is False:
@@ -73,7 +68,6 @@ def delete_perm(func):
 
 
 def check_permit(groups_usr: list, PERM: str) -> bool:
-
     if session.get("username") == "root":
         return True
 
@@ -83,18 +77,14 @@ def check_permit(groups_usr: list, PERM: str) -> bool:
         return redirect(url_for("dash.dashboard"))
 
     for grp in groups_usr:
-
         rules = Permissions.query.all()
 
         for rule in rules:
-
             if any(
                 grp == grupo_membro for grupo_membro in json.loads(rule.groups_members)
             ):
-
                 perms = json.loads(rule.perms)
                 for rota in perms:
-
                     grant = perms[rota]
                     if any(PERM == perms and rota == end for perms in grant):
                         return True

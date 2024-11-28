@@ -47,7 +47,6 @@ tipo = db.Model
 
 
 def get_models(tipo: str) -> Type[tipo]:
-
     models = {
         "equipamentos": ProdutoEPI,
         "estoque": EstoqueEPI,
@@ -71,7 +70,6 @@ def get_models(tipo: str) -> Type[tipo]:
 
 
 def getformCad(form) -> Type[FlaskForm]:
-
     forms = {
         "equipamentos": CadastroEPIForm(),
         "empresas": CadastroEmpresa(),
@@ -90,7 +88,6 @@ def getformCad(form) -> Type[FlaskForm]:
 
 
 def getform(form: str) -> Type[FlaskForm]:
-
     forms: dict[str, Type[FlaskForm]] = {
         "edit_equipamentos": EditItemProdutoForm(),
         "edit_estoque": EditSaldoGrade(),

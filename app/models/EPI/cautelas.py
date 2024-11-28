@@ -6,7 +6,6 @@ from app import db
 
 
 class RegistrosEPI(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     nome_epis = db.Column(db.String(length=2048), nullable=False)
     valor_total = db.Column(db.Float, nullable=False)

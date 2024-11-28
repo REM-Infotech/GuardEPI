@@ -46,7 +46,6 @@ tipo_choices = [
 
 
 class CadastroGrade(FlaskForm):
-
     grade = StringField("Grade", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)")
     submit = SubmitField("Salvar")
@@ -74,14 +73,12 @@ class InsertEstoqueForm(FlaskForm):
     submit = SubmitField(label="Salvar")
 
     def __init__(self, *args, **kwargs):
-
-        super(InsertEstoqueForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.nome_epi.choices.extend(set_choices())
         self.tipo_grade.choices.extend(set_choicesGrade())
 
 
 class CadastroEPIForm(FlaskForm):
-
     ca = StringField(label="CA")
     cod_ca = IntegerField(label="Cod CA", validators=[DataRequired()])
     nome_epi = StringField(label="EPI", validators=[DataRequired()])
@@ -102,8 +99,7 @@ class CadastroEPIForm(FlaskForm):
     submit = SubmitField(label="Salvar")
 
     def __init__(self, *args, **kwargs):
-
-        super(CadastroEPIForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fornecedor.choices.extend(set_choicesFornecedor())
         self.marca.choices.extend(set_choicesMarca())
         self.modelo.choices.extend(set_choicesModelo())
@@ -111,35 +107,30 @@ class CadastroEPIForm(FlaskForm):
 
 
 class CadastroClasses(FlaskForm):
-
     classe = StringField("Classificação EPI", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)")
     submit = SubmitField("Cadastrar")
 
 
 class CadastroFonecedores(FlaskForm):
-
     fornecedor = StringField("Fornecedor", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)")
     submit = SubmitField("Cadastrar")
 
 
 class CadastroMarcas(FlaskForm):
-
     marca = StringField("Marca", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)")
     submit = SubmitField("Cadastrar")
 
 
 class CadastroModelos(FlaskForm):
-
     modelo = StringField("Modelo", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)")
     submit = SubmitField("Cadastrar")
 
 
 class Cautela(FlaskForm):
-
     select_funcionario = SelectField(
         label="Selecione o Funcionário", validators=[DataRequired()], choices=[]
     )
@@ -154,7 +145,7 @@ class Cautela(FlaskForm):
     submit_cautela = SubmitField(id="submit_cautela", label="Emitir documento")
 
     def __init__(self, *args, **kwargs):
-        super(Cautela, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.nome_epi.choices.append(("Selecione", "Selecione"))
         self.nome_epi.choices.extend(set_EpiCautelaChoices())

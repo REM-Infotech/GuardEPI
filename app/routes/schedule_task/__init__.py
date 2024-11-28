@@ -13,7 +13,6 @@ schedule_bp = Blueprint(
 
 @schedule_bp.get("/dash")
 def dash():
-
     form = schedule_task.TaskNotificacaoForm()
     page = "schedules.html"
     return render_template("index.html", page=page, form=form)

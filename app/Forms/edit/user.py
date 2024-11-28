@@ -7,7 +7,6 @@ file_allowed = FileAllowed(["jpg", "png", "jpeg"], "Images only!")
 
 
 class ProfileEditForm(FlaskForm):
-
     login = StringField(label="Usuário")
     nome_usuario = StringField(label="Nome Completo")
     old_password = PasswordField(label="Senha atual")
@@ -17,11 +16,10 @@ class ProfileEditForm(FlaskForm):
     submit = SubmitField(label="Salvar Alterações")
 
     def __init__(self, *args, **kwargs):
-        super(ProfileEditForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class AdmChangePassWord(FlaskForm):
-
     user_to_change = StringField(
         label="Usuário para a troca de senha", validators=[DataRequired()]
     )
@@ -35,7 +33,6 @@ class AdmChangePassWord(FlaskForm):
 
 
 class AdmChangeEmail(FlaskForm):
-
     user_to_change = StringField(
         label="Usuário para a troca de email", validators=[DataRequired()]
     )
@@ -45,7 +42,6 @@ class AdmChangeEmail(FlaskForm):
 
 
 class ChangePassWord(FlaskForm):
-
     old_password = PasswordField(
         label="Senha atual", validators=[DataRequired(), Length(min=8, max=62)]
     )
@@ -59,7 +55,6 @@ class ChangePassWord(FlaskForm):
 
 
 class ChangeEmail(FlaskForm):
-
     old_email = EmailField(label="E-mail atual", validators=[DataRequired()])
     new_email = EmailField(label="Novo e-mail", validators=[DataRequired()])
     repeat_email = EmailField(label="Novo e-mail", validators=[DataRequired()])

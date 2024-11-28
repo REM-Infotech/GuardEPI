@@ -27,7 +27,6 @@ tipo = db.Model
 
 
 def get_models(tipo: str) -> Type[tipo]:
-
     models = {
         "equipamentos": ProdutoEPI,
         "grades": GradeEPI,
@@ -49,7 +48,6 @@ def get_models(tipo: str) -> Type[tipo]:
 @app.route("/gerar_relatorio/<dbase>")
 @login_required
 def gerar_relatorio(dbase: str):
-
     try:
         now = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")  # Change colon to hyphen
         filename = f"Relatório {dbase.capitalize()} - {now}.xlsx"
@@ -60,7 +58,6 @@ def gerar_relatorio(dbase: str):
 
         data = []
         for item in query:
-
             it: dict = item.__dict__
             for column in item.__table__.columns:
                 if isinstance(column.type, LargeBinary):

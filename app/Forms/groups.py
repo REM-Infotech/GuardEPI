@@ -24,7 +24,6 @@ endpoints = [
 
 
 def setRules() -> list[tuple[str, str]]:
-
     return [
         ("CREATE", "Criar"),
         ("READ", "Acesso a informações"),
@@ -34,17 +33,14 @@ def setRules() -> list[tuple[str, str]]:
 
 
 def set_choicesUsers() -> list[tuple[str, str]]:
-
     return [(item.login, item.nome_usuario) for item in Users.query.all()]
 
 
 def set_choicesGroups() -> list[tuple[str, str]]:
-
     return [(item.name_group, item.name_group) for item in Groups.query.all()]
 
 
 class CreateGroup(FlaskForm):
-
     nome = StringField(label="Nome do Grupo", validators=[DataRequired()])
     membros = SelectMultipleField(
         "Selecione os Integrantes", validators=[DataRequired()], choices=[]
@@ -52,6 +48,6 @@ class CreateGroup(FlaskForm):
     submit = SubmitField("Salvar Alterações")
 
     def __init__(self, *args, **kwargs):
-        super(CreateGroup, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.membros.choices.extend(set_choicesUsers())

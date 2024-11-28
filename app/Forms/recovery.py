@@ -4,7 +4,6 @@ from wtforms.validators import DataRequired, Length
 
 
 class ForgotPassword(FlaskForm):
-
     email_recover = StringField(
         label="E-mail para recuperar senha", validators=[DataRequired()]
     )
@@ -12,7 +11,6 @@ class ForgotPassword(FlaskForm):
 
 
 class ByPassRecover(FlaskForm):
-
     codigoverificar = StringField(
         label="Código de verificação", validators=[DataRequired(), Length(min=6, max=6)]
     )

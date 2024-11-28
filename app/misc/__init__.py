@@ -24,7 +24,6 @@ __all__ = (
 
 
 def format_currency_brl(value) -> str:
-
     number = numbers.format_currency(value, "BRL", locale="pt_BR")
     number = unicodedata.normalize("NFKD", number)
     return number
@@ -52,5 +51,4 @@ def generate_pid(count: int = 6) -> str:
 
 
 def hash_str() -> str:
-
     return bcrypt.hashpw(generate_pid().encode(), salt).decode("utf-8")

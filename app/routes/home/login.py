@@ -10,7 +10,6 @@ from app.models.users import Users
 
 @app.route("/", methods=["GET"])
 def index():
-
     if not current_user.is_authenticated:
         return redirect(url_for("dash.dashboard"))
 
@@ -19,7 +18,6 @@ def index():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-
     try:
         if session.get("_user_id", None) is not None:
             return redirect(url_for("dash.dashboard"))
@@ -30,11 +28,9 @@ def login():
         location = str(session.get("next"))
         form = LoginForm()
         if form.validate_on_submit():
-
             user = Users.query.filter_by(login=form.login.data).first()
 
             if user and user.converte_senha(form.password.data):
-
                 session["username"] = form.login.data
                 session["groups_usr"] = json.loads(user.grupos)
                 session["nome_usuario"] = user.nome_usuario
@@ -57,7 +53,6 @@ def login():
 
 @app.route("/logout", methods=["GET"])
 def logout():
-
     logout_user()
     flash("Sessão encerrada", "info")
     location = url_for("login")

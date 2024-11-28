@@ -81,7 +81,6 @@ def create_app():
 
 
 def init_extensions(app: Flask):
-
     global db, login_manager, mail
     mail = Mail(app)
     db = SQLAlchemy()
@@ -108,7 +107,6 @@ def init_extensions(app: Flask):
     login_manager.login_message_category = "info"
 
     with app.app_context():
-
         from app.models import init_database
 
         if not Path("is_init.txt").exists():

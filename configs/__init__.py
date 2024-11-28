@@ -1,5 +1,4 @@
 def csp() -> dict[str]:
-
     csp_vars = {
         "default-src": ["'self'"],
         "script-src": [

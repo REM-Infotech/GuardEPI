@@ -13,7 +13,6 @@ from app.models.Funcionários import Departamento
 @set_endpoint
 @read_perm
 def Departamentos():
-
     try:
         importForm = IMPORTEPIForm()
         form = CadastroDepartamentos()

@@ -19,7 +19,6 @@ dash = Blueprint("dash", __name__, template_folder="templates", static_folder="s
 @login_required
 @set_endpoint
 def dashboard():
-
     try:
         """
         ## Rota Dashboard
@@ -92,7 +91,6 @@ def dashboard():
 
 @dash.route("/saidasEquipamento", methods=["GET"])
 def saidasEquipamento():
-
     chart_data = {"labels": [], "values": [], "media": 0}
 
     # Obtendo o mês e ano atuais
@@ -106,7 +104,6 @@ def saidasEquipamento():
     ).all()
 
     if entregas:
-
         data = {
             "Equipamento": [entrega.nome_epi for entrega in entregas],
             "Valor": [entrega.valor_total for entrega in entregas],
@@ -133,7 +130,6 @@ def saidasEquipamento():
 
 @dash.route("/saidasFuncionario", methods=["GET"])
 def saidasFuncionario():
-
     chart_data = {"labels": [], "values": [], "media": 0}
 
     # Obtendo o mês e ano atuais
@@ -147,7 +143,6 @@ def saidasFuncionario():
     ).all()
 
     if entregas:
-
         # Construa o DataFrame
         data = {
             "Funcionario": [entrega.funcionario for entrega in entregas],
@@ -174,7 +169,6 @@ def saidasFuncionario():
 
 @dash.route("/test_celery", methods=["GET"])
 def test_celery():
-
     result = send_email.delay(15, 15)
 
     return jsonify({"result_id": result.id}), 200

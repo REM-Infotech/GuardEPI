@@ -13,7 +13,6 @@ salt = bcrypt.gensalt()
 
 @login_manager.user_loader
 def load_user(user_id):
-
     link = request.referrer
     if link is None:
         link = request.url
@@ -22,7 +21,6 @@ def load_user(user_id):
 
 
 class Users(db.Model, UserMixin):
-
     __tablename__ = "users"
     id: int = db.Column(db.Integer, primary_key=True)
     login: str = db.Column(db.String(length=30), nullable=False, unique=True)
@@ -55,7 +53,6 @@ class Users(db.Model, UserMixin):
 
 
 class Groups(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     name_group = db.Column(db.String(length=30), nullable=False, unique=True)
     members = db.Column(db.Text)
@@ -63,7 +60,6 @@ class Groups(db.Model):
 
 
 class Permissions(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     name_rule = db.Column(db.String(length=30), nullable=False, unique=True)
     groups_members = db.Column(db.Text)
@@ -71,7 +67,6 @@ class Permissions(db.Model):
 
 
 class EndPoints(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     endpoint = db.Column(db.String(length=30), nullable=False, unique=True)
     displayName = db.Column(db.Text)

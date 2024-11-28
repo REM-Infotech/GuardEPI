@@ -141,9 +141,8 @@ def cadastrarEPI():
             headers = {"Authorization": f"Bearer {data.get('access_token')}"}
 
             # Faça a requisição GET (ou POST, PUT, etc.) com o cabeçalho
-            response = requests.get(
-                f"{url}/consulta_ca/{form.data.get("cod_ca", "99999")}", headers=headers
-            )
+            url_request = f"{url}/consulta_ca/{form.data.get("cod_ca", "99999")}"
+            response = requests.get(url_request, headers=headers)
 
             if response.status_code == 200:
 

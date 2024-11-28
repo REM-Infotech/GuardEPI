@@ -24,15 +24,12 @@ __all__ = (users, profile, groups, perms)
 @login_required
 @create_perm
 def caduser_end():
-
     form = CreateUserForm()
     if request.method == "GET" and request.headers.get("HX-Request") == "true":
-
         html = "pages/forms/admin/CreateUserForm.html"
         return render_template(html, form=form)
 
     elif request.method == "POST" and form.validate_on_submit():
-
         usuario = Users(
             login=form.login.data,
             nome_usuario=form.nome.data,
@@ -43,10 +40,8 @@ def caduser_end():
         usuario.senhacrip = form.password.data
 
         try:
-
             dbase_group = Groups.query.filter(Groups.name_group == "Default").first()
             if dbase_group:
-
                 list_groups = dbase_group.members
                 extend_group = [form.login.data]
                 if not list_groups:
@@ -78,7 +73,6 @@ def caduser_end():
 @login_required
 @update_perm
 def changepw_end():
-
     try:
         form = AdmChangePassWord()
 
@@ -115,7 +109,6 @@ def changepw_end():
 @login_required
 @update_perm
 def changemail_end():
-
     try:
         form = AdmChangeEmail()
 
@@ -130,7 +123,6 @@ def changemail_end():
             html = "pages/forms/user/ChangeMailForm.html"
 
         if form.validate_on_submit():
-
             login_usr = form.data.get("user_to_change", session.get("login"))
             mail = Users.query.filter_by(login=login_usr).first()
             if form.new_email.data != form.repeat_email.data:
@@ -153,9 +145,7 @@ def changemail_end():
 @login_required
 @delete_perm
 def delete_user(usuario: str):
-
     try:
-
         set_delete = False
         atual_admin = session.get("login")
         license_key = session.get("license_token", "")
@@ -168,7 +158,6 @@ def delete_user(usuario: str):
             query = Users.query.filter(Users.license_key == license_key).all()
 
         for user in query:
-
             if user.login == usuario:
                 if usuario == atual_admin:
                     message = "Você nao pode deletar seu usuário"

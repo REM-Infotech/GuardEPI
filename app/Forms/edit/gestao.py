@@ -15,7 +15,6 @@ from app.models import Cargos, Departamento, Empresa
 
 
 def setChoices_Empresa() -> list[tuple[str, str]]:
-
     with app.app_context():
         return [
             (query.nome_empresa, query.nome_empresa) for query in Empresa.query.all()
@@ -23,7 +22,6 @@ def setChoices_Empresa() -> list[tuple[str, str]]:
 
 
 def setChoices_Departamento() -> list[tuple[str, str]]:
-
     with app.app_context():
         return [
             (query.departamento, query.departamento)
@@ -32,13 +30,11 @@ def setChoices_Departamento() -> list[tuple[str, str]]:
 
 
 def setChoices_Cargo() -> list[tuple[str, str]]:
-
     with app.app_context():
         return [(query.cargo, query.cargo) for query in Cargos.query.all()]
 
 
 class EditFuncionario(FlaskForm):
-
     codigo = StringField(
         "Código de Identificação", validators=[DataRequired(), Length(max=6)]
     )
@@ -62,7 +58,7 @@ class EditFuncionario(FlaskForm):
     submit = SubmitField("Salvar alterações")
 
     def __init__(self, *args, **kwargs):
-        super(EditFuncionario, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.empresa.choices.extend(setChoices_Empresa())
         self.departamento.choices.extend(setChoices_Departamento())
@@ -70,7 +66,6 @@ class EditFuncionario(FlaskForm):
 
 
 class EditEmpresa(FlaskForm):
-
     nome_empresa = StringField("Nome da Empresa", validators=[DataRequired()])
     cnpj_empresa = StringField(
         "CNPJ empresa", validators=[Length(min=14, max=18), DataRequired()]
@@ -80,14 +75,12 @@ class EditEmpresa(FlaskForm):
 
 
 class EditCargo(FlaskForm):
-
     cargo = StringField("Nome do Cargo", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)")
     submit = SubmitField("Salvar alterações")
 
 
 class EditDepartamentos(FlaskForm):
-
     departamento = StringField("Nome do departamento", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)")
     submit = SubmitField("Salvar alterações")

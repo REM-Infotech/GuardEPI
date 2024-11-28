@@ -7,7 +7,6 @@ from app import db
 
 
 class EstoqueEPI(db.Model):
-
     id = db.Column(db.Integer, primary_key=True, unique=True)
     nome_epi = db.Column(db.String(length=64), nullable=False)
     tipo_qtd = db.Column(db.String(length=64), nullable=False)
@@ -15,7 +14,6 @@ class EstoqueEPI(db.Model):
 
 
 class EstoqueGrade(db.Model):
-
     id = db.Column(db.Integer, primary_key=True, unique=True)
     nome_epi = db.Column(db.String(length=64), nullable=False)
     grade = db.Column(db.String(length=64), nullable=False)
@@ -24,7 +22,6 @@ class EstoqueGrade(db.Model):
 
 
 class RegistroEntradas(db.Model):
-
     id = db.Column(db.Integer, primary_key=True, unique=True)
     nome_epi = db.Column(db.String(length=64), nullable=False)
     grade = db.Column(db.String(length=64), nullable=False)
@@ -39,7 +36,6 @@ class RegistroEntradas(db.Model):
 
 
 class RegistroSaidas(db.Model):
-
     id = db.Column(db.Integer, primary_key=True, unique=True)
     nome_epi = db.Column(db.String(length=64), nullable=False)
     qtd_saida = db.Column(db.Integer, nullable=False)
@@ -55,7 +51,6 @@ class RegistroSaidas(db.Model):
         data_saida: Type[datetime] = datetime.now(),
         valor_total: float = 0.00,
     ) -> None:
-
         self.nome_epi = nome_epi
         self.qtd_saida = qtd_saida
         self.data_saida = data_saida

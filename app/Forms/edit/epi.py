@@ -18,7 +18,6 @@ from app.Forms.choices import (
 
 
 class EditSaldoGrade(FlaskForm):
-
     nome_epi = StringField(label="Nome EPI")
     tipo_grade = StringField(label="Grade")
     qtd_estoque = IntegerField(label="Quantidade Estoque")
@@ -27,7 +26,6 @@ class EditSaldoGrade(FlaskForm):
 
 
 class EditItemProdutoForm(FlaskForm):
-
     ca = StringField(label="CA")
     cod_ca = IntegerField(label="Cod CA", validators=[DataRequired()])
     nome_epi = StringField(label="EPI", validators=[DataRequired()])
@@ -48,8 +46,7 @@ class EditItemProdutoForm(FlaskForm):
     submit = SubmitField(label="Salvar")
 
     def __init__(self, *args, **kwargs):
-
-        super(EditItemProdutoForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         fornecedor_choices = set_choicesFornecedor()
         marca_choices = set_choicesMarca()
         modelo_choices = set_choicesModelo()

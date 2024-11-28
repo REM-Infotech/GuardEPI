@@ -62,17 +62,14 @@ __all__ = (
 
 
 def init_database() -> str:
-
     root_pw = generate_pid(10)
 
     with app.app_context():
-
         db.create_all()
         to_add = []
         usr = db.session.query(Users).filter_by(login="root").first()
 
         if usr is None:
-
             filename = "favicon.png"
             path_img = os.path.join("app", "src", "assets", "img", filename)
             with open(path_img, "rb") as file:
@@ -92,7 +89,6 @@ def init_database() -> str:
         group = Groups.query.filter(Groups.name_group == "Grupo Root").first()
 
         if group is None:
-
             grp = Groups(name_group="Grupo Root", members=json.dumps(["root"]))
             to_add.append(grp)
 
@@ -103,11 +99,9 @@ def init_database() -> str:
             to_add.append(grp)
 
         for endpoint, displayName in endpoints:
-
             checkend = EndPoints.query.filter(EndPoints.endpoint == endpoint).first()
 
             if not checkend:
-
                 add = EndPoints(endpoint=endpoint, displayName=displayName)
 
                 to_add.append(add)

@@ -12,7 +12,6 @@ from app.models.Funcionários import Funcionarios
 @set_endpoint
 @read_perm
 def funcionarios():
-
     try:
         form = CadastroFuncionario()
         importForm = IMPORTEPIForm()

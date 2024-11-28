@@ -42,17 +42,14 @@ perms = [
 
 
 def set_choicesUsers() -> list[tuple[str, str]]:
-
     return [(item.login, item.nome_usuario) for item in Users.query.all()]
 
 
 def set_choicesGrupos() -> list[tuple[str, str]]:
-
     return [(item.name_group, item.name_group) for item in Groups.query.all()]
 
 
 class CreateUserForm(FlaskForm):
-
     nome = StringField(label="Nome", validators=[DataRequired()])
     login = StringField(label="Login", validators=[DataRequired()])
     email = StringField(label="Email", validators=[DataRequired()])
@@ -64,18 +61,16 @@ class CreateUserForm(FlaskForm):
 
 
 class CreateGroup(FlaskForm):
-
     nome = StringField(label="Nome do Grupo", validators=[DataRequired()])
     desc = TextAreaField("Descrição (Opcional)")
 
     def __init__(self, *args, **kwargs):
-        super(CreateGroup, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.users.choices.extend(set_choicesUsers())
 
 
 class CreatePerm(FlaskForm):
-
     name_rule = StringField(label="Nome do Grupo", validators=[DataRequired()])
     grupos = SelectMultipleField("Selecione os Grupos", choices=[])
     rota = SelectField("Selecione a Página", choices=endpoints)
@@ -83,5 +78,5 @@ class CreatePerm(FlaskForm):
     submit = SubmitField("Salvar Alterações")
 
     def __init__(self, *args, **kwargs):
-        super(CreatePerm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.grupos.choices.extend(set_choicesGrupos())

@@ -16,7 +16,6 @@ from app.models import EstoqueEPI, EstoqueGrade, ProdutoEPI, RegistroEntradas
 @set_endpoint
 @read_perm
 def Estoque():
-
     try:
         database = EstoqueEPI.query.all()
         title = request.endpoint.capitalize()
@@ -47,7 +46,6 @@ def Estoque():
 @set_endpoint
 @read_perm
 def Estoque_Grade():
-
     try:
         database = EstoqueGrade.query.all()
         DataTables = f"js/DataTables/epi/{request.endpoint.lower()}.js"
@@ -69,7 +67,6 @@ def Estoque_Grade():
 @set_endpoint
 @read_perm
 def Entradas():
-
     title = "Relação de Entradas EPI"
     page = f"pages/epi/{request.endpoint.lower()}.html"
     importForm = IMPORTEPIForm()
@@ -90,11 +87,9 @@ def Entradas():
 @login_required
 @create_perm
 def lancamento_produto():
-
     try:
         form = InsertEstoqueForm()
         if form.validate_on_submit():
-
             query_Estoque = EstoqueEPI.query
             query_EstoqueGrade = EstoqueGrade.query
 
@@ -175,7 +170,6 @@ def lancamento_produto():
             return redirect(url_for("Estoque"))
 
         if form.errors:
-
             flash("Campos Obrigatórios não preenchidos!")
             return redirect(url_for("Estoque"))
 
