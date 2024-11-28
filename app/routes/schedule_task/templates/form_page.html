@@ -1,41 +1,41 @@
 <div class="modal fade" id="cadastroFuncionario" tabindex="-1" aria-labelledby="cadastroFuncionario" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <form class="card border-0 shadow rounded-3" action="#!" method="POST" enctype="multipart/form-data">
-                <div class="modal-header">
-                    <h4 class="m-0 font-weight-bold text-primary">Teste {{ display_name }}</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                {% if form %}
-                <div class="card-body bg-warning bg-opacity-75 p-4 p-sm-5">
-                    {{ form.hidden_tag() }}
-                    <div class="row g-3 rounded justify-content-center p-3">
-                        {% for field in form %}
-                        {% if field.name == "data_inicio" or field.name == "doc_parte" or
-                        field.name == "data_fim" or field.name == "parte_name"%}
-                        <div class="col-md-5 mb-3 border border-secondary p-2 border-2 rounded bg-white">
-                            {{ field.label(class="form-label") }}
-                            {{ field(class="form-control", id=field.id, **{"data-placeholder":
-                            field.label.text}) }}
-                        </div>
-                        {% else %}
-                        {% if field.name != "csrf_token" and field.name != "submit" %}
-                        <div class="col-md-10 mb-3 border border-secondary p-2 border-2 rounded bg-white">
-                            {{ field.label(class="form-label") }}
-                            {{ field(class="form-control", id=field.id, **{"data-placeholder":
-                            field.label.text}) }}
-                        </div>
-                        {% endif %}
-                        {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="card-footer d-grid gap-2">
-                    {{ form.submit(class="btn btn btn-outline-success btn-login fw-semibold",
-                    onclick="showLoad()") }}
-                </div>
-                {% endif %}
-            </form>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <form class="card border-0 shadow rounded-3" action="#!" method="POST" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h4 class="m-0 font-weight-bold text-primary">Teste {{ display_name }}</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        {% if form %}
+        <div class="card-body bg-warning bg-opacity-75 p-4 p-sm-5">
+          {{ form.hidden_tag() }}
+          <div class="row g-3 rounded justify-content-center p-3">
+            {% for field in form %}
+            {% if field.name == "data_inicio" or field.name == "doc_parte" or
+            field.name == "data_fim" or field.name == "parte_name"%}
+            <div class="col-md-5 mb-3 border border-secondary p-2 border-2 rounded bg-white">
+              {{ field.label(class="form-label") }}
+              {{ field(class="form-control", id=field.id, **{"data-placeholder":
+              field.label.text}) }}
+            </div>
+            {% else %}
+            {% if field.name != "csrf_token" and field.name != "submit" %}
+            <div class="col-md-10 mb-3 border border-secondary p-2 border-2 rounded bg-white">
+              {{ field.label(class="form-label") }}
+              {{ field(class="form-control", id=field.id, **{"data-placeholder":
+              field.label.text}) }}
+            </div>
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="card-footer d-grid gap-2">
+          {{ form.submit(class="btn btn btn-outline-success btn-login fw-semibold",
+          onclick="showLoad()") }}
+        </div>
+        {% endif %}
+      </form>
     </div>
+  </div>
 </div>

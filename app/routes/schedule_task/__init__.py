@@ -5,7 +5,8 @@ from celery import shared_task
 from celery.schedules import crontab
 from flask import Blueprint
 from flask import current_app as app
-from flask import render_template
+from flask import redirect, render_template, url_for
+from flask_mail import Mail, Message
 from flask_wtf import FlaskForm
 from pytz import timezone
 
@@ -21,31 +22,49 @@ schedule_bp = Blueprint(
 
 @schedule_bp.get("/dash")
 def dash():
+
     form: FlaskForm = schedule_task.TaskNotificacaoForm()
     page = "schedules.html"
+    return render_template("index.html", page=page, form=form)
+
+
+@schedule_bp.post("/new_schedule")
+def new_schedule():
+
+    form: FlaskForm = schedule_task.TaskNotificacaoForm()
 
     if form.validate_on_submit():
         pass
 
         celery_app.add_periodic_task(
             crontab(hour=7, minute=30, day_of_week={1, 2, 3, 4, 5}),
-            send_email.s(),
+            send_email.s(form.todo.data),
             name=form.nome_task.data,
             timezone=timezone(form.timezone),
         )
 
-    return render_template("index.html", page=page, form=form)
+    return redirect(url_for("schedule_bp.dash"))
 
 
 @shared_task(bind=True, ignore_result=False)
-def send_email(self):
+def send_email(self, todo: str):
+
+    mail = Mail(app)
+
+    with app.app_context():
+
+        msg = message_formatter(todo)
+        mail.send(msg)
+
+    return
+
+
+def message_formatter(todo: str) -> Message:
+
     from dotenv import dotenv_values
-    from flask_mail import Mail, Message
 
     from app import db
     from app.models import Users
-
-    mail = Mail(app)
 
     users = db.session.query(Users).all()
     copy_content = ["nicholas@robotz.dev"]
@@ -63,7 +82,4 @@ def send_email(self):
         assunto = "Notificação de troca de EPI"
         mensagem = render_template("assets/body_email.html", Funcionarios=funcionarios)
 
-        msg = Message(assunto, sender=sender_, recipients=copy_content, html=mensagem)
-        mail.send(msg)
-
-    return
+        return Message(assunto, sender=sender_, recipients=copy_content, html=mensagem)
