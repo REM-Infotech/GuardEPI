@@ -65,7 +65,7 @@ for paths in [DOCS_PATH, TEMP_PATH, IMAGE_TEMP_PATH, CSV_TEMP_PATH, PDF_TEMP_PAT
 
 
 CELERY = dict(
-    broker_url="redis://:Redis2019!@195.200.1.226/0",
+    broker_url="/0",
     result_backend="redis://:Redis2019!@195.200.1.226/1",
     task_ignore_result=True,
 )
