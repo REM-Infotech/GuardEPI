@@ -1,6 +1,8 @@
 import json
 import os
 
+from dotenv import dotenv_values
+
 from app import app, db
 from app.misc import generate_pid
 
@@ -67,7 +69,14 @@ def init_database() -> str:
     with app.app_context():
         db.create_all()
         to_add = []
-        usr = db.session.query(Users).filter_by(login="root").first()
+
+        values = dotenv_values()
+
+        loginsys = values.get("loginsys")
+        nomeusr = values.get("nomeusr")
+        emailusr = values.get("emailusr")
+
+        usr = db.session.query(Users).filter_by(login=loginsys).first()
 
         if usr is None:
             filename = "favicon.png"
@@ -76,9 +85,9 @@ def init_database() -> str:
                 blob_doc = file.read()
             usr = Users(
                 grupos=json.dumps(["Grupo Root"]),
-                login="root",
-                nome_usuario="Root",
-                email="adm@robotz.dev",
+                login=loginsys,
+                nome_usuario=nomeusr,
+                email=emailusr,
                 blob_doc=blob_doc,
                 filename=filename,
             )
