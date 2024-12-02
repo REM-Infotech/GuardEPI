@@ -1,6 +1,6 @@
 from flask import Flask
 
-from app.routes import cargos, config, dashboard, handler, schedule_task, terms_policy
+from app.routes import config, handler, terms_policy
 from app.routes.CRUD import create, delete, update
 from app.routes.EPI import cautela, equipamentos, estoque, grades
 from app.routes.Gestao import departamentos, empresas, funcionarios
@@ -14,7 +14,6 @@ __all__ = [
     estoque,
     cautela,
     grades,
-    cargos,
     departamentos,
     empresas,
     funcionarios,
@@ -28,10 +27,14 @@ __all__ = [
 
 
 def register_blueprint(app: Flask):
-    blueprints = [dashboard.dash, cargos.cargo_bp, schedule_task.schedule_bp]
 
-    for blueprint in blueprints:
-        app.register_blueprint(blueprint)
+    with app.app_context():
+        from app.routes import cargos, dashboard, schedule_task
+
+        blueprints = [dashboard.dash, cargos.cargo_bp, schedule_task.schedule_bp]
+
+        for blueprint in blueprints:
+            app.register_blueprint(blueprint)
 
 
 # from app import app

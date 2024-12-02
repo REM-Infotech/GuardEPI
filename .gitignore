@@ -23,6 +23,12 @@ parts/
 sdist/
 var/
 wheels/
+
+# Celery beat files
+*.bak
+*.dat
+*.dir
+
 share/python-wheels/
 *.egg-info/
 .installed.cfg

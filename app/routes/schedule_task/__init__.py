@@ -2,17 +2,14 @@ from os import path
 from pathlib import Path
 
 from celery import shared_task
-from celery.schedules import crontab
 from flask import Blueprint
 from flask import current_app as app
 from flask import redirect, render_template, url_for
+from flask_login import login_required
 from flask_mail import Mail, Message
 from flask_wtf import FlaskForm
-from pytz import timezone
 
-from app import celery_app
-
-from ...Forms import schedule_task
+from ...Forms.schedule_task import TaskNotificacaoForm
 
 template_folder = path.join(Path(__file__).parent.resolve(), "templates")
 schedule_bp = Blueprint(
@@ -21,29 +18,25 @@ schedule_bp = Blueprint(
 
 
 @schedule_bp.get("/dash")
+@login_required
 def dash():
 
-    form: FlaskForm = schedule_task.TaskNotificacaoForm()
+    form: FlaskForm | TaskNotificacaoForm = TaskNotificacaoForm()
     page = "schedules.html"
     return render_template("index.html", page=page, form=form)
 
 
 @schedule_bp.post("/new_schedule")
+@login_required
 def new_schedule():
 
-    form: FlaskForm = schedule_task.TaskNotificacaoForm()
+    # form: FlaskForm | TaskNotificacaoForm = TaskNotificacaoForm()
 
-    if form.validate_on_submit():
-        pass
+    # if form.validate_on_submit():
 
-        celery_app.add_periodic_task(
-            crontab(hour=7, minute=30, day_of_week={1, 2, 3, 4, 5}),
-            send_email.s(form.todo.data),
-            name=form.nome_task.data,
-            timezone=timezone(form.timezone),
-        )
+    #     days = [int(day) for day in form.days_of_week.data]
 
-    return redirect(url_for("schedule_bp.dash"))
+    return redirect(url_for("schedules.dash"))
 
 
 @shared_task(bind=True, ignore_result=False)

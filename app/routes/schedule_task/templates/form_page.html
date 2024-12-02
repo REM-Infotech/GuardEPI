@@ -1,7 +1,8 @@
 <div class="modal fade" id="cadastroFuncionario" tabindex="-1" aria-labelledby="cadastroFuncionario" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
-      <form class="card border-0 shadow rounded-3" action="#!" method="POST" enctype="multipart/form-data">
+      <form class="card border-0 shadow rounded-3" action="{{ url_for('schedules.new_schedule') }}" method="POST"
+        enctype="multipart/form-data">
         <div class="modal-header">
           <h4 class="m-0 font-weight-bold text-primary">Teste {{ display_name }}</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

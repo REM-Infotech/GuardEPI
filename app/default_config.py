@@ -1,10 +1,14 @@
 import os
 import shutil
-from datetime import timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 from uuid import uuid4
 
+from celery.schedules import crontab
 from dotenv import dotenv_values
+from pytz import timezone
+
+# PARAMETROS PARA O BANCO DE DADOS
 
 values = dotenv_values()
 
@@ -63,9 +67,19 @@ for paths in [DOCS_PATH, TEMP_PATH, IMAGE_TEMP_PATH, CSV_TEMP_PATH, PDF_TEMP_PAT
 
     Path(paths).mkdir(exist_ok=True)
 
+now = datetime.now(timezone("America/Manaus"))
+hour = now.hour
+minute = now.minute
 
-CELERY = dict(
-    broker_url=f"{redis_uri}/0",
-    result_backend=f"{redis_uri}/1",
-    task_ignore_result=True,
-)
+CELERY = {
+    "broker_url": f"{redis_uri}/0",
+    "result_backend": f"{redis_uri}/1",
+    "task_ignore_result": True,
+    "beat_schedule": {
+        "notifications_epi": {
+            "task": "app.routes.schedule_task.send_email",
+            "schedule": crontab(hour=hour, minute=minute),
+        }
+    },
+    "timezone": "America/Sao_Paulo",
+}

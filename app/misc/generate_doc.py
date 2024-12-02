@@ -24,7 +24,6 @@ from reportlab.platypus import Paragraph, Table, TableStyle
 
 
 num = secrets.randbelow(801) + 100  # Gera um número entre 100 e 900
-print(num)
 
 
 def create_watermark_pdf(image_path: str, output_pdf: str):
