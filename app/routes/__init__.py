@@ -1,5 +1,13 @@
 from deep_translator import GoogleTranslator
-from flask import Flask, redirect, render_template, url_for
+from flask import (
+    Flask,
+    redirect,
+    render_template,
+    url_for,
+    send_from_directory,
+    abort,
+    make_response,
+)
 from werkzeug.exceptions import HTTPException
 
 from app.routes.auth import auth
@@ -51,6 +59,36 @@ def register_routes(app: Flask):
             ),
             error.code,
         )
+
+    @app.route("/termos_uso", methods=["GET"])
+    def termos_uso():
+        try:
+            filename = "Termos de Uso.pdf"
+            url = send_from_directory(app.config["PDF_PATH"], filename)
+            # Crie a resposta usando make_response
+            response = make_response(url)
+
+            # Defina o tipo MIME como application/pdf
+            response.headers["Content-Type"] = "application/pdf"
+            return url
+
+        except Exception as e:
+            abort(500, description=str(e))
+
+    @app.route("/politica_privacidade", methods=["GET"])
+    def politica_privacidade():
+        try:
+            filename = "Política de Privacidade.pdf"
+            url = send_from_directory(app.config["PDF_PATH"], filename)
+            # Crie a resposta usando make_response
+            response = make_response(url)
+
+            # Defina o tipo MIME como application/pdf
+            response.headers["Content-Type"] = "application/pdf"
+            return url
+
+        except Exception as e:
+            abort(500, description=str(e))
 
 
 # from app import app
