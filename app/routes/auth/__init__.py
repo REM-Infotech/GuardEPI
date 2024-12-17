@@ -1,6 +1,6 @@
 import json
 
-from click import Path
+from pathlib import Path
 from flask import (
     Blueprint,
     abort,
