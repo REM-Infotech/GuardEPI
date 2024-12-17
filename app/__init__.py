@@ -72,9 +72,9 @@ def create_app():
 
     init_extensions(app)
     app.logger = initialize_logging()
-    from app.routes import register_blueprint
+    from app.routes import register_routes
 
-    register_blueprint(app)
+    register_routes(app)
 
     global celery_app
     celery_app = celery_init(app)

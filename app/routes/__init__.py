@@ -1,40 +1,55 @@
 from flask import Flask
+from deep_translator import GoogleTranslator
+from flask import redirect, render_template, url_for
+from werkzeug.exceptions import HTTPException
 
-from app.routes import config, handler, terms_policy
-from app.routes.CRUD import create, delete, update
-from app.routes.EPI import cautela, equipamentos, estoque, grades
-from app.routes.Gestao import departamentos, empresas, funcionarios
-from app.routes.home import login, queue, relatorio
-
-__all__ = [
-    login,
-    queue,
-    relatorio,
-    equipamentos,
+from app.routes.dashboard import dash
+from app.routes.cargos import cargo_bp
+from app.routes.EPI import (
+    categoria,
+    cautelas,
+    equip,
     estoque,
-    cautela,
-    grades,
-    departamentos,
-    empresas,
-    funcionarios,
-    create,
-    update,
-    delete,
-    handler,
-    config,
-    terms_policy,
-]
+    fornecedor,
+    marca,
+    modelo,
+)
 
 
-def register_blueprint(app: Flask):
+def register_routes(app: Flask):
 
     with app.app_context():
-        from app.routes import cargos, dashboard, schedule_task
 
-        blueprints = [dashboard.dash, cargos.cargo_bp, schedule_task.schedule_bp]
+        blueprints = [
+            dash,
+            cargo_bp,
+            categoria,
+            cautelas,
+            equip,
+            estoque,
+            fornecedor,
+            marca,
+            modelo,
+        ]
 
         for blueprint in blueprints:
-            app.register_blueprint(blueprint)
+            app.register_routes(blueprint)
+
+    @app.errorhandler(HTTPException)
+    def handle_http_exception(error):
+        tradutor = GoogleTranslator(source="en", target="pt")
+        name = tradutor.translate(error.name)
+        desc = tradutor.translate(error.description)
+
+        if error.code == 405:
+            return redirect(url_for("dash.dashboard"))
+
+        return (
+            render_template(
+                "handler/index.html", name=name, desc=desc, code=error.code
+            ),
+            error.code,
+        )
 
 
 # from app import app
