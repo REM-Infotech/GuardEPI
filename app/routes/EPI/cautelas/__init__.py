@@ -1,10 +1,12 @@
 import json
 import os
+from pathlib import Path
 import uuid
 from datetime import datetime
 from time import sleep
 
 from flask import (
+    Blueprint,
     abort,
     flash,
     get_flashed_messages,
@@ -35,8 +37,11 @@ from app.models import (
     RegistrosEPI,
 )
 
+template_folder = Path(__file__).joinpath("templates")
+cautelas = Blueprint("cautelas", __name__, template_folder=template_folder)
 
-@app.before_request
+
+@cautelas.before_request
 def setgroups():
 
     if request.endpoint == "Cautelas":
@@ -56,7 +61,7 @@ def setgroups():
                 f.write(json_obj)
 
 
-@app.route("/add_itens", methods=["GET", "POST"])
+@cautelas.route("/add_itens", methods=["GET", "POST"])
 @login_required
 def add_itens():
 
@@ -85,7 +90,7 @@ def add_itens():
         abort(500, description=str(e))
 
 
-@app.route("/remove-itens", methods=["GET", "POST"])
+@cautelas.route("/remove-itens", methods=["GET", "POST"])
 @login_required
 def remove_itens():
 
@@ -99,7 +104,7 @@ def remove_itens():
     return item_html
 
 
-@app.route("/Registro_Saidas", methods=["GET"])
+@cautelas.route("/Registro_Saidas", methods=["GET"])
 @login_required
 @set_endpoint
 @read_perm
@@ -119,7 +124,7 @@ def Registro_Saidas():
     )
 
 
-@app.route("/Cautelas", methods=["GET"])
+@cautelas.route("/Cautelas", methods=["GET"])
 @login_required
 @set_endpoint
 @read_perm
@@ -141,7 +146,7 @@ def Cautelas():
     )
 
 
-@app.route("/get-grade", methods=["POST"])
+@cautelas.route("/get-grade", methods=["POST"])
 @login_required
 def get_grade():
     # >> Issue: [B110:try_except_pass] Try, Except, Pass detected.
@@ -175,7 +180,7 @@ def get_grade():
         abort(500, description=str(e))
 
 
-@app.route("/emitir_cautela", methods=["POST"])
+@cautelas.route("/emitir_cautela", methods=["POST"])
 @login_required
 @create_perm
 def emitir_cautela():
