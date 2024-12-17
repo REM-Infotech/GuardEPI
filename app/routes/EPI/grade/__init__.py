@@ -1,14 +1,18 @@
-from flask import abort, render_template, request
+from pathlib import Path
+
+from flask import Blueprint, abort, render_template, request
 from flask_login import login_required
 
-from app import app
 from app.decorators import read_perm, set_endpoint
 from app.forms import CadastroGrade, IMPORTEPIForm
 from app.misc import format_currency_brl
 from app.models import GradeEPI
 
+folder_template = Path(__file__).joinpath("templates")
+grade = Blueprint("grade", __name__, template_folder=folder_template)
 
-@app.route("/Grade")
+
+@grade.route("/Grade")
 @login_required
 @set_endpoint
 @read_perm
