@@ -61,7 +61,7 @@ def dashboard():
 
         database = RegistrosEPI.query.all()
         title = request.endpoint.capitalize()
-        page = "pages/dashboard.html"
+        page = "dashboard.html"
         DataTables = "js/DataTables/DashboardTable.js"
 
         # today = datetime.now().strftime("%d/%m/%Y")

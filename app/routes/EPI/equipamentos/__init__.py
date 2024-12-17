@@ -19,7 +19,7 @@ def Equipamentos():
 
     importForm = IMPORTEPIForm()
     form = CadastroEPIForm()
-    page = f"pages/epi/{request.endpoint.lower()}.html"
+    page = f"{request.endpoint.lower()}.html"
     title = request.endpoint.capitalize()
     database = []
     DataTables = "js/DataTables/epi/EquipamentosTable.js"

@@ -24,7 +24,7 @@ def Estoque():
         database = EstoqueEPI.query.all()
         title = request.endpoint.capitalize()
         DataTables = "js/DataTables/epi/EstoqueTable.js"
-        page = f"pages/epi/{request.endpoint.lower()}.html"
+        page = f"{request.endpoint.lower()}.html"
         form = InsertEstoqueForm()
 
         importForm = IMPORTEPIForm()
@@ -53,7 +53,7 @@ def Estoque_Grade():
     try:
         database = EstoqueGrade.query.all()
         DataTables = f"js/DataTables/epi/{request.endpoint.lower()}.js"
-        page = f"pages/epi/{request.endpoint.lower()}.html"
+        page = f"{request.endpoint.lower()}.html"
         importForm = IMPORTEPIForm()
         return render_template(
             "index.html",
@@ -72,7 +72,7 @@ def Estoque_Grade():
 @read_perm
 def Entradas():
     title = "Relação de Entradas EPI"
-    page = f"pages/epi/{request.endpoint.lower()}.html"
+    page = f"{request.endpoint.lower()}.html"
     importForm = IMPORTEPIForm()
     database = RegistroEntradas.query.all()
     DataTables = "js/DataTables/epi/entradas.js"

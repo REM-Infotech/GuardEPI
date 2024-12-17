@@ -110,7 +110,7 @@ def remove_itens():
 @read_perm
 def Registro_Saidas():
 
-    page = f"pages/epi/{request.endpoint.lower()}.html"
+    page = f"{request.endpoint.lower()}.html"
     database = RegistroSaidas.query.all()
     title = request.endpoint.capitalize().replace("_", " ")
     DataTables = "js/DataTables/DataTables.js"
@@ -130,7 +130,7 @@ def Registro_Saidas():
 @read_perm
 def Cautelas():
 
-    page = f"pages/epi/{request.endpoint.lower()}.html"
+    page = f"{request.endpoint.lower()}.html"
     database = RegistrosEPI.query.all()
     title = request.endpoint.capitalize()
     DataTables = "js/DataTables/epi/CautelasTable.js"

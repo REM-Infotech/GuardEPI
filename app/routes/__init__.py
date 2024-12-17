@@ -19,6 +19,7 @@ from app.routes.EPI import (
     equip,
     estoque,
     fornecedor,
+    grade,
     marca,
     modelo,
 )
@@ -39,6 +40,7 @@ def register_routes(app: Flask):
             fornecedor,
             marca,
             modelo,
+            grade,
         ]
 
         for blueprint in blueprints:
@@ -48,14 +50,14 @@ def register_routes(app: Flask):
     def handle_http_exception(error):
         tradutor = GoogleTranslator(source="en", target="pt")
         name = tradutor.translate(error.name)
-        desc = tradutor.translate(error.description)
+        # desc = tradutor.translate(error.description)
 
         if error.code == 405:
             return redirect(url_for("dash.dashboard"))
 
         return (
             render_template(
-                "handler/index.html", name=name, desc=desc, code=error.code
+                "handler/index.html", name=name, desc="Erro Interno", code=error.code
             ),
             error.code,
         )

@@ -19,7 +19,7 @@ grade = Blueprint("grade", __name__, template_folder=folder_template)
 def Grade():
     try:
         title = "Grades"
-        page = f"pages/epi/{request.endpoint.lower()}.html"
+        page = f"{request.endpoint.lower()}.html"
         DataTables = "js/DataTables/epi/grade.js"
         form = CadastroGrade()
         importForm = IMPORTEPIForm()

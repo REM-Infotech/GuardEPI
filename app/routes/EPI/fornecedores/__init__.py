@@ -17,7 +17,7 @@ fornecedor = Blueprint("fornecedor", __name__, template_folder=template_folder)
 def fornecedores():
     form = CadastroFornecedores()
     DataTables = "js/DataTables/DataTables.js"
-    page = f"pages/epi/{request.endpoint.lower()}.html"
+    page = f"{request.endpoint.lower()}.html"
     database = []
     return render_template(
         "index.html", page=page, form=form, DataTables=DataTables, database=database

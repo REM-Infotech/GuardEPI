@@ -24,10 +24,10 @@
               data-bs-parent="#sidenavAccordionPages">
               <nav class="sb-sidenav-menu-nested nav">
                 <a class="nav-link" href="{{ url_for('equip.Equipamentos') }}">Equipamentos</a>
-                <a class="nav-link" href="{{ url_for('grade.grade') }}">Grades</a>
+                <a class="nav-link" href="{{ url_for('grade.Grade') }}">Grades</a>
                 <a class="nav-link" href="{{ url_for('categoria.categorias') }}">Classes</a>
                 <a class="nav-link" href="{{ url_for('fornecedor.fornecedores') }}">Fornecedores</a>
-                <a class="nav-link" href="{{ url_for('marcam.marcas') }}">Marcas</a>
+                <a class="nav-link" href="{{ url_for('marca.marcas') }}">Marcas</a>
                 <a class="nav-link" href="{{ url_for('modelo.modelos') }}">Modelos</a>
               </nav>
             </div>
@@ -39,9 +39,9 @@
             <div class="collapse" id="pagesEstoque" aria-labelledby="headingOne"
               data-bs-parent="#sidenavAccordionPages">
               <nav class="sb-sidenav-menu-nested nav">
-                <a class="nav-link" href="{{ url_for('Estoque') }}">Equipamentos</a>
-                <a class="nav-link" href="{{ url_for('Estoque_Grade') }}">Grades</a>
-                <a class="nav-link" href="{{ url_for('Entradas') }}">Entradas</a>
+                <a class="nav-link" href="{{ url_for('estoque.Estoque') }}">Equipamentos</a>
+                <a class="nav-link" href="{{ url_for('estoque.Estoque_Grade') }}">Grades</a>
+                <a class="nav-link" href="{{ url_for('estoque.Entradas') }}">Entradas</a>
               </nav>
             </div>
             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesLiberacoes"
@@ -52,8 +52,8 @@
             <div class="collapse" id="pagesLiberacoes" aria-labelledby="headingOne"
               data-bs-parent="#sidenavAccordionPages">
               <nav class="sb-sidenav-menu-nested nav">
-                <a class="nav-link" href="{{ url_for('Cautelas') }}">Cautelas</a>
-                <a class="nav-link" href="{{ url_for('Registro_Saidas') }}">Registro Saídas</a>
+                <a class="nav-link" href="{{ url_for('cautelas.Cautelas') }}">Cautelas</a>
+                <a class="nav-link" href="{{ url_for('cautelas.Registro_Saidas') }}">Registro Saídas</a>
               </nav>
             </div>
           </nav>
@@ -67,7 +67,7 @@
           Corporativo
           <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
         </a>
-        <div class="collapse" id="colapse_TablesEmpresa" aria-labelledby="headingOne"
+        {# <div class="collapse" id="colapse_TablesEmpresa" aria-labelledby="headingOne"
           data-bs-parent="#sidenavAccordion">
           <nav class="sb-sidenav-menu-nested nav">
             <a class="nav-link" href="{{ url_for('funcionarios') }}">Funcionários</a>
@@ -75,7 +75,7 @@
             <a class="nav-link" href="{{ url_for('cargo.cargos') }}">Cargos</a>
             <a class="nav-link" href="{{ url_for('Departamentos') }}">Departamentos</a>
           </nav>
-        </div>
+        </div> #}
 
         <div class="sb-sidenav-menu-heading">Sistema</div>
 
@@ -85,13 +85,13 @@
           Configurações
           <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
         </a>
-        <div class="collapse" id="collapse_Settings" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+        {# <div class="collapse" id="collapse_Settings" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
           <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
             <a class="nav-link" href="{{ url_for('users') }}">Usuários</a>
             <a class="nav-link" href="{{ url_for('groups') }}">Grupos e Membros</a>
             <a class="nav-link" href="{{ url_for('Permissoes') }}">Permissões</a>
           </nav>
-        </div>
+        </div> #}
 
       </div>
     </div>
@@ -99,16 +99,17 @@
       <div class="dropdown">
         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
           data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="{{ url_for('profile_pic') }}" alt="" width="32" height="32" class="rounded-circle me-2 border 3">
+          {# <img src="{{ url_for('profile_pic') }}" alt="" width="32" height="32" class="rounded-circle me-2 border 3">
+          #}
           <strong>{{ session["nome_usuario"] }}</strong>
         </a>
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
           <li><a class="dropdown-item" href="#">Manuais</a></li>
-          <li><a class="dropdown-item" href="{{ url_for('profile') }}">Configurações do Perfil</a></li>
+          {# <li><a class="dropdown-item" href="{{ url_for('profile') }}">Configurações do Perfil</a></li> #}
           <li>
             <hr class="dropdown-divider">
           </li>
-          <li><a class="dropdown-item" href="{{ url_for('logout') }}">Sair</a></li>
+          <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sair</a></li>
         </ul>
       </div>
     </div>
