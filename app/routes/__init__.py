@@ -32,7 +32,7 @@ def register_routes(app: Flask):
         ]
 
         for blueprint in blueprints:
-            app.register_routes(blueprint)
+            app.register_blueprint(blueprint)
 
     @app.errorhandler(HTTPException)
     def handle_http_exception(error):
