@@ -107,7 +107,7 @@ def init_extensions(app: Flask):
             x_xss_protection=True,
         )
 
-    login_manager.login_view = "login"
+    login_manager.login_view = "auth.login"
     login_manager.login_message = "Faça login para acessar essa página."
     login_manager.login_message_category = "info"
 
