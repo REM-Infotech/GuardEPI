@@ -8,7 +8,7 @@ from app.forms import CadastroGrade, IMPORTEPIForm
 from app.misc import format_currency_brl
 from app.models import GradeEPI
 
-folder_template = Path(__file__).joinpath("templates")
+folder_template = Path(__file__).parent.resolve().joinpath("templates")
 grade = Blueprint("grade", __name__, template_folder=folder_template)
 
 

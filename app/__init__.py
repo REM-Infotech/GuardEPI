@@ -62,8 +62,8 @@ def celery_init(app: Flask) -> Celery:
 def create_app():
     global app
 
-    template_folder = Path(__file__).joinpath("templates")
-    static_folder = Path(__file__).joinpath("static")
+    template_folder = Path(__file__).parent.resolve().joinpath("templates").resolve()
+    static_folder = Path(__file__).parent.resolve().joinpath("static").resolve()
     app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
 
     config_obj = Configurator().get_configurator()

@@ -2,6 +2,7 @@ from deep_translator import GoogleTranslator
 from flask import Flask, redirect, render_template, url_for
 from werkzeug.exceptions import HTTPException
 
+from app.routes.auth import auth
 from app.routes.cargos import cargo
 from app.routes.dashboard import dash
 from app.routes.EPI import (
@@ -20,6 +21,7 @@ def register_routes(app: Flask):
     with app.app_context():
 
         blueprints = [
+            auth,
             dash,
             cargo,
             categoria,

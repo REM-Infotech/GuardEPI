@@ -7,8 +7,7 @@ from app.decorators import read_perm, set_endpoint
 from app.forms import CadastroEPIForm, IMPORTEPIForm
 from app.misc import format_currency_brl
 
-
-template_folder = Path(__file__).joinpath("templates")
+template_folder = Path(__file__).parent.resolve().joinpath("templates")
 equip = Blueprint("equip", __name__, template_folder=template_folder)
 
 

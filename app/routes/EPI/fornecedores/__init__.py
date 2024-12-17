@@ -6,8 +6,7 @@ from flask_login import login_required
 from app.decorators import read_perm, set_endpoint
 from app.forms import CadastroFornecedores
 
-
-template_folder = Path(__file__).joinpath("templates")
+template_folder = Path(__file__).parent.resolve().joinpath("templates")
 fornecedor = Blueprint("fornecedor", __name__, template_folder=template_folder)
 
 

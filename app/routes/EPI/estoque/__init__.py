@@ -11,7 +11,7 @@ from app.forms import IMPORTEPIForm, InsertEstoqueForm
 from app.misc import format_currency_brl
 from app.models import EstoqueEPI, EstoqueGrade, ProdutoEPI, RegistroEntradas
 
-template_folder = Path(__file__).joinpath("templates")
+template_folder = Path(__file__).parent.resolve().joinpath("templates")
 estoque = Blueprint("estoque", __name__, template_folder=template_folder)
 
 

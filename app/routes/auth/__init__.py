@@ -1,14 +1,27 @@
 import json
 
-from flask import abort, flash, redirect, render_template, request, session, url_for
+from click import Path
+from flask import (
+    Blueprint,
+    abort,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask_login import current_user, login_user, logout_user
 
 from app import app
 from app.forms import LoginForm
 from app.models.users import Users
 
+template_folder = Path(__file__).parent.resolve().joinpath("templates")
+auth = Blueprint("auth", __name__, template_folder=template_folder)
 
-@app.route("/", methods=["GET"])
+
+@auth.route("/", methods=["GET"])
 def index():
     if not current_user.is_authenticated:
         return redirect(url_for("dash.dashboard"))
@@ -16,7 +29,7 @@ def index():
     return redirect(url_for("login"))
 
 
-@app.route("/login", methods=["GET", "POST"])
+@auth.route("/login", methods=["GET", "POST"])
 def login():
     try:
         if session.get("_user_id", None) is not None:
@@ -51,7 +64,7 @@ def login():
         abort(500, description=str(e))
 
 
-@app.route("/logout", methods=["GET"])
+@auth.route("/logout", methods=["GET"])
 def logout():
     logout_user()
     flash("Sessão encerrada", "info")
