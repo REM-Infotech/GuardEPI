@@ -12,7 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 
 from app.logs.setup import initialize_logging
-from configs import csp
+from configs import Configurator, csp
 
 app = None
 db = None
@@ -65,7 +65,10 @@ def create_app():
 
     files_render = os.path.join(os.getcwd(), "app", "src")
     app = Flask(__name__, template_folder=files_render, static_folder=files_render)
-    app.config.from_object("app.default_config")
+
+    config_obj = Configurator().get_configurator()
+
+    app.config.from_object(config_obj)
 
     init_extensions(app)
     app.logger = initialize_logging()
