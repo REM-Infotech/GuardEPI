@@ -34,7 +34,7 @@ endpoints = [
     ("Registro_Saidas", "Registro_Saidas"),
     ("Cautelas", "Cautelas"),
     ("Grade", "Grade"),
-    ("cargo_bp.cargos", "cargo_bp.cargos"),
+    ("cargo.cargos", "cargo.cargos"),
     ("Empresas", "Empresas"),
     ("funcionarios", "funcionarios"),
     ("Departamentos", "Departamentos"),

@@ -4,7 +4,7 @@ from flask import redirect, render_template, url_for
 from werkzeug.exceptions import HTTPException
 
 from app.routes.dashboard import dash
-from app.routes.cargos import cargo_bp
+from app.routes.cargos import cargo
 from app.routes.EPI import (
     categoria,
     cautelas,
@@ -22,7 +22,7 @@ def register_routes(app: Flask):
 
         blueprints = [
             dash,
-            cargo_bp,
+            cargo,
             categoria,
             cautelas,
             equip,

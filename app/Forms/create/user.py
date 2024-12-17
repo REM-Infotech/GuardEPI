@@ -26,7 +26,7 @@ endpoints = [
     ("Cautelas", "Cautelas"),
     ("funcionarios", "Funcionarios"),
     ("Empresas", "Empresas"),
-    ("cargo_bp.cargos", "cargo_bp.cargos"),
+    ("cargo.cargos", "cargo.cargos"),
     ("Departamentos", "Departamentos"),
     ("users", "Usuários"),
     ("groups", "Grupos"),

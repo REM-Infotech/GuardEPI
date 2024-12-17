@@ -10,12 +10,12 @@ from app.forms.globals import IMPORTEPIForm
 from app.models.Funcionários import Cargos
 
 template_folder = path.join(Path(__file__).parent.resolve(), "templates")
-cargo_bp = Blueprint(
-    "cargo_bp", __name__, template_folder=template_folder, static_folder="static"
+cargo = Blueprint(
+    "cargo", __name__, template_folder=template_folder, static_folder="static"
 )
 
 
-@cargo_bp.route("/cargos")
+@cargo.route("/cargos")
 @login_required
 @set_endpoint
 @read_perm
