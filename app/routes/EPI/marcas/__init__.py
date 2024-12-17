@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request
 from flask_login import login_required
 
 from app.decorators import read_perm, set_endpoint
-from app.forms import Cadastromarcas
+from app.forms import CadastroMarcas
 
 template_folder = Path(__file__).joinpath("templates")
 marca = Blueprint("marca", __name__, template_folder=template_folder)
@@ -14,7 +14,7 @@ marca = Blueprint("marca", __name__, template_folder=template_folder)
 @set_endpoint
 @read_perm
 def marcas():
-    form = Cadastromarcas()
+    form = CadastroMarcas()
     DataTables = "js/DataTables/DataTables.js"
     page = f"pages/epi/{request.endpoint.lower()}.html"
     database = []
