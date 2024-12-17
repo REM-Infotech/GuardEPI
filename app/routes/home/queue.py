@@ -8,7 +8,7 @@ from sqlalchemy import LargeBinary
 from werkzeug.utils import secure_filename
 
 from app import app, db
-from app.Forms.globals import IMPORTEPIForm
+from app.forms.globals import IMPORTEPIForm
 from app.models import (
     Cargos,
     Departamento,

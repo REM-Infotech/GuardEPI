@@ -15,7 +15,7 @@ from flask_login import login_required
 from werkzeug.utils import secure_filename
 
 from app import app, db
-from app.Forms import ProfileEditForm
+from app.forms import ProfileEditForm
 from app.misc import generate_pid
 from app.models import Groups, Users
 

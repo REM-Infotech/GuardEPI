@@ -7,7 +7,7 @@ from flask_login import login_required
 
 from app import app, db
 from app.decorators import create_perm, read_perm, set_endpoint
-from app.Forms import CreatePerm
+from app.forms import CreatePerm
 from app.models import Permissions
 
 

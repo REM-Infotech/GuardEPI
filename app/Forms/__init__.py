@@ -1,8 +1,8 @@
 from .auth import LoginForm
 from .create.epi import (
-    CadastroClasses,
+    CadastroCategorias,
     CadastroEPIForm,
-    CadastroFonecedores,
+    CadastroFornecedores,
     CadastroGrade,
     CadastroMarcas,
     CadastroModelos,
@@ -36,12 +36,12 @@ from .schedule_task import TaskNotificacaoForm
 __all__ = [
     LoginForm,
     CadastroCargo,
-    CadastroClasses,
+    CadastroCategorias,
     CadastroDepartamentos,
     CadastroEmpresa,
     CadastroDepartamentos,
     CadastroEPIForm,
-    CadastroFonecedores,
+    CadastroFornecedores,
     CadastroFuncionario,
     CadastroGrade,
     CadastroMarcas,

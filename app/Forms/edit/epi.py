@@ -9,7 +9,7 @@ from wtforms import (
     TextAreaField,
 )
 
-from app.Forms.choices import (
+from app.forms.choices import (
     set_choicesClasseEPI,
     set_choicesFornecedor,
     set_choicesMarca,

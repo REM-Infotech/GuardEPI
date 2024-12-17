@@ -3,8 +3,8 @@ from flask_login import login_required
 
 from app import app
 from app.decorators import read_perm, set_endpoint
-from app.Forms.create import CadastroDepartamentos
-from app.Forms.globals import IMPORTEPIForm
+from app.forms.create import CadastroDepartamentos
+from app.forms.globals import IMPORTEPIForm
 from app.models.Funcionários import Departamento
 
 

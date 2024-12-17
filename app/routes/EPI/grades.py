@@ -3,7 +3,7 @@ from flask_login import login_required
 
 from app import app
 from app.decorators import read_perm, set_endpoint
-from app.Forms import CadastroGrade, IMPORTEPIForm
+from app.forms import CadastroGrade, IMPORTEPIForm
 from app.misc import format_currency_brl
 from app.models import GradeEPI
 

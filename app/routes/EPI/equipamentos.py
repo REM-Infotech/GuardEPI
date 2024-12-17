@@ -11,16 +11,8 @@ from requests.exceptions import ConnectionError, ConnectTimeout
 from werkzeug.utils import secure_filename
 
 from app import app, db
-from app.decorators import create_perm, read_perm, set_endpoint
-from app.Forms import (
-    CadastroClasses,
-    CadastroEPIForm,
-    CadastroFonecedores,
-    CadastroMarcas,
-    CadastroModelos,
-    EditItemProdutoForm,
-    IMPORTEPIForm,
-)
+from app.decorators import create_perm
+from app.forms import CadastroEPIForm, EditItemProdutoForm
 from app.misc import format_currency_brl
 from app.models import ClassesEPI
 from app.models import Fornecedores as fornecedores
@@ -41,32 +33,6 @@ def get_models(tipo) -> Type[tipo]:
     }
 
     return models[tipo]
-
-
-@app.route("/Equipamentos")
-@login_required
-@set_endpoint
-@read_perm
-def Equipamentos():
-
-    importForm = IMPORTEPIForm()
-    form = CadastroEPIForm()
-    page = f"pages/epi/{request.endpoint.lower()}.html"
-    title = request.endpoint.capitalize()
-    database = get_models(request.endpoint.lower()).query.all()
-    DataTables = "js/DataTables/epi/EquipamentosTable.js"
-    url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
-    return render_template(
-        "index.html",
-        page=page,
-        title=title,
-        form=form,
-        importForm=importForm,
-        database=database,
-        format_currency_brl=format_currency_brl,
-        DataTables=DataTables,
-        url_image=url,
-    )
 
 
 @app.route("/SetEditarEPI/<item>", methods=["GET"])
@@ -234,63 +200,3 @@ def cadastrarEPI():
         pass
 
     return redirect(url_for("Equipamentos"))
-
-
-@app.route("/Fornecedores", methods=["GET"])
-@login_required
-@set_endpoint
-@read_perm
-def Fornecedores():
-
-    form = CadastroFonecedores()
-    DataTables = "js/DataTables/DataTables.js"
-    page = f"pages/epi/{request.endpoint.lower()}.html"
-    database = get_models(request.endpoint.lower()).query.all()
-    return render_template(
-        "index.html", page=page, form=form, DataTables=DataTables, database=database
-    )
-
-
-@app.route("/Marcas", methods=["GET"])
-@login_required
-@set_endpoint
-@read_perm
-def Marcas():
-
-    form = CadastroMarcas()
-    DataTables = "js/DataTables/DataTables.js"
-    page = f"pages/epi/{request.endpoint.lower()}.html"
-    database = get_models(request.endpoint.lower()).query.all()
-    return render_template(
-        "index.html", page=page, form=form, DataTables=DataTables, database=database
-    )
-
-
-@app.route("/Modelos", methods=["GET"])
-@login_required
-@set_endpoint
-@read_perm
-def Modelos():
-
-    form = CadastroModelos()
-    DataTables = "js/DataTables/DataTables.js"
-    page = f"pages/epi/{request.endpoint.lower()}.html"
-    database = get_models(request.endpoint.lower()).query.all()
-    return render_template(
-        "index.html", page=page, form=form, DataTables=DataTables, database=database
-    )
-
-
-@app.route("/Classes", methods=["GET"])
-@login_required
-@set_endpoint
-@read_perm
-def Classes():
-
-    form = CadastroClasses()
-    DataTables = "js/DataTables/DataTables.js"
-    page = f"pages/epi/{request.endpoint.lower()}.html"
-    database = get_models(request.endpoint.lower()).query.all()
-    return render_template(
-        "index.html", page=page, form=form, DataTables=DataTables, database=database
-    )

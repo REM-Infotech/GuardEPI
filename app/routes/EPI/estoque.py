@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 
 from app import app, db
 from app.decorators import create_perm, read_perm, set_endpoint
-from app.Forms import IMPORTEPIForm, InsertEstoqueForm
+from app.forms import IMPORTEPIForm, InsertEstoqueForm
 from app.misc import format_currency_brl
 from app.models import EstoqueEPI, EstoqueGrade, ProdutoEPI, RegistroEntradas
 

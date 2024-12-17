@@ -3,20 +3,20 @@ from typing import Type
 from flask_wtf import FlaskForm
 
 from app import db
-from app.Forms import (
+from app.forms import (
     CadastroCargo,
-    CadastroClasses,
+    CadastroCategorias,
     CadastroDepartamentos,
     CadastroEmpresa,
     CadastroEPIForm,
-    CadastroFonecedores,
+    CadastroFornecedores,
     CadastroFuncionario,
     CadastroGrade,
     CadastroMarcas,
     CadastroModelos,
     InsertEstoqueForm,
 )
-from app.Forms.edit import (
+from app.forms.edit import (
     EditCargo,
     EditDepartamentos,
     EditEmpresa,
@@ -78,10 +78,10 @@ def getformCad(form) -> Type[FlaskForm]:
         "cargo_bp.cargos": CadastroCargo(),
         "grade": CadastroGrade(),
         "funcionarios": CadastroFuncionario(),
-        "fornecedores": CadastroFonecedores(),
+        "fornecedores": CadastroFornecedores(),
         "marcas": CadastroMarcas(),
         "modelos": CadastroModelos(),
-        "classes": CadastroClasses(),
+        "classes": CadastroCategorias(),
     }
 
     return forms[form]
@@ -95,10 +95,10 @@ def getform(form: str) -> Type[FlaskForm]:
         "edit_empresas": EditEmpresa(),
         "edit_departamentos": EditDepartamentos(),
         "edit_cargos": EditCargo(),
-        "edit_fornecedores": CadastroFonecedores(),
+        "edit_fornecedores": CadastroFornecedores(),
         "edit_marcas": CadastroMarcas(),
         "edit_modelos": CadastroModelos(),
-        "edit_classes": CadastroClasses(),
+        "edit_classes": CadastroCategorias(),
         "edit_grade": CadastroGrade(),
     }
 

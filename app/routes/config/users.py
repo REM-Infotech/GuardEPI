@@ -3,7 +3,7 @@ from flask_login import login_required
 
 from app import app
 from app.decorators import read_perm, set_endpoint
-from app.Forms import IMPORTEPIForm
+from app.forms import IMPORTEPIForm
 from app.models.users import Users
 
 

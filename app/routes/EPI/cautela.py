@@ -17,7 +17,7 @@ from flask_login import login_required
 
 from app import app, db
 from app.decorators import create_perm, read_perm, set_endpoint
-from app.Forms import Cautela
+from app.forms import Cautela
 from app.misc import format_currency_brl, generate_pid
 from app.misc.generate_doc import (
     add_watermark,

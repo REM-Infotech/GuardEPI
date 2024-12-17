@@ -10,7 +10,7 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, Length
 
-from app.Forms.choices import (
+from app.forms.choices import (
     set_choices,
     set_choicesClasseEPI,
     set_choicesFornecedor,
@@ -106,13 +106,13 @@ class CadastroEPIForm(FlaskForm):
         self.tipo_epi.choices.extend(set_choicesClasseEPI())
 
 
-class CadastroClasses(FlaskForm):
+class CadastroCategorias(FlaskForm):
     classe = StringField("Classificação EPI", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)")
     submit = SubmitField("Cadastrar")
 
 
-class CadastroFonecedores(FlaskForm):
+class CadastroFornecedores(FlaskForm):
     fornecedor = StringField("Fornecedor", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)")
     submit = SubmitField("Cadastrar")

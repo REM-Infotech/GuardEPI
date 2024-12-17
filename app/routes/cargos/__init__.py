@@ -5,8 +5,8 @@ from flask import Blueprint, abort, render_template, request
 from flask_login import login_required
 
 from app.decorators import read_perm, set_endpoint
-from app.Forms.create import CadastroCargo
-from app.Forms.globals import IMPORTEPIForm
+from app.forms.create import CadastroCargo
+from app.forms.globals import IMPORTEPIForm
 from app.models.Funcionários import Cargos
 
 template_folder = path.join(Path(__file__).parent.resolve(), "templates")

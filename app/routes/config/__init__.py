@@ -6,7 +6,7 @@ from flask_login import login_required
 
 from app import app, db
 from app.decorators import create_perm, delete_perm, update_perm
-from app.Forms import (
+from app.forms import (
     AdmChangeEmail,
     AdmChangePassWord,
     ChangeEmail,

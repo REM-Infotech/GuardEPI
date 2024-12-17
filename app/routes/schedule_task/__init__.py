@@ -9,7 +9,7 @@ from flask_login import login_required
 from flask_mail import Mail, Message
 from flask_wtf import FlaskForm
 
-from ...Forms.schedule_task import TaskNotificacaoForm
+from ...forms.schedule_task import TaskNotificacaoForm
 
 template_folder = path.join(Path(__file__).parent.resolve(), "templates")
 schedule_bp = Blueprint(

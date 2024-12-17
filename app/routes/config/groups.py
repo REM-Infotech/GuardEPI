@@ -11,7 +11,7 @@ from app.decorators import (
     set_endpoint,
     update_perm,
 )
-from app.Forms import CreateGroup
+from app.forms import CreateGroup
 from app.models import Groups, Users
 
 

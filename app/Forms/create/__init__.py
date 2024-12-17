@@ -1,7 +1,7 @@
 from .epi import (
-    CadastroClasses,
+    CadastroCategorias,
     CadastroEPIForm,
-    CadastroFonecedores,
+    CadastroFornecedores,
     CadastroGrade,
     CadastroMarcas,
     CadastroModelos,
@@ -17,9 +17,9 @@ from .gestao import (
 from .user import CreateGroup, CreatePerm, CreateUserForm
 
 __all__ = [
-    CadastroClasses,
+    CadastroCategorias,
     CadastroEPIForm,
-    CadastroFonecedores,
+    CadastroFornecedores,
     CadastroGrade,
     CadastroMarcas,
     CadastroModelos,
