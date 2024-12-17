@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from flask import Blueprint, render_template, request
@@ -7,7 +8,7 @@ from app.decorators import read_perm, set_endpoint
 from app.forms import CadastroEPIForm, IMPORTEPIForm
 from app.misc import format_currency_brl
 
-template_folder = Path(__file__).parent.resolve().joinpath("templates")
+template_folder = os.path.join(Path(__file__).parent.resolve(), "templates")
 equip = Blueprint("equip", __name__, template_folder=template_folder)
 
 

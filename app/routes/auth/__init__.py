@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 
 from flask import (
@@ -16,7 +17,7 @@ from flask_login import current_user, login_user, logout_user
 from app.forms import LoginForm
 from app.models.users import Users
 
-template_folder = Path(__file__).parent.resolve().joinpath("templates")
+template_folder = os.path.join(Path(__file__).parent.resolve(), "templates")
 auth = Blueprint("auth", __name__, template_folder=template_folder)
 
 

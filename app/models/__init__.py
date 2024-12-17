@@ -1,9 +1,10 @@
 import json
-import os
+from pathlib import Path
 
 from dotenv import dotenv_values
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-from app import app, db
 from app.misc import generate_pid
 
 from .EPI import (
@@ -63,7 +64,7 @@ __all__ = (
 )
 
 
-def init_database() -> str:
+def init_database(app: Flask, db: SQLAlchemy) -> str:
     root_pw = generate_pid(10)
 
     with app.app_context():
@@ -80,7 +81,8 @@ def init_database() -> str:
 
         if usr is None:
             filename = "favicon.png"
-            path_img = os.path.join("app", "src", "assets", "img", filename)
+
+            path_img = Path(app.static_folder).joinpath("assets", "img", filename)
             with open(path_img, "rb") as file:
                 blob_doc = file.read()
             usr = Users(

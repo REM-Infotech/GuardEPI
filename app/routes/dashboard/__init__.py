@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from pathlib import Path
 
@@ -11,7 +12,7 @@ from ...decorators import set_endpoint
 from ...misc import format_currency_brl
 from ...models import RegistroEntradas, RegistroSaidas, RegistrosEPI
 
-template_folder = Path(__file__).parent.resolve().joinpath("templates")
+template_folder = os.path.join(Path(__file__).parent.resolve(), "templates")
 dash = Blueprint("dash", __name__, template_folder=template_folder)
 
 

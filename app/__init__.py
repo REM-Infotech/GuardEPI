@@ -62,7 +62,9 @@ def celery_init(app: Flask) -> Celery:
 def create_app():
     global app
 
-    template_folder = Path(__file__).parent.resolve().joinpath("templates").resolve()
+    template_folder = (
+        Path(__file__).parent.resolve().joinpath("templates_root").resolve()
+    )
     static_folder = Path(__file__).parent.resolve().joinpath("static").resolve()
     app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
 
@@ -116,4 +118,4 @@ def init_extensions(app: Flask):
 
         if not Path("is_init.txt").exists():
             with open("is_init.txt", "w") as f:
-                f.write(init_database())
+                f.write(init_database(app, db))

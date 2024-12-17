@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from flask import Blueprint, abort, render_template, request
@@ -8,7 +9,7 @@ from app.forms import CadastroGrade, IMPORTEPIForm
 from app.misc import format_currency_brl
 from app.models import GradeEPI
 
-folder_template = Path(__file__).parent.resolve().joinpath("templates")
+folder_template = os.path.join(Path(__file__).parent.resolve(), "templates")
 grade = Blueprint("grade", __name__, template_folder=folder_template)
 
 

@@ -37,7 +37,7 @@ from app.models import (
     RegistrosEPI,
 )
 
-template_folder = Path(__file__).parent.resolve().joinpath("templates")
+template_folder = os.path.join(Path(__file__).parent.resolve(), "templates")
 cautelas = Blueprint("cautelas", __name__, template_folder=template_folder)
 
 
