@@ -6,9 +6,9 @@ from flask import Blueprint, abort, jsonify, make_response, render_template, req
 from flask_login import login_required
 from sqlalchemy import extract
 
-from ..decorators import set_endpoint
-from ..misc import format_currency_brl
-from ..models import RegistroEntradas, RegistroSaidas, RegistrosEPI
+from ...decorators import set_endpoint
+from ...misc import format_currency_brl
+from ...models import RegistroEntradas, RegistroSaidas, RegistrosEPI
 
 dash = Blueprint("dash", __name__, template_folder="templates", static_folder="static")
 

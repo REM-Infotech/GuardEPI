@@ -1,4 +1,3 @@
-import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -63,8 +62,9 @@ def celery_init(app: Flask) -> Celery:
 def create_app():
     global app
 
-    files_render = os.path.join(os.getcwd(), "app", "src")
-    app = Flask(__name__, template_folder=files_render, static_folder=files_render)
+    template_folder = Path(__file__).joinpath("templates")
+    static_folder = Path(__file__).joinpath("static")
+    app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
 
     config_obj = Configurator().get_configurator()
 

@@ -1,10 +1,9 @@
-from flask import Flask
 from deep_translator import GoogleTranslator
-from flask import redirect, render_template, url_for
+from flask import Flask, redirect, render_template, url_for
 from werkzeug.exceptions import HTTPException
 
-from app.routes.dashboard import dash
 from app.routes.cargos import cargo
+from app.routes.dashboard import dash
 from app.routes.EPI import (
     categoria,
     cautelas,
