@@ -1,6 +1,6 @@
 import json
-
 from pathlib import Path
+
 from flask import (
     Blueprint,
     abort,
@@ -13,7 +13,6 @@ from flask import (
 )
 from flask_login import current_user, login_user, logout_user
 
-from app import app
 from app.forms import LoginForm
 from app.models.users import Users
 
@@ -26,7 +25,7 @@ def index():
     if not current_user.is_authenticated:
         return redirect(url_for("dash.dashboard"))
 
-    return redirect(url_for("login"))
+    return redirect(url_for("auth.login"))
 
 
 @auth.route("/login", methods=["GET", "POST"])
@@ -68,5 +67,5 @@ def login():
 def logout():
     logout_user()
     flash("Sessão encerrada", "info")
-    location = url_for("login")
+    location = url_for("auth.login")
     return redirect(location)

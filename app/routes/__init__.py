@@ -1,12 +1,12 @@
 from deep_translator import GoogleTranslator
 from flask import (
     Flask,
-    redirect,
-    render_template,
-    url_for,
-    send_from_directory,
     abort,
     make_response,
+    redirect,
+    render_template,
+    send_from_directory,
+    url_for,
 )
 from werkzeug.exceptions import HTTPException
 
