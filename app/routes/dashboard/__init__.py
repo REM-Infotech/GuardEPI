@@ -1,4 +1,5 @@
 from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
 import pytz
@@ -10,7 +11,8 @@ from ...decorators import set_endpoint
 from ...misc import format_currency_brl
 from ...models import RegistroEntradas, RegistroSaidas, RegistrosEPI
 
-dash = Blueprint("dash", __name__, template_folder="templates", static_folder="static")
+template_folder = Path(__file__).parent.resolve().joinpath("templates")
+dash = Blueprint("dash", __name__, template_folder=template_folder)
 
 
 @dash.route("/dashboard", methods=["GET"])
