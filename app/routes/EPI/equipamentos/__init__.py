@@ -6,7 +6,7 @@ from flask_login import login_required
 from app.decorators import read_perm, set_endpoint
 from app.forms import CadastroEPIForm, IMPORTEPIForm
 from app.misc import format_currency_brl
-from app.models import get_models
+
 
 template_folder = Path(__file__).joinpath("templates")
 equip = Blueprint("equip", __name__, template_folder=template_folder)
@@ -22,7 +22,7 @@ def Equipamentos():
     form = CadastroEPIForm()
     page = f"pages/epi/{request.endpoint.lower()}.html"
     title = request.endpoint.capitalize()
-    database = get_models(request.endpoint.lower()).query.all()
+    database = []
     DataTables = "js/DataTables/epi/EquipamentosTable.js"
     url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
     return render_template(
