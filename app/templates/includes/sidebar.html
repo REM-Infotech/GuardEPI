@@ -23,12 +23,12 @@
             <div class="collapse" id="ProdutosCollapse" aria-labelledby="headingOne"
               data-bs-parent="#sidenavAccordionPages">
               <nav class="sb-sidenav-menu-nested nav">
-                <a class="nav-link" href="{{ url_for('equip.Equipamentos') }}">Equipamentos</a>
-                <a class="nav-link" href="{{ url_for('grade.Grade') }}">Grades</a>
-                <a class="nav-link" href="{{ url_for('categoria.categorias') }}">Classes</a>
-                <a class="nav-link" href="{{ url_for('fornecedor.fornecedores') }}">Fornecedores</a>
-                <a class="nav-link" href="{{ url_for('marca.marcas') }}">Marcas</a>
-                <a class="nav-link" href="{{ url_for('modelo.modelos') }}">Modelos</a>
+                <a class="nav-link" href="{{ url_for('epi.Equipamentos') }}">Equipamentos</a>
+                <a class="nav-link" href="{{ url_for('epi.Grade') }}">Grades</a>
+                <a class="nav-link" href="{{ url_for('epi.categorias') }}">Classes</a>
+                <a class="nav-link" href="{{ url_for('epi.fornecedores') }}">Fornecedores</a>
+                <a class="nav-link" href="{{ url_for('epi.marcas') }}">Marcas</a>
+                <a class="nav-link" href="{{ url_for('epi.modelos') }}">Modelos</a>
               </nav>
             </div>
             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesEstoque"
@@ -39,12 +39,12 @@
             <div class="collapse" id="pagesEstoque" aria-labelledby="headingOne"
               data-bs-parent="#sidenavAccordionPages">
               <nav class="sb-sidenav-menu-nested nav">
-                <a class="nav-link" href="{{ url_for('estoque.Estoque') }}">Equipamentos</a>
-                <a class="nav-link" href="{{ url_for('estoque.Estoque_Grade') }}">Grades</a>
-                <a class="nav-link" href="{{ url_for('estoque.Entradas') }}">Entradas</a>
+                <a class="nav-link" href="{{ url_for('epi.Estoque') }}">Equipamentos</a>
+                <a class="nav-link" href="{{ url_for('epi.Estoque_Grade') }}">Grades</a>
+                <a class="nav-link" href="{{ url_for('epi.Entradas') }}">Entradas</a>
               </nav>
             </div>
-            {# <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesLiberacoes"
+            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesLiberacoes"
               aria-expanded="false" aria-controls="pagesLiberacoes">
               Liberações
               <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -52,10 +52,10 @@
             <div class="collapse" id="pagesLiberacoes" aria-labelledby="headingOne"
               data-bs-parent="#sidenavAccordionPages">
               <nav class="sb-sidenav-menu-nested nav">
-                <a class="nav-link" href="{{ url_for('cautelas.Cautelas') }}">Cautelas</a>
-                <a class="nav-link" href="{{ url_for('cautelas.Registro_Saidas') }}">Registro Saídas</a>
+                <a class="nav-link" href="{{ url_for('epi.Cautelas') }}">Cautelas</a>
+                <a class="nav-link" href="{{ url_for('epi.Registro_Saidas') }}">Registro Saídas</a>
               </nav>
-            </div> #}
+            </div>
           </nav>
         </div>
 
