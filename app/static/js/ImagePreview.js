@@ -4,11 +4,9 @@ function previewImage(e, id_element) {
 
   reader.onload = function (e) {
     document.getElementById(id_element).src = e.target.result;
-  }
+  };
 
   reader.readAsDataURL(file);
 }
 
-function teste() {
-
-}
+function teste() {}

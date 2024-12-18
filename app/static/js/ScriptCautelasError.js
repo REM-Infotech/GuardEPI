@@ -1,5 +1,4 @@
-$('#modalLoading').modal('hide');
+$("#modalLoading").modal("hide");
 setTimeout(() => {
-
-  $('#modalMessage').modal('show');
+  $("#modalMessage").modal("show");
 }, 1000);

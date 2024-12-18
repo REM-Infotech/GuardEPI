@@ -1,1 +1,1 @@
-$('#modalLoading').modal('hide');
+$("#modalLoading").modal("hide");
