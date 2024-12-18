@@ -9,21 +9,11 @@ from flask import (
     url_for,
 )
 from werkzeug.exceptions import HTTPException
-
-from app.routes.auth import auth
-from app.routes.corporativo import corp
-from app.routes.dashboard import dash
-from app.routes.EPI import (
-    categoria,
-    cautelas,
-    equip,
-    estoque,
-    fornecedor,
-    grade,
-    marca,
-    modelo,
-)
-from app.routes.serving import serve
+from .auth import auth
+from .corporativo import corp
+from .dashboard import dash
+from .serving import serve
+from .epi import epi
 
 
 def register_routes(app: Flask):
@@ -34,14 +24,7 @@ def register_routes(app: Flask):
             auth,
             dash,
             corp,
-            categoria,
-            cautelas,
-            equip,
-            estoque,
-            fornecedor,
-            marca,
-            modelo,
-            grade,
+            epi,
             serve,
         ]
 
