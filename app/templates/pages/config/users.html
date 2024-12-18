@@ -1,195 +1,130 @@
 {% include 'pages/forms/importform.html' %}
 <div class="container p-4">
-    <div class="card rounded"
-         style="background-color: rgba(255, 255, 255, 0.822)">
-        <nav>
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link active text-black"
-                        id="nav_table_users-tab"
-                        data-bs-toggle="tab"
-                        data-bs-target="#nav_table_users"
-                        type="button"
-                        role="tab"
-                        aria-controls="nav_table_users"
-                        aria-selected="true">Usuários Ativos</button>
-                <button class="nav-link text-black"
-                        id="nav-cad_user-tab"
-                        data-bs-toggle="tab"
-                        data-bs-target="#nav-cad_user"
-                        type="button"
-                        role="tab"
-                        aria-controls="nav-cad_user"
-                        aria-selected="false"
-                        hx-get="{{ url_for('caduser_end') }}"
-                        hx-trigger="click"
-                        hx-target="#CreateUserForm"
-                        hx-indicator="#indicator">
-                    Cadastro de Usuário
-                    <span id="indicator"
-                          class="htmx-indicator spinner-border spinner-border-sm"
-                          aria-hidden="true"></span>
-                </button>
-                <button class="nav-link text-black"
-                        id="nav_changemail-tab"
-                        data-bs-toggle="tab"
-                        data-bs-target="#nav_changemail"
-                        type="button"
-                        role="tab"
-                        aria-controls="nav_changemail"
-                        aria-selected="false"
-                        hx-get="{{ url_for('changemail_end') }}"
-                        hx-trigger="click"
-                        hx-target="#AdmChangeMailForm"
-                        hx-indicator="#mailindicator">
-                    Alteração de E-mail
-                    <span id="mailindicator"
-                          class="htmx-indicator spinner-border spinner-border-sm"
-                          aria-hidden="true"></span>
-                </button>
-                <button class="nav-link text-black"
-                        id="nav_changepw-tab"
-                        data-bs-toggle="tab"
-                        data-bs-target="#nav_changepw"
-                        type="button"
-                        role="tab"
-                        aria-controls="nav_changepw"
-                        aria-selected="false"
-                        hx-get="{{ url_for('changepw_end') }}"
-                        hx-trigger="click"
-                        hx-target="#AdmChangePasswordForm"
-                        hx-indicator="#pwindicator">
-                    Alteração de senha
-                    <span id="pwindicator"
-                          class="htmx-indicator spinner-border spinner-border-sm"
-                          aria-hidden="true"></span>
-                </button>
-                {% if session['tipo-usuario'] == "super_admin" %}
-                    <button class="nav-link text-black"
-                            id="clientetable-tab"
-                            data-bs-toggle="tab"
-                            data-bs-target="#clientetable"
-                            type="button"
-                            role="tab"
-                            aria-controls="clientetable"
-                            aria-selected="false"
-                            hx-get="{{ url_for('clientetable_end') }}"
-                            hx-trigger="click"
-                            hx-target="#ClientesTable"
-                            hx-indicator="#clindicator">
-                        Tabela de Clientes
-                        <span id="clindicator"
-                              class="htmx-indicator spinner-border spinner-border-sm"
-                              aria-hidden="true"></span>
-                    </button>
-                {% endif %}
-            </nav>
-            <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active text-white p-3"
-                     id="nav_table_users"
-                     role="tabpanel"
-                     aria-labelledby="nav_table_users-tab"
-                     tabindex="0">
-                    {% if session['tipo-usuario'] == "super_admin" %}
-                        <div class="card-header bg-white rounded">
-                            <a href="#!" class="btn btn-primary btn-icon-split mb-3">
-                                <span class="icon text-white-50">
-                                    <i class="fa-solid fa-file-csv"></i>
-                                </span>
-                                <span class="text">Gerar Relatório</span>
-                            </a>
-                            <button type="button"
-                                    class="btn btn-warning btn-icon-split"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#importarquivo">
-                                <span class="icon text-white-50">
-                                    <i class="fa-solid fa-download"></i>
-                                </span>
-                                <span class="text">Import em lotes</span>
-                            </button>
-                        </div>
-                    {% endif %}
-                    <div class="card table-responsive-xxl">
-                        <table class="table table-striped rounded">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nome</th>
-                                    <th scope="col">Login</th>
-                                    <th scope="col">Grupos</th>
-                                    <th scope="col">E-mail</th>
-                                    <th scope="col">Último Login</th>
-                                    <th scope="col">ID de Sessão</th>
-                                    <th scope="col">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% if database %}
-                                    {% for item in database %}
-                                        <tr>
-                                            <th scope="row">{{ item.id }}</th>
-                                            <td>{{ item.nome_usuario }}</td>
-                                            <td>{{ item.login }}</td>
-                                            <td>{{ item.grupos.replace('[', '').replace(']', '') }}</td>
-                                            <td>{{ item.email }}</td>
-                                            <td>{{ item.login_time.strftime("%d/%m/%Y %H:%M:%S") }}</td>
-                                            {% if item.login_id %}
-                                                <td>{{ item.login_id }}</td>
-                                            {% else %}
-                                                <td>Sem dados</td>
-                                            {% endif %}
-                                            <td>
-                                                {% if item.login != session['login'] %}
-                                                    <button type="button"
-                                                            id="delete_user"
-                                                            class="btn btn-danger btn-icon-split btn-sm"
-                                                            hx-get="{{ url_for('delete_user', usuario = item.login) }}"
-                                                            hx-target="#info_result"
-                                                            hx-trigger="click">
-                                                        <span class="icon text-white-50">
-                                                            <i class="fa-solid fa-trash"></i>
-                                                        </span>
-                                                        <span class="text">Deletar</span>
-                                                    </button>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% endif %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="tab-pane fade text-white p-3"
-                     id="nav-cad_user"
-                     role="tabpanel"
-                     aria-labelledby="nav-cad_user-tab"
-                     tabindex="0">
-                    <div class="card" id="CreateUserForm">...</div>
-                </div>
-                <div class="tab-pane fade text-white p-3"
-                     id="nav_changemail"
-                     role="tabpanel"
-                     aria-labelledby="nav_changemail-tab"
-                     tabindex="0">
-                    <div class="card" id="AdmChangeMailForm">...</div>
-                </div>
-                <div class="tab-pane fade text-white p-3"
-                     id="nav_changepw"
-                     role="tabpanel"
-                     aria-labelledby="nav_changepw-tab"
-                     tabindex="0">
-                    <div class="card" id="AdmChangePasswordForm">...</div>
-                </div>
-                {% if session['tipo-usuario'] == "super_admin" %}
-                    <div class="tab-pane fade text-white p-3"
-                         id="clientetable"
-                         role="tabpanel"
-                         aria-labelledby="clientetable-tab"
-                         tabindex="0">
-                        <div class="card" id="ClientesTable">...</div>
-                    </div>
-                {% endif %}
-            </div>
+  <div class="card rounded custom-card">
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active text-black" id="nav_table_users-tab" data-bs-toggle="tab"
+          data-bs-target="#nav_table_users" type="button" role="tab" aria-controls="nav_table_users"
+          aria-selected="true">Usuários Ativos</button>
+        <button class="nav-link text-black" id="nav-cad_user-tab" data-bs-toggle="tab" data-bs-target="#nav-cad_user"
+          type="button" role="tab" aria-controls="nav-cad_user" aria-selected="false"
+          hx-get="{{ url_for('caduser_end') }}" hx-trigger="click" hx-target="#CreateUserForm"
+          hx-indicator="#indicator">
+          Cadastro de Usuário
+          <span id="indicator" class="htmx-indicator spinner-border spinner-border-sm" aria-hidden="true"></span>
+        </button>
+        <button class="nav-link text-black" id="nav_changemail-tab" data-bs-toggle="tab"
+          data-bs-target="#nav_changemail" type="button" role="tab" aria-controls="nav_changemail" aria-selected="false"
+          hx-get="{{ url_for('changemail_end') }}" hx-trigger="click" hx-target="#AdmChangeMailForm"
+          hx-indicator="#mailindicator">
+          Alteração de E-mail
+          <span id="mailindicator" class="htmx-indicator spinner-border spinner-border-sm" aria-hidden="true"></span>
+        </button>
+        <button class="nav-link text-black" id="nav_changepw-tab" data-bs-toggle="tab" data-bs-target="#nav_changepw"
+          type="button" role="tab" aria-controls="nav_changepw" aria-selected="false"
+          hx-get="{{ url_for('changepw_end') }}" hx-trigger="click" hx-target="#AdmChangePasswordForm"
+          hx-indicator="#pwindicator">
+          Alteração de senha
+          <span id="pwindicator" class="htmx-indicator spinner-border spinner-border-sm" aria-hidden="true"></span>
+        </button>
+        {% if session['tipo-usuario'] == "super_admin" %}
+        <button class="nav-link text-black" id="clientetable-tab" data-bs-toggle="tab" data-bs-target="#clientetable"
+          type="button" role="tab" aria-controls="clientetable" aria-selected="false"
+          hx-get="{{ url_for('clientetable_end') }}" hx-trigger="click" hx-target="#ClientesTable"
+          hx-indicator="#clindicator">
+          Tabela de Clientes
+          <span id="clindicator" class="htmx-indicator spinner-border spinner-border-sm" aria-hidden="true"></span>
+        </button>
+        {% endif %}
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active text-white p-3" id="nav_table_users" role="tabpanel"
+        aria-labelledby="nav_table_users-tab" tabindex="0">
+        {% if session['tipo-usuario'] == "super_admin" %}
+        <div class="card-header bg-white rounded">
+          <a href="#!" class="btn btn-primary btn-icon-split mb-3">
+            <span class="icon text-white-50">
+              <i class="fa-solid fa-file-csv"></i>
+            </span>
+            <span class="text">Gerar Relatório</span>
+          </a>
+          <button type="button" class="btn btn-warning btn-icon-split" data-bs-toggle="modal"
+            data-bs-target="#importarquivo">
+            <span class="icon text-white-50">
+              <i class="fa-solid fa-download"></i>
+            </span>
+            <span class="text">Import em lotes</span>
+          </button>
         </div>
+        {% endif %}
+        <div class="card table-responsive-xxl">
+          <table class="table table-striped rounded">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Login</th>
+                <th scope="col">Grupos</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Último Login</th>
+                <th scope="col">ID de Sessão</th>
+                <th scope="col">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if database %}
+              {% for item in database %}
+              <tr>
+                <th scope="row">{{ item.id }}</th>
+                <td>{{ item.nome_usuario }}</td>
+                <td>{{ item.login }}</td>
+                <td>{{ item.grupos.replace('[', '').replace(']', '') }}</td>
+                <td>{{ item.email }}</td>
+                <td>{{ item.login_time.strftime("%d/%m/%Y %H:%M:%S") }}</td>
+                {% if item.login_id %}
+                <td>{{ item.login_id }}</td>
+                {% else %}
+                <td>Sem dados</td>
+                {% endif %}
+                <td>
+                  {% if item.login != session['login'] %}
+                  <button type="button" id="delete_user" class="btn btn-danger btn-icon-split btn-sm"
+                    hx-get="{{ url_for('delete_user', usuario = item.login) }}" hx-target="#info_result"
+                    hx-trigger="click">
+                    <span class="icon text-white-50">
+                      <i class="fa-solid fa-trash"></i>
+                    </span>
+                    <span class="text">Deletar</span>
+                  </button>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="tab-pane fade text-white p-3" id="nav-cad_user" role="tabpanel" aria-labelledby="nav-cad_user-tab"
+        tabindex="0">
+        <div class="card" id="CreateUserForm">...</div>
+      </div>
+      <div class="tab-pane fade text-white p-3" id="nav_changemail" role="tabpanel" aria-labelledby="nav_changemail-tab"
+        tabindex="0">
+        <div class="card" id="AdmChangeMailForm">...</div>
+      </div>
+      <div class="tab-pane fade text-white p-3" id="nav_changepw" role="tabpanel" aria-labelledby="nav_changepw-tab"
+        tabindex="0">
+        <div class="card" id="AdmChangePasswordForm">...</div>
+      </div>
+      {% if session['tipo-usuario'] == "super_admin" %}
+      <div class="tab-pane fade text-white p-3" id="clientetable" role="tabpanel" aria-labelledby="clientetable-tab"
+        tabindex="0">
+        <div class="card" id="ClientesTable">...</div>
+      </div>
+      {% endif %}
     </div>
-    <div id="info_result"></div>
+  </div>
+</div>
+<div id="info_result"></div>
+</div>
