@@ -39,7 +39,7 @@ def Equipamentos():
 
 @epi.route("/equipamentos/cadastro", methods=["GET", "POST"])
 @login_required
-def cadastro():
+def cadastro_equipamento():
 
     form = CadastroEPIForm()
 
@@ -79,13 +79,13 @@ def cadastro():
         flash("EPI cadastrado com sucesso!", "success")
         return redirect(url_for("equip.Equipamentos"))
 
-    page = "form.html"
+    page = "forms/equipamento_form.html"
     return render_template("index.html", page=page, form=form)
 
 
 @epi.route("/equipamentos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
-def editar(id: int):
+def editar_equipamento(id: int):
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
     epi = db.session.query(ProdutoEPI).filter_by(id=id).first()
@@ -174,12 +174,12 @@ def editar(id: int):
         flash("Edições Salvas con sucesso!", "success")
         return redirect(url_for("equip.Equipamentos"))
 
-    page = "form.html"
+    page = "forms/equipamento_form.html"
     return render_template("index.html", page=page, form=form, url_image=url_image)
 
 
 @epi.route("/equipamentos/deletar/<int:id>")
-def deletar(id: int):
+def deletar_equipamento(id: int):
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
     epi = db.session.query(ProdutoEPI).filter_by(id=id).first()
@@ -187,5 +187,6 @@ def deletar(id: int):
     db.session.delete(epi)
     db.session.commit()
 
-    flash("EPI deletado com sucesso!", "success")
-    redirect(url_for("equip.Equipamentos"))
+    template = "includes/show.html"
+    message = "Informação deletada com sucesso!"
+    return render_template(template, message=message)

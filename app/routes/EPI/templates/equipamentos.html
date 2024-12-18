@@ -3,26 +3,26 @@
   <div class="mt-4 card mb-4">
 
     <div class="card-header">
-      <h2 class="m-2">Equipamentos</h1>
-        <hr>
-        <a type="button" class="btn btn-success mb-3" href="{{ url_for('equip.cadastro') }}">
-          <span class="icon text-white-50">
-            <i class="fa-solid fa-plus"></i>
-          </span>
-          <span class="text">Cadastrar</span>
-        </a>
-        <button type="button" class="btn btn-warning mb-3" data-bs-toggle="modal" data-bs-target="#importarquivo">
-          <span class="icon text-white-50">
-            <i class="fa-solid fa-file-import"></i>
-          </span>
-          <span class="text">Import em lotes</span>
-        </button>
-        <a href="#!" class="btn btn-primary btn-icon-split mb-3">
-          <span class="icon text-white-50">
-            <i class="fa-solid fa-file-csv"></i>
-          </span>
-          <span class="text">Gerar Relatório</span>
-        </a>
+      <h2 class="m-2">Equipamentos</h2>
+      <hr>
+      <a type="button" class="btn btn-success mb-3" href="{{ url_for('epi.cadastro_equipamento') }}">
+        <span class="icon text-white-50">
+          <i class="fa-solid fa-plus"></i>
+        </span>
+        <span class="text">Cadastrar</span>
+      </a>
+      <button type="button" class="btn btn-warning mb-3" data-bs-toggle="modal" data-bs-target="#importarquivo">
+        <span class="icon text-white-50">
+          <i class="fa-solid fa-file-import"></i>
+        </span>
+        <span class="text">Import em lotes</span>
+      </button>
+      <a href="#!" class="btn btn-primary btn-icon-split mb-3">
+        <span class="icon text-white-50">
+          <i class="fa-solid fa-file-csv"></i>
+        </span>
+        <span class="text">Gerar Relatório</span>
+      </a>
     </div>
 
     <div class="card-body table-responsive">
@@ -47,26 +47,20 @@
             <td>{{ format_currency_brl(item.valor_unitario).replace("\\xa", "") }}</td>
             <td>{{ item.marca }}</td>
             <td>
-              <a type="button" class="btn btn-warning btn-sm m-1" href="{{ url_for('equip.editar', id=item.id) }}">
+              <a type="button" class="btn btn-warning btn-sm m-1"
+                href="{{ url_for('epi.editar_equipamento', id=item.id) }}">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-pen"></i>
                 </span>
                 <span class="text">Editar</span>
               </a>
-              {#
               <button type="button" id="DeleteEpiButton" class="btn btn-danger btn-sm mb-2"
-                hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}" hx-trigger="click"
-                hx-target="#results">
+                hx-post="{{ url_for('epi.deletar_equipamento',id=item.id) }}" hx-trigger="click" hx-target="#results">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-trash"></i>
                 </span>
                 <span class="text">Deletar</span>
               </button>
-
-              <button type="button" id="EditEpiButton" class="btn btn-warning btn-sm mb-2"
-                hx-get="{{ url_for('SetEditarEPI', item = item.id) }}" hx-target="#results" onclick="showLoad()">
-
-              </button> #}
             </td>
           </tr>
           {% endfor %}

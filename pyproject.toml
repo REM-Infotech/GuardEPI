@@ -33,6 +33,7 @@ clear = "^2.0.0"
 celery = "^5.4.0"
 psycopg2 = "^2.9.10"
 redis = "^5.2.0"
+djlint = "^1.36.3"
 
 
 [tool.poetry.group.dev.dependencies]

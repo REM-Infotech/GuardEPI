@@ -20,7 +20,7 @@ def categorias():
 
 @epi.route("/categorias/cadastrar", methods=["GET", "POST"])
 @login_required
-def cadastrar():
+def cadastrar_categoria():
     form = CadastroCategorias()
     if form.validate_on_submit():
         # Logic to add category to the database
@@ -30,7 +30,7 @@ def cadastrar():
 
 @epi.route("/categorias/editar/<int:id>", methods=["GET", "POST"])
 @login_required
-def editar(id):
+def editar_categoria(id):
     form = CadastroCategorias()
     if form.validate_on_submit():
         # Logic to update category in the database
@@ -41,7 +41,7 @@ def editar(id):
 
 @epi.route("/categorias/deletar/<int:id>", methods=["POST"])
 @login_required
-def deletar(id: int):
+def deletar_categoria(id: int):
     # Logic to delete category from the database
     pass
     return redirect(url_for("categoria.categorias"))
