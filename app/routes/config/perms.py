@@ -6,7 +6,7 @@ from flask import flash, redirect, render_template, request, session, url_for
 from flask_login import login_required
 
 from app import app, db
-from app.decorators import create_perm, read_perm, set_endpoint
+from app.decorators import create_perm
 from app.forms import CreatePerm
 from app.models import Permissions
 
@@ -71,8 +71,6 @@ def remove_itens_perms():
 
 @app.route("/Permissoes", methods=["GET"])
 @login_required
-@set_endpoint
-@read_perm
 def Permissoes():
 
     form = CreatePerm()

@@ -3,7 +3,6 @@ from pathlib import Path
 from flask import Blueprint, abort, render_template
 from flask_login import login_required
 
-from app.decorators import read_perm, set_endpoint
 from app.forms import CadastroGrade
 from app.misc import format_currency_brl
 from app.models import GradeEPI
@@ -14,13 +13,11 @@ grade = Blueprint("grade", __name__, template_folder=folder_template)
 
 @grade.route("/Grade")
 @login_required
-@set_endpoint
-@read_perm
 def Grade():
     try:
         title = "Grades"
         page = "grades.html"
-        DataTables = "js/DataTables/epi/grade.js"
+
         form = CadastroGrade()
 
         database = GradeEPI.query.all()
@@ -29,7 +26,6 @@ def Grade():
             page=page,
             title=title,
             database=database,
-            DataTables=DataTables,
             form=form,
             format_currency_brl=format_currency_brl,
         )

@@ -4,21 +4,13 @@ from flask import abort, flash, redirect, render_template, request, session, url
 from flask_login import login_required
 
 from app import app, db
-from app.decorators import (
-    create_perm,
-    delete_perm,
-    read_perm,
-    set_endpoint,
-    update_perm,
-)
+from app.decorators import create_perm, delete_perm, update_perm
 from app.forms import CreateGroup
 from app.models import Groups, Users
 
 
 @app.route("/groups", methods=["GET"])
 @login_required
-@set_endpoint
-@read_perm
 def groups():
     try:
         session["name_group"] = ""

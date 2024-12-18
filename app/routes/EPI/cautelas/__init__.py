@@ -18,7 +18,7 @@ from flask import (
 from flask_login import login_required
 
 from app import app, db
-from app.decorators import create_perm, read_perm, set_endpoint
+from app.decorators import create_perm
 from app.forms import Cautela
 from app.misc import format_currency_brl, generate_pid
 from app.misc.generate_doc import (
@@ -106,34 +106,29 @@ def remove_itens():
 
 @cautelas.route("/Registro_Saidas", methods=["GET"])
 @login_required
-@set_endpoint
-@read_perm
 def Registro_Saidas():
 
     page = "registro_saidas.html"
     database = RegistroSaidas.query.all()
     title = request.endpoint.split(".")[1].capitalize().replace("_", " ")
-    DataTables = "js/DataTables/DataTables.js"
+
     return render_template(
         "index.html",
         page=page,
         title=title,
         database=database,
-        DataTables=DataTables,
         format_currency_brl=format_currency_brl,
     )
 
 
 @cautelas.route("/Cautelas", methods=["GET"])
 @login_required
-@set_endpoint
-@read_perm
 def Cautelas():
 
     page = "cautelas.html"
     database = RegistrosEPI.query.all()
     title = request.endpoint.split(".")[1].capitalize()
-    DataTables = "js/DataTables/epi/CautelasTable.js"
+
     form = Cautela()
     session["itens_lista_cautela"] = []
     return render_template(
@@ -141,7 +136,6 @@ def Cautelas():
         page=page,
         title=title,
         database=database,
-        DataTables=DataTables,
         form=form,
     )
 

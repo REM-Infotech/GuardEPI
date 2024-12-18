@@ -6,7 +6,7 @@ from flask_login import login_required
 from werkzeug.utils import secure_filename
 
 from app import app, db
-from app.decorators import create_perm, read_perm, set_endpoint
+from app.decorators import create_perm
 from app.forms import InsertEstoqueForm
 from app.misc import format_currency_brl
 from app.models import EstoqueEPI, EstoqueGrade, ProdutoEPI, RegistroEntradas
@@ -17,13 +17,10 @@ estoque = Blueprint("estoque", __name__, template_folder=template_folder)
 
 @estoque.route("/Estoque")
 @login_required
-@set_endpoint
-@read_perm
 def Estoque():
     try:
         database = EstoqueEPI.query.all()
         title = request.endpoint.split(".")[1].capitalize()
-        DataTables = "js/DataTables/epi/EstoqueTable.js"
         page = "estoque.html"
         form = InsertEstoqueForm()
 
@@ -32,7 +29,6 @@ def Estoque():
             page=page,
             title=title,
             database=database,
-            DataTables=DataTables,
             form=form,
             format_currency_brl=format_currency_brl,
         )
@@ -45,18 +41,15 @@ def Estoque():
 
 @estoque.route("/Estoque_Grade", methods=["GET"])
 @login_required
-@set_endpoint
-@read_perm
 def Estoque_Grade():
     try:
         database = EstoqueGrade.query.all()
-        DataTables = f"js/DataTables/epi/{request.endpoint.lower()}.js"
+
         page = "estoque_grade.html"
 
         return render_template(
             "index.html",
             page=page,
-            DataTables=DataTables,
             database=database,
         )
     except Exception as e:
@@ -65,20 +58,16 @@ def Estoque_Grade():
 
 @estoque.route("/Entradas")
 @login_required
-@set_endpoint
-@read_perm
 def Entradas():
     title = "Relação de Entradas EPI"
     page = "entradas.html"
 
     database = RegistroEntradas.query.all()
-    DataTables = "js/DataTables/epi/entradas.js"
     return render_template(
         "index.html",
         page=page,
         title=title,
         database=database,
-        DataTables=DataTables,
         format_currency_brl=format_currency_brl,
     )
 

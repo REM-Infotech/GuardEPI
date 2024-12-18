@@ -29,7 +29,6 @@ def Equipamentos():
     page = "equipamentos.html"
     title = request.endpoint.split(".")[1].capitalize()
     database = ProdutoEPI.query.all()
-    DataTables = "js/DataTables/epi/EquipamentosTable.js"
     url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
     return render_template(
         "index.html",
@@ -37,7 +36,6 @@ def Equipamentos():
         title=title,
         database=database,
         format_currency_brl=format_currency_brl,
-        DataTables=DataTables,
         url_image=url,
     )
 

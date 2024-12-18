@@ -1,10 +1,10 @@
-from . import corp
-
 from flask import abort, render_template
 from flask_login import login_required
 
 from app.forms import CadastroFuncionario
 from app.models.Funcionários import Funcionarios
+
+from . import corp
 
 
 @corp.get("/funcionarios")
@@ -12,7 +12,7 @@ from app.models.Funcionários import Funcionarios
 def funcionarios():
     try:
 
-        page = ""
+        page = "funcionarios.html"
         database = Funcionarios.query.all()
         return render_template(
             "index.html",

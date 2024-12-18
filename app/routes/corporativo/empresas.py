@@ -1,9 +1,10 @@
 from flask import abort, render_template
 from flask_login import login_required
 
-from . import corp
 from app.forms.create import CadastroEmpresa
 from app.models.Funcionários import Empresa
+
+from . import corp
 
 
 @corp.route("/Empresas", methods=["GET"])
@@ -13,13 +14,12 @@ def Empresas():
 
         form = CadastroEmpresa()
         database = Empresa.query.all()
-        DataTables = ""
-        page = ""
+
+        page = "empresas.html"
         return render_template(
             "index.html",
             page=page,
             form=form,
-            DataTables=DataTables,
             database=database,
         )
 
