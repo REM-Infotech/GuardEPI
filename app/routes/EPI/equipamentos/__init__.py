@@ -174,11 +174,9 @@ def editar(id: int):
 
                 setattr(epi, key, value)
 
-        epi = ProdutoEPI(**to_add)
-        db.session.add(epi)
         db.session.commit()
 
-        flash("EPI cadastrado com sucesso!", "success")
+        flash("Edições Salvas con sucesso!", "success")
         return redirect(url_for("equip.Equipamentos"))
 
     page = "form.html"
