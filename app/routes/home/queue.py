@@ -2,13 +2,11 @@ import os
 from typing import Type
 
 import pandas as pd
-from flask import abort, flash, make_response, redirect, send_file, url_for
+from flask import make_response, send_file
 from flask_login import login_required
 from sqlalchemy import LargeBinary
-from werkzeug.utils import secure_filename
 
 from app import app, db
-from app.forms.globals import IMPORTEPIForm
 from app.models import (
     Cargos,
     Departamento,
@@ -67,58 +65,58 @@ def gen_model(model: str):
     return response
 
 
-@app.route("/import_lotes/<tipo>", methods=["POST"])
-@login_required
-def import_lotes(tipo: str):
-    try:
-        form = IMPORTEPIForm()
-        model = getModel(tipo.lower())
-        if form.validate_on_submit():
-            doc = form.arquivo.raw_data[0]
+# @app.route("/import_lotes/<tipo>", methods=["POST"])
+# @login_required
+# def import_lotes(tipo: str):
+#     try:
 
-            docname = secure_filename(doc.filename)
-            doc.save(os.path.join(app.config["CSV_TEMP_PATH"], f"{docname}"))
-            doc_path = os.path.join(app.config["CSV_TEMP_PATH"], f"{docname}")
+#         model = getModel(tipo.lower())
+#         if form.validate_on_submit():
+#             doc = form.arquivo.raw_data[0]
 
-            df = pd.read_excel(doc_path)
-            df.columns = df.columns.str.lower()
+#             docname = secure_filename(doc.filename)
+#             doc.save(os.path.join(app.config["CSV_TEMP_PATH"], f"{docname}"))
+#             doc_path = os.path.join(app.config["CSV_TEMP_PATH"], f"{docname}")
 
-            try:
-                data_admissao = df["data_admissao"]
-            except Exception:
-                data_admissao = None
+#             df = pd.read_excel(doc_path)
+#             df.columns = df.columns.str.lower()
 
-            if data_admissao is not None:
-                df["data_admissao"] = pd.to_datetime(
-                    df["data_admissao"], errors="coerce"
-                )
+#             try:
+#                 data_admissao = df["data_admissao"]
+#             except Exception:
+#                 data_admissao = None
 
-            data = []
-            for _, row in df.iterrows():
-                row = row.dropna()
-                data_info = row.to_dict()
+#             if data_admissao is not None:
+#                 df["data_admissao"] = pd.to_datetime(
+#                     df["data_admissao"], errors="coerce"
+#                 )
 
-                appends = model(**data_info)
-                data.append(appends)
+#             data = []
+#             for _, row in df.iterrows():
+#                 row = row.dropna()
+#                 data_info = row.to_dict()
 
-            if tipo.lower() == "grade":
-                data = []
-                for _, row in df.iterrows():
-                    data_info = row.to_dict()
-                    d = data_info.get("grade")
+#                 appends = model(**data_info)
+#                 data.append(appends)
 
-                    check_entry = model.query.filter_by(grade=d).first()
+#             if tipo.lower() == "grade":
+#                 data = []
+#                 for _, row in df.iterrows():
+#                     data_info = row.to_dict()
+#                     d = data_info.get("grade")
 
-                    if not check_entry:
-                        data_info.update({"grade": str(d)})
-                        appends = model(**data_info)
-                        data.append(appends)
+#                     check_entry = model.query.filter_by(grade=d).first()
 
-            db.session.add_all(data)
-            db.session.commit()
+#                     if not check_entry:
+#                         data_info.update({"grade": str(d)})
+#                         appends = model(**data_info)
+#                         data.append(appends)
 
-        flash("Informação cadastrada com sucesso!", "success")
-        return redirect(url_for(tipo))
+#             db.session.add_all(data)
+#             db.session.commit()
 
-    except Exception as e:
-        abort(500, description=str(e))
+#         flash("Informação cadastrada com sucesso!", "success")
+#         return redirect(url_for(tipo))
+
+#     except Exception as e:
+#         abort(500, description=str(e))

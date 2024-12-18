@@ -3,7 +3,6 @@ from flask_login import login_required
 
 from app import app
 from app.decorators import read_perm, set_endpoint
-from app.forms import IMPORTEPIForm
 from app.models.users import Users
 
 
@@ -13,12 +12,14 @@ from app.models.users import Users
 @read_perm
 def users():
     try:
-        importForm = IMPORTEPIForm()
+
         database = Users.query.order_by(Users.login_time.desc()).all()
 
         page = "pages/config/users.html"
         return render_template(
-            "index.html", page=page, database=database, importForm=importForm
+            "index.html",
+            page=page,
+            database=database,
         )
 
     except Exception as e:

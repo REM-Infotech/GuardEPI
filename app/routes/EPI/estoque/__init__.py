@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 from app import app, db
 from app.decorators import create_perm, read_perm, set_endpoint
-from app.forms import IMPORTEPIForm, InsertEstoqueForm
+from app.forms import InsertEstoqueForm
 from app.misc import format_currency_brl
 from app.models import EstoqueEPI, EstoqueGrade, ProdutoEPI, RegistroEntradas
 
@@ -27,7 +27,6 @@ def Estoque():
         page = "estoque.html"
         form = InsertEstoqueForm()
 
-        importForm = IMPORTEPIForm()
         return render_template(
             "index.html",
             page=page,
@@ -35,7 +34,6 @@ def Estoque():
             database=database,
             DataTables=DataTables,
             form=form,
-            importForm=importForm,
             format_currency_brl=format_currency_brl,
         )
     except Exception as e:
@@ -54,13 +52,12 @@ def Estoque_Grade():
         database = EstoqueGrade.query.all()
         DataTables = f"js/DataTables/epi/{request.endpoint.lower()}.js"
         page = "estoque_grade.html"
-        importForm = IMPORTEPIForm()
+
         return render_template(
             "index.html",
             page=page,
             DataTables=DataTables,
             database=database,
-            importForm=importForm,
         )
     except Exception as e:
         abort(500, description=str(e))
@@ -73,7 +70,7 @@ def Estoque_Grade():
 def Entradas():
     title = "Relação de Entradas EPI"
     page = "entradas.html"
-    importForm = IMPORTEPIForm()
+
     database = RegistroEntradas.query.all()
     DataTables = "js/DataTables/epi/entradas.js"
     return render_template(
@@ -82,7 +79,6 @@ def Entradas():
         title=title,
         database=database,
         DataTables=DataTables,
-        importForm=importForm,
         format_currency_brl=format_currency_brl,
     )
 

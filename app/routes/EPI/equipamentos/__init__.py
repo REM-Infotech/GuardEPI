@@ -181,3 +181,16 @@ def editar(id: int):
 
     page = "form.html"
     return render_template("index.html", page=page, form=form, url_image=url_image)
+
+
+@equip.route("/equipamentos/deletar/<id>")
+def deletar(id: int):
+
+    db: SQLAlchemy = app.extensions["sqlalchemy"]
+    epi = db.session.query(ProdutoEPI).filter_by(id=id).first()
+
+    db.session.delete(epi)
+    db.session.commit()
+
+    flash("EPI deletado com sucesso!", "success")
+    redirect(url_for("equip.Equipamentos"))

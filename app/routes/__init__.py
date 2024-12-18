@@ -11,7 +11,7 @@ from flask import (
 from werkzeug.exceptions import HTTPException
 
 from app.routes.auth import auth
-from app.routes.cargos import cargo
+from app.routes.corporativo import corp
 from app.routes.dashboard import dash
 from app.routes.EPI import (
     categoria,
@@ -33,7 +33,7 @@ def register_routes(app: Flask):
         blueprints = [
             auth,
             dash,
-            cargo,
+            corp,
             categoria,
             cautelas,
             equip,

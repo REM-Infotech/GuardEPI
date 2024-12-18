@@ -4,7 +4,7 @@ from flask import Blueprint, abort, render_template
 from flask_login import login_required
 
 from app.decorators import read_perm, set_endpoint
-from app.forms import CadastroGrade, IMPORTEPIForm
+from app.forms import CadastroGrade
 from app.misc import format_currency_brl
 from app.models import GradeEPI
 
@@ -22,7 +22,7 @@ def Grade():
         page = "grades.html"
         DataTables = "js/DataTables/epi/grade.js"
         form = CadastroGrade()
-        importForm = IMPORTEPIForm()
+
         database = GradeEPI.query.all()
         return render_template(
             "index.html",
@@ -31,7 +31,6 @@ def Grade():
             database=database,
             DataTables=DataTables,
             form=form,
-            importForm=importForm,
             format_currency_brl=format_currency_brl,
         )
     except Exception as e:
