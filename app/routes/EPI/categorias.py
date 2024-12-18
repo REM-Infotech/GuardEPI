@@ -1,11 +1,10 @@
-
 from flask import redirect, render_template, url_for
 from flask_login import login_required
 
 from app.forms import CadastroCategorias
 from app.models import ClassesEPI
 
-from .categorias import epi
+from . import epi
 
 
 @epi.route("/categorias", methods=["GET"])

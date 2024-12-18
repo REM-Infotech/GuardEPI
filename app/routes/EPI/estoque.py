@@ -1,7 +1,6 @@
 import os
-from pathlib import Path
 
-from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
+from flask import abort, flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from werkzeug.utils import secure_filename
 
@@ -11,11 +10,10 @@ from app.forms import InsertEstoqueForm
 from app.misc import format_currency_brl
 from app.models import EstoqueEPI, EstoqueGrade, ProdutoEPI, RegistroEntradas
 
-template_folder = Path(__file__).parent.resolve().joinpath("templates")
-estoque = Blueprint("estoque", __name__, template_folder=template_folder)
+from . import epi
 
 
-@estoque.route("/Estoque")
+@epi.route("/Estoque")
 @login_required
 def Estoque():
     try:
@@ -39,7 +37,7 @@ def Estoque():
 # Estoque_Grade
 
 
-@estoque.route("/Estoque_Grade", methods=["GET"])
+@epi.route("/Estoque_Grade", methods=["GET"])
 @login_required
 def Estoque_Grade():
     try:
@@ -56,7 +54,7 @@ def Estoque_Grade():
         abort(500, description=str(e))
 
 
-@estoque.route("/Entradas")
+@epi.route("/Entradas")
 @login_required
 def Entradas():
     title = "Relação de Entradas EPI"
@@ -72,7 +70,7 @@ def Entradas():
     )
 
 
-@estoque.route("/lancamento_estoque", methods=["POST"])
+@epi.route("/lancamento_estoque", methods=["POST"])
 @login_required
 @create_perm
 def lancamento_produto():

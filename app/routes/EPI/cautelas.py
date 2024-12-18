@@ -35,7 +35,7 @@ from app.models import (
     RegistrosEPI,
 )
 
-from .categorias import epi
+from . import epi
 
 
 @epi.before_request

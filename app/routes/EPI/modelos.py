@@ -1,15 +1,13 @@
-from pathlib import Path
 
-from flask import Blueprint, render_template
+from flask import render_template
 from flask_login import login_required
 
 from app.forms import CadastroModelos
 
-template_folder = Path(__file__).parent.resolve().joinpath("templates")
-modelo = Blueprint("modelo", __name__, template_folder=template_folder)
+from . import epi
 
 
-@modelo.route("/modelos", methods=["GET"])
+@epi.route("/modelos", methods=["GET"])
 @login_required
 def modelos():
 

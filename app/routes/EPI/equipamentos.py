@@ -2,7 +2,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Union
 
-from flask import Blueprint
 from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
@@ -14,14 +13,12 @@ from app.decorators import set_endpoint
 from app.forms import CadastroEPIForm
 from app.misc import format_currency_brl
 from app.models import ProdutoEPI
+from . import epi
 
 form_content = Union[str, FileStorage, int, float, datetime]
 
-template_folder = Path(__file__).parent.resolve().joinpath("templates")
-equip = Blueprint("equip", __name__, template_folder=template_folder)
 
-
-@equip.route("/equipamentos")
+@epi.route("/equipamentos")
 @login_required
 @set_endpoint
 def Equipamentos():
@@ -40,7 +37,7 @@ def Equipamentos():
     )
 
 
-@equip.route("/equipamentos/cadastro", methods=["GET", "POST"])
+@epi.route("/equipamentos/cadastro", methods=["GET", "POST"])
 @login_required
 def cadastro():
 
@@ -86,7 +83,7 @@ def cadastro():
     return render_template("index.html", page=page, form=form)
 
 
-@equip.route("/equipamentos/editar/<int:id>", methods=["GET", "POST"])
+@epi.route("/equipamentos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 def editar(id: int):
 
@@ -181,7 +178,7 @@ def editar(id: int):
     return render_template("index.html", page=page, form=form, url_image=url_image)
 
 
-@equip.route("/equipamentos/deletar/<int:id>")
+@epi.route("/equipamentos/deletar/<int:id>")
 def deletar(id: int):
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
