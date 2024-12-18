@@ -33,9 +33,9 @@ class Configurator:
 
             # PARAMETROS PARA O APP FLASK
             DEBUG = True
-            PDF_PATH = os.path.join(os.getcwd(), "PDF")
-            DOCS_PATH = os.path.join(os.getcwd(), "Docs")
-            TEMP_PATH = os.path.join(os.getcwd(), "Temp")
+            PDF_PATH = str(Path(__file__).cwd().joinpath("PDF"))
+            DOCS_PATH = str(Path(__file__).cwd().joinpath("Docs"))
+            TEMP_PATH = str(Path(__file__).cwd().joinpath("Temp"))
             IMAGE_TEMP_PATH = os.path.join(TEMP_PATH, "IMG")
             CSV_TEMP_PATH = os.path.join(TEMP_PATH, "csv")
             PDF_TEMP_PATH = os.path.join(TEMP_PATH, "pdf")
