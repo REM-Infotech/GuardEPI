@@ -24,6 +24,7 @@ sdist/
 var/
 wheels/
 
+bandit_results.html
 # Celery beat files
 *.bak
 *.dat
