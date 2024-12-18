@@ -1,22 +1,36 @@
-<div class="modal fade" id="cadastroEmpresa" tabindex="-1" aria-labelledby="cadastroEmpresaLabel" aria-hidden="true">
+<div class="modal fade"
+     id="cadastroEmpresa"
+     tabindex="-1"
+     aria-labelledby="cadastroEmpresaLabel"
+     aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="m-0 font-weight-bold text-primary">Cadastrar Empresa</h4>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ url_for('cadastrar', tipo = request.endpoint) }}" method="post" enctype="multipart/form-data">
+                <form action="{{ url_for('cadastrar', tipo = request.endpoint) }}"
+                      method="post"
+                      enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <div class="d-flex justify-content-center align-items-center">
                                 <br>
                                 {% set url_image = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png" %}
-                                <img id="preview" src="{{ url_image }}" alt="Image preview"
-                                    class="img-fluid border border-primary border-5 rounded-3 "
-                                    style="max-width: 300px; max-height: 300px; align-items: center; width: 300px; height: 300px;">
+                                <img id="preview"
+                                     src="{{ url_image }}"
+                                     alt="Image preview"
+                                     class="img-fluid border border-primary border-5 rounded-3 "
+                                     style="max-width: 300px;
+                                            max-height: 300px;
+                                            align-items: center;
+                                            width: 300px;
+                                            height: 300px">
                                 <br>
                             </div>
                         </div>
@@ -24,7 +38,7 @@
                             <div class="mb-3">
                                 {{ form.filename.label(for="formFile", class="form-label") }}
                                 {{ form.filename(class="form-control", type="file", id="formFile",
-                                onchange="previewImage(event, 'preview')") }}
+                                                                onchange="previewImage(event, 'preview')") }}
                             </div>
                             <hr>
                             <div class="form-floating mb-3">
@@ -33,15 +47,12 @@
                             </div>
                             <div class="form-floating mb-3">
                                 {{ form.cnpj_empresa(class="form-control", id="cnpj_empresa", placeholder="...",
-                                onkeyup="formatarComoCNPJ(this)") }}
+                                                                onkeyup="formatarComoCNPJ(this)") }}
                                 {{ form.cnpj_empresa.label(for="empresa") }}
                             </div>
                             <div class="footer">
-                                <div class="d-grid gap-2">
-                                    {{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
-                                </div>
+                                <div class="d-grid gap-2">{{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}</div>
                             </div>
-
                         </div>
                     </div>
                 </form>

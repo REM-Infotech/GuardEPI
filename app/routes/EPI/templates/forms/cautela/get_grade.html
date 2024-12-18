@@ -1,12 +1,11 @@
 {% if form %}
-<div class="form-floating mb-3">
-    {{ form.qtd_entregar(type="text", class="form-control", id="qtd_entregar", placeholder="")
-    }}
-    {{ form.qtd_entregar.label(for="qtd_entregar") }}
-</div>
-<div class="form-floating mb-3">
-    {{ form.tipo_grade(class="form-control", id="tipo_grade") }}
-    {{ form.tipo_grade.label(for="tipo_grade") }} 
-</div>  
-
+    <div class="form-floating mb-3">
+        {{ form.qtd_entregar(type="text", class="form-control", id="qtd_entregar", placeholder="") 
+        }}
+        {{ form.qtd_entregar.label(for="qtd_entregar") }}
+    </div>
+    <div class="form-floating mb-3">
+        {{ form.tipo_grade(class="form-control", id="tipo_grade") }}
+        {{ form.tipo_grade.label(for="tipo_grade") }}
+    </div>
 {% endif %}

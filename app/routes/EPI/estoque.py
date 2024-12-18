@@ -1,14 +1,8 @@
 import os
 
-from flask import (
-    abort,
-    flash,
-    redirect,
-    render_template,
-    request,
-    url_for,
-    current_app as app,
-)
+from flask import abort
+from flask import current_app as app
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename

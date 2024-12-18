@@ -1,27 +1,28 @@
 <div class="container-fluid px-4">
-
     <div class="mt-4 card mb-4">
-
         <div class="card-header">
-            <h2 class="m-2">Estoque Grades</h1>
-                <hr>
-                <a href="#!" class="btn btn-primary btn-icon-split mb-3">
-                    <span class="icon text-white-50">
-                        <i class="fa-solid fa-file-csv"></i>
-                    </span>
-                    <span class="text">Gerar Relatório</span>
-                </a>
-                {% if session["nome_usuario"] == "Root" %}
-                <button type="button" class="btn btn-warning mb-3" data-bs-toggle="modal"
-                    data-bs-target="#importarquivo">
+            <h2 class="m-2">
+                Estoque Grades
+            </h1>
+            <hr>
+            <a href="#!" class="btn btn-primary btn-icon-split mb-3">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-file-csv"></i>
+                </span>
+                <span class="text">Gerar Relatório</span>
+            </a>
+            {% if session["nome_usuario"] == "Root" %}
+                <button type="button"
+                        class="btn btn-warning mb-3"
+                        data-bs-toggle="modal"
+                        data-bs-target="#importarquivo">
                     <span class="icon text-white-50">
                         <i class="fa-solid fa-file-import"></i>
                     </span>
                     <span class="text">Import em lotes</span>
                 </button>
-                {% endif %}
+            {% endif %}
         </div>
-
         <div class="card-body table-responsive">
             <table class="table table-striped" id="EstoqueGrade">
                 <thead>
@@ -35,15 +36,15 @@
                 </thead>
                 <tbody>
                     {% if database %}
-                    {% for item in database %}
-                    <tr>
-                        <td>{{ item.id }}</td>
-                        <td>{{ item.nome_epi }}</td>
-                        <td>{{ item.grade }}</td>
-                        <td>{{ item.qtd_estoque }}</td>
-                        <td>{{ item.tipo_qtd }}</td>
-                    </tr>
-                    {% endfor %}
+                        {% for item in database %}
+                            <tr>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.nome_epi }}</td>
+                                <td>{{ item.grade }}</td>
+                                <td>{{ item.qtd_estoque }}</td>
+                                <td>{{ item.tipo_qtd }}</td>
+                            </tr>
+                        {% endfor %}
                     {% endif %}
                 </tbody>
                 <tfoot>

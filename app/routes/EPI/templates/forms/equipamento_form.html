@@ -1,115 +1,117 @@
 <div class="container px-4">
-
-  <div class="mt-4 card mb-4">
-
-    <div class="card-header">
-      <h2 class="m-2">Equipamentos - Cadastro</h1>
-        <hr>
-    </div>
-
-    <div class="card-body table-responsive">
-      <form method="POST" enctype="multipart/form-data" class="form-floating">
-        {{ form.hidden_tag() }}
-        <div class="row g-3 justify-content-center p-3">
-          <div class="col-md-6 mb-3">
-            <div class="d-flex justify-content-center align-items-center">
-              <br>
-              {% if not url_image %}
-              {% set url_image = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png" %}
-              {% endif %}
-              <img id="preview" src="{{ url_image }}" alt="Image preview"
-                class="img-fluid border border-primary border-5 rounded-3 "
-                style="max-width: 300px; max-height: 300px; align-items: center; width: 300px; height: 300px;">
-              <br>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3">
-              {{ form.filename.label(for="formFile", class="form-label") }}
-              {{ form.filename(class="form-control", type="file", id="formFile",
-              onchange="previewImage(event, 'preview')") }}
-            </div>
+    <div class="mt-4 card mb-4">
+        <div class="card-header">
+            <h2 class="m-2">
+                Equipamentos - Cadastro
+            </h1>
             <hr>
-            <div class="form-floating mb-3">
-              {{ form.ca(type="text", class="form-control", id="ca", placeholder="") }}
-              {{ form.ca.label(for="ca") }}
-            </div>
-            <div class="form-floating mb-3">
-              {{ form.cod_ca(type="text", class="form-control", id="cod_ca", placeholder="") }}
-              {{ form.cod_ca.label(for="cod_ca") }}
-            </div>
-            <div class="form-floating mb-3">
-              {{ form.nome_epi(type="text", class="form-control", id="nome_epi", placeholder="") }}
-              {{ form.nome_epi.label(for="nome_epi") }}
-            </div>
-          </div>
-          <div class="col-12">
-            <div class="form-floating mb-3">
-              {{ form.vencimento(class="form-control", id="vencimento", placeholder="") }}
-              {{ form.vencimento.label(for="vencimento") }}
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3 border border-black p-2 border-2 rounded">
-              {{ form.fornecedor.label(class="form-label") }}
-              {{ form.fornecedor(class="form-control", id="fornecedor", placeholder="") }}
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3 border border-black p-2 border-2 rounded">
-              {{ form.marca.label(class="form-label") }}
-              {{ form.marca(class="form-control", id="marca", placeholder="") }}
-
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3 border border-black p-2 border-2 rounded">
-              {{ form.modelo.label(class="form-label") }}
-              {{ form.modelo(class="form-control", id="modelo", placeholder="") }}
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="mb-3 border border-black p-2 border-2 rounded">
-              {{ form.tipo_epi.label(class="form-label") }}
-              {{ form.tipo_epi(type="text", class="form-control", id="tipo_epi", placeholder="") }}
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-floating mb-3">
-              {{ form.valor_unitario(type="text", class="form-control", id="valor_unitario",
-              placeholder="",
-              onkeyup="formatarComoMoeda(this)") }}
-              {{ form.valor_unitario.label(for="valor_unitario") }}
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-floating mb-3">
-              {{ form.qtd_entregar(type="text", class="form-control", id="qtd_entregar",
-              placeholder="") }}
-              {{ form.qtd_entregar.label(for="qtd_entregar") }}
-            </div>
-          </div>
-          <div class="col-12">
-            <div class="form-floating mb-3">
-              {{ form.periodicidade_item(type="text", class="form-control", id="periodicidade_item",
-              placeholder="") }}
-              {{ form.periodicidade_item.label(for="periodicidade_item") }}
-            </div>
-          </div>
-          <div class="col-12 mb-4">
-            <div class="form-group">
-              {{form.descricao.label(for="descricao", class="form-label")}}
-              {{form.descricao(class="form-control", id="descricao")}}
-            </div>
-          </div>
         </div>
-        <hr>
-        <div class="footer">
-          <div class="d-grid gap-2">
-            {{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
-          </div>
+        <div class="card-body table-responsive">
+            <form method="POST" enctype="multipart/form-data" class="form-floating">
+                {{ form.hidden_tag() }}
+                <div class="row g-3 justify-content-center p-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <br>
+                            {% if not url_image %}
+                                {% set url_image = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png" %}
+                            {% endif %}
+                            <img id="preview"
+                                 src="{{ url_image }}"
+                                 alt="Image preview"
+                                 class="img-fluid border border-primary border-5 rounded-3 "
+                                 style="max-width: 300px;
+                                        max-height: 300px;
+                                        align-items: center;
+                                        width: 300px;
+                                        height: 300px">
+                            <br>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form.filename.label(for="formFile", class="form-label") }}
+                            {{ form.filename(class="form-control", type="file", id="formFile",
+                                                        onchange="previewImage(event, 'preview')") }}
+                        </div>
+                        <hr>
+                        <div class="form-floating mb-3">
+                            {{ form.ca(type="text", class="form-control", id="ca", placeholder="") }}
+                            {{ form.ca.label(for="ca") }}
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form.cod_ca(type="text", class="form-control", id="cod_ca", placeholder="") }}
+                            {{ form.cod_ca.label(for="cod_ca") }}
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form.nome_epi(type="text", class="form-control", id="nome_epi", placeholder="") }}
+                            {{ form.nome_epi.label(for="nome_epi") }}
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-floating mb-3">
+                            {{ form.vencimento(class="form-control", id="vencimento", placeholder="") }}
+                            {{ form.vencimento.label(for="vencimento") }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3 border border-black p-2 border-2 rounded">
+                            {{ form.fornecedor.label(class="form-label") }}
+                            {{ form.fornecedor(class="form-control", id="fornecedor", placeholder="") }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3 border border-black p-2 border-2 rounded">
+                            {{ form.marca.label(class="form-label") }}
+                            {{ form.marca(class="form-control", id="marca", placeholder="") }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3 border border-black p-2 border-2 rounded">
+                            {{ form.modelo.label(class="form-label") }}
+                            {{ form.modelo(class="form-control", id="modelo", placeholder="") }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3 border border-black p-2 border-2 rounded">
+                            {{ form.tipo_epi.label(class="form-label") }}
+                            {{ form.tipo_epi(type="text", class="form-control", id="tipo_epi", placeholder="") }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form.valor_unitario(type="text", class="form-control", id="valor_unitario",
+                                                        placeholder="",
+                                                        onkeyup="formatarComoMoeda(this)") }}
+                            {{ form.valor_unitario.label(for="valor_unitario") }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form.qtd_entregar(type="text", class="form-control", id="qtd_entregar",
+                                                        placeholder="") }}
+                            {{ form.qtd_entregar.label(for="qtd_entregar") }}
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-floating mb-3">
+                            {{ form.periodicidade_item(type="text", class="form-control", id="periodicidade_item",
+                                                        placeholder="") }}
+                            {{ form.periodicidade_item.label(for="periodicidade_item") }}
+                        </div>
+                    </div>
+                    <div class="col-12 mb-4">
+                        <div class="form-group">
+                            {{ form.descricao.label(for="descricao", class="form-label") }}
+                            {{ form.descricao(class="form-control", id="descricao") }}
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="footer">
+                    <div class="d-grid gap-2">{{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}</div>
+                </div>
+            </form>
         </div>
-      </form>
     </div>
-  </div>
 </div>

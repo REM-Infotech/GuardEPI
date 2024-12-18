@@ -1,54 +1,67 @@
-<div class="modal fade" id="EmissãoCautela" tabindex="-1" aria-labelledby="EmissãoCautelaLabel" aria-hidden="true">
+<div class="modal fade"
+     id="EmissãoCautela"
+     tabindex="-1"
+     aria-labelledby="EmissãoCautelaLabel"
+     aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="m-0 font-weight-bold text-primary">Emitir Cautela</h4>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="cautela-form" action="{{ url_for('emitir_cautela') }}", method="post">
+                <form id="cautela-form"
+                      action="{{ url_for("emitir_cautela") }}"
+                      method="post">
                     {{ form.hidden_tag() }}
                     <div class="row g-3">
                         <div class="col-12">
                             <div class="form-group">
-                                {{form.select_funcionario.label(for="select_funcionario", class="form-label")}}
-                                {{form.select_funcionario(class="form-control", id="select_funcionario")}}
+                                {{ form.select_funcionario.label(for="select_funcionario", class="form-label") }}
+                                {{ form.select_funcionario(class="form-control", id="select_funcionario") }}
                             </div>
                         </div>
-
                         <div class="mb-3 border border-black p-2 border-2 rounded">
-                            {{form.nome_epi.label(for="selectNomeEpi", class="form-label")}}
-                            {{form.nome_epi(**{"hx-post": "/get-grade", "hx-target": "#gradeContainer",
-                            "hx-trigger": "change", "id":"selectNomeEpi", "class":"form-control" })}}
+                            {{ form.nome_epi.label(for="selectNomeEpi", class="form-label") }}
+                            {{ form.nome_epi(**{"hx-post": "/get-grade", "hx-target": "#gradeContainer",
+                                                        "hx-trigger": "change", "id":"selectNomeEpi", "class":"form-control" }) }}
                         </div>
-                        <div class="col-12" id="gradeContainer">
-
-                            
-                        </div>
+                        <div class="col-12" id="gradeContainer"></div>
                         <div class="col-12">
                             <ul id="entregas-table" class="list-group">
                             </ul>
                         </div>
                         <div class="col-12 m-1">
                             <hr>
-                            <button type="button" id="addEpiButton" class="btn btn-outline-warning" hx-post="/add_itens"
-                                hx-trigger="click" hx-target="#entregas-table">Adicionar</button>
-                            <button type="button" id="addEpiButton" class="btn btn-outline-danger" hx-post="/remove-itens"
-                                hx-trigger="click" hx-target="#entregas-table">Limpar
-                                Lista</button>
+                            <button type="button"
+                                    id="addEpiButton"
+                                    class="btn btn-outline-warning"
+                                    hx-post="/add_itens"
+                                    hx-trigger="click"
+                                    hx-target="#entregas-table">Adicionar</button>
+                            <button type="button"
+                                    id="addEpiButton"
+                                    class="btn btn-outline-danger"
+                                    hx-post="/remove-itens"
+                                    hx-trigger="click"
+                                    hx-target="#entregas-table">
+                                Limpar
+                                Lista
+                            </button>
                             <hr>
                         </div>
                     </div>
                     <div class="card-footer d-grid gap-2">
                         {{ form.submit_cautela(**{"hx-post": "/emitir_cautela", "hx-target": "#render_pdf_cautela",
-                        "hx-trigger": "click", "id":"submit_cautela", "class":"btn btn btn-outline-success btn-login text-uppercase fw-bold",
-                        "onclick": "showLoadCautela()"
-                        }) }}
+                                                "hx-trigger": "click", "id":"submit_cautela", "class":"btn btn btn-outline-success btn-login text-uppercase fw-bold",
+                                                "onclick": "showLoadCautela()"
+                                                }) }}
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
 </div>

@@ -1,18 +1,17 @@
 <div class="container-fluid px-4">
-
     <div class="mt-4 card mb-4">
-
         <div class="card-header">
-            <h2 class="m-2">Entradas</h1>
-                <hr>
-                <a href="#!" class="btn btn-primary btn-icon-split mb-3">
-                    <span class="icon text-white-50">
-                        <i class="fa-solid fa-file-csv"></i>
-                    </span>
-                    <span class="text">Gerar Relatório</span>
-                </a>
+            <h2 class="m-2">
+                Entradas
+            </h1>
+            <hr>
+            <a href="#!" class="btn btn-primary btn-icon-split mb-3">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-file-csv"></i>
+                </span>
+                <span class="text">Gerar Relatório</span>
+            </a>
         </div>
-
         <div class="card-body table-responsive">
             <table class="table table-striped" id="EntradasTable">
                 <thead>
@@ -27,29 +26,30 @@
                 </thead>
                 <tbody>
                     {% if database %}
-                    {% for item in database %}
-                    <tr>
-                        <td>{{ item.id }}</td>
-                        <td>{{ item.nome_epi }}</td>
-                        <td>{{ item.grade }}</td>
-                        <td>{{ item.qtd_entrada }}</td>
-                        <td>{{ format_currency_brl(item.valor_total) }}</td>
-                        {% if item.filename %}
-                        <td>
-                            <button type="button" class="btn btn-primary btn-sm  mb-2 open-pdf"
-                                name="{{ item.filename}}"
-                                data-pdf-url="{{ url_for('serve_pdf', index = item.id, md = request.endpoint, _external=True, _scheme='https') }}"><span
-                                    class="icon text-white-50">
-                                    <i class="fa-solid fa-file-pdf"></i>
-                                </span>
-                                <span class="text">Ver PDF</span>
-                            </button>
-                        </td>
-                        {% else %}
-                        <td>Sem nota fiscal</td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
+                        {% for item in database %}
+                            <tr>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.nome_epi }}</td>
+                                <td>{{ item.grade }}</td>
+                                <td>{{ item.qtd_entrada }}</td>
+                                <td>{{ format_currency_brl(item.valor_total) }}</td>
+                                {% if item.filename %}
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-primary btn-sm  mb-2 open-pdf"
+                                                name="{{ item.filename}}"
+                                                data-pdf-url="{{ url_for('serve_pdf', index = item.id, md = request.endpoint, _external=True, _scheme='https') }}">
+                                            <span class="icon text-white-50">
+                                                <i class="fa-solid fa-file-pdf"></i>
+                                            </span>
+                                            <span class="text">Ver PDF</span>
+                                        </button>
+                                    </td>
+                                {% else %}
+                                    <td>Sem nota fiscal</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
                     {% endif %}
                 </tbody>
                 <tfoot>

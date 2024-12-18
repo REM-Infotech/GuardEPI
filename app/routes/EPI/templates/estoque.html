@@ -1,34 +1,37 @@
 <div class="container-fluid px-4">
-
     <div class="mt-4 card mb-4">
-
         <div class="card-header">
-            <h2 class="m-2">Estoque</h1>
-                <hr>
-                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal"
+            <h2 class="m-2">
+                Estoque
+            </h1>
+            <hr>
+            <button type="button"
+                    class="btn btn-success mb-3"
+                    data-bs-toggle="modal"
                     data-bs-target="#cadastroEstoque">
-                    <span class="icon text-white-50">
-                        <i class="fa-solid fa-plus"></i>
-                    </span>
-                    <span class="text">Lançamento Produto</span>
-                </button>
-                {% if session["nome_usuario"] == "Root" %}
-                <button type="button" class="btn btn-warning mb-3" data-bs-toggle="modal"
-                    data-bs-target="#importarquivo">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-plus"></i>
+                </span>
+                <span class="text">Lançamento Produto</span>
+            </button>
+            {% if session["nome_usuario"] == "Root" %}
+                <button type="button"
+                        class="btn btn-warning mb-3"
+                        data-bs-toggle="modal"
+                        data-bs-target="#importarquivo">
                     <span class="icon text-white-50">
                         <i class="fa-solid fa-file-import"></i>
                     </span>
                     <span class="text">Import em lotes</span>
                 </button>
-                {% endif %}
-                <a href="#!" class="btn btn-primary btn-icon-split mb-3">
-                    <span class="icon text-white-50">
-                        <i class="fa-solid fa-file-csv"></i>
-                    </span>
-                    <span class="text">Gerar Relatório</span>
-                </a>
+            {% endif %}
+            <a href="#!" class="btn btn-primary btn-icon-split mb-3">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-file-csv"></i>
+                </span>
+                <span class="text">Gerar Relatório</span>
+            </a>
         </div>
-
         <div class="card-body table-responsive">
             <table class="table table-striped" id="EstoqueTable">
                 <thead>
@@ -41,14 +44,14 @@
                 </thead>
                 <tbody>
                     {% if database %}
-                    {% for item in database %}
-                    <tr>
-                        <td>{{ item.id }}</td>
-                        <td>{{ item.nome_epi }}</td>
-                        <td>{{ item.tipo_qtd }}</td>
-                        <td class="text-start">{{ item.qtd_estoque }}</td>
-                    </tr>
-                    {% endfor %}
+                        {% for item in database %}
+                            <tr>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.nome_epi }}</td>
+                                <td>{{ item.tipo_qtd }}</td>
+                                <td class="text-start">{{ item.qtd_estoque }}</td>
+                            </tr>
+                        {% endfor %}
                     {% endif %}
                 </tbody>
                 <tfoot>

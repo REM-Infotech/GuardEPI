@@ -1,6 +1,8 @@
 <h4 class="card-header mb-4 text-black">Criar Usuário</h4>
 <div class="card-body">
-    <form action="{{ url_for('caduser_end') }}" method="post" class="text-black">
+    <form action="{{ url_for("caduser_end") }}"
+          method="post"
+          class="text-black">
         {{ form.hidden_tag() }}
         <div class="form-floating mb-3">
             {{ form.nome(id="nome_sobrenome", class="form-control", placeholder="Nome", autocomplete="given-name") }}
@@ -12,24 +14,22 @@
         </div>
         <div class="form-floating mb-3">
             {{ form.password(id="floatingPassword", class="form-control", placeholder="Senha", autocomplete="new-password") }}
-            {{ form.password.label(for="floatingPassword")}}
+            {{ form.password.label(for="floatingPassword") }}
             <div class="input-group-append">
                 <div class="input-group-text">
-                    <input type="checkbox" id="show_password"> Mostrar senha
+                    <input type="checkbox" id="show_password">
+                    Mostrar senha
                 </div>
             </div>
         </div>
         <div class="form-floating mb-3">
             {{ form.email(id="floatingemail", class="form-control", placeholder="E-mail") }}
-            {{ form.email.label(for="floatingemail")}}
+            {{ form.email.label(for="floatingemail") }}
         </div>
         <hr class="my-4">
-        <div class="d-grid">
-            {{ form.submit(class="btn btn-primary btn-login text-uppercase fw-bold") }}
-        </div>
+        <div class="d-grid">{{ form.submit(class="btn btn-primary btn-login text-uppercase fw-bold") }}</div>
     </form>
 </div>
-
 <script>
     $(document).ready(function(){
         $('#show_password').change(function(){

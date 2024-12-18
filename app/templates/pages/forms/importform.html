@@ -1,28 +1,31 @@
-<div class="modal fade" id="importarquivo" tabindex="-1" aria-labelledby="importarquivoLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title fs-5" id="importarquivoLabel">Importação Massiva</h3>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        {% set action = ""%}
-        <form method="POST" enctype="multipart/form-data" action="{{ action }}">
-          {{ importForm.hidden_tag() }}
-
-          <div class="form-group mb-4">
-            {{importForm.arquivo.label(class="form-label")}}
-            {{importForm.arquivo(class="form-control", id="formFile", accept=".xls, .xlsx, .csv")}}
-          </div>
-          <div class="modal-footer">
-            <a href="#!" class="btn btn-primary text-uppercase fw-bold"> Gerar Modelo </a>
-            <div class="d-grid gap-2">
-              {{ importForm.submit(class="btn btn-success btn-login text-uppercase fw-bold") }}
+<div class="modal fade"
+     id="importarquivo"
+     tabindex="-1"
+     aria-labelledby="importarquivoLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title fs-5" id="importarquivoLabel">Importação Massiva</h3>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
             </div>
-          </div>
-        </form>
-      </div>
-
+            <div class="modal-body">
+                {% set action = "" %}
+                <form method="POST" enctype="multipart/form-data" action="{{ action }}">
+                    {{ importForm.hidden_tag() }}
+                    <div class="form-group mb-4">
+                        {{ importForm.arquivo.label(class="form-label") }}
+                        {{ importForm.arquivo(class="form-control", id="formFile", accept=".xls, .xlsx, .csv") }}
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#!" class="btn btn-primary text-uppercase fw-bold">Gerar Modelo</a>
+                        <div class="d-grid gap-2">{{ importForm.submit(class="btn btn-success btn-login text-uppercase fw-bold") }}</div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

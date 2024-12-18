@@ -4,18 +4,19 @@ import uuid
 from datetime import datetime
 from time import sleep
 
+from flask import abort
+from flask import current_app as app
 from flask import (
-    abort,
     flash,
     get_flashed_messages,
     render_template,
     request,
     session,
     url_for,
-    current_app as app,
 )
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+
 from app.decorators import create_perm
 from app.forms import Cautela
 from app.misc import format_currency_brl, generate_pid

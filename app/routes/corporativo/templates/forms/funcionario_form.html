@@ -1,14 +1,21 @@
-<div class="modal fade" id="cadastroFuncionario" tabindex="-1" aria-labelledby="cadastroFuncionario" aria-hidden="true">
+<div class="modal fade"
+     id="cadastroFuncionario"
+     tabindex="-1"
+     aria-labelledby="cadastroFuncionario"
+     aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="m-0 font-weight-bold text-primary">Cadastrar Funcionário</h4>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="container">
-                    <form method="POST" action="{{ url_for('cadastrar', tipo=request.endpoint) }}">
+                    <form method="POST"
+                          action="{{ url_for('cadastrar', tipo=request.endpoint) }}">
                         {{ form.hidden_tag() }}
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -20,7 +27,7 @@
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
                                     {{ form.nome_funcionario(class="form-control", id="funcionario", placeholder="...") }}
-                                    {{ form.nome_funcionario.label(for="funcionario") }} 
+                                    {{ form.nome_funcionario.label(for="funcionario") }}
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -31,9 +38,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
-                                    {{ form.email_funcionario(class="form-control", placeholder="...")}}
-                                    {{ form.email_funcionario.label(for="email_funcionario") }} 
-                                    
+                                    {{ form.email_funcionario(class="form-control", placeholder="...") }}
+                                    {{ form.email_funcionario.label(for="email_funcionario") }}
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -45,7 +51,7 @@
                             <div class="col-md-6">
                                 <div class="form-floating mb-3">
                                     {{ form.data_admissao(class="form-control") }}
-                                    {{ form.data_admissao.label(for="data_admissao") }} 
+                                    {{ form.data_admissao.label(for="data_admissao") }}
                                 </div>
                             </div>
                             <div class="col-12">
@@ -54,14 +60,13 @@
                                     {{ form.empresa(class="form-control", id="empresa", placeholder="...") }}
                                 </div>
                             </div>
-
                         </div>
                         <div class="mb-3 border border-black p-2 border-2 rounded">
-                            {{ form.cargo.label(class="form-label") }} 
+                            {{ form.cargo.label(class="form-label") }}
                             {{ form.cargo(class="form-control", placeholder=form.cargo.label.text) }}
                         </div>
                         <div class="mb-3 border border-black p-2 border-2 rounded"">
-                            {{ form.departamento.label(class="form-label") }} 
+                            {{ form.departamento.label(class="form-label") }}
                             {{ form.departamento(class="form-control") }}
                         </div>
                         <div class="footer m-3">
@@ -73,7 +78,6 @@
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

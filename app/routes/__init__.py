@@ -9,11 +9,12 @@ from flask import (
     url_for,
 )
 from werkzeug.exceptions import HTTPException
+
 from .auth import auth
 from .corporativo import corp
 from .dashboard import dash
-from .serving import serve
 from .epi import epi
+from .serving import serve
 
 
 def register_routes(app: Flask):

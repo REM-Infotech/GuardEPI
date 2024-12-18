@@ -13,6 +13,7 @@ from app.decorators import set_endpoint
 from app.forms import CadastroEPIForm
 from app.misc import format_currency_brl
 from app.models import ProdutoEPI
+
 from . import epi
 
 form_content = Union[str, FileStorage, int, float, datetime]

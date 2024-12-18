@@ -1,9 +1,11 @@
 <h4 class="card-header mb-4 text-black">Alterar email</h4>
 <div class="card-body">
-    <form action="{{ url_for('changemail_end') }}" method="post" class="text-black">
+    <form action="{{ url_for("changemail_end") }}"
+          method="post"
+          class="text-black">
         {{ form.hidden_tag() }}
         <div class="form-floating mb-3">
-            {{ form.user_to_change(id="user_to_change", class="form-control", placeholder="Usuário para a troca de email")}}
+            {{ form.user_to_change(id="user_to_change", class="form-control", placeholder="Usuário para a troca de email") }}
             {{ form.user_to_change.label(for="user_to_change") }}
         </div>
         <div class="form-floating mb-3">
@@ -15,8 +17,6 @@
             {{ form.repeat_email.label(for="repeat_email") }}
         </div>
         <hr class="my-4">
-        <div class="d-grid">
-            {{ form.submit_email(class="btn btn-primary btn-login text-uppercase fw-bold") }}
-        </div>
+        <div class="d-grid">{{ form.submit_email(class="btn btn-primary btn-login text-uppercase fw-bold") }}</div>
     </form>
 </div>

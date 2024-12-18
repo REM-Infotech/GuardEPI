@@ -1,32 +1,35 @@
 <div class="container-fluid px-4">
-
     <div class="mt-4 card mb-4">
-
         <div class="card-header">
-            <h2 class="m-2">Classes EPI</h1>
-                <hr>
-                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal"
+            <h2 class="m-2">
+                Classes EPI
+            </h1>
+            <hr>
+            <button type="button"
+                    class="btn btn-success mb-3"
+                    data-bs-toggle="modal"
                     data-bs-target="#CadastroCategorias">
-                    <span class="icon text-white-50">
-                        <i class="fa-solid fa-plus"></i>
-                    </span>
-                    <span class="text">Cadastrar</span>
-                </button>
-                <button type="button" class="btn btn-warning mb-3" data-bs-toggle="modal"
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-plus"></i>
+                </span>
+                <span class="text">Cadastrar</span>
+            </button>
+            <button type="button"
+                    class="btn btn-warning mb-3"
+                    data-bs-toggle="modal"
                     data-bs-target="#importarquivo">
-                    <span class="icon text-white-50">
-                        <i class="fa-solid fa-file-import"></i>
-                    </span>
-                    <span class="text">Import em lotes</span>
-                </button>
-                <a href="#!" class="btn btn-primary btn-icon-split mb-3">
-                    <span class="icon text-white-50">
-                        <i class="fa-solid fa-file-csv"></i>
-                    </span>
-                    <span class="text">Gerar Relatório</span>
-                </a>
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-file-import"></i>
+                </span>
+                <span class="text">Import em lotes</span>
+            </button>
+            <a href="#!" class="btn btn-primary btn-icon-split mb-3">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-file-csv"></i>
+                </span>
+                <span class="text">Gerar Relatório</span>
+            </a>
         </div>
-
         <div class="card-body table-responsive">
             <table class="table table-striped">
                 <thead>
@@ -39,36 +42,41 @@
                 </thead>
                 <tbody>
                     {% if database %}
-                    {% for item in database %}
-                    <tr>
-                        <td>{{ item.id }}</td>
-                        <td>{{ item.classe }}</td>
-                        {% if not item.descricao %}
-                        <td>Sem descrição</td>
-                        {% else %}
-                        <td>{{ item.descricao }}</td>
-                        {% endif %}
-
-                        <td>
-                            <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
-                                hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
-                                hx-trigger="click" hx-target="#results">
-                                <span class="icon text-white-50">
-                                    <i class="fa-solid fa-trash"></i>
-                                </span>
-                                <span class="text">Deletar</span>
-                            </button>
-                            <button type="button" id="EditInfo" class="btn btn-warning btn-sm mb-2"
-                                hx-get="{{ url_for('set_editar', tipo = request.endpoint, item = item.id) }}"
-                                hx-target="#results" onclick="showLoad()">
-                                <span class="icon text-white-50">
-                                    <i class="fa-solid fa-pen"></i>
-                                </span>
-                                <span class="text">Editar</span>
-                            </button>
-                        </td>
-                    </tr>
-                    {% endfor %}
+                        {% for item in database %}
+                            <tr>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.classe }}</td>
+                                {% if not item.descricao %}
+                                    <td>Sem descrição</td>
+                                {% else %}
+                                    <td>{{ item.descricao }}</td>
+                                {% endif %}
+                                <td>
+                                    <button type="button"
+                                            id="DeleteEstoqueButton"
+                                            class="btn btn-danger btn-sm mb-2"
+                                            hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
+                                            hx-trigger="click"
+                                            hx-target="#results">
+                                        <span class="icon text-white-50">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </span>
+                                        <span class="text">Deletar</span>
+                                    </button>
+                                    <button type="button"
+                                            id="EditInfo"
+                                            class="btn btn-warning btn-sm mb-2"
+                                            hx-get="{{ url_for('set_editar', tipo = request.endpoint, item = item.id) }}"
+                                            hx-target="#results"
+                                            onclick="showLoad()">
+                                        <span class="icon text-white-50">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </span>
+                                        <span class="text">Editar</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
                     {% endif %}
                 </tbody>
                 <tfoot>
@@ -82,5 +90,4 @@
             </table>
         </div>
     </div>
-
 </div>

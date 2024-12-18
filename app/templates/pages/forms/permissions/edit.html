@@ -1,9 +1,16 @@
-<div class="modal fade" id="EmissãoCautela" tabindex="-1" aria-labelledby="EmissãoCautelaLabel" aria-hidden="true">
+<div class="modal fade"
+     id="EmissãoCautela"
+     tabindex="-1"
+     aria-labelledby="EmissãoCautelaLabel"
+     aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="m-0 font-weight-bold text-primary">Editar Regra</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="cautela-form" action="#!" method="post">
@@ -17,8 +24,8 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                {{form.grupos.label(for="grupos", class="form-label")}}
-                                {{form.grupos(class="form-control", id="grupos")}}
+                                {{ form.grupos.label(for="grupos", class="form-label") }}
+                                {{ form.grupos(class="form-control", id="grupos") }}
                             </div>
                         </div>
                         <div class="col-12">
@@ -29,32 +36,40 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                {{form.permissoes.label(for="selectNomeEpi", class="form-label")}}
-                                {{form.permissoes(id="selectNomeEpi", class="form-control")}}
+                                {{ form.permissoes.label(for="selectNomeEpi", class="form-label") }}
+                                {{ form.permissoes(id="selectNomeEpi", class="form-control") }}
                             </div>
                         </div>
                         <div class="col-12">
                             <ul id="entregas-table" class="list-group">
-
                             </ul>
                         </div>
                         <div class="col-12 m-1">
                             <hr>
-                            <button type="button" id="addEpiButton" class="btn btn-outline-warning" hx-post="/add_itens"
-                                hx-trigger="click" hx-target="#entregas-table">Adicionar</button>
-                            <button type="button" id="addEpiButton" class="btn btn-outline-danger"
-                                hx-post="/remove-itens" hx-trigger="click" hx-target="#entregas-table">Limpar
-                                Lista</button>
+                            <button type="button"
+                                    id="addEpiButton"
+                                    class="btn btn-outline-warning"
+                                    hx-post="/add_itens"
+                                    hx-trigger="click"
+                                    hx-target="#entregas-table">Adicionar</button>
+                            <button type="button"
+                                    id="addEpiButton"
+                                    class="btn btn-outline-danger"
+                                    hx-post="/remove-itens"
+                                    hx-trigger="click"
+                                    hx-target="#entregas-table">
+                                Limpar
+                                Lista
+                            </button>
                             <hr>
                         </div>
                     </div>
                     <div class="card-footer d-grid gap-2">
                         {{ form.submit(class="btn btn btn-outline-success btn-login text-uppercase fw-bold",
-                        onclick="showLoadCautela()") }}
+                                                onclick="showLoadCautela()") }}
                     </div>
                 </form>
             </div>
-
         </div>
     </div>
 </div>
