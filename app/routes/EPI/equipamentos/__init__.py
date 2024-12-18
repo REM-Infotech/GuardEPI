@@ -19,8 +19,8 @@ def Equipamentos():
 
     importForm = IMPORTEPIForm()
     form = CadastroEPIForm()
-    page = f"{request.endpoint.lower()}.html"
-    title = request.endpoint.capitalize()
+    page = "equipamentos.html"
+    title = request.endpoint.split(".")[1].capitalize()
     database = []
     DataTables = "js/DataTables/epi/EquipamentosTable.js"
     url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"

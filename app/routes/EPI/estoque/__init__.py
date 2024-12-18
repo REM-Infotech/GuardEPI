@@ -22,9 +22,9 @@ estoque = Blueprint("estoque", __name__, template_folder=template_folder)
 def Estoque():
     try:
         database = EstoqueEPI.query.all()
-        title = request.endpoint.capitalize()
+        title = request.endpoint.split(".")[1].capitalize()
         DataTables = "js/DataTables/epi/EstoqueTable.js"
-        page = f"{request.endpoint.lower()}.html"
+        page = "estoque.html"
         form = InsertEstoqueForm()
 
         importForm = IMPORTEPIForm()
@@ -53,7 +53,7 @@ def Estoque_Grade():
     try:
         database = EstoqueGrade.query.all()
         DataTables = f"js/DataTables/epi/{request.endpoint.lower()}.js"
-        page = f"{request.endpoint.lower()}.html"
+        page = "estoque_grade.html"
         importForm = IMPORTEPIForm()
         return render_template(
             "index.html",
@@ -72,7 +72,7 @@ def Estoque_Grade():
 @read_perm
 def Entradas():
     title = "Relação de Entradas EPI"
-    page = f"{request.endpoint.lower()}.html"
+    page = "entradas.html"
     importForm = IMPORTEPIForm()
     database = RegistroEntradas.query.all()
     DataTables = "js/DataTables/epi/entradas.js"

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from flask import Blueprint, abort, render_template, request
+from flask import Blueprint, abort, render_template
 from flask_login import login_required
 
 from app.decorators import read_perm, set_endpoint
@@ -19,7 +19,7 @@ grade = Blueprint("grade", __name__, template_folder=folder_template)
 def Grade():
     try:
         title = "Grades"
-        page = f"{request.endpoint.lower()}.html"
+        page = "grades.html"
         DataTables = "js/DataTables/epi/grade.js"
         form = CadastroGrade()
         importForm = IMPORTEPIForm()

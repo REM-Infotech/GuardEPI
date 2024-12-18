@@ -77,7 +77,7 @@ def Permissoes():
 
     form = CreatePerm()
     page = f"pages/config/{request.endpoint.lower()}.html"
-    title = request.endpoint.capitalize()
+    title = request.endpoint.split(".")[1].capitalize()
     database = Permissions.query.all()
     return render_template(
         "index.html", page=page, title=title, form=form, database=database

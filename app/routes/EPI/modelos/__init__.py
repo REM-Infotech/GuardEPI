@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template
 from flask_login import login_required
 
 from app.decorators import read_perm, set_endpoint
@@ -17,7 +17,7 @@ modelo = Blueprint("modelo", __name__, template_folder=template_folder)
 def modelos():
     form = CadastroModelos()
     DataTables = "js/DataTables/DataTables.js"
-    page = f"{request.endpoint.lower()}.html"
+    page = "modelos.html"
     database = []
     return render_template(
         "index.html", page=page, form=form, DataTables=DataTables, database=database

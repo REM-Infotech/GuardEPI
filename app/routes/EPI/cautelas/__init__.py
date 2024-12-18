@@ -110,9 +110,9 @@ def remove_itens():
 @read_perm
 def Registro_Saidas():
 
-    page = f"{request.endpoint.lower()}.html"
+    page = "registro_saidas.html"
     database = RegistroSaidas.query.all()
-    title = request.endpoint.capitalize().replace("_", " ")
+    title = request.endpoint.split(".")[1].capitalize().replace("_", " ")
     DataTables = "js/DataTables/DataTables.js"
     return render_template(
         "index.html",
@@ -130,9 +130,9 @@ def Registro_Saidas():
 @read_perm
 def Cautelas():
 
-    page = f"{request.endpoint.lower()}.html"
+    page = "cautelas.html"
     database = RegistrosEPI.query.all()
-    title = request.endpoint.capitalize()
+    title = request.endpoint.split(".")[1].capitalize()
     DataTables = "js/DataTables/epi/CautelasTable.js"
     form = Cautela()
     session["itens_lista_cautela"] = []

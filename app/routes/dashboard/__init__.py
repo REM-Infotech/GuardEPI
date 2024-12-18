@@ -62,7 +62,7 @@ def dashboard():
         # valor_totalEntradas = sum(map(lambda item: float(item.valor_total), dbase2))
 
         database = RegistrosEPI.query.all()
-        title = request.endpoint.capitalize()
+        title = request.endpoint.split(".")[1].capitalize()
         page = "dashboard.html"
         DataTables = "js/DataTables/DashboardTable.js"
 
