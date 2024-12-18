@@ -37,7 +37,7 @@
                         {% if not item.members %}
                         <td>Sem Membros</td>
                         {% else %}
-                        <td>{{ item.members.replace('[', '').replace(']', '').replace('"', '') }}</td>
+                        <td>{{ item.members.replace('[', '').replace(']', '') }}</td>
                         {% endif %}
                         <td>
                             <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
