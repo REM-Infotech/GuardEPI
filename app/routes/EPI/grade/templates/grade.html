@@ -5,24 +5,26 @@
         <div class="card-header">
             <h2 class="m-2">Grades</h1>
                 <hr>
-                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#cadastrogrades">
+                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal"
+                    data-bs-target="#cadastrogrades">
                     <span class="icon text-white-50">
                         <i class="fa-solid fa-plus"></i>
                     </span>
                     <span class="text">Cadastrar</span>
                 </button>
-                <button type="button" class="btn btn-warning mb-3" data-bs-toggle="modal" data-bs-target="#importarquivo">
+                <button type="button" class="btn btn-warning mb-3" data-bs-toggle="modal"
+                    data-bs-target="#importarquivo">
                     <span class="icon text-white-50">
                         <i class="fa-solid fa-file-import"></i>
                     </span>
                     <span class="text">Import em lotes</span>
                 </button>
-                <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}" class="btn btn-primary btn-icon-split mb-3">
-                <span class="icon text-white-50">
-                    <i class="fa-solid fa-file-csv"></i>
-                </span>
-                <span class="text">Gerar Relatório</span>
-            </a>
+                <a href="#!" class="btn btn-primary btn-icon-split mb-3">
+                    <span class="icon text-white-50">
+                        <i class="fa-solid fa-file-csv"></i>
+                    </span>
+                    <span class="text">Gerar Relatório</span>
+                </a>
         </div>
 
         <div class="card-body table-responsive">
@@ -31,7 +33,7 @@
                     <tr>
                         <th>#</th>
                         <th>Grade</th>
-                        <th>Descrição</th> 
+                        <th>Descrição</th>
                         <th data-sortable="false">Ações</th>
                     </tr>
                 </thead>
@@ -46,7 +48,7 @@
                         {% else %}
                         <td>{{ item.descricao }}</td>
                         {% endif %}
-                        
+
                         <td>
                             <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
                                 hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
@@ -73,7 +75,7 @@
                     <tr>
                         <th>#</th>
                         <th>Grade</th>
-                        <th>Descrição</th> 
+                        <th>Descrição</th>
                         <th>Ações</th>
                     </tr>
                 </tfoot>

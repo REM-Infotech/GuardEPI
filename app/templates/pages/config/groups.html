@@ -11,12 +11,12 @@
                     </span>
                     <span class="text">Adicionar Grupo</span>
                 </button>
-                <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}" class="btn btn-primary btn-icon-split mb-3">
-                <span class="icon text-white-50">
-                    <i class="fa-solid fa-file-csv"></i>
-                </span>
-                <span class="text">Gerar Relatório</span>
-            </a>
+                <a href="#!" class="btn btn-primary btn-icon-split mb-3">
+                    <span class="icon text-white-50">
+                        <i class="fa-solid fa-file-csv"></i>
+                    </span>
+                    <span class="text">Gerar Relatório</span>
+                </a>
         </div>
 
         <div class="card-body table-responsive">
@@ -42,16 +42,16 @@
                         {% endif %}
                         <td>
                             <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
-                                hx-post="{{ url_for('deleteGroup', id = item.id) }}"
-                                hx-trigger="click" hx-target="#results">
+                                hx-post="{{ url_for('deleteGroup', id = item.id) }}" hx-trigger="click"
+                                hx-target="#results">
                                 <span class="icon text-white-50">
                                     <i class="fa-solid fa-trash"></i>
                                 </span>
                                 <span class="text">Deletar</span>
                             </button>
                             <button type="button" id="EditEstoqueButton" class="btn btn-warning btn-sm mb-2"
-                                hx-get="{{ url_for('setEditGroup', item = item.id) }}"
-                                hx-target="#results" onclick="showLoad()">
+                                hx-get="{{ url_for('setEditGroup', item = item.id) }}" hx-target="#results"
+                                onclick="showLoad()">
                                 <span class="icon text-white-50">
                                     <i class="fa-solid fa-pen"></i>
                                 </span>

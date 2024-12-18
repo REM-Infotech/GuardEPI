@@ -5,18 +5,19 @@
         <div class="card-header">
             <h2 class="m-2">Cautelas</h1>
                 <hr>
-                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#EmissãoCautela">
+                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal"
+                    data-bs-target="#EmissãoCautela">
                     <span class="icon text-white-50">
                         <i class="fa-solid fa-file-pdf"></i>
                     </span>
                     <span class="text">Emitir Cautela</span>
                 </button>
-                <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}" class="btn btn-primary btn-icon-split mb-3">
-                <span class="icon text-white-50">
-                    <i class="fa-solid fa-file-csv"></i>
-                </span>
-                <span class="text">Gerar Relatório</span>
-            </a>
+                <a href="#!" class="btn btn-primary btn-icon-split mb-3">
+                    <span class="icon text-white-50">
+                        <i class="fa-solid fa-file-csv"></i>
+                    </span>
+                    <span class="text">Gerar Relatório</span>
+                </a>
         </div>
 
         <div class="card-body table-responsive">
@@ -39,8 +40,7 @@
                         <td>{{ item.funcionario }}</td>
                         <td>{{ item.data_solicitacao.strftime("%d/%m/%Y") }}</td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-sm  mb-2 open-pdf"
-                                name="{{ item.filename}}"
+                            <button type="button" class="btn btn-danger btn-sm  mb-2 open-pdf" name="{{ item.filename}}"
                                 data-pdf-url="{{ url_for('serve_pdf', md = request.endpoint, index = item.id, _external=True, _scheme='https') }}"><span
                                     class="icon text-white-50">
                                     <i class="fa-solid fa-file-pdf"></i>
@@ -64,7 +64,7 @@
         </div>
     </div>
     {% if form %}
-    
+
     {% include 'pages/forms/cautelas/emitir.html' %}
     {% endif %}
     {% include 'includes/show_pdf_copy.html' %}

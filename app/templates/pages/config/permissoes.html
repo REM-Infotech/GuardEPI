@@ -4,14 +4,14 @@
 
         <div class="card-header">
             <h2 class="m-2">Permissões</h2>
-                <hr>
-                <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#CreateRuleForm">
-                    <span class="icon text-white-50">
-                        <i class="fa-solid fa-plus"></i>
-                    </span>
-                    <span class="text">Configurar Nova Regra</span>
-                </button>
-                <a href="{{ url_for('gerar_relatorio', dbase = request.endpoint) }}" class="btn btn-primary btn-icon-split mb-3">
+            <hr>
+            <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#CreateRuleForm">
+                <span class="icon text-white-50">
+                    <i class="fa-solid fa-plus"></i>
+                </span>
+                <span class="text">Configurar Nova Regra</span>
+            </button>
+            <a href="#!" class="btn btn-primary btn-icon-split mb-3">
                 <span class="icon text-white-50">
                     <i class="fa-solid fa-file-csv"></i>
                 </span>
@@ -42,8 +42,8 @@
                         {% endif %}
                         <td>
                             <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
-                                hx-post="{{ url_for('deleteGroup', id = item.id) }}"
-                                hx-trigger="click" hx-target="#results">
+                                hx-post="{{ url_for('deleteGroup', id = item.id) }}" hx-trigger="click"
+                                hx-target="#results">
                                 <span class="icon text-white-50">
                                     <i class="fa-solid fa-trash"></i>
                                 </span>
