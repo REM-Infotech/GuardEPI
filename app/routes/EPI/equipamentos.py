@@ -86,7 +86,7 @@ def cadastro():
     return render_template("index.html", page=page, form=form)
 
 
-@equip.route("/equipamentos/editar/<id>", methods=["GET", "POST"])
+@equip.route("/equipamentos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 def editar(id: int):
 
@@ -181,7 +181,7 @@ def editar(id: int):
     return render_template("index.html", page=page, form=form, url_image=url_image)
 
 
-@equip.route("/equipamentos/deletar/<id>")
+@equip.route("/equipamentos/deletar/<int:id>")
 def deletar(id: int):
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]

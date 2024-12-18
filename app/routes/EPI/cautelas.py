@@ -2,11 +2,9 @@ import json
 import os
 import uuid
 from datetime import datetime
-from pathlib import Path
 from time import sleep
 
 from flask import (
-    Blueprint,
     abort,
     flash,
     get_flashed_messages,
@@ -37,11 +35,10 @@ from app.models import (
     RegistrosEPI,
 )
 
-template_folder = Path(__file__).parent.resolve().joinpath("templates")
-cautelas = Blueprint("cautelas", __name__, template_folder=template_folder)
+from .categorias import epi
 
 
-@cautelas.before_request
+@epi.before_request
 def setgroups():
 
     if request.endpoint == "Cautelas":
@@ -61,7 +58,7 @@ def setgroups():
                 f.write(json_obj)
 
 
-@cautelas.route("/add_itens", methods=["GET", "POST"])
+@epi.route("/add_itens", methods=["GET", "POST"])
 @login_required
 def add_itens():
 
@@ -90,7 +87,7 @@ def add_itens():
         abort(500, description=str(e))
 
 
-@cautelas.route("/remove-itens", methods=["GET", "POST"])
+@epi.route("/remove-itens", methods=["GET", "POST"])
 @login_required
 def remove_itens():
 
@@ -104,7 +101,7 @@ def remove_itens():
     return item_html
 
 
-@cautelas.route("/Registro_Saidas", methods=["GET"])
+@epi.route("/Registro_Saidas", methods=["GET"])
 @login_required
 def Registro_Saidas():
 
@@ -121,7 +118,7 @@ def Registro_Saidas():
     )
 
 
-@cautelas.route("/Cautelas", methods=["GET"])
+@epi.route("/Cautelas", methods=["GET"])
 @login_required
 def Cautelas():
 
@@ -140,7 +137,7 @@ def Cautelas():
     )
 
 
-@cautelas.route("/get-grade", methods=["POST"])
+@epi.route("/get-grade", methods=["POST"])
 @login_required
 def get_grade():
     # >> Issue: [B110:try_except_pass] Try, Except, Pass detected.
@@ -174,7 +171,7 @@ def get_grade():
         abort(500, description=str(e))
 
 
-@cautelas.route("/emitir_cautela", methods=["POST"])
+@epi.route("/emitir_cautela", methods=["POST"])
 @login_required
 @create_perm
 def emitir_cautela():
