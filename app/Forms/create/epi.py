@@ -79,18 +79,18 @@ class InsertEstoqueForm(FlaskForm):
 
 
 class CadastroEPIForm(FlaskForm):
-    ca = StringField(label="CA")
-    cod_ca = IntegerField(label="Cod CA", validators=[DataRequired()])
+    ca = StringField(label="CA", default="Não Especificado")
+    cod_ca = IntegerField(label="Cod CA", validators=[DataRequired()], default="9999")
     nome_epi = StringField(label="EPI", validators=[DataRequired()])
     tipo_epi = SelectField(label="Tipo do EPI", validators=[DataRequired()], choices=[])
     valor_unitario = StringField(label="Valor Unitário", validators=[DataRequired()])
-    qtd_entregar = IntegerField(label="Quantidade a Entregar")
+    qtd_entregar = IntegerField(label="Quantidade a Entregar", default=1)
     vencimento = DateField(label="Vencimento CA")
-    periodicidade_item = IntegerField(label="Periodicidade do Item")
+    periodicidade_item = IntegerField(label="Periodicidade do Item", default=90)
     fornecedor = SelectField(label="Fornecedor", choices=[])
     marca = SelectField(label="Marca", choices=[])
     modelo = SelectField(label="Modelo", choices=[])
-    descricao = TextAreaField("Descrição (Opcional)")
+    descricao = TextAreaField("Descrição (Opcional)", default="Sem Descrição")
     filename = FileField(
         label="Foto do EPI",
         id="imagem",
