@@ -2,13 +2,19 @@
   <script src="{{ url_for('static', filename = 'js/Formatadores/CNPJ.js') }}"></script>
   <div class="card mt-4 mb-4">
     <div class="card-header">
-      <h2>Tarefas de Notificação</h2>
+      <h2>Empresas</h2>
       <hr>
-      <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#cadastroFuncionario">
+      <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#cadastroEmpresa">
         <span class="icon text-white-50">
           <i class="fa-solid fa-plus"></i>
         </span>
-        <span class="text">Criar Tarefa</span>
+        <span class="text">Cadastrar</span>
+      </button>
+      <button type="button" class="btn btn-warning mb-3" data-bs-toggle="modal" data-bs-target="#importarquivo">
+        <span class="icon text-white-50">
+          <i class="fa-solid fa-file-import"></i>
+        </span>
+        <span class="text">Import em lotes</span>
       </button>
       <a href="#!" class="btn btn-primary btn-icon-split mb-3">
         <span class="icon text-white-50">
@@ -18,14 +24,12 @@
       </a>
     </div>
     <div class="card-body table-responsive">
-      <table class="table table-striped" id="FuncionariosTable">
+      <table class="table table-striped" id="EmpresaTable">
         <thead>
           <tr>
             <th>#</th>
-            <th>Nome Tarefa</th>
-            <th>Dias da Semana</th>
-            <th>Hora Execução</th>
-            <th>Delta Time</th>
+            <th>Empresa</th>
+            <th>CNPJ</th>
             <th data-sortable="false">Ações</th>
           </tr>
         </thead>
@@ -34,10 +38,8 @@
           {% for item in database %}
           <tr>
             <td>{{item.id}}</td>
-            <td>{{ item.nome_funcionario }}</td>
-            <td>{{ item.cargo }}</td>
-            <td>{{ item.departamento }}</td>
-            <td>{{ item.empresa }}</td>
+            <td>{{ item.nome_empresa }}</td>
+            <td>{{ item.cnpj_empresa }}</td>
             <td>
               <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm mb-2"
                 hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}" hx-trigger="click"
@@ -63,10 +65,8 @@
         <tfoot>
           <tr>
             <th>#</th>
-            <th>Nome Tarefa</th>
-            <th>Dias da Semana</th>
-            <th>Hora Execução</th>
-            <th>Delta Time</th>
+            <th>Empresa</th>
+            <th>CNPJ</th>
             <th>Ações</th>
           </tr>
         </tfoot>
@@ -75,8 +75,3 @@
   </div>
 
 </div>
-
-
-{% if form %}
-{% include 'form_page.html' %}
-{% endif %}
