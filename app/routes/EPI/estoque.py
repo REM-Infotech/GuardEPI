@@ -1,10 +1,18 @@
 import os
 
-from flask import abort, flash, redirect, render_template, request, url_for
+from flask import (
+    abort,
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for,
+    current_app as app,
+)
 from flask_login import login_required
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 
-from app import app, db
 from app.decorators import create_perm
 from app.forms import InsertEstoqueForm
 from app.misc import format_currency_brl
@@ -75,6 +83,8 @@ def Entradas():
 @create_perm
 def lancamento_produto():
     try:
+
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
         form = InsertEstoqueForm()
         if form.validate_on_submit():
             query_Estoque = EstoqueEPI.query

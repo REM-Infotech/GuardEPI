@@ -1,68 +1,67 @@
-import os
-from typing import Type
+# import os
+# from typing import Type
 
-import pandas as pd
-from flask import make_response, send_file
-from flask_login import login_required
-from sqlalchemy import LargeBinary
+# import pandas as pd
+# from flask import make_response, send_file, current_app as app
+# from flask_login import login_required
+# from sqlalchemy import LargeBinary
 
-from app import app, db
-from app.models import (
-    Cargos,
-    Departamento,
-    Empresa,
-    EstoqueEPI,
-    EstoqueGrade,
-    Funcionarios,
-    GradeEPI,
-    ProdutoEPI,
-)
+# from app.models import (
+#     Cargos,
+#     Departamento,
+#     Empresa,
+#     EstoqueEPI,
+#     EstoqueGrade,
+#     Funcionarios,
+#     GradeEPI,
+#     ProdutoEPI,
+# )
 
-tipo = db.Model
-
-
-def getModel(tipo: str) -> Type[tipo]:
-    model = {
-        "funcionarios": Funcionarios,
-        "empresas": Empresa,
-        "departamentos": Departamento,
-        "cargo.cargos": Cargos,
-        "estoque": EstoqueEPI,
-        "grade": GradeEPI,
-        "equipamentos": ProdutoEPI,
-        "estoque_grade": EstoqueGrade,
-    }
-
-    return model[tipo]
+# tipo = db.Model
 
 
-@app.route("/gen_model/<model>", methods=["GET"])
-@login_required
-def gen_model(model: str):
-    str_model = model
-    model = getModel(model.lower())
+# def getModel(tipo: str) -> Type[tipo]:
+#     model = {
+#         "funcionarios": Funcionarios,
+#         "empresas": Empresa,
+#         "departamentos": Departamento,
+#         "cargo.cargos": Cargos,
+#         "estoque": EstoqueEPI,
+#         "grade": GradeEPI,
+#         "equipamentos": ProdutoEPI,
+#         "estoque_grade": EstoqueGrade,
+#     }
 
-    # Extraindo os nomes das colunas do modelo
+#     return model[tipo]
 
-    model.__table__.columns
-    columns = []
-    for column in model.__table__.columns:
-        if not isinstance(column.type, LargeBinary):
-            columns.append(column.name)
 
-    # Criando um DataFrame com as colunas
-    df = pd.DataFrame(columns=columns)
+# @app.route("/gen_model/<model>", methods=["GET"])
+# @login_required
+# def gen_model(model: str):
+#     str_model = model
+#     model = getModel(model.lower())
 
-    # Salvando o DataFrame em uma planilha
-    filename = f"{str_model}.xlsx"
-    file_path = os.path.join(app.config["TEMP_PATH"], filename)
+#     # Extraindo os nomes das colunas do modelo
 
-    with pd.ExcelWriter(file_path, engine="auto") as writer:
-        df.to_excel(writer, index=False, sheet_name="Sheet1")
+#     model.__table__.columns
+#     columns = []
+#     for column in model.__table__.columns:
+#         if not isinstance(column.type, LargeBinary):
+#             columns.append(column.name)
 
-    response = make_response(send_file(f"{file_path}", as_attachment=True))
-    response.headers["Content-Disposition"] = f"attachment; filename={filename}"
-    return response
+#     # Criando um DataFrame com as colunas
+#     df = pd.DataFrame(columns=columns)
+
+#     # Salvando o DataFrame em uma planilha
+#     filename = f"{str_model}.xlsx"
+#     file_path = os.path.join(app.config["TEMP_PATH"], filename)
+
+#     with pd.ExcelWriter(file_path, engine="auto") as writer:
+#         df.to_excel(writer, index=False, sheet_name="Sheet1")
+
+#     response = make_response(send_file(f"{file_path}", as_attachment=True))
+#     response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+#     return response
 
 
 # @app.route("/import_lotes/<tipo>", methods=["POST"])

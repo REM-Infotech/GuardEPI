@@ -12,10 +12,10 @@ from flask import (
     request,
     session,
     url_for,
+    current_app as app,
 )
 from flask_login import login_required
-
-from app import app, db
+from flask_sqlalchemy import SQLAlchemy
 from app.decorators import create_perm
 from app.forms import Cautela
 from app.misc import format_currency_brl, generate_pid
@@ -177,6 +177,8 @@ def get_grade():
 def emitir_cautela():
 
     try:
+
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
         form = Cautela()
         if form.validate_on_submit:
 
