@@ -1,36 +1,27 @@
-<div class="container-fluid px-4">
-  <div class="row">
-    <div class="col-lg-8 mx-auto">
-      <form class="card border-0 shadow rounded-3 my-5" action="{{ url }}" method="POST" enctype="multipart/form-data"
-        target="_blank">
-        <h4 class="card-header p-4">{{ display_name }}</h4>
-        {% if form %}
-        <div class="card-body bg-warning bg-opacity-75 p-4 p-sm-5">
-          {{ form.hidden_tag() }}
-          <div class="row g-3 rounded justify-content-center p-3">
-            {% for field in form %}
-            {% if field.name == "data_inicio" or field.name == "doc_parte" or
-            field.name == "data_fim" or field.name == "parte_name"%}
-            <div class="col-md-5 mb-3 border border-secondary p-2 border-2 rounded bg-white">
+<div class="container px-4">
+  <div class="mt-4 card mb-4">
+    <div class="card-header">
+      <h2 class="m-2">{{ endpoint }} - {{ act }}</h2>
+      <hr>
+    </div>
+    <div class="card-body table-responsive">
+      <form method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="row">
+          {% for field in form %}
+          <div class="col-12">
+            <div class="form-floating mb-3">
               {{ field.label(class="form-label") }}
               {{ field(class="form-control", id=field.id, **{"data-placeholder": field.label.text}) }}
             </div>
-            {% else %}
-            <div class="col-md-10 mb-3 border border-secondary p-2 border-2 rounded bg-white">
-              {{ field.label(class="form-label") }}
-              {{ field(class="form-control", id=field.id, **{"data-placeholder": field.label.text}) }}
+          </div>
+          {% endfor %}
+          <div class="footer">
+            <div class="d-grid gap-2">
+              {{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
             </div>
-            {% endif %}
-            {% endfor %}
           </div>
         </div>
-        <div class="card-footer d-grid gap-2">
-          {{ form.submit(class="btn btn btn-outline-success btn-login fw-semibold", onclick="showLoad()") }}
-          {% set url_model = url_for('bot.get_model', id=id, system=system, typebot=typebot,
-          filename=model_name) %}
-          <a class="btn btn-outline-primary fw-semibold" href="{{ url_model }}">Gerar Modelo</a>
-        </div>
-        {% endif %}
       </form>
     </div>
   </div>
