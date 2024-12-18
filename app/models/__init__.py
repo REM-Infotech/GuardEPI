@@ -1,9 +1,11 @@
 import json
-import os
+from os import path
+from pathlib import Path
 
 from dotenv import dotenv_values
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-from app import app, db
 from app.misc import generate_pid
 
 from .EPI import (
@@ -63,11 +65,13 @@ __all__ = (
 )
 
 
-def init_database() -> str:
-    root_pw = generate_pid(10)
+def init_database(app: Flask, db: SQLAlchemy) -> str:
 
     with app.app_context():
+
+        db.drop_all()
         db.create_all()
+
         to_add = []
 
         values = dotenv_values()
@@ -76,13 +80,18 @@ def init_database() -> str:
         nomeusr = values.get("nomeusr")
         emailusr = values.get("emailusr")
 
+        root_pw = generate_pid(10)
         usr = db.session.query(Users).filter_by(login=loginsys).first()
 
         if usr is None:
             filename = "favicon.png"
-            path_img = os.path.join("app", "src", "assets", "img", filename)
-            with open(path_img, "rb") as file:
+            path_img = Path(app.static_folder).joinpath(
+                path.join("assets", "img", filename)
+            )
+
+            with path_img.open("rb") as file:
                 blob_doc = file.read()
+
             usr = Users(
                 grupos=json.dumps(["Grupo Root"]),
                 login=loginsys,

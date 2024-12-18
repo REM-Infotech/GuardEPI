@@ -116,4 +116,4 @@ def init_extensions(app: Flask):
 
         if not Path("is_init.txt").exists():
             with open("is_init.txt", "w") as f:
-                f.write(init_database())
+                f.write(init_database(app, db))

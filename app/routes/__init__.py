@@ -23,6 +23,7 @@ from app.routes.EPI import (
     marca,
     modelo,
 )
+from app.routes.serving import serve
 
 
 def register_routes(app: Flask):
@@ -41,6 +42,7 @@ def register_routes(app: Flask):
             marca,
             modelo,
             grade,
+            serve,
         ]
 
         for blueprint in blueprints:

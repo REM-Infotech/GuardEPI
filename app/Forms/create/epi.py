@@ -56,8 +56,16 @@ class InsertEstoqueForm(FlaskForm):
     ### Formulário de inserção de produto no Estoque
     """
 
-    nome_epi = SelectField(label="EPI", validators=[DataRequired()], choices=[])
-    tipo_grade = SelectField(label="Grade", validators=[DataRequired()], choices=[])
+    nome_epi = SelectField(
+        label="EPI",
+        validators=[DataRequired()],
+        choices=[("Não Especificado", "Não Especificado")],
+    )
+    tipo_grade = SelectField(
+        label="Grade",
+        validators=[DataRequired()],
+        choices=[("Não Especificado", "Não Especificado")],
+    )
     tipo_qtd = SelectField(
         label="Tipo de Quantidade(Peça, Unidade, Par, etc)",
         choices=tipo_choices,
@@ -79,17 +87,48 @@ class InsertEstoqueForm(FlaskForm):
 
 
 class CadastroEPIForm(FlaskForm):
-    ca = StringField(label="CA", default="Não Especificado")
+
+    ca = SelectField(
+        label="CA",
+        choices=[
+            ("CA Válido", "CA Válido"),
+            ("CA Inválido", "CA Inválido"),
+            ("CA Não Informado", "CA Não Informado"),
+            ("Não Aplicável", "Não Aplicável"),
+        ],
+    )
     cod_ca = IntegerField(label="Cod CA", validators=[DataRequired()], default="9999")
     nome_epi = StringField(label="EPI", validators=[DataRequired()])
-    tipo_epi = SelectField(label="Tipo do EPI", validators=[DataRequired()], choices=[])
+
+    tipo_epi = SelectField(
+        label="Tipo do EPI",
+        validators=[DataRequired()],
+        choices=[("Não Especificado", "Não Especificado")],
+    )
+    # tipo_epi = StringField(label="Tipo do EPI", validators=[DataRequired()])
+
     valor_unitario = StringField(label="Valor Unitário", validators=[DataRequired()])
     qtd_entregar = IntegerField(label="Quantidade a Entregar", default=1)
     vencimento = DateField(label="Vencimento CA")
     periodicidade_item = IntegerField(label="Periodicidade do Item", default=90)
-    fornecedor = SelectField(label="Fornecedor", choices=[])
-    marca = SelectField(label="Marca", choices=[])
-    modelo = SelectField(label="Modelo", choices=[])
+
+    # fornecedor = StringField(label="Fornecedor")
+    # marca = StringField(label="Marca")
+    # modelo = StringField(label="Modelo")
+
+    fornecedor = SelectField(
+        label="Fornecedor",
+        choices=[("Não Especificado", "Não Especificado")],
+    )
+    marca = SelectField(
+        label="Marca",
+        choices=[("Não Especificado", "Não Especificado")],
+    )
+    modelo = SelectField(
+        label="Modelo",
+        choices=[("Não Especificado", "Não Especificado")],
+    )
+
     descricao = TextAreaField("Descrição (Opcional)", default="Sem Descrição")
     filename = FileField(
         label="Foto do EPI",
@@ -100,10 +139,20 @@ class CadastroEPIForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         self.fornecedor.choices.extend(set_choicesFornecedor())
         self.marca.choices.extend(set_choicesMarca())
         self.modelo.choices.extend(set_choicesModelo())
         self.tipo_epi.choices.extend(set_choicesClasseEPI())
+
+    def __getattr__(self, name: str):
+
+        func = super().__getattr__(name)
+        if not func:
+            func = getattr(self, name)
+            if not func:
+                raise AttributeError(f"Attribute {name} not found")
+        return
 
 
 class CadastroCategorias(FlaskForm):
@@ -132,12 +181,22 @@ class CadastroModelos(FlaskForm):
 
 class Cautela(FlaskForm):
     select_funcionario = SelectField(
-        label="Selecione o Funcionário", validators=[DataRequired()], choices=[]
+        label="Selecione o Funcionário",
+        validators=[DataRequired()],
+        choices=[("Não Especificado", "Não Especificado")],
     )
 
-    nome_epi = SelectField(id="selectNomeEpi", label="Selecione a EPI", choices=[])
+    nome_epi = SelectField(
+        id="selectNomeEpi",
+        label="Selecione a EPI",
+        choices=[("Não Especificado", "Não Especificado")],
+    )
 
-    tipo_grade = SelectField(id="selectNomeEpi", label="Selecione a Grade", choices=[])
+    tipo_grade = SelectField(
+        id="selectNomeEpi",
+        label="Selecione a Grade",
+        choices=[("Não Especificado", "Não Especificado")],
+    )
 
     qtd_entregar = IntegerField(
         label="Quantidade para entregar", validators=[Length(min=1)]

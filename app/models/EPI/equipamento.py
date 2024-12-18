@@ -6,26 +6,36 @@ from app import db
 
 
 class ProdutoEPI(db.Model):
-    id = db.Column(db.Integer, primary_key=True, unique=True)
-    ca = db.Column(db.String(length=64), nullable=False)
-    cod_ca = db.Column(db.Integer)
-    nome_epi = db.Column(db.String(length=64), nullable=False, unique=True)
-    tipo_epi = db.Column(db.String(length=64), nullable=False)
-    valor_unitario = db.Column(db.Float, nullable=False)
-    qtd_entregar = db.Column(db.Integer, nullable=False)
-    periodicidade_item = db.Column(db.Integer, nullable=False, default=10)
-    fornecedor = db.Column(db.String(length=64))
-    marca = db.Column(db.String(length=64))
-    modelo = db.Column(db.String(length=64))
-    filename = db.Column(db.String(length=128))
-    blob_doc = db.Column(db.LargeBinary(length=(2**32) - 1))
-    vencimento = db.Column(
+    id: int = db.Column(db.Integer, primary_key=True, unique=True)
+    ca: str = db.Column(db.String(length=64), nullable=False)
+    cod_ca: int = db.Column(db.Integer)
+    nome_epi: str = db.Column(db.String(length=64), nullable=False, unique=True)
+    tipo_epi: str = db.Column(db.String(length=64), nullable=False)
+    valor_unitario: float = db.Column(db.Float, nullable=False)
+    qtd_entregar: int = db.Column(db.Integer, nullable=False)
+    periodicidade_item: int = db.Column(db.Integer, nullable=False, default=10)
+    fornecedor: str = db.Column(db.String(length=64))
+    marca: str = db.Column(db.String(length=64))
+    modelo: str = db.Column(db.String(length=64))
+    filename: str = db.Column(db.String(length=128))
+    blob_doc: bytes = db.Column(db.LargeBinary(length=(2**32) - 1))
+    vencimento: datetime = db.Column(
         db.DateTime, default=datetime.now(pytz.timezone("Etc/GMT+4"))
     )
-    descricao = db.Column(db.Text, default="Sem Descrição")
+    descricao: str = db.Column(db.Text, default="Sem Descrição")
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: tuple, **kwargs: dict) -> None:
         super().__init__(*args, **kwargs)
+
+    def __getattr__(self, attr: str):
+
+        func = super().__getattr__(attr)
+        if not func:
+            func = getattr(self, attr)
+            if not func:
+                raise AttributeError(f"Attribute {attr} not found")
+
+        return func
 
 
 class Fornecedores(db.Model):

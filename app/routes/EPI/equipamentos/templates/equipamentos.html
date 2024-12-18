@@ -47,7 +47,12 @@
             <td>{{ format_currency_brl(item.valor_unitario).replace("\\xa", "") }}</td>
             <td>{{ item.marca }}</td>
             <td>
-              vazio
+              <a type="button" class="btn btn-warning btn-sm m-1" href="{{ url_for('equip.editar', id=item.id) }}">
+                <span class="icon text-white-50">
+                  <i class="fa-solid fa-pen"></i>
+                </span>
+                <span class="text">Editar</span>
+              </a>
               {#
               <button type="button" id="DeleteEpiButton" class="btn btn-danger btn-sm mb-2"
                 hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}" hx-trigger="click"
@@ -60,10 +65,7 @@
 
               <button type="button" id="EditEpiButton" class="btn btn-warning btn-sm mb-2"
                 hx-get="{{ url_for('SetEditarEPI', item = item.id) }}" hx-target="#results" onclick="showLoad()">
-                <span class="icon text-white-50">
-                  <i class="fa-solid fa-pen"></i>
-                </span>
-                <span class="text">Editar</span>
+
               </button> #}
             </td>
           </tr>
