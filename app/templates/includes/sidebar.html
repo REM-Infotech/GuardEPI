@@ -3,7 +3,7 @@
         <div class="sb-sidenav-menu">
             <div class="nav">
                 <div class="sb-sidenav-menu-heading">EPI</div>
-                <a class="nav-link" href="{{ url_for("dash.dashboard") }}">
+                <a class="nav-link" href="{{ url_for('dash.dashboard') }}">
                     <div class="sb-nav-link-icon">
                         <i class="fas fa-tachometer-alt"></i>
                     </div>
@@ -44,12 +44,12 @@
                              aria-labelledby="headingOne"
                              data-bs-parent="#sidenavAccordionPages">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="{{ url_for("epi.Equipamentos") }}">Equipamentos</a>
-                                <a class="nav-link" href="{{ url_for("epi.Grade") }}">Grades</a>
-                                <a class="nav-link" href="{{ url_for("epi.categorias") }}">Classes</a>
-                                <a class="nav-link" href="{{ url_for("epi.fornecedores") }}">Fornecedores</a>
-                                <a class="nav-link" href="{{ url_for("epi.marcas") }}">Marcas</a>
-                                <a class="nav-link" href="{{ url_for("epi.modelos") }}">Modelos</a>
+                                <a class="nav-link" href="{{ url_for('epi.Equipamentos') }}">Equipamentos</a>
+                                <a class="nav-link" href="{{ url_for('epi.Grade') }}">Grades</a>
+                                <a class="nav-link" href="{{ url_for('epi.categorias') }}">Classes</a>
+                                <a class="nav-link" href="{{ url_for('epi.fornecedores') }}">Fornecedores</a>
+                                <a class="nav-link" href="{{ url_for('epi.marcas') }}">Marcas</a>
+                                <a class="nav-link" href="{{ url_for('epi.modelos') }}">Modelos</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed"
@@ -68,9 +68,9 @@
                              aria-labelledby="headingOne"
                              data-bs-parent="#sidenavAccordionPages">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="{{ url_for("epi.Estoque") }}">Equipamentos</a>
-                                <a class="nav-link" href="{{ url_for("epi.Estoque_Grade") }}">Grades</a>
-                                <a class="nav-link" href="{{ url_for("epi.Entradas") }}">Entradas</a>
+                                <a class="nav-link" href="{{ url_for('epi.Estoque') }}">Equipamentos</a>
+                                <a class="nav-link" href="{{ url_for('epi.Estoque_Grade') }}">Grades</a>
+                                <a class="nav-link" href="{{ url_for('epi.Entradas') }}">Entradas</a>
                             </nav>
                         </div>
                         <a class="nav-link collapsed"
@@ -89,8 +89,8 @@
                              aria-labelledby="headingOne"
                              data-bs-parent="#sidenavAccordionPages">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="{{ url_for("epi.Cautelas") }}">Cautelas</a>
-                                <a class="nav-link" href="{{ url_for("epi.Registro_Saidas") }}">Registro Saídas</a>
+                                <a class="nav-link" href="{{ url_for('epi.Cautelas') }}">Cautelas</a>
+                                <a class="nav-link" href="{{ url_for('epi.Registro_Saidas') }}">Registro Saídas</a>
                             </nav>
                         </div>
                     </nav>
@@ -115,10 +115,10 @@
                      aria-labelledby="headingOne"
                      data-bs-parent="#sidenavAccordion">
                     <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="{{ url_for("corp.funcionarios") }}">Funcionários</a>
-                        <a class="nav-link" href="{{ url_for("corp.Empresas") }}">Empresas</a>
-                        <a class="nav-link" href="{{ url_for("corp.cargos") }}">Cargos</a>
-                        <a class="nav-link" href="{{ url_for("corp.Departamentos") }}">Departamentos</a>
+                        <a class="nav-link" href="{{ url_for('corp.funcionarios') }}">Funcionários</a>
+                        <a class="nav-link" href="{{ url_for('corp.Empresas') }}">Empresas</a>
+                        <a class="nav-link" href="{{ url_for('corp.cargos') }}">Cargos</a>
+                        <a class="nav-link" href="{{ url_for('corp.Departamentos') }}">Departamentos</a>
                     </nav>
                 </div>
                 <div class="sb-sidenav-menu-heading">Sistema</div>
@@ -164,7 +164,7 @@
                         <hr class="dropdown-divider">
                     </li>
                     <li>
-                        <a class="dropdown-item" href="{{ url_for("auth.logout") }}">Sair</a>
+                        <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sair</a>
                     </li>
                 </ul>
             </div>

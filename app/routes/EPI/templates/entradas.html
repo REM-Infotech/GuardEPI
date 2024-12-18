@@ -37,7 +37,7 @@
                                     <td>
                                         <button type="button"
                                                 class="btn btn-primary btn-sm  mb-2 open-pdf"
-                                                name="{{ item.filename}}"
+                                                name="{{ item.filename }}"
                                                 data-pdf-url="{{ url_for('serve_pdf', index = item.id, md = request.endpoint, _external=True, _scheme='https') }}">
                                             <span class="icon text-white-50">
                                                 <i class="fa-solid fa-file-pdf"></i>

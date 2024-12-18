@@ -39,7 +39,7 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <form action="{{ url_for("auth.login") }}" method="post">
+                                        <form action="{{ url_for('auth.login') }}" method="post">
                                             {{ form.hidden_tag() }}
                                             <div class="form-floating mb-3">
                                                 {{ form.login(class="form-control", id="formLogin", placeholder="...") }}
@@ -78,9 +78,9 @@
                         <div class="d-flex align-items-center justify-content-between small">
                             <div class="text-muted">Copyright &copy; GuardEPI 2024</div>
                             <div>
-                                <a href="{{ url_for("politica_privacidade") }}">Política de Privacidade</a>
+                                <a href="{{ url_for('politica_privacidade') }}">Política de Privacidade</a>
                                 &middot;
-                                <a href="{{ url_for("termos_uso") }}">Termos &amp; Condições</a>
+                                <a href="{{ url_for('termos_uso') }}">Termos &amp; Condições</a>
                             </div>
                         </div>
                     </div>

@@ -7,7 +7,7 @@
             <hr>
         </div>
         <div class="card-body bg-secondary bg-opacity-25">
-            <h4>Registros {{month}}/{{year}}</h4>
+            <h4>Registros {{ month }}/{{ year }}</h4>
             <hr>
             <div class="row">
                 <div class="col-xl-3 col-md-6">
@@ -24,7 +24,7 @@
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link"
-                               href="{{ url_for("epi.Cautelas") }}">Ver Detalhes</a>
+                               href="{{ url_for('epi.Cautelas') }}">Ver Detalhes</a>
                             <div class="small text-white">
                                 <i class="fas fa-angle-right"></i>
                             </div>
@@ -41,7 +41,7 @@
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link"
-                               href="{{ url_for("epi.Cautelas") }}">Ver Detalhes</a>
+                               href="{{ url_for('epi.Cautelas') }}">Ver Detalhes</a>
                             <div class="small text-white">
                                 <i class="fas fa-angle-right"></i>
                             </div>
@@ -54,11 +54,11 @@
                             <h4 class="text">Entradas Qtd.</h4>
                         </div>
                         <div class="card-body">
-                            <h3 class="text">{{total_entradas}}</h3>
+                            <h3 class="text">{{ total_entradas }}</h3>
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link"
-                               href="{{ url_for("epi.Entradas") }}">Ver Detalhes</a>
+                               href="{{ url_for('epi.Entradas') }}">Ver Detalhes</a>
                             <div class="small text-white">
                                 <i class="fas fa-angle-right"></i>
                             </div>
@@ -75,7 +75,7 @@
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
                             <a class="small text-white stretched-link"
-                               href="{{ url_for("epi.Entradas") }}">Ver Detalhes</a>
+                               href="{{ url_for('epi.Entradas') }}">Ver Detalhes</a>
                             <div class="small text-white">
                                 <i class="fas fa-angle-right"></i>
                             </div>

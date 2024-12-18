@@ -20,7 +20,7 @@
                         role="tab"
                         aria-controls="nav-cad_user"
                         aria-selected="false"
-                        hx-get="{{ url_for("caduser_end") }}"
+                        hx-get="{{ url_for('caduser_end') }}"
                         hx-trigger="click"
                         hx-target="#CreateUserForm"
                         hx-indicator="#indicator">
@@ -37,7 +37,7 @@
                         role="tab"
                         aria-controls="nav_changemail"
                         aria-selected="false"
-                        hx-get="{{ url_for("changemail_end") }}"
+                        hx-get="{{ url_for('changemail_end') }}"
                         hx-trigger="click"
                         hx-target="#AdmChangeMailForm"
                         hx-indicator="#mailindicator">
@@ -54,7 +54,7 @@
                         role="tab"
                         aria-controls="nav_changepw"
                         aria-selected="false"
-                        hx-get="{{ url_for("changepw_end") }}"
+                        hx-get="{{ url_for('changepw_end') }}"
                         hx-trigger="click"
                         hx-target="#AdmChangePasswordForm"
                         hx-indicator="#pwindicator">
@@ -72,7 +72,7 @@
                             role="tab"
                             aria-controls="clientetable"
                             aria-selected="false"
-                            hx-get="{{ url_for("clientetable_end") }}"
+                            hx-get="{{ url_for('clientetable_end') }}"
                             hx-trigger="click"
                             hx-target="#ClientesTable"
                             hx-indicator="#clindicator">

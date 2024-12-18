@@ -46,7 +46,7 @@
                         <h4>Informações da conta</h4>
                     </div>
                     <div class="card-body">
-                        {% if session["username"] == "root"%}
+                        {% if session["username"] == "root" %}
                             <div class="form-floating mb-3">
                                 {{ form.login(type="text", class="form-control", id="login", placeholder="", disabled = "True") }}
                                 {{ form.login.label(for="login") }}

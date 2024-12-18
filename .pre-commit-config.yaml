@@ -46,6 +46,9 @@ repos:
       - id: djlint-reformat-handlebars
         files: "\\.html"
         types_or: ["html"]
+        args: ["--profile", "jinja"]
+
       - id: djlint-handlebars
         files: "\\.html"
         types_or: ["html"]
+        args: ["--profile", "jinja"]
