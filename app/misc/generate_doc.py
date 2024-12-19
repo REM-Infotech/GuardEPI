@@ -291,8 +291,8 @@ def create_EPI_control_sheet(filename, employee_data, d, item_data, logo_path):
     c.drawString(0.5 * inch, 1.5 * inch, "____________________________________________")
     c.drawString(0.5 * inch, 1.3 * inch, "Assinatura do Funcionário")
 
-    # c.drawString(4.5 * inch, 1.5 * inch, "____________________________________________")
-    # c.drawString(4.5 * inch, 1.3 * inch, "Assinatura do Responsável")
+    c.drawString(4.5 * inch, 1.5 * inch, "____________________________________________")
+    c.drawString(4.5 * inch, 1.3 * inch, "Assinatura do Entregador")
 
     # Finaliza o PDF
     c.showPage()
