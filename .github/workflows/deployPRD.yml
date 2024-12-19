@@ -1,26 +1,21 @@
 on:
   release:
-      types: [published]
+    types: [published]
 
 jobs:
   deploy_PRD:
-    
     name: Setup Gcloud Account
     runs-on: ubuntu-latest
-
 
     env:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/site:latest
     steps:
-
-      
       # Git checkout
       - name: Checkout
         uses: actions/checkout@v2
-      
+
       - name: Set environment variables
         env:
-
           login: ${{ secrets.logindb_prd }}
           password: ${{ secrets.passworddb_prd }}
           host: ${{ secrets.hostdb_prd }}
@@ -41,12 +36,12 @@ jobs:
           echo "password_api=$password_api" >> .env
           echo "url_api=$url_api" >> .env
           echo "CLOUDFLARED_TOKEN=$CLOUDFLARED_TOKEN" >> .env
-          
+
       # Login to GCP
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v2'
+      - id: "auth"
+        uses: "google-github-actions/auth@v2"
         with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+          credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
 
       - uses: google-github-actions/setup-gcloud@v2
         with:
@@ -67,4 +62,3 @@ jobs:
       # deploy image
       - name: Deploy Docker image
         run: gcloud run deploy prdguardepi --image $IMAGE_NAME --region us-central1 --memory 512Mi --port 5002 --min-instances 0 --max-instances 1 --platform managed --allow-unauthenticated
-  

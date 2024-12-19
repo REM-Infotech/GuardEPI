@@ -7,7 +7,7 @@
         <div class="card-body bg-secondary bg-opacity-25">
             <h4>Registros {{ month }}/{{ year }}</h4>
             <hr>
-            <div class="row">
+            <div class="row g-3">
                 <div class="col-xl-3 col-md-6">
                     <div class="card bg-success text-white mb-4">
                         <div class="card-header">
@@ -15,14 +15,14 @@
                         </div>
                         <div class="card-body">
                             {% if total_saidas == 0 %}
-                                <h3 class="text">Sem registro</h3>
+                            <h3 class="text">Sem registro</h3>
                             {% else %}
-                                <h3 class="text">{{ total_saidas }}</h3>
+                            <h3 class="text">{{ total_saidas }}</h3>
                             {% endif %}
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link"
-                               href="{{ url_for('epi.Cautelas') }}">Ver Detalhes</a>
+                            <a class="small text-white stretched-link" href="{{ url_for('epi.Cautelas') }}">Ver
+                                Detalhes</a>
                             <div class="small text-white">
                                 <i class="fas fa-angle-right"></i>
                             </div>
@@ -38,8 +38,8 @@
                             <h3 class="text">- {{ format_currency_brl(valor_total) }}</h3>
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link"
-                               href="{{ url_for('epi.Cautelas') }}">Ver Detalhes</a>
+                            <a class="small text-white stretched-link" href="{{ url_for('epi.Cautelas') }}">Ver
+                                Detalhes</a>
                             <div class="small text-white">
                                 <i class="fas fa-angle-right"></i>
                             </div>
@@ -55,8 +55,8 @@
                             <h3 class="text">{{ total_entradas }}</h3>
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link"
-                               href="{{ url_for('epi.Entradas') }}">Ver Detalhes</a>
+                            <a class="small text-white stretched-link" href="{{ url_for('epi.Entradas') }}">Ver
+                                Detalhes</a>
                             <div class="small text-white">
                                 <i class="fas fa-angle-right"></i>
                             </div>
@@ -72,8 +72,8 @@
                             <h3 class="text">{{ format_currency_brl(valor_totalEntradas) }}</h3>
                         </div>
                         <div class="card-footer d-flex align-items-center justify-content-between">
-                            <a class="small text-white stretched-link"
-                               href="{{ url_for('epi.Entradas') }}">Ver Detalhes</a>
+                            <a class="small text-white stretched-link" href="{{ url_for('epi.Entradas') }}">Ver
+                                Detalhes</a>
                             <div class="small text-white">
                                 <i class="fas fa-angle-right"></i>
                             </div>
@@ -81,7 +81,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row g-3">
                 <div class="col-xl-6">
                     <div class="card mb-4">
                         <div class="card-header">
@@ -122,24 +122,27 @@
                             </tr>
                         </thead>
                         {# <tbody>
-              {% if database %}
-              {% for item in database %}
-              <tr>
-                <td>{{ item.id }}</td>
-                <td>{{ item.nome_epis }}</td>
-                <td>{{ item.funcionario }}</td>
-                <td>{{ item.data_solicitacao.strftime("%d/%m/%Y") }}</td>
-                <td>
-                  <button type="button" class="btn btn-primary btn-sm  mb-2 open-pdf" name="{{ item.filename}}" data-pdf-url="{{ url_for('serve_pdf', index = item.id, md = request.endpoint, _external=True, _scheme='https') }}"><span class="icon text-white-50">
-                      <i class="fa-solid fa-file-pdf"></i>
-                    </span>
-                    <span cl<span class="text">Ver PDF</span>
-                  </button>
-                </td>
-              </tr>
-              {% endfor %}
-              {% endif %}
-            </tbody> #}
+                            {% if database %}
+                            {% for item in database %}
+                            <tr>
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.nome_epis }}</td>
+                                <td>{{ item.funcionario }}</td>
+                                <td>{{ item.data_solicitacao.strftime("%d/%m/%Y") }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm  mb-2 open-pdf"
+                                        name="{{ item.filename}}"
+                                        data-pdf-url="{{ url_for('serve_pdf', index = item.id, md = request.endpoint, _external=True, _scheme='https') }}"><span
+                                            class="icon text-white-50">
+                                            <i class="fa-solid fa-file-pdf"></i>
+                                        </span>
+                                        <span cl<span class="text">Ver PDF</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                        </tbody> #}
                         <tfoot>
                             <tr>
                                 <th>#</th>
