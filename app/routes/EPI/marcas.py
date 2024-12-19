@@ -1,9 +1,11 @@
-from flask import render_template, request, flash, redirect, url_for, current_app as app
+from flask import current_app as app
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
 from app.forms import CadastroMarcas
 from app.models import Marcas
+
 from . import epi
 
 

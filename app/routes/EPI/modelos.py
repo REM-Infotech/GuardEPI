@@ -1,4 +1,5 @@
-from flask import render_template, current_app as app, flash, redirect, url_for, request
+from flask import current_app as app
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 

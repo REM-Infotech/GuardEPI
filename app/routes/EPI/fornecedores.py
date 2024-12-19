@@ -1,4 +1,5 @@
-from flask import render_template, current_app as app, flash, redirect, url_for, request
+from flask import current_app as app
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
@@ -10,7 +11,7 @@ from . import epi
 
 @epi.route("/fornecedores", methods=["GET"])
 @login_required
-def Fornecedores():
+def fornecedores():
     form = CadastroFornecedores()
 
     page = "fornecedores.html"

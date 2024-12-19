@@ -1,31 +1,28 @@
 <div class="container px-4">
-  <div class="mt-4 card mb-4">
-    <div class="card-header">
-      <h2 class="m-2">{{ endpoint }} - {{ act }}</h2>
-      <hr>
-    </div>
-    <div class="card-body table-responsive">
-      <form method="post" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <div class="row">
-          {% for field in form %}
-
-          {% if field.name != "submit" and field.name != "csrf_token" %}
-          <div class="col-12">
-            <div class="form-floating mb-3">
-              {{ field(class="form-control", id=field.id, placeholder = field.label.text ) }}
-              {{ field.label(class="form-label", for=field.id) }}
-            </div>
-          </div>
-          {% endif %}
-
-          {% endfor %}
-          <div class="footer">
-            <div class="d-grid gap-2">{{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
-            </div>
-          </div>
+    <div class="mt-4 card mb-4">
+        <div class="card-header">
+            <h2 class="m-2">{{ endpoint }} - {{ act }}</h2>
+            <hr>
         </div>
-      </form>
+        <div class="card-body table-responsive">
+            <form method="post" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <div class="row">
+                    {% for field in form %}
+                        {% if field.name != "submit" and field.name != "csrf_token" %}
+                            <div class="col-12">
+                                <div class="form-floating mb-3">
+                                    {{ field(class="form-control", id=field.id, placeholder = field.label.text) }}
+                                    {{ field.label(class="form-label", for=field.id) }}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    <div class="footer">
+                        <div class="d-grid gap-2">{{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}</div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
