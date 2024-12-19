@@ -1,7 +1,7 @@
 <div class="container px-4">
   <div class="mt-4 card mb-4">
     <div class="card-header">
-      <h2 class="m-2">{{ endpoint }} - {{ act }}</h2>
+      <h2 class="m-2">{{ act }} - {{ endpoint }}</h2>
       <hr>
     </div>
     <div class="card-body table-responsive">
@@ -56,15 +56,16 @@
           {{ form.cargo.label(class="form-label") }}
           {{ form.cargo(class="form-control", placeholder=form.cargo.label.text) }}
         </div>
-        <div class="mb-3 border border-black p-2 border-2 rounded"">
-        {{ form.departamento.label(class=" form-label") }} {{ form.departamento(class="form-control" ) }} </div>
-          <div class="footer m-3">
-            <div class="d-grid gap-2">
-              <hr>
-              {{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
-            </div>
+        <div class="mb-3 border border-black p-2 border-2 rounded">
+          {{ form.departamento.label(class=" form-label") }} {{ form.departamento(class="form-control" ) }}
+        </div>
+        <div class="footer m-3">
+          <div class="d-grid gap-2">
+            <hr>
+            {{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
           </div>
-      </form>
+        </div>
     </div>
+    </form>
   </div>
 </div>

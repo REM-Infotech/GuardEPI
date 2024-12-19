@@ -1,7 +1,7 @@
 <div class="container px-4">
   <div class="mt-4 card mb-4">
     <div class="card-header">
-      <h2 class="m-2">{{ endpoint }} - {{ act }}</h2>
+      <h2 class="m-2">{{ act }} - {{ endpoint }}</h2>
       <hr>
     </div>
     <div class="card-body table-responsive">
@@ -33,10 +33,13 @@
               onkeyup="formatarComoCNPJ(this)") }}
               {{ form.cnpj_empresa.label(for="empresa") }}
             </div>
-            <div class="footer">
-              <div class="d-grid gap-2">{{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
-              </div>
-            </div>
+
+          </div>
+        </div>
+        <hr>
+        <div class="footer">
+          <div class="d-grid gap-2">
+            {{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
           </div>
         </div>
       </form>
