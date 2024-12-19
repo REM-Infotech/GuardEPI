@@ -3,7 +3,7 @@ from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
-from psycopg import errors
+from psycopg2 import errors
 
 from app.forms import CadastroGrade
 from app.misc import format_currency_brl
@@ -84,6 +84,7 @@ def cadastrar_grade():
             db.session.commit()
         except errors.UniqueViolation:
             abort(500, description="Item já cadastrado!")
+
         flash("Grade cadastrada com sucesso!", "success")
         return redirect(url_for("epi.Grade"))
 

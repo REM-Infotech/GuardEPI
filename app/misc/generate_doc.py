@@ -13,6 +13,7 @@ from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Paragraph, Table, TableStyle
 
+"""
 # Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
 # Severity: Low   Confidence: High
 # CWE: CWE-330 (https://cwe.mitre.org/data/definitions/330.html)
@@ -21,12 +22,22 @@ from reportlab.platypus import Paragraph, Table, TableStyle
 
 # import random
 # num = random.randint(100, 900)
+"""
 
 
 num = secrets.randbelow(801) + 100  # Gera um número entre 100 e 900
 
 
 def create_watermark_pdf(image_path: str, output_pdf: str):
+    """
+    Creates a PDF with a watermark image positioned at the top right corner.
+    Args:
+        image_path (str): The file path to the image to be used as a watermark.
+        output_pdf (str): The file path where the output PDF will be saved.
+    Returns:
+        None
+    """
+
     c = canvas.Canvas(output_pdf, pagesize=letter)
     # Dimensões da página (em pontos, 1 ponto = 1/72 polegadas)
     width, height = letter
@@ -49,70 +60,114 @@ def create_watermark_pdf(image_path: str, output_pdf: str):
 
 
 def add_watermark(input_pdf: str, output_pdf: str, watermark_pdf: str):
-    input_file = open(input_pdf, "rb")
-    watermark_file = open(watermark_pdf, "rb")
+    """
+    Adds a watermark to each page of the input PDF and saves the result to the output PDF.
 
-    input_pdf_reader = PdfFileReader(input_file)
-    watermark_pdf_reader = PdfFileReader(watermark_file)
+    Args:
+        input_pdf (str): The file path to the input PDF.
+        output_pdf (str): The file path where the output PDF with watermark will be saved.
+        watermark_pdf (str): The file path to the PDF containing the watermark.
 
-    output_pdf_writer = PdfFileWriter()
+    Returns:
+        None
+    """
+    input_file = open(input_pdf, "rb")  # Open the input PDF file in read-binary mode
+    watermark_file = open(
+        watermark_pdf, "rb"
+    )  # Open the watermark PDF file in read-binary mode
+
+    input_pdf_reader = PdfFileReader(
+        input_file
+    )  # Create a PDF reader object for the input PDF
+    watermark_pdf_reader = PdfFileReader(
+        watermark_file
+    )  # Create a PDF reader object for the watermark PDF
+
+    output_pdf_writer = PdfFileWriter()  # Create a PDF writer object for the output PDF
 
     for page_num in range(len(input_pdf_reader.pages)):
-        page = input_pdf_reader.pages[page_num]
-        watermark_page = watermark_pdf_reader.pages[0]
-        page.merge_page(watermark_page)
-        output_pdf_writer.add_page(page)
+        page = input_pdf_reader.pages[page_num]  # Get each page from the input PDF
+        watermark_page = watermark_pdf_reader.pages[
+            0
+        ]  # Get the first page of the watermark PDF
+        page.merge_page(watermark_page)  # Merge the watermark with the current page
+        output_pdf_writer.add_page(page)  # Add the watermarked page to the output PDF
 
     with open(output_pdf, "wb") as output_file:
-        output_pdf_writer.write(output_file)
+        output_pdf_writer.write(output_file)  # Write the output PDF to a file
 
-    input_file.close()
-    watermark_file.close()
+    input_file.close()  # Close the input PDF file
+    watermark_file.close()  # Close the watermark PDF file
 
 
 def adjust_image_transparency(image_path: str, output_path: str, transparency):
-    img = Image.open(image_path)
-    img = img.convert("RGBA")
+    """
+    Adjusts the transparency of an image and saves the result.
 
-    # Ajusta a opacidade
-    data = img.getdata()
+    Args:
+        image_path (str): The file path to the input image.
+        output_path (str): The file path where the output image will be saved.
+        transparency (float): The transparency level to be applied (0.0 to 1.0).
+
+    Returns:
+        None
+    """
+    img = Image.open(image_path)  # Open the image file
+    img = img.convert("RGBA")  # Convert the image to RGBA mode to handle transparency
+
+    # Adjust the opacity
+    data = img.getdata()  # Get image data
     new_data = []
     for item in data:
-        # Altera o valor alpha com base no parâmetro de transparência
+        # Modify the alpha value based on the transparency parameter
         new_data.append((item[0], item[1], item[2], int(item[3] * transparency)))
-    img.putdata(new_data)
+    img.putdata(new_data)  # Update image data with new transparency values
 
-    # Salva a imagem ajustada
-    img.save(output_path, "PNG")
+    # Save the adjusted image
+    img.save(output_path, "PNG")  # Save the image in PNG format
 
 
 def draw_table(c, x, y, data, max_width=5.5 * inch, min_font_size=4):
+    """
+    Draws a table on the given canvas at the specified position with the provided data.
+
+    Args:
+        c (canvas.Canvas): The canvas object where the table will be drawn.
+        x (float): The x-coordinate of the table's position.
+        y (float): The y-coordinate of the table's position.
+        data (list): A list of lists containing the table data.
+        max_width (float): The maximum width of the table (default is 5.5 inches).
+        min_font_size (int): The minimum font size to be used (default is 4).
+
+    Returns:
+        None
+    """
     styles = getSampleStyleSheet()
     style = styles["BodyText"]
-    style.wordWrap = "Word"  # Habilita quebra de texto
-    # normal_font_size = style.fontSize
+    style.wordWrap = "Word"  # Enable word wrapping
 
-    # Converter dados e calcular largura/altura necessária
-    data2 = []
-    col_widths = [0] * len(data[0])
+    data2 = []  # List to hold the processed table data
+    col_widths = [0] * len(data[0])  # List to hold the width of each column
+
+    # Convert data and calculate required width/height
     for row in data:
         new_row = []
         for index, item in enumerate(row):
-            p = Paragraph(str(item), style)
+            p = Paragraph(str(item), style)  # Create a Paragraph object for each item
             new_row.append(p)
             text_width = (
                 stringWidth(str(item), style.fontName, style.fontSize) + 10
-            )  # Adiciona um buffer
+            )  # Calculate text width with buffer
             if text_width > col_widths[index]:
-                col_widths[index] = text_width
+                col_widths[index] = text_width  # Update column width if necessary
         data2.append(new_row)
 
-    total_width = sum(col_widths)
+    total_width = sum(col_widths)  # Calculate total width of the table
     if total_width > max_width:
-        # Redimensiona as larguras das colunas proporcionalmente se a largura total exceder o máximo
+        # Resize column widths proportionally if total width exceeds the maximum
         scale_factor = max_width / total_width
         col_widths = [width * scale_factor for width in col_widths]
-        # Reduz o tamanho da fonte se ainda for muito largo
+        # Reduce font size if still too wide
         while total_width > max_width and style.fontSize > min_font_size:
             style.fontSize -= 1
             total_width = sum(
@@ -121,25 +176,43 @@ def draw_table(c, x, y, data, max_width=5.5 * inch, min_font_size=4):
                 for row in data2
             )
 
-    table = Table(data2, colWidths=col_widths)
+    table = Table(
+        data2, colWidths=col_widths
+    )  # Create the table with adjusted column widths
     table.setStyle(
         TableStyle(
             [
-                ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.black),
-                ("BOX", (0, 0), (-1, -1), 0.25, colors.black),
-                ("FONTNAME", (0, 0), (-1, -1), style.fontName),
-                ("FONTSIZE", (0, 0), (-1, -1), style.fontSize),
+                (
+                    "INNERGRID",
+                    (0, 0),
+                    (-1, -1),
+                    0.25,
+                    colors.black,
+                ),  # Set inner grid lines
+                ("BOX", (0, 0), (-1, -1), 0.25, colors.black),  # Set outer box lines
+                ("FONTNAME", (0, 0), (-1, -1), style.fontName),  # Set font name
+                ("FONTSIZE", (0, 0), (-1, -1), style.fontSize),  # Set font size
             ]
         )
     )
 
-    table.wrapOn(c, x, y)
-    table.drawOn(c, x, y - table._height)
+    table.wrapOn(c, x, y)  # Wrap the table on the canvas
+    table.drawOn(c, x, y - table._height)  # Draw the table on the canvas
 
 
-def create_EPI_control_sheet(
-    filename, employee_data, delivery_data, item_data, logo_path
-):
+def create_EPI_control_sheet(filename, employee_data, d, item_data, logo_path):
+    """
+    Creates a PDF document for EPI (Personal Protective Equipment) control and delivery sheet.
+    Args:
+        filename (str): The name of the file where the PDF will be saved.
+        employee_data (dict): A dictionary containing employee information such as company, name, registration, department, and position.
+        d (dict): A dictionary containing additional data (not used in the current implementation).
+        item_data (list): A list of dictionaries containing item information to be included in the table.
+        logo_path (str): The file path to the logo image to be included in the PDF.
+    Returns:
+        None
+    """
+
     c = canvas.Canvas(filename, pagesize=letter)
     logo_width = 75  # Largura em pontos
 
