@@ -1,20 +1,13 @@
-from deep_translator import GoogleTranslator
 from flask import (
     Flask,
-    abort,
-    make_response,
-    redirect,
-    render_template,
-    send_from_directory,
-    url_for,
 )
-from werkzeug.exceptions import HTTPException
 
 from .auth import auth
 from .corporativo import corp
 from .dashboard import dash
 from .epi import epi
 from .serving import serve
+from .index import index as ind
 
 
 def register_routes(app: Flask):
@@ -38,94 +31,10 @@ def register_routes(app: Flask):
 
     with app.app_context():
 
-        blueprints = [
-            auth,
-            dash,
-            corp,
-            epi,
-            serve,
-        ]
+        blueprints = [auth, dash, corp, epi, serve, ind]
 
         for blueprint in blueprints:
             app.register_blueprint(blueprint)
-
-    @app.errorhandler(HTTPException)
-    def handle_http_exception(error):
-        """
-        Handles HTTP exceptions by translating the error name to Portuguese and rendering an error template.
-        Args:
-            error (HTTPException): The HTTP exception that was raised.
-        Returns:
-            Response: A Flask response object with the rendered error template and the appropriate HTTP status code.
-        """
-        tradutor = GoogleTranslator(source="en", target="pt")
-        name = tradutor.translate(error.name)
-        # desc = tradutor.translate(error.description)
-
-        if error.code == 405:
-            return redirect(url_for("dash.dashboard"))
-
-        return (
-            render_template(
-                "handler/index.html", name=name, desc="Erro Interno", code=error.code
-            ),
-            error.code,
-        )
-
-    @app.route("/termos_uso", methods=["GET"])
-    def termos_uso():
-        """
-        Rota para servir o arquivo "Termos de Uso.pdf".
-
-        Esta rota responde a requisições GET e retorna o arquivo PDF "Termos de Uso.pdf"
-        localizado no diretório configurado em `app.config["PDF_PATH"]`.
-
-        Returns:
-            Response: Um objeto de resposta contendo o arquivo PDF e o cabeçalho de tipo MIME
-            definido como "application/pdf".
-
-        Raises:
-            HTTPException: Retorna um erro 500 se ocorrer qualquer exceção durante o processo.
-        """
-        try:
-            filename = "Termos de Uso.pdf"
-            url = send_from_directory(app.config["PDF_PATH"], filename)
-            # Crie a resposta usando make_response
-            response = make_response(url)
-
-            # Defina o tipo MIME como application/pdf
-            response.headers["Content-Type"] = "application/pdf"
-            return url
-
-        except Exception as e:
-            abort(500, description=str(e))
-
-    @app.route("/politica_privacidade", methods=["GET"])
-    def politica_privacidade():
-        """
-        Rota para servir o arquivo de Política de Privacidade em formato PDF.
-
-        Tenta enviar o arquivo "Política de Privacidade.pdf" do diretório configurado em "PDF_PATH".
-        Define o tipo MIME da resposta como "application/pdf".
-
-        Returns:
-            Response: A resposta contendo o arquivo PDF.
-
-        Raises:
-            HTTPException: Se ocorrer algum erro ao tentar enviar o arquivo, retorna um erro 500 com a descrição do erro.
-        """
-        try:
-            filename = "Política de Privacidade.pdf"
-            url = send_from_directory(app.config["PDF_PATH"], filename)
-            # Crie a resposta usando make_response
-            response = make_response(url)
-
-            # Defina o tipo MIME como application/pdf
-            response.headers["Content-Type"] = "application/pdf"
-            return url
-
-        except Exception as e:
-            abort(500, description=str(e))
 
 
 # from app import app
