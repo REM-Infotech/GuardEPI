@@ -86,11 +86,11 @@ class CadastroEmpresa(FlaskForm):
 
 class CadastroCargo(FlaskForm):
     cargo = StringField("Nome do Cargo", validators=[DataRequired()])
-    descricao = TextAreaField("Descrição (Opcional)")
+    descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
     submit = SubmitField("Cadastrar!")
 
 
 class CadastroDepartamentos(FlaskForm):
     departamento = StringField("Nome do departamento", validators=[DataRequired()])
-    descricao = TextAreaField("Descrição (Opcional)")
+    descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
     submit = SubmitField("Cadastrar!")

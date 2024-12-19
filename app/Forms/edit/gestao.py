@@ -76,11 +76,11 @@ class EditEmpresa(FlaskForm):
 
 class EditCargo(FlaskForm):
     cargo = StringField("Nome do Cargo", validators=[DataRequired()])
-    descricao = TextAreaField("Descrição (Opcional)")
+    descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
     submit = SubmitField("Salvar alterações")
 
 
 class EditDepartamentos(FlaskForm):
     departamento = StringField("Nome do departamento", validators=[DataRequired()])
-    descricao = TextAreaField("Descrição (Opcional)")
+    descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
     submit = SubmitField("Salvar alterações")

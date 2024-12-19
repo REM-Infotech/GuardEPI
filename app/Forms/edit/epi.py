@@ -37,7 +37,7 @@ class EditItemProdutoForm(FlaskForm):
     fornecedor = SelectField(label="Fornecedor", choices=[])
     marca = SelectField(label="Marca", choices=[])
     modelo = SelectField(label="Modelo", choices=[])
-    descricao = TextAreaField("Descrição (Opcional)")
+    descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
     filename = FileField(
         label="Foto do EPI",
         id="imagem",

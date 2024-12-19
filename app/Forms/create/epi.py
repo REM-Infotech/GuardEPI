@@ -47,7 +47,7 @@ tipo_choices = [
 
 class CadastroGrade(FlaskForm):
     grade = StringField("Grade", validators=[DataRequired()])
-    descricao = TextAreaField("Descrição (Opcional)")
+    descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
     submit = SubmitField("Salvar")
 
 
@@ -157,25 +157,25 @@ class CadastroEPIForm(FlaskForm):
 
 class CadastroCategorias(FlaskForm):
     classe = StringField("Classificação EPI", validators=[DataRequired()])
-    descricao = TextAreaField("Descrição (Opcional)")
+    descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
     submit = SubmitField("Cadastrar")
 
 
 class CadastroFornecedores(FlaskForm):
     fornecedor = StringField("Fornecedor", validators=[DataRequired()])
-    descricao = TextAreaField("Descrição (Opcional)")
+    descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
     submit = SubmitField("Cadastrar")
 
 
 class CadastroMarcas(FlaskForm):
     marca = StringField("Marca", validators=[DataRequired()])
-    descricao = TextAreaField("Descrição (Opcional)")
+    descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
     submit = SubmitField("Cadastrar")
 
 
 class CadastroModelos(FlaskForm):
     modelo = StringField("Modelo", validators=[DataRequired()])
-    descricao = TextAreaField("Descrição (Opcional)")
+    descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
     submit = SubmitField("Cadastrar")
 
 
