@@ -1,87 +1,74 @@
 <div class="container-fluid px-4">
-    <script src="{{ url_for('static', filename = 'js/Formatadores/CNPJ.js') }}"></script>
-    <div class="card mt-4 mb-4">
-        <div class="card-header">
-            <h2>Empresas</h2>
-            <hr>
-            <button type="button"
-                    class="btn btn-success me-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#cadastroEmpresa">
-                <span class="icon text-white-50">
-                    <i class="fa-solid fa-plus"></i>
-                </span>
-                <span class="text">Cadastrar</span>
-            </button>
-            <button type="button"
-                    class="btn btn-warning me-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#importarquivo">
-                <span class="icon text-white-50">
-                    <i class="fa-solid fa-file-import"></i>
-                </span>
-                <span class="text">Import em lotes</span>
-            </button>
-            <a href="#!" class="btn btn-primary btn-icon-split me-2">
-                <span class="icon text-white-50">
-                    <i class="fa-solid fa-file-csv"></i>
-                </span>
-                <span class="text">Gerar Relatório</span>
-            </a>
-        </div>
-        <div class="card-body table-responsive">
-            <table class="table table-striped" id="EmpresaTable">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Empresa</th>
-                        <th>CNPJ</th>
-                        <th data-sortable="false">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if database %}
-                        {% for item in database %}
-                            <tr>
-                                <td>{{ item.id }}</td>
-                                <td>{{ item.nome_empresa }}</td>
-                                <td>{{ item.cnpj_empresa }}</td>
-                                <td>
-                                    <button type="button"
-                                            id="DeleteEstoqueButton"
-                                            class="btn btn-danger btn-sm me-2"
-                                            hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
-                                            hx-trigger="click"
-                                            hx-target="#results">
-                                        <span class="icon text-white-50">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </span>
-                                        <span class="text">Deletar</span>
-                                    </button>
-                                    <button type="button"
-                                            id="EditEstoqueButton"
-                                            class="btn btn-warning btn-sm me-2"
-                                            hx-get="{{ url_for('set_editar', tipo = request.endpoint, item = item.id) }}"
-                                            hx-target="#results">
-                                        <span class="icon text-white-50">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </span>
-                                        <span class="text">Editar</span>
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>#</th>
-                        <th>Empresa</th>
-                        <th>CNPJ</th>
-                        <th>Ações</th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+  <script src="{{ url_for('static', filename = 'js/Formatadores/CNPJ.js') }}"></script>
+  <div class="card mt-4 mb-4">
+    <div class="card-header">
+      <h2>Empresas</h2>
+      <hr>
+      <a type="button" class="btn btn-success me-2" href="{{ url_for('corp.cadastro_empresas') }}">
+        <span class="icon text-white-50">
+          <i class="fa-solid fa-plus"></i>
+        </span>
+        <span class="text">Cadastrar</span>
+      </a>
+      <button type="button" class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#importarquivo">
+        <span class="icon text-white-50">
+          <i class="fa-solid fa-file-import"></i>
+        </span>
+        <span class="text">Import em lotes</span>
+      </button>
+      <a href="#!" class="btn btn-primary btn-icon-split me-2">
+        <span class="icon text-white-50">
+          <i class="fa-solid fa-file-csv"></i>
+        </span>
+        <span class="text">Gerar Relatório</span>
+      </a>
     </div>
+    <div class="card-body table-responsive">
+      <table class="table table-striped" id="EmpresaTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Empresa</th>
+            <th>CNPJ</th>
+            <th data-sortable="false">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if database %}
+          {% for item in database %}
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.nome_empresa }}</td>
+            <td>{{ item.cnpj_empresa }}</td>
+            <td>
+              <a type="button" class="btn btn-warning btn-sm me-2"
+                href="{{ url_for('corp.editar_empresas', id=item.id) }}">
+                <span class="icon text-white-50">
+                  <i class="fa-solid fa-pen"></i>
+                </span>
+                <span class="text">Editar</span>
+              </a>
+              <button type="button" id="DeleteEpiButton" class="btn btn-danger btn-sm me-2"
+                hx-post="{{ url_for('corp.deletar_empresas',id=item.id) }}" hx-trigger="click" hx-target="#results">
+                <span class="icon text-white-50">
+                  <i class="fa-solid fa-trash"></i>
+                </span>
+                <span class="text">Deletar</span>
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+          {% endif %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>#</th>
+            <th>Empresa</th>
+            <th>CNPJ</th>
+            <th>Ações</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
 </div>

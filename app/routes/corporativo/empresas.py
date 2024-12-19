@@ -63,6 +63,9 @@ def cadastro_empresas():
         will propagate up to the caller.
     """
 
+    endpoint = "Empresas"
+    act = "Cadastro"
+
     form = CadastroEmpresa()
 
     if form.validate_on_submit():
@@ -102,7 +105,9 @@ def cadastro_empresas():
         return redirect(url_for("corp.Empresas"))
 
     page = "forms/empresa_form.html"
-    return render_template("index.html", page=page, form=form)
+    return render_template(
+        "index.html", act=act, endpoint=endpoint, page=page, form=form
+    )
 
 
 @corp.route("/Empresas/editar/<int:id>", methods=["GET", "POST"])
@@ -119,6 +124,9 @@ def editar_empresas(id: int):
         Response: A rendered template for the company edit form on GET request.
                   A redirect to the equipment page on successful form submission.
     """
+
+    endpoint = "Empresas"
+    act = "Editar"
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
     emp = db.session.query(Empresa).filter_by(id=id).first()
@@ -200,7 +208,14 @@ def editar_empresas(id: int):
         return redirect(url_for("corp.Empresas"))
 
     page = "forms/empresa_form.html"
-    return render_template("index.html", page=page, form=form, url_image=url_image)
+    return render_template(
+        "index.html",
+        act=act,
+        endpoint=endpoint,
+        page=page,
+        form=form,
+        url_image=url_image,
+    )
 
 
 @corp.route("/Empresas/deletar/<int:id>")

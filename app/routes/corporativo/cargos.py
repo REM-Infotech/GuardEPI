@@ -129,7 +129,7 @@ def editar_cargos(id):
     )
 
 
-@corp.route("/cargoss/deletar/<int:id>", methods=["POST"])
+@corp.route("/cargos/deletar/<int:id>", methods=["POST"])
 @login_required
 def deletar_cargos(id: int):
     """
