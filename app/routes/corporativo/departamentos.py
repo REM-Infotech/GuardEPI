@@ -3,6 +3,7 @@ from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from psycopg import errors
 
 from app.forms import CadastroDepartamentos
 from app.models import Departamento
@@ -75,7 +76,10 @@ def cadastrar_departamentos():
 
         Departamentos = Departamento(**to_add)
         db.session.add(Departamentos)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
         flash("Departamentos cadastrada com sucesso!", "success")
         return redirect(url_for("corp.Departamentos"))
 
@@ -119,7 +123,10 @@ def editar_departamentos(id):
             if key != "csrf_token" or key != "submit" and value:
                 setattr(Departamentos, key, value)
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
 
         flash("Departamentos editada com sucesso!", "success")
         return redirect(url_for("corp.Departamentos"))

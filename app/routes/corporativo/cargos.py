@@ -3,6 +3,7 @@ from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from psycopg import errors
 
 from app.forms import CadastroCargo
 from app.models import Cargos
@@ -72,7 +73,10 @@ def cadastrar_cargos():
 
         cargos = Cargos(**to_add)
         db.session.add(cargos)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
         flash("Cargo cadastrado com sucesso!", "success")
         return redirect(url_for("corp.cargos"))
 
@@ -119,7 +123,10 @@ def editar_cargos(id):
             if key != "csrf_token" or key != "submit" and value:
                 setattr(cargos, key, value)
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
 
         flash("Cargo editado com sucesso!", "success")
         return redirect(url_for("corp.cargos"))

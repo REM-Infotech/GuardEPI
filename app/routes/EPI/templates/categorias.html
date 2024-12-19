@@ -1,7 +1,7 @@
 <div class="container-fluid px-4">
   <div class="mt-4 card mb-4">
     <div class="card-header">
-      <h2 class="m-2">Classes EPI</h2>
+      <h2 class="m-2">Categorias EPI</h2>
       <hr>
       <a type="button" href="{{ url_for('epi.cadastrar_categoria') }}" class="btn btn-success me-2">
         <span class="icon text-white-50">
@@ -45,21 +45,19 @@
             <td>{{ item.descricao }}</td>
             {% endif %}
             <td>
-              <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm me-2"
-                hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}" hx-trigger="click"
-                hx-target="#results">
-                <span class="icon text-white-50">
-                  <i class="fa-solid fa-trash"></i>
-                </span>
-                <span class="text">Deletar</span>
-              </button>
-              <button type="button" id="EditInfo" class="btn btn-warning btn-sm me-2"
-                hx-get="{{ url_for('set_editar', tipo = request.endpoint, item = item.id) }}" hx-target="#results"
-                onclick="showLoad()">
+              <a type="button" class="btn btn-warning btn-sm me-2"
+                href="{{ url_for('epi.editar_equipamento', id=item.id) }}">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-pen"></i>
                 </span>
                 <span class="text">Editar</span>
+              </a>
+              <button type="button" id="DeleteEpiButton" class="btn btn-danger btn-sm me-2"
+                hx-post="{{ url_for('epi.deletar_equipamento',id=item.id) }}" hx-trigger="click" hx-target="#results">
+                <span class="icon text-white-50">
+                  <i class="fa-solid fa-trash"></i>
+                </span>
+                <span class="text">Deletar</span>
               </button>
             </td>
           </tr>

@@ -1,7 +1,9 @@
+from flask import abort
 from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from psycopg import errors
 
 from app.forms import CadastroModelos
 from app.models import ModelosEPI
@@ -32,7 +34,7 @@ def cadastrar_modelos():
     It validates the form data, extracts the relevant information, and adds
     a new entry to the database if the form is successfully validated.
     Returns:
-        Response: A redirect to the "epi.modeloss" endpoint if the form is successfully
+        Response: A redirect to the "epi.modelos" endpoint if the form is successfully
                   submitted and processed, or renders the form template with the
                   appropriate context if the form is not submitted or is invalid.
     """
@@ -57,9 +59,14 @@ def cadastrar_modelos():
 
         classe = ModelosEPI(**to_add)
         db.session.add(classe)
-        db.session.commit()
+
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
+
         flash("modelos cadastrada com sucesso!", "success")
-        return redirect(url_for("epi.modeloss"))
+        return redirect(url_for("epi.modelos"))
 
     return render_template(
         "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
@@ -103,10 +110,13 @@ def editar_modelos(id: int):
             if key != "csrf_token" or key != "submit" and value:
                 setattr(classe, key, value)
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
 
         flash("modelos editada com sucesso!", "success")
-        return redirect(url_for("epi.modeloss"))
+        return redirect(url_for("epi.modelos"))
 
     return render_template(
         "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act

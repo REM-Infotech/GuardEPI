@@ -5,6 +5,7 @@ from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from psycopg import errors
 from werkzeug.utils import secure_filename
 
 from app.decorators import create_perm
@@ -203,7 +204,10 @@ def lancamento_produto():
             dbase_produto.valor_unitario = new_valor_unitario
 
             db.session.add(EntradaEPI)
-            db.session.commit()
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
             flash("Informações salvas com sucesso!", "success")
             return redirect(url_for("Estoque"))
