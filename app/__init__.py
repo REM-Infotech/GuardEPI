@@ -74,7 +74,8 @@ def create_app():
     app.logger = initialize_logging()
     from app.routes import register_routes
 
-    register_routes(app)
+    with app.app_context():
+        register_routes(app)
 
     global celery_app
     celery_app = celery_init(app)
