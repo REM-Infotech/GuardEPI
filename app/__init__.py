@@ -22,14 +22,14 @@ celery_app = None
 
 def celery_init(app: Flask) -> Celery:
     """
-    ## celery_init
-
-    ### Parameters:
-    ####    app (Flask): Flask app
-
-    ### Returns:
-    ####    Celery app (Celery): Aplicação Celery
-
+    Initialize a Celery instance with the given Flask application.
+    This function sets up a Celery instance, configures it to use threads as the worker pool,
+    imports configurations from the Flask app, and defines a custom task class that ensures
+    tasks are executed within the Flask application context.
+    Args:
+        app (Flask): The Flask application instance.
+    Returns:
+        Celery: The configured Celery instance.
     """
 
     """ Instancia do Celery"""
@@ -74,8 +74,7 @@ def create_app():
     app.logger = initialize_logging()
     from app.routes import register_routes
 
-    with app.app_context():
-        register_routes(app)
+    register_routes(app)
 
     global celery_app
     celery_app = celery_init(app)
