@@ -1,0 +1,92 @@
+<div class="container px-4">
+    <div class="mt-4 card mb-4">
+        <div class="card-header">
+            <h4>Configurações do Perfil</h4>
+        </div>
+        <form method="POST" action="#" enctype="multipart/form-data"
+            class="form-floating card-body bg-secondary bg-opacity-25">
+            {{ form.hidden_tag() }}
+            <div class="row g-3">
+                <div class="card col m-3 p-3">
+                    <div class="card-header">
+                        <h4>Foto de Perfil</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <br>
+                                {% if not url_image %}
+                                {% set url_image = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png" %}
+                                {% endif %}
+                                <img id="preview" src="{{ url_image }}" alt="Image preview"
+                                    class="img-fluid border border-dark rounded-circle border-5 rounded-5 " style="max-width: 300px;
+                                            max-height: 300px;
+                                            align-items: center;
+                                            width: 300px;
+                                            height: 300px">
+                                <br>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="mb-3">
+                                {{ form.filename.label(for="formFile", class="form-label") }}
+                                {{ form.filename(class="form-control", type="file", id="formFile",
+                                onchange="previewImage(event, 'preview')") }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card col m-3 p-3">
+                    <div class="card-header">
+                        <h4>Informações da conta</h4>
+                    </div>
+                    <div class="card-body">
+                        {% if session["username"] == "root" %}
+                        <div class="form-floating mb-3">
+                            {{ form.login(type="text", class="form-control", id="login", placeholder="", disabled =
+                            "True") }}
+                            {{ form.login.label(for="login") }}
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form.nome_usuario(type="text", class="form-control", id="nome_usuario", placeholder="",
+                            disabled = "True") }}
+                            {{ form.nome_usuario.label(for="nome_usuario") }}
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form.email(type="text", class="form-control", id="email", placeholder="", disabled =
+                            "True") }}
+                            {{ form.email.label(for="email") }}
+                        </div>
+                        {% else %}
+                        <div class="form-floating mb-3">
+                            {{ form.login(type="text", class="form-control", id="login", placeholder="") }}
+                            {{ form.login.label(for="login") }}
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form.nome_usuario(type="text", class="form-control", id="nome_usuario", placeholder="")
+                            }}
+                            {{ form.nome_usuario.label(for="nome_usuario") }}
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form.email(type="text", class="form-control", id="email", placeholder="") }}
+                            {{ form.email.label(for="email") }}
+                        </div>
+                        {% endif %}
+                        <div class="form-floating mb-3">
+                            {{ form.old_password(class="form-control", id="old_password", placeholder="") }}
+                            {{ form.old_password.label(for="old_password") }}
+                        </div>
+                        <div class="form-floating mb-3">
+                            {{ form.new_password(class="form-control", id="new_password", placeholder="") }}
+                            {{ form.new_password.label(for="new_password") }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="d-grid gap-2">{{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

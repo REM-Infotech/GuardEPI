@@ -1,83 +1,70 @@
-<div class="modal fade"
-     id="cadastroFuncionario"
-     tabindex="-1"
-     aria-labelledby="cadastroFuncionario"
-     aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="m-0 font-weight-bold text-primary">Cadastrar Funcionário</h4>
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="container">
-                    <form method="post"
-                          action="{{ url_for('cadastrar', tipo=request.endpoint) }}">
-                        {{ form.hidden_tag() }}
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    {{ form.codigo(class="form-control", id="codigo", placeholder="...") }}
-                                    {{ form.codigo.label(for="codigo") }}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    {{ form.nome_funcionario(class="form-control", id="funcionario", placeholder="...") }}
-                                    {{ form.nome_funcionario.label(for="funcionario") }}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    {{ form.cpf_funcionario(class="form-control", id="cpf_funcionario", placeholder="...",
-                                                                        oninput="formatDocument(this)") }}
-                                    {{ form.cpf_funcionario.label(for="cpf_funcionario") }}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    {{ form.email_funcionario(class="form-control", placeholder="...") }}
-                                    {{ form.email_funcionario.label(for="email_funcionario") }}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    {{ form.deficiencia(class="form-control", placeholder="...") }}
-                                    {{ form.deficiencia.label(for="deficiencia") }}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating mb-3">
-                                    {{ form.data_admissao(class="form-control") }}
-                                    {{ form.data_admissao.label(for="data_admissao") }}
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="mb-3 border border-black p-2 border-2 rounded">
-                                    {{ form.empresa.label(class="form-label") }}
-                                    {{ form.empresa(class="form-control", id="empresa", placeholder="...") }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mb-3 border border-black p-2 border-2 rounded">
-                            {{ form.cargo.label(class="form-label") }}
-                            {{ form.cargo(class="form-control", placeholder=form.cargo.label.text) }}
-                        </div>
-                        <div class="mb-3 border border-black p-2 border-2 rounded"">
-                            {{ form.departamento.label(class=" form-label") }} {{ form.departamento(class="form-control") }}
-                        </div>
-                        <div class="footer m-3">
-                            <div class="d-grid gap-2">
-                                <hr>
-                                {{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+<div class="container px-4">
+  <div class="mt-4 card mb-4">
+    <div class="card-header">
+      <h2 class="m-2">{{ endpoint }} - {{ act }}</h2>
+      <hr>
     </div>
+    <div class="card-body table-responsive">
+      <form method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="form-floating mb-3">
+              {{ form.codigo(class="form-control", id="codigo", placeholder="...") }}
+              {{ form.codigo.label(for="codigo") }}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating mb-3">
+              {{ form.nome_funcionario(class="form-control", id="funcionario", placeholder="...") }}
+              {{ form.nome_funcionario.label(for="funcionario") }}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating mb-3">
+              {{ form.cpf_funcionario(class="form-control", id="cpf_funcionario", placeholder="...",
+              oninput="formatDocument(this)") }}
+              {{ form.cpf_funcionario.label(for="cpf_funcionario") }}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating mb-3">
+              {{ form.email_funcionario(class="form-control", placeholder="...") }}
+              {{ form.email_funcionario.label(for="email_funcionario") }}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating mb-3">
+              {{ form.deficiencia(class="form-control", placeholder="...") }}
+              {{ form.deficiencia.label(for="deficiencia") }}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-floating mb-3">
+              {{ form.data_admissao(class="form-control") }}
+              {{ form.data_admissao.label(for="data_admissao") }}
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="mb-3 border border-black p-2 border-2 rounded">
+              {{ form.empresa.label(class="form-label") }}
+              {{ form.empresa(class="form-control", id="empresa", placeholder="...") }}
+            </div>
+          </div>
+        </div>
+        <div class="mb-3 border border-black p-2 border-2 rounded">
+          {{ form.cargo.label(class="form-label") }}
+          {{ form.cargo(class="form-control", placeholder=form.cargo.label.text) }}
+        </div>
+        <div class="mb-3 border border-black p-2 border-2 rounded"">
+        {{ form.departamento.label(class=" form-label") }} {{ form.departamento(class="form-control" ) }} </div>
+          <div class="footer m-3">
+            <div class="d-grid gap-2">
+              <hr>
+              {{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
+            </div>
+          </div>
+      </form>
+    </div>
+  </div>
 </div>

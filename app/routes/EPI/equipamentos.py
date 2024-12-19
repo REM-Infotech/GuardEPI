@@ -208,6 +208,7 @@ def editar_equipamento(id: int):
 
 
 @epi.route("/equipamentos/deletar/<int:id>")
+@login_required
 def deletar_equipamento(id: int):
     """
     Deletes an equipment record from the database based on the provided ID.
