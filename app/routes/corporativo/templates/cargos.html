@@ -4,17 +4,16 @@
         <div class="card-header">
             <h2>Cargos</h2>
             <hr>
-            <button type="button"
-                    class="btn btn-success mb-3"
-                    data-bs-toggle="modal"
-                    data-bs-target="#cadastroCargo">
+            <a type="button"
+               href="{{ url_for('corp.cadastrar_cargos') }}"
+               class="btn btn-success me-2">
                 <span class="icon text-white-50">
                     <i class="fa-solid fa-plus"></i>
                 </span>
                 <span class="text">Cadastrar</span>
-            </button>
+            </a>
             <button type="button"
-                    class="btn btn-warning mb-3"
+                    class="btn btn-warning me-2"
                     data-bs-toggle="modal"
                     data-bs-target="#importarquivo">
                 <span class="icon text-white-50">
@@ -22,7 +21,7 @@
                 </span>
                 <span class="text">Import em lotes</span>
             </button>
-            <a href="#!" class="btn btn-primary btn-icon-split mb-3">
+            <a href="#!" class="btn btn-primary btn-icon-split me-2">
                 <span class="icon text-white-50">
                     <i class="fa-solid fa-file-csv"></i>
                 </span>
@@ -47,26 +46,24 @@
                                 <td>{{ item.cargo }}</td>
                                 <td>{{ item.descricao }}</td>
                                 <td>
+                                    <a type="button"
+                                       href="{{ url_for('corp.editar_cargos', id=item.id) }}"
+                                       class="btn btn-warning btn-sm me-2">
+                                        <span class="icon text-white-50">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </span>
+                                        <span class="text">Editar</span>
+                                    </a>
                                     <button type="button"
                                             id="DeleteEstoqueButton"
-                                            class="btn btn-danger btn-sm mb-2"
-                                            hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
+                                            class="btn btn-danger btn-sm me-2"
+                                            hx-get="{{ url_for('corp.deletar_cargos', id=item.id) }}"
                                             hx-trigger="click"
                                             hx-target="#results">
                                         <span class="icon text-white-50">
                                             <i class="fa-solid fa-trash"></i>
                                         </span>
                                         <span class="text">Deletar</span>
-                                    </button>
-                                    <button type="button"
-                                            id="EditEstoqueButton"
-                                            class="btn btn-warning btn-sm mb-2"
-                                            hx-get="{{ url_for('set_editar', tipo = request.endpoint, item = item.id) }}"
-                                            hx-target="#results">
-                                        <span class="icon text-white-50">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </span>
-                                        <span class="text">Editar</span>
                                     </button>
                                 </td>
                             </tr>
@@ -85,3 +82,4 @@
         </div>
     </div>
 </div>
+<div id="results"></div>

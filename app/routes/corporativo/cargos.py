@@ -44,14 +44,16 @@ def cadastrar_cargos():
         list_form_data = list(form_data.items())
 
         for key, value in list_form_data:
-            if key != "csrf_token" or key != "submit":
-                to_add.update({key: value})
+            if key.lower() == "csrf_token" or key.lower() == "submit":
+                continue
+
+            to_add.update({key: value})
 
         cargos = Cargos(**to_add)
         db.session.add(cargos)
         db.session.commit()
-        flash("cargos cadastrada com sucesso!", "success")
-        return redirect(url_for("epi.cargoss"))
+        flash("Cargo cadastrado com sucesso!", "success")
+        return redirect(url_for("corp.cargos"))
 
     return render_template(
         "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
@@ -84,8 +86,8 @@ def editar_cargos(id):
 
         db.session.commit()
 
-        flash("cargos editada com sucesso!", "success")
-        return redirect(url_for("epi.cargoss"))
+        flash("Cargo editado com sucesso!", "success")
+        return redirect(url_for("corp.cargos"))
 
     return render_template(
         "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act

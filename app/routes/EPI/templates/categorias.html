@@ -5,14 +5,14 @@
             <hr>
             <a type="button"
                href="{{ url_for('epi.cadastrar_categoria') }}"
-               class="btn btn-success mb-3">
+               class="btn btn-success me-2">
                 <span class="icon text-white-50">
                     <i class="fa-solid fa-plus"></i>
                 </span>
                 <span class="text">Cadastrar</span>
             </a>
             <button type="button"
-                    class="btn btn-warning mb-3"
+                    class="btn btn-warning me-2"
                     data-bs-toggle="modal"
                     data-bs-target="#importarquivo">
                 <span class="icon text-white-50">
@@ -20,7 +20,7 @@
                 </span>
                 <span class="text">Import em lotes</span>
             </button>
-            <a href="#!" class="btn btn-primary btn-icon-split mb-3">
+            <a href="#!" class="btn btn-primary btn-icon-split me-2">
                 <span class="icon text-white-50">
                     <i class="fa-solid fa-file-csv"></i>
                 </span>
@@ -51,7 +51,7 @@
                                 <td>
                                     <button type="button"
                                             id="DeleteEstoqueButton"
-                                            class="btn btn-danger btn-sm mb-2"
+                                            class="btn btn-danger btn-sm me-2"
                                             hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
                                             hx-trigger="click"
                                             hx-target="#results">
@@ -62,7 +62,7 @@
                                     </button>
                                     <button type="button"
                                             id="EditInfo"
-                                            class="btn btn-warning btn-sm mb-2"
+                                            class="btn btn-warning btn-sm me-2"
                                             hx-get="{{ url_for('set_editar', tipo = request.endpoint, item = item.id) }}"
                                             hx-target="#results"
                                             onclick="showLoad()">

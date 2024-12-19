@@ -35,8 +35,10 @@ def cadastrar_modelos():
         list_form_data = list(form_data.items())
 
         for key, value in list_form_data:
-            if key != "csrf_token" or key != "submit":
-                to_add.update({key: value})
+            if key.lower() == "csrf_token" or key.lower() == "submit":
+                continue
+
+            to_add.update({key: value})
 
         classe = ModelosEPI(**to_add)
         db.session.add(classe)

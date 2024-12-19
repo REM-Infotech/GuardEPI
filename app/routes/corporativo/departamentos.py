@@ -44,14 +44,16 @@ def cadastrar_departamentos():
         list_form_data = list(form_data.items())
 
         for key, value in list_form_data:
-            if key != "csrf_token" or key != "submit":
-                to_add.update({key: value})
+            if key.lower() == "csrf_token" or key.lower() == "submit":
+                continue
+
+            to_add.update({key: value})
 
         Departamentos = Departamento(**to_add)
         db.session.add(Departamentos)
         db.session.commit()
         flash("Departamentos cadastrada com sucesso!", "success")
-        return redirect(url_for("epi.Departamentoss"))
+        return redirect(url_for("corp.Departamentos"))
 
     return render_template(
         "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
@@ -85,7 +87,7 @@ def editar_departamentos(id):
         db.session.commit()
 
         flash("Departamentos editada com sucesso!", "success")
-        return redirect(url_for("epi.Departamentoss"))
+        return redirect(url_for("corp.Departamentos"))
 
     return render_template(
         "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
