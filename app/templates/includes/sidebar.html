@@ -1,173 +1,136 @@
 <div id="layoutSidenav_nav">
-    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-        <div class="sb-sidenav-menu">
-            <div class="nav">
-                <div class="sb-sidenav-menu-heading">EPI</div>
-                <a class="nav-link" href="{{ url_for('dash.dashboard') }}">
-                    <div class="sb-nav-link-icon">
-                        <i class="fas fa-tachometer-alt"></i>
-                    </div>
-                    Dashboard
-                </a>
-                <a class="nav-link collapsed"
-                   href="#"
-                   data-bs-toggle="collapse"
-                   data-bs-target="#colapse_Tables"
-                   aria-expanded="false"
-                   aria-controls="colapse_Tables">
-                    <div class="sb-nav-link-icon">
-                        <i class="fas fa-table"></i>
-                    </div>
-                    Gestão EPI's
-                    <div class="sb-sidenav-collapse-arrow">
-                        <i class="fas fa-angle-down"></i>
-                    </div>
-                </a>
-                <div class="collapse"
-                     id="colapse_Tables"
-                     aria-labelledby="headingOne"
-                     data-bs-parent="#sidenavAccordion">
-                    <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link collapsed"
-                           href="#"
-                           data-bs-toggle="collapse"
-                           data-bs-target="#ProdutosCollapse"
-                           aria-expanded="false"
-                           aria-controls="ProdutosCollapse">
-                            Produtos
-                            <div class="sb-sidenav-collapse-arrow">
-                                <i class="fas fa-angle-down"></i>
-                            </div>
-                        </a>
-                        <div class="collapse"
-                             id="ProdutosCollapse"
-                             aria-labelledby="headingOne"
-                             data-bs-parent="#sidenavAccordionPages">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="{{ url_for('epi.Equipamentos') }}">Equipamentos</a>
-                                <a class="nav-link" href="{{ url_for('epi.Grade') }}">Grades</a>
-                                <a class="nav-link" href="{{ url_for('epi.categorias') }}">Classes</a>
-                                <a class="nav-link" href="{{ url_for('epi.fornecedores') }}">Fornecedores</a>
-                                <a class="nav-link" href="{{ url_for('epi.marcas') }}">Marcas</a>
-                                <a class="nav-link" href="{{ url_for('epi.modelos') }}">Modelos</a>
-                            </nav>
-                        </div>
-                        <a class="nav-link collapsed"
-                           href="#"
-                           data-bs-toggle="collapse"
-                           data-bs-target="#pagesEstoque"
-                           aria-expanded="false"
-                           aria-controls="pagesEstoque">
-                            Estoque
-                            <div class="sb-sidenav-collapse-arrow">
-                                <i class="fas fa-angle-down"></i>
-                            </div>
-                        </a>
-                        <div class="collapse"
-                             id="pagesEstoque"
-                             aria-labelledby="headingOne"
-                             data-bs-parent="#sidenavAccordionPages">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="{{ url_for('epi.Estoque') }}">Equipamentos</a>
-                                <a class="nav-link" href="{{ url_for('epi.Estoque_Grade') }}">Grades</a>
-                                <a class="nav-link" href="{{ url_for('epi.Entradas') }}">Entradas</a>
-                            </nav>
-                        </div>
-                        <a class="nav-link collapsed"
-                           href="#"
-                           data-bs-toggle="collapse"
-                           data-bs-target="#pagesLiberacoes"
-                           aria-expanded="false"
-                           aria-controls="pagesLiberacoes">
-                            Liberações
-                            <div class="sb-sidenav-collapse-arrow">
-                                <i class="fas fa-angle-down"></i>
-                            </div>
-                        </a>
-                        <div class="collapse"
-                             id="pagesLiberacoes"
-                             aria-labelledby="headingOne"
-                             data-bs-parent="#sidenavAccordionPages">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="{{ url_for('epi.Cautelas') }}">Cautelas</a>
-                                <a class="nav-link" href="{{ url_for('epi.Registro_Saidas') }}">Registro Saídas</a>
-                            </nav>
-                        </div>
-                    </nav>
-                </div>
-                <div class="sb-sidenav-menu-heading">Empresa</div>
-                <a class="nav-link collapsed"
-                   href="#"
-                   data-bs-toggle="collapse"
-                   data-bs-target="#colapse_TablesEmpresa"
-                   aria-expanded="false"
-                   aria-controls="colapse_TablesEmpresa">
-                    <div class="sb-nav-link-icon">
-                        <i class="fa-regular fa-building"></i>
-                    </div>
-                    Corporativo
-                    <div class="sb-sidenav-collapse-arrow">
-                        <i class="fas fa-angle-down"></i>
-                    </div>
-                </a>
-                <div class="collapse"
-                     id="colapse_TablesEmpresa"
-                     aria-labelledby="headingOne"
-                     data-bs-parent="#sidenavAccordion">
-                    <nav class="sb-sidenav-menu-nested nav">
-                        <a class="nav-link" href="{{ url_for('corp.funcionarios') }}">Funcionários</a>
-                        <a class="nav-link" href="{{ url_for('corp.Empresas') }}">Empresas</a>
-                        <a class="nav-link" href="{{ url_for('corp.cargos') }}">Cargos</a>
-                        <a class="nav-link" href="{{ url_for('corp.Departamentos') }}">Departamentos</a>
-                    </nav>
-                </div>
-                <div class="sb-sidenav-menu-heading">Sistema</div>
-                <a class="nav-link collapsed"
-                   href="#"
-                   data-bs-toggle="collapse"
-                   data-bs-target="#collapse_Settings"
-                   aria-expanded="false"
-                   aria-controls="collapse_Settings">
-                    <div class="sb-nav-link-icon">
-                        <i class="fa-solid fa-gear"></i></i>
-                    </div>
-                    Configurações
-                    <div class="sb-sidenav-collapse-arrow">
-                        <i class="fas fa-angle-down"></i>
-                    </div>
-                </a>
-                {# <div class="collapse" id="collapse_Settings" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+  <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+    <div class="sb-sidenav-menu">
+      <div class="nav">
+        <div class="sb-sidenav-menu-heading">EPI</div>
+        <a class="nav-link" href="{{ url_for('dash.dashboard') }}">
+          <div class="sb-nav-link-icon">
+            <i class="fas fa-tachometer-alt"></i>
+          </div>
+          Dashboard
+        </a>
+        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#colapse_Tables"
+          aria-expanded="false" aria-controls="colapse_Tables">
+          <div class="sb-nav-link-icon">
+            <i class="fas fa-table"></i>
+          </div>
+          Gestão EPI's
+          <div class="sb-sidenav-collapse-arrow">
+            <i class="fas fa-angle-down"></i>
+          </div>
+        </a>
+        <div class="collapse" id="colapse_Tables" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+          <nav class="sb-sidenav-menu-nested nav">
+            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#ProdutosCollapse"
+              aria-expanded="false" aria-controls="ProdutosCollapse">
+              Produtos
+              <div class="sb-sidenav-collapse-arrow">
+                <i class="fas fa-angle-down"></i>
+              </div>
+            </a>
+            <div class="collapse" id="ProdutosCollapse" aria-labelledby="headingOne"
+              data-bs-parent="#sidenavAccordionPages">
+              <nav class="sb-sidenav-menu-nested nav">
+                <a class="nav-link" href="{{ url_for('epi.Equipamentos') }}">Equipamentos</a>
+                <a class="nav-link" href="{{ url_for('epi.Grade') }}">Grades</a>
+                <a class="nav-link" href="{{ url_for('epi.categorias') }}">Classes</a>
+                <a class="nav-link" href="{{ url_for('epi.fornecedores') }}">Fornecedores</a>
+                <a class="nav-link" href="{{ url_for('epi.marcas') }}">Marcas</a>
+                <a class="nav-link" href="{{ url_for('epi.modelos') }}">Modelos</a>
+              </nav>
+            </div>
+            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesEstoque"
+              aria-expanded="false" aria-controls="pagesEstoque">
+              Estoque
+              <div class="sb-sidenav-collapse-arrow">
+                <i class="fas fa-angle-down"></i>
+              </div>
+            </a>
+            <div class="collapse" id="pagesEstoque" aria-labelledby="headingOne"
+              data-bs-parent="#sidenavAccordionPages">
+              <nav class="sb-sidenav-menu-nested nav">
+                <a class="nav-link" href="{{ url_for('epi.Estoque') }}">Equipamentos</a>
+                <a class="nav-link" href="{{ url_for('epi.Estoque_Grade') }}">Grades</a>
+                <a class="nav-link" href="{{ url_for('epi.Entradas') }}">Entradas</a>
+              </nav>
+            </div>
+            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesLiberacoes"
+              aria-expanded="false" aria-controls="pagesLiberacoes">
+              Liberações
+              <div class="sb-sidenav-collapse-arrow">
+                <i class="fas fa-angle-down"></i>
+              </div>
+            </a>
+            <div class="collapse" id="pagesLiberacoes" aria-labelledby="headingOne"
+              data-bs-parent="#sidenavAccordionPages">
+              <nav class="sb-sidenav-menu-nested nav">
+                <a class="nav-link" href="{{ url_for('epi.Cautelas') }}">Cautelas</a>
+                <a class="nav-link" href="{{ url_for('epi.Registro_Saidas') }}">Registro Saídas</a>
+              </nav>
+            </div>
+          </nav>
+        </div>
+        <div class="sb-sidenav-menu-heading">Empresa</div>
+        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#colapse_TablesEmpresa"
+          aria-expanded="false" aria-controls="colapse_TablesEmpresa">
+          <div class="sb-nav-link-icon">
+            <i class="fa-regular fa-building"></i>
+          </div>
+          Corporativo
+          <div class="sb-sidenav-collapse-arrow">
+            <i class="fas fa-angle-down"></i>
+          </div>
+        </a>
+        <div class="collapse" id="colapse_TablesEmpresa" aria-labelledby="headingOne"
+          data-bs-parent="#sidenavAccordion">
+          <nav class="sb-sidenav-menu-nested nav">
+            <a class="nav-link" href="{{ url_for('corp.funcionarios') }}">Funcionários</a>
+            <a class="nav-link" href="{{ url_for('corp.Empresas') }}">Empresas</a>
+            <a class="nav-link" href="{{ url_for('corp.cargos') }}">Cargos</a>
+            <a class="nav-link" href="{{ url_for('corp.Departamentos') }}">Departamentos</a>
+          </nav>
+        </div>
+        <div class="sb-sidenav-menu-heading">Sistema</div>
+        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapse_Settings"
+          aria-expanded="false" aria-controls="collapse_Settings">
+          <div class="sb-nav-link-icon">
+            <i class="fa-solid fa-gear"></i>
+          </div>
+          Configurações
+          <div class="sb-sidenav-collapse-arrow">
+            <i class="fas fa-angle-down"></i>
+          </div>
+        </a>
+        {# <div class="collapse" id="collapse_Settings" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
           <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
             <a class="nav-link" href="{{ url_for('users') }}">Usuários</a>
             <a class="nav-link" href="{{ url_for('groups') }}">Grupos e Membros</a>
             <a class="nav-link" href="{{ url_for('Permissoes') }}">Permissões</a>
           </nav>
-</div> #}
-            </div>
-        </div>
-        <div class="sb-sidenav-footer">
-            <div class="dropdown">
-                <a href="#"
-                   class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-                   data-bs-toggle="dropdown"
-                   aria-expanded="false">
-                    {# <img src="{{ url_for('profile_pic') }}" alt="" width="32" height="32" class="rounded-circle me-2 border 3">
+        </div> #}
+      </div>
+    </div>
+    <div class="sb-sidenav-footer">
+      <div class="dropdown">
+        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          {# <img src="{{ url_for('profile_pic') }}" alt="" width="32" height="32" class="rounded-circle me-2 border 3">
           #}
-                    <strong>{{ session["nome_usuario"] }}</strong>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                    <li>
-                        <a class="dropdown-item" href="#">Manuais</a>
-                    </li>
-                    {# <li><a class="dropdown-item" href="{{ url_for('profile') }}">Configurações do Perfil</a></li> #}
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sair</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+          <strong>{{ session["nome_usuario"] }}</strong>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+          <li>
+            <a class="dropdown-item" href="#">Manuais</a>
+          </li>
+          {# <li><a class="dropdown-item" href="{{ url_for('profile') }}">Configurações do Perfil</a></li> #}
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li>
+            <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sair</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 </div>

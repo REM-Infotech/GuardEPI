@@ -13198,3 +13198,17 @@ body {
   background-color: rgba(255, 255, 255, 0.822);
 
 }
+
+.pdf-frame {
+
+  height: 80vh;
+
+}
+
+.logo-img {
+
+  width: 20%;
+
+  height: auto;
+
+}
