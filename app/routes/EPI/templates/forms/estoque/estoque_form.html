@@ -1,66 +1,74 @@
-<div class="modal fade" id="cadastroEstoque" tabindex="-1" aria-labelledby="cadastroEstoqueLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="m-0 font-weight-bold text-primary">Lançamento Produto</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method="post" action="{{ url_for('lancamento_produto') }}" enctype="multipart/form-data"
-          class="form-floating">
-          {{ form.hidden_tag() }}
-          <div class="row g-3 justify-content-center p-3">
-            <div class="col-12 border border-black p-2 border-2 rounded">
-              <div class="mb-3">
-                {{ form.nota_fiscal.label(for="formFile", class="form-label") }}
-                {{ form.nota_fiscal(class="form-control", type="file", id="formFile", accept=".pdf") }}
-              </div>
+<div class="modal fade"
+     id="cadastroEstoque"
+     tabindex="-1"
+     aria-labelledby="cadastroEstoqueLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="m-0 font-weight-bold text-primary">Lançamento Produto</h4>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
             </div>
-            <div class="col-12">
-              <div class="form-floating mb-3">
-                {{ form.cod_notafiscal(class="form-control", id="cod_notafiscal", placeholder="") }}
-                {{ form.cod_notafiscal.label(for="cod_notafiscal") }}
-              </div>
+            <div class="modal-body">
+                <form method="post"
+                      action="{{ url_for('lancamento_produto') }}"
+                      enctype="multipart/form-data"
+                      class="form-floating">
+                    {{ form.hidden_tag() }}
+                    <div class="row g-3 justify-content-center p-3">
+                        <div class="col-12 border border-black p-2 border-2 rounded">
+                            <div class="mb-3">
+                                {{ form.nota_fiscal.label(for="formFile", class="form-label") }}
+                                {{ form.nota_fiscal(class="form-control", type="file", id="formFile", accept=".pdf") }}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating mb-3">
+                                {{ form.cod_notafiscal(class="form-control", id="cod_notafiscal", placeholder="") }}
+                                {{ form.cod_notafiscal.label(for="cod_notafiscal") }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3 border border-black p-2 border-2 rounded">
+                                {{ form.nome_epi.label(class="form-label") }}
+                                {{ form.nome_epi(class="form-control", id="nome_epi", placeholder="") }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3 border border-black p-2 border-2 rounded">
+                                {{ form.tipo_grade.label(class="form-label") }}
+                                {{ form.tipo_grade(class="form-control", id="tipo_grade", placeholder="") }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3 border border-black p-2 border-2 rounded">
+                                {{ form.tipo_qtd.label(class="form-label") }}
+                                {{ form.tipo_qtd(type="text", class="form-control", id="tipo_qtd", placeholder="") }}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating mb-3">
+                                {{ form.qtd_estoque(class="form-control", id="qtd_estoque", placeholder="") }}
+                                {{ form.qtd_estoque.label(for="qtd_estoque") }}
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-floating mb-3">
+                                {{ form.valor_total(class="form-control", id="valor_total", placeholder="",
+                                                                onkeyup="formatarComoMoeda(this)") }}
+                                {{ form.valor_total.label(for="valor_total") }}
+                            </div>
+                        </div>
+                        <hr class="mt-4 mb-4">
+                    </div>
+                    <div class="footer">
+                        <div class="d-grid gap-2">{{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}</div>
+                    </div>
+                </form>
             </div>
-            <div class="col-md-4">
-              <div class="mb-3 border border-black p-2 border-2 rounded">
-                {{ form.nome_epi.label(class="form-label") }}
-                {{ form.nome_epi(class="form-control", id="nome_epi", placeholder="") }}
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3 border border-black p-2 border-2 rounded">
-                {{ form.tipo_grade.label(class="form-label") }}
-                {{ form.tipo_grade(class="form-control", id="tipo_grade", placeholder="") }}
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="mb-3 border border-black p-2 border-2 rounded">
-                {{ form.tipo_qtd.label(class="form-label") }}
-                {{ form.tipo_qtd(type="text", class="form-control", id="tipo_qtd", placeholder="") }}
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="form-floating mb-3">
-                {{ form.qtd_estoque(class="form-control", id="qtd_estoque", placeholder="") }}
-                {{ form.qtd_estoque.label(for="qtd_estoque") }}
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="form-floating mb-3">
-                {{ form.valor_total(class="form-control", id="valor_total", placeholder="",
-                onkeyup="formatarComoMoeda(this)") }}
-                {{ form.valor_total.label(for="valor_total") }}
-              </div>
-            </div>
-            <hr class="mt-4 mb-4">
-          </div>
-          <div class="footer">
-            <div class="d-grid gap-2">{{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
-            </div>
-          </div>
-        </form>
-      </div>
+        </div>
     </div>
-  </div>
 </div>

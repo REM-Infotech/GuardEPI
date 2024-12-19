@@ -1,5 +1,7 @@
-from flask import redirect, render_template, url_for
+from flask import current_app as app
+from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
+from flask_sqlalchemy import SQLAlchemy
 
 from app.forms import CadastroCategorias
 from app.models import ClassesEPI
@@ -21,22 +23,66 @@ def categorias():
 @epi.route("/categorias/cadastrar", methods=["GET", "POST"])
 @login_required
 def cadastrar_categoria():
+
+    endpoint = "Categoria"
+    act = "Cadastro"
     form = CadastroCategorias()
+
+    db: SQLAlchemy = app.extensions["sqlalchemy"]
+
     if form.validate_on_submit():
-        # Logic to add category to the database
-        pass
-    return render_template("index.html", page="form_base.html", form=form)
+
+        to_add = {}
+        form_data = form.data
+        list_form_data = list(form_data.items())
+
+        for key, value in list_form_data:
+            if key != "csrf_token" or key != "submit":
+                to_add.update({key: value})
+
+        classe = ClassesEPI(**to_add)
+        db.session.add(classe)
+        db.session.commit()
+        flash("Categoria cadastrada com sucesso!", "success")
+        return redirect(url_for("epi.categorias"))
+
+    return render_template(
+        "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
+    )
 
 
 @epi.route("/categorias/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 def editar_categoria(id):
+
+    endpoint = "Categoria"
+    act = "Cadastro"
+
+    db: SQLAlchemy = app.extensions["sqlalchemy"]
     form = CadastroCategorias()
+
+    classe = db.session.query(ClassesEPI).filter(ClassesEPI.id == id).first()
+
+    if request.method == "GET":
+        form = CadastroCategorias(**classe.__dict__)
+
     if form.validate_on_submit():
-        # Logic to update category in the database
-        pass
-    # Logic to load category data into form
-    return render_template("index.html", page="form_base.html", form=form)
+
+        form_data = form.data
+        list_form_data = list(form_data.items())
+
+        for key, value in list_form_data:
+            if key != "csrf_token" or key != "submit" and value:
+                setattr(classe, key, value)
+
+        db.session.commit()
+
+        flash("Categoria editada com sucesso!", "success")
+        return redirect(url_for("epi.categorias"))
+
+    return render_template(
+        "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
+    )
 
 
 @epi.route("/categorias/deletar/<int:id>", methods=["POST"])
