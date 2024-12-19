@@ -2,10 +2,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Union
 
+from flask import abort
 from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from psycopg import errors
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
@@ -93,7 +95,10 @@ def cadastro_equipamento():
 
         epi = ProdutoEPI(**to_add)
         db.session.add(epi)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
 
         flash("EPI cadastrado com sucesso!", "success")
         return redirect(url_for("epi.Equipamentos"))
@@ -198,7 +203,10 @@ def editar_equipamento(id: int):
 
                 setattr(epi, key, value)
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
 
         flash("Edições Salvas con sucesso!", "success")
         return redirect(url_for("epi.Equipamentos"))

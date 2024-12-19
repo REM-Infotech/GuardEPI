@@ -16,6 +16,7 @@ from flask import (
 )
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from psycopg import errors
 
 from app.decorators import create_perm
 from app.forms import Cautela
@@ -290,7 +291,10 @@ def emitir_cautela():
 
             db.session.add(registrar)
             db.session.add_all(para_registro)
-            db.session.commit()
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
             employee_data = {
                 "company": str(data_funcionario.empresa),
@@ -357,7 +361,10 @@ def emitir_cautela():
                     cautela_data = file.read()
 
                 set_cautela.blob_doc = cautela_data
-                db.session.commit()
+                try:
+                    db.session.commit()
+                except errors.UniqueViolation:
+                    abort(500, description="Item já cadastrado!")
 
                 url = url_for(
                     "serve_pdf",

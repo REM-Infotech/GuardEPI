@@ -1,7 +1,9 @@
+from flask import abort
 from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from psycopg import errors
 
 from app.forms import CadastroMarcas
 from app.models import Marcas
@@ -59,7 +61,10 @@ def cadastrar_marca():
 
         classe = Marcas(**to_add)
         db.session.add(classe)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
         flash("Marca cadastrada com sucesso!", "success")
         return redirect(url_for("epi.marcas"))
 
@@ -106,7 +111,10 @@ def editar_marca(id):
             if key != "csrf_token" or key != "submit" and value:
                 setattr(classe, key, value)
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
 
         flash("Marca editada com sucesso!", "success")
         return redirect(url_for("epi.marcas"))

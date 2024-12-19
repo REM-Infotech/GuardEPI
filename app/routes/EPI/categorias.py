@@ -1,7 +1,9 @@
+from flask import abort
 from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from psycopg import errors
 
 from app.forms import CadastroCategorias
 from app.models import ClassesEPI
@@ -60,7 +62,10 @@ def cadastrar_categoria():
 
         classe = ClassesEPI(**to_add)
         db.session.add(classe)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
         flash("Categoria cadastrada com sucesso!", "success")
         return redirect(url_for("epi.categorias"))
 
@@ -104,7 +109,10 @@ def editar_categoria(id):
             if key != "csrf_token" or key != "submit" and value:
                 setattr(classe, key, value)
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
 
         flash("Categoria editada com sucesso!", "success")
         return redirect(url_for("epi.categorias"))

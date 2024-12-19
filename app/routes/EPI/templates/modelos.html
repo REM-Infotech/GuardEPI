@@ -3,12 +3,12 @@
     <div class="card-header">
       <h2 class="m-2">Modelos</h2>
       <hr>
-      <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#cadastroModelos">
+      <a type="button" class="btn btn-success me-2" href="{{ url_for('epi.cadastrar_modelos') }}">
         <span class="icon text-white-50">
           <i class="fa-solid fa-plus"></i>
         </span>
         <span class="text">Cadastrar</span>
-      </button>
+      </a>
       <button type="button" class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#importarquivo">
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-import"></i>
@@ -45,21 +45,19 @@
             <td>{{ item.descricao }}</td>
             {% endif %}
             <td>
-              <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm me-2"
-                hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}" hx-trigger="click"
-                hx-target="#results">
-                <span class="icon text-white-50">
-                  <i class="fa-solid fa-trash"></i>
-                </span>
-                <span class="text">Deletar</span>
-              </button>
-              <button type="button" id="EditInfo" class="btn btn-warning btn-sm me-2"
-                hx-get="{{ url_for('set_editar', tipo = request.endpoint, item = item.id) }}" hx-target="#results"
-                onclick="showLoad()">
+              <a type="button" class="btn btn-warning btn-sm me-2"
+                href="{{ url_for('epi.editar_modelos', id=item.id) }}">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-pen"></i>
                 </span>
                 <span class="text">Editar</span>
+              </a>
+              <button type="button" id="DeleteEpiButton" class="btn btn-danger btn-sm me-2"
+                hx-post="{{ url_for('epi.deletar_modelos',id=item.id) }}" hx-trigger="click" hx-target="#results">
+                <span class="icon text-white-50">
+                  <i class="fa-solid fa-trash"></i>
+                </span>
+                <span class="text">Deletar</span>
               </button>
             </td>
           </tr>

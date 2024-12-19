@@ -7,6 +7,7 @@ from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from psycopg import errors
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
@@ -99,7 +100,10 @@ def cadastro_empresas():
 
         emp = Empresa(**to_add)
         db.session.add(emp)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
 
         flash("emp cadastrado com sucesso!", "success")
         return redirect(url_for("corp.Empresas"))
@@ -202,7 +206,10 @@ def editar_empresas(id: int):
 
                 setattr(emp, key, value)
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
 
         flash("Edições Salvas con sucesso!", "success")
         return redirect(url_for("corp.Empresas"))

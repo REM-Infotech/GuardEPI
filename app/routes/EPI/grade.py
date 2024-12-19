@@ -3,6 +3,7 @@ from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from psycopg import errors
 
 from app.forms import CadastroGrade
 from app.misc import format_currency_brl
@@ -79,9 +80,12 @@ def cadastrar_grade():
 
         grade = GradeEPI(**to_add)
         db.session.add(grade)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
         flash("Grade cadastrada com sucesso!", "success")
-        return redirect(url_for("epi.grades"))
+        return redirect(url_for("epi.Grade"))
 
     return render_template(
         "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
@@ -90,7 +94,7 @@ def cadastrar_grade():
 
 @epi.route("/Grade/editar/<int:id>", methods=["GET", "POST"])
 @login_required
-def editar_Grade(id):
+def editar_grade(id):
     """
     Edit a GradeEPI entry in the database.
     This function handles the editing of a GradeEPI entry identified by the given id.
@@ -125,10 +129,13 @@ def editar_Grade(id):
             if key != "csrf_token" or key != "submit" and value:
                 setattr(grade, key, value)
 
-        db.session.commit()
+        try:
+            db.session.commit()
+        except errors.UniqueViolation:
+            abort(500, description="Item já cadastrado!")
 
         flash("Grade editada com sucesso!", "success")
-        return redirect(url_for("epi.grades"))
+        return redirect(url_for("epi.Grade"))
 
     return render_template(
         "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
@@ -137,7 +144,7 @@ def editar_Grade(id):
 
 @epi.route("/grades/deletar/<int:id>", methods=["POST"])
 @login_required
-def deletar_Grade(id: int):
+def deletar_grade(id: int):
     """
     Deletes a GradeEPI record from the database based on the provided ID.
     Args:
