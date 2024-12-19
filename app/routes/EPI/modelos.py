@@ -3,7 +3,7 @@ from flask import current_app as app
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
-from psycopg import errors
+from psycopg2 import errors
 
 from app.forms import CadastroModelos
 from app.models import ModelosEPI

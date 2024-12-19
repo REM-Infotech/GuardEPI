@@ -16,7 +16,7 @@ from flask import (
 )
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
-from psycopg import errors
+from psycopg2 import errors
 
 from app.decorators import create_perm
 from app.forms import Cautela
