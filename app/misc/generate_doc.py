@@ -3,15 +3,34 @@ import secrets
 from datetime import datetime
 
 from PIL import Image
+
+# PdfReader and PdfWriter are used for reading and writing PDF files
 from pypdf import PdfReader as PdfFileReader
 from pypdf import PdfWriter as PdfFileWriter
+
+# Importing colors for setting table and text colors in the PDF
 from reportlab.lib import colors
+
+# Importing letter for setting the page size to letter format
 from reportlab.lib.pagesizes import letter
+
+# Importing getSampleStyleSheet to get default styles for text
 from reportlab.lib.styles import getSampleStyleSheet
+
+# Importing inch to use inch units for positioning elements in the PDF
 from reportlab.lib.units import inch
+
+# Importing stringWidth to calculate the width of text strings
 from reportlab.pdfbase.pdfmetrics import stringWidth
+
+# Importing canvas to create and manipulate PDF pages
 from reportlab.pdfgen import canvas
+
+# Importing Paragraph, Table, and TableStyle for creating and styling tables in the PDF
 from reportlab.platypus import Paragraph, Table, TableStyle
+
+# Importing necessary modules for PDF manipulation and creation
+
 
 """
 # Issue: [B311:blacklist] Standard pseudo-random generators are not suitable for security/cryptographic purposes.
