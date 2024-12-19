@@ -81,16 +81,16 @@ class CadastroEmpresa(FlaskForm):
         "CNPJ empresa", validators=[Length(min=14, max=18), DataRequired()]
     )
     filename = FileField("LOGO Da Empresa", validators=[FileRequired()])
-    submit = SubmitField("Cadastrar!")
+    submit = SubmitField("Salvar")
 
 
 class CadastroCargo(FlaskForm):
     cargo = StringField("Nome do Cargo", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
-    submit = SubmitField("Cadastrar!")
+    submit = SubmitField("Salvar")
 
 
 class CadastroDepartamentos(FlaskForm):
     departamento = StringField("Nome do departamento", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
-    submit = SubmitField("Cadastrar!")
+    submit = SubmitField("Salvar")
