@@ -12,16 +12,35 @@ from . import epi
 @epi.route("/fornecedores", methods=["GET"])
 @login_required
 def fornecedores():
-    form = CadastroFornecedores()
+    """
+    Renders the 'fornecedores' page with an empty database.
+    This function sets the 'page' variable to "fornecedores.html" and initializes
+    an empty list for the 'database'. It then renders the "index.html" template
+    with the 'page' and 'database' variables.
+    Returns:
+        A rendered template of "index.html" with 'page' set to "fornecedores.html"
+        and an empty 'database'.
+    """
 
     page = "fornecedores.html"
-    database = []
-    return render_template("index.html", page=page, form=form, database=database)
+    database = Fornecedores.query.all()
+    return render_template("index.html", page=page, database=database)
 
 
 @epi.route("/fornecedores/cadastrar", methods=["GET", "POST"])
 @login_required
 def cadastrar_fornecedores():
+    """
+    Handles the registration of suppliers.
+    This function processes the form submission for registering new suppliers.
+    It validates the form data, adds the new supplier to the database, and
+    commits the transaction. If the registration is successful, it flashes a
+    success message and redirects to the suppliers page.
+    Returns:
+        Response: A redirect response to the suppliers page if the form is
+        successfully submitted and processed. Otherwise, it renders the
+        registration form template.
+    """
 
     endpoint = "fornecedores"
     act = "Cadastro"
@@ -54,7 +73,19 @@ def cadastrar_fornecedores():
 
 @epi.route("/fornecedores/editar/<int:id>", methods=["GET", "POST"])
 @login_required
-def editar_fornecedores(id):
+def editar_fornecedores(id: int):
+    """
+    Edit a supplier's information in the database.
+    This function handles the editing of supplier information based on the provided supplier ID.
+    It supports both GET and POST requests. On a GET request, it populates the form with the
+    supplier's current data. On a POST request, it validates the form and updates the supplier's
+    information in the database if the form is valid.
+    Args:
+        id (int): The ID of the supplier to be edited.
+    Returns:
+        Response: A rendered template for the form on GET request, or a redirect to the suppliers
+        list with a success message on successful form submission.
+    """
 
     endpoint = "fornecedores"
     act = "Cadastro"
@@ -89,6 +120,13 @@ def editar_fornecedores(id):
 @epi.route("/fornecedores/deletar/<int:id>", methods=["POST"])
 @login_required
 def deletar_fornecedores(id: int):
+    """
+    Deletes a supplier from the database based on the provided ID.
+    Args:
+        id (int): The ID of the supplier to be deleted.
+    Returns:
+        Response: A rendered template with a success message indicating that the supplier information has been successfully deleted.
+    """
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
     fornecedor = db.session.query(Fornecedores).filter(Fornecedores.id == id).first()

@@ -10,6 +10,17 @@ from . import corp
 @corp.get("/funcionarios")
 @login_required
 def funcionarios():
+    """
+    Fetches all records from the Funcionarios table and renders the 'index.html' template with the data.
+    This function queries all records from the Funcionarios table in the database and passes the data to the
+    'index.html' template along with the page name 'funcionarios.html'. If an exception occurs during the process,
+    it aborts the request with a 500 status code and includes the exception message in the response.
+    Returns:
+        Response: A Flask response object that renders the 'index.html' template with the fetched data.
+    Raises:
+        HTTPException: If an exception occurs, it aborts the request with a 500 status code and the exception message.
+    """
+
     try:
 
         page = "funcionarios.html"

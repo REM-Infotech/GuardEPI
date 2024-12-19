@@ -13,6 +13,20 @@ from . import corp
 @corp.route("/Departamentos")
 @login_required
 def Departamentos():
+    """
+    Handles the route for displaying the departments page.
+    This function queries all departments from the database and renders the
+    'index.html' template with the departments data. If an exception occurs
+    during the process, it aborts the request with a 500 status code and
+    includes the exception message in the response.
+    Returns:
+        Response: A Flask response object that renders the 'index.html' template
+        with the departments data.
+    Raises:
+        HTTPException: If an exception occurs, a 500 HTTP status code is returned
+        with the exception message.
+    """
+
     try:
 
         page = "departamentos.html"
@@ -30,6 +44,16 @@ def Departamentos():
 @corp.route("/Departamentos/cadastrar", methods=["GET", "POST"])
 @login_required
 def cadastrar_departamentos():
+    """
+    Handles the creation and registration of new departments.
+    This function processes a form submission for creating new departments.
+    It validates the form data, adds the new department to the database,
+    and commits the transaction. If the form submission is successful,
+    it flashes a success message and redirects to the departments page.
+    Returns:
+        Response: A redirect response to the departments page if the form is successfully submitted,
+                  otherwise renders the form template for department registration.
+    """
 
     endpoint = "Departamentos"
     act = "Cadastro"
@@ -63,6 +87,17 @@ def cadastrar_departamentos():
 @corp.route("/Departamentos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 def editar_departamentos(id):
+    """
+    Edit a department by its ID.
+    This function handles the editing of a department's details. It retrieves the department
+    from the database using the provided ID, populates a form with the department's current
+    details, and updates the department's information if the form is submitted and validated.
+    Args:
+        id (int): The ID of the department to be edited.
+    Returns:
+        Response: A rendered template for the department edit form, or a redirect to the
+        department list page if the form is successfully submitted and processed.
+    """
 
     endpoint = "Departamentos"
     act = "Cadastro"
@@ -97,6 +132,13 @@ def editar_departamentos(id):
 @corp.route("/Departamentoss/deletar/<int:id>", methods=["POST"])
 @login_required
 def deletar_departamentos(id: int):
+    """
+    Deletes a department from the database based on the provided ID.
+    Args:
+        id (int): The ID of the department to be deleted.
+    Returns:
+        Response: Renders a template with a success message indicating that the information was successfully deleted.
+    """
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
     Departamentos = db.session.query(Departamento).filter(Departamento.id == id).first()

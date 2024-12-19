@@ -19,16 +19,19 @@ dash = Blueprint("dash", __name__, template_folder=template_folder)
 @login_required
 @set_endpoint
 def dashboard():
+    """
+    Renders the dashboard page with various statistics and data for the current month.
+    This function retrieves data from the database for the current month, including
+    total entries, total exits, and their respective values. It then renders the
+    'index.html' template with the retrieved data.
+    Returns:
+        Response: A Flask response object containing the rendered template.
+    Raises:
+        HTTPException: If an error occurs during data retrieval or template rendering,
+                       a 500 HTTP error is raised with the error description.
+    """
+
     try:
-        """
-        ## Rota Dashboard
-
-        ### Returns:
-            title: titulo da página
-            page: página a ser renderizada
-            DataTables: JS Datatables para a página
-
-        """
         now = datetime.now(pytz.timezone("Etc/GMT+4"))
         current_month = now.month
         month = str(now.month)
@@ -88,7 +91,21 @@ def dashboard():
 
 
 @dash.route("/saidasEquipamento", methods=["GET"])
+@login_required
 def saidasEquipamento():
+    """
+    Retrieves equipment output data for the current month and returns it in JSON format.
+    This function queries the database for equipment output records for the current month,
+    processes the data to calculate the total values and average, and returns the data
+    formatted for charting.
+    Returns:
+        Response: A Flask JSON response containing the chart data with the following structure:
+            {
+                "labels": [list of equipment names],
+                "values": [list of total values for each equipment],
+                "media": calculated average value
+    """
+
     chart_data = {"labels": [], "values": [], "media": 0}
 
     # Obtendo o mês e ano atuais
@@ -127,7 +144,19 @@ def saidasEquipamento():
 
 
 @dash.route("/saidasFuncionario", methods=["GET"])
+@login_required
 def saidasFuncionario():
+    """
+    Retrieves and processes employee data for the current month to generate chart data.
+    This function queries the database for records of employee deliveries (RegistrosEPI)
+    filtered by the current month. It then constructs a DataFrame from the retrieved data,
+    groups the data by employee, and calculates the total value for each employee. Additionally,
+    it calculates a media value based on the highest total value.
+    Returns:
+        Response: A JSON response containing the chart data with labels (employee names),
+                  values (total values), and media (calculated media value).
+    """
+
     chart_data = {"labels": [], "values": [], "media": 0}
 
     # Obtendo o mês e ano atuais

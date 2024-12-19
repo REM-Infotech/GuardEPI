@@ -23,6 +23,14 @@ form_content = Union[str, FileStorage, int, float, datetime]
 @login_required
 @set_endpoint
 def Equipamentos():
+    """
+    Renders the 'equipamentos' page with the necessary context.
+    This function retrieves all entries from the ProdutoEPI database, constructs
+    the page title from the request endpoint, and sets the URL for an image icon.
+    It then renders the 'index.html' template with the provided context.
+    Returns:
+        A rendered HTML template for the 'equipamentos' page.
+    """
 
     page = "equipamentos.html"
     title = request.endpoint.split(".")[1].capitalize()
@@ -41,6 +49,16 @@ def Equipamentos():
 @epi.route("/equipamentos/cadastro", methods=["GET", "POST"])
 @login_required
 def cadastro_equipamento():
+    """
+    Handles the registration of new EPI (Personal Protective Equipment).
+    This function processes the form data submitted for registering a new EPI.
+    It validates the form, processes the data, and saves it to the database.
+    If the form submission is successful, it flashes a success message and redirects
+    to the Equipamentos page. Otherwise, it renders the form page again.
+    Returns:
+        Response: A redirect response to the Equipamentos page if the form is successfully submitted,
+                  or a rendered template of the form page if the form is not submitted or is invalid.
+    """
 
     form = CadastroEPIForm()
 
@@ -87,6 +105,16 @@ def cadastro_equipamento():
 @epi.route("/equipamentos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 def editar_equipamento(id: int):
+    """
+    Edit an existing EPI (Equipamento de Proteção Individual) record in the database.
+    This function handles both GET and POST requests. On a GET request, it retrieves the EPI data from the database,
+    populates a form with the data, and renders the form for editing. On a POST request, it validates the form data,
+    updates the EPI record in the database, and saves any uploaded files.
+    Args:
+        id (int): The ID of the EPI record to be edited.
+    Returns:
+        Response: A rendered template for the EPI form on GET request, or a redirect to the EPI list page on successful form submission.
+    """
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
     epi = db.session.query(ProdutoEPI).filter_by(id=id).first()
@@ -181,6 +209,13 @@ def editar_equipamento(id: int):
 
 @epi.route("/equipamentos/deletar/<int:id>")
 def deletar_equipamento(id: int):
+    """
+    Deletes an equipment record from the database based on the provided ID.
+    Args:
+        id (int): The ID of the equipment to be deleted.
+    Returns:
+        Response: Renders a template with a success message indicating that the information was deleted successfully.
+    """
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
     epi = db.session.query(ProdutoEPI).filter_by(id=id).first()

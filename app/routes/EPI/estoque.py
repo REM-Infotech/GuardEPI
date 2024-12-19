@@ -18,6 +18,19 @@ from . import epi
 @epi.route("/Estoque")
 @login_required
 def Estoque():
+    """
+    Handles the retrieval and rendering of the stock (Estoque) page.
+    This function queries the database for all entries in the EstoqueEPI table,
+    prepares the necessary data for rendering the stock page, and returns the
+    rendered HTML template. If an error occurs during this process, a 500 error
+    is raised with a description of the exception.
+    Returns:
+        Response: The rendered HTML template for the stock page.
+    Raises:
+        HTTPException: If an error occurs during the database query or rendering process,
+                       a 500 error is raised with the exception description.
+    """
+
     try:
         database = EstoqueEPI.query.all()
         title = request.endpoint.split(".")[1].capitalize()
@@ -42,6 +55,17 @@ def Estoque():
 @epi.route("/Estoque_Grade", methods=["GET"])
 @login_required
 def Estoque_Grade():
+    """
+    Fetches all records from the EstoqueGrade database table and renders the 'estoque_grade.html' page.
+    This function queries all entries from the EstoqueGrade table and passes the data to the 'index.html' template
+    with 'estoque_grade.html' as the page to be rendered. If an exception occurs during the process, it aborts the
+    request with a 500 status code and includes the exception message in the response.
+    Returns:
+        Response: A Flask response object that renders the 'index.html' template with the specified page and database data.
+    Raises:
+        HTTPException: If an error occurs during the database query or rendering process, a 500 HTTPException is raised.
+    """
+
     try:
         database = EstoqueGrade.query.all()
 
@@ -59,6 +83,14 @@ def Estoque_Grade():
 @epi.route("/Entradas")
 @login_required
 def Entradas():
+    """
+    Handles the route for displaying the list of EPI (Personal Protective Equipment) entries.
+    This function retrieves all entries from the RegistroEntradas database and renders the
+    'index.html' template with the retrieved data, along with the page title and format_currency_brl function.
+    Returns:
+        str: Rendered HTML template for the EPI entries page.
+    """
+
     title = "Relação de Entradas EPI"
     page = "entradas.html"
 
@@ -76,6 +108,22 @@ def Entradas():
 @login_required
 @create_perm
 def lancamento_produto():
+    """
+    Handles the product entry process in the inventory system.
+    This function processes the form submission for adding a new product entry to the inventory.
+    It performs the following steps:
+    1. Validates the form submission.
+    2. Checks if the product and its grade already exist in the inventory.
+    3. Adds or updates the product and its grade in the inventory.
+    4. Records the entry in the RegistroEntradas table.
+    5. Saves the uploaded invoice file, if provided.
+    6. Updates the unit price of the product.
+    7. Commits the changes to the database.
+    If the form submission is invalid or an error occurs during the process, appropriate error messages are flashed.
+    Raises:
+        Exception: If any error occurs during the process, a 500 error is raised with the error description.
+    """
+
     try:
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]

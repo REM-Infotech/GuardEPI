@@ -9,6 +9,11 @@ epi = Blueprint("epi", __name__, template_folder=template_folder, url_prefix="/e
 
 @epi.get("/")
 def redirecting():
+    """
+    Redirects to the 'Equipamentos' endpoint within the 'epi' blueprint.
+    Returns:
+        Response: A redirect response object to the 'epi.Equipamentos' URL.
+    """
 
     return redirect(url_for("epi.Equipamentos"))
 
@@ -16,6 +21,19 @@ def redirecting():
 if epi is not None:
 
     def epi_bp():
+        """
+        Import various modules related to 'epi' (personal protective equipment).
+        This function imports the following modules:
+        - .categorias: Handles categories of equipment.
+        - .cautelas: Manages cautions or warnings.
+        - .equipamentos: Manages equipment details.
+        - .estoque: Manages inventory or stock.
+        - .fornecedores: Manages suppliers.
+        - .grade: Handles grading or classification.
+        - .marcas: Manages brands.
+        - .modelos: Manages models.
+        Each module is imported using the import_module function from the importlib package.
+        """
 
         import_module(".categorias", package=__package__)
         import_module(".cautelas", package=__package__)
