@@ -88,6 +88,13 @@ def editar_categoria(id):
 @epi.route("/categorias/deletar/<int:id>", methods=["POST"])
 @login_required
 def deletar_categoria(id: int):
-    # Logic to delete category from the database
-    pass
-    return redirect(url_for("categoria.categorias"))
+
+    db: SQLAlchemy = app.extensions["sqlalchemy"]
+    classe = db.session.query(ClassesEPI).filter(ClassesEPI.id == id).first()
+
+    db.session.delete(classe)
+    db.session.commit()
+
+    template = "includes/show.html"
+    message = "Informação deletada com sucesso!"
+    return render_template(template, message=message)
