@@ -78,7 +78,7 @@ def cadastro_equipamento():
         db.session.commit()
 
         flash("EPI cadastrado com sucesso!", "success")
-        return redirect(url_for("equip.Equipamentos"))
+        return redirect(url_for("epi.Equipamentos"))
 
     page = "forms/equipamento_form.html"
     return render_template("index.html", page=page, form=form)
@@ -173,7 +173,7 @@ def editar_equipamento(id: int):
         db.session.commit()
 
         flash("Edições Salvas con sucesso!", "success")
-        return redirect(url_for("equip.Equipamentos"))
+        return redirect(url_for("epi.Equipamentos"))
 
     page = "forms/equipamento_form.html"
     return render_template("index.html", page=page, form=form, url_image=url_image)
