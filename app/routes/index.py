@@ -1,71 +1,15 @@
-from datetime import datetime
 import os
-from typing import Union
-from flask import (
-    Blueprint,
-    current_app as app,
-    make_response,
-    render_template,
-    send_file,
-    send_from_directory,
-    redirect,
-    url_for,
-    abort,
-)
-from flask_sqlalchemy import SQLAlchemy
-from flask_sqlalchemy.model import Model
-from flask_login import login_required
+from datetime import datetime
+
 import pandas as pd
+from flask import Blueprint, abort
+from flask import current_app as app
+from flask import make_response, send_file, send_from_directory
+from flask_login import login_required
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import LargeBinary
-from werkzeug.exceptions import HTTPException
-from deep_translator import GoogleTranslator
-
-from ..models import RegistrosEPI
-from ..models import GradeEPI, ProdutoEPI
-from ..models import EstoqueEPI, EstoqueGrade, RegistroEntradas
-from ..models import Cargos, Departamento, Empresa, Funcionarios
-from ..models.users import Groups, Users
-
-epi_models = Union[
-    RegistrosEPI,
-    RegistroEntradas,
-    EstoqueEPI,
-    EstoqueGrade,
-    GradeEPI,
-    ProdutoEPI,
-    Cargos,
-    Departamento,
-    Empresa,
-    Funcionarios,
-    Groups,
-    Users,
-]
 
 index = Blueprint("index", __name__)
-
-
-@app.errorhandler(HTTPException)
-def handle_http_exception(error):
-    """
-    Handles HTTP exceptions by translating the error name to Portuguese and rendering an error template.
-    Args:
-        error (HTTPException): The HTTP exception that was raised.
-    Returns:
-        Response: A Flask response object with the rendered error template and the appropriate HTTP status code.
-    """
-    tradutor = GoogleTranslator(source="en", target="pt")
-    name = tradutor.translate(error.name)
-    # desc = tradutor.translate(error.description)
-
-    if error.code == 405:
-        return redirect(url_for("dash.dashboard"))
-
-    return (
-        render_template(
-            "handler/index.html", name=name, desc="Erro Interno", code=error.code
-        ),
-        error.code,
-    )
 
 
 @index.route("/termos_uso", methods=["GET"])
@@ -126,7 +70,22 @@ def politica_privacidade():
 
 
 def get_models(tipo: str):
-    models: dict[str, epi_models] = {
+
+    from ..models import (
+        Cargos,
+        Departamento,
+        Empresa,
+        EstoqueEPI,
+        EstoqueGrade,
+        Funcionarios,
+        GradeEPI,
+        ProdutoEPI,
+        RegistroEntradas,
+        RegistrosEPI,
+    )
+    from ..models.users import Groups, Users
+
+    modelo = {
         "equipamentos": ProdutoEPI,
         "grades": GradeEPI,
         "estoque": EstoqueEPI,
@@ -141,10 +100,15 @@ def get_models(tipo: str):
         "groups": Groups,
     }
 
-    return models[tipo]
+    model = modelo.get(tipo)
+    if model is None:
+        message = "".join(("Modelo ", f'"{tipo}"', " não encontrado."))
+        raise AttributeError(message)
+
+    return
 
 
-@app.route("/gerar_relatorio/<str:dbase>")
+@index.route("/gerar_relatorio/<dbase>")
 @login_required
 def gerar_relatorio(dbase: str):
     try:

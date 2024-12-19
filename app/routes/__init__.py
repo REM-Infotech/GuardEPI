@@ -1,13 +1,13 @@
-from flask import (
-    Flask,
-)
+from deep_translator import GoogleTranslator
+from flask import Flask, redirect, render_template, url_for
+from werkzeug.exceptions import HTTPException
 
 from .auth import auth
 from .corporativo import corp
 from .dashboard import dash
 from .epi import epi
-from .serving import serve
 from .index import index as ind
+from .serving import serve
 
 
 def register_routes(app: Flask):
@@ -29,12 +29,33 @@ def register_routes(app: Flask):
         - /politica_privacidade (GET): Serves the "Política de Privacidade.pdf" file from the configured PDF path.
     """
 
-    with app.app_context():
+    blueprints = [auth, dash, corp, epi, serve, ind]
 
-        blueprints = [auth, dash, corp, epi, serve, ind]
+    for blueprint in blueprints:
+        app.register_blueprint(blueprint)
 
-        for blueprint in blueprints:
-            app.register_blueprint(blueprint)
+    @app.errorhandler(HTTPException)
+    def handle_http_exception(error):
+        """
+        Handles HTTP exceptions by translating the error name to Portuguese and rendering an error template.
+        Args:
+            error (HTTPException): The HTTP exception that was raised.
+        Returns:
+            Response: A Flask response object with the rendered error template and the appropriate HTTP status code.
+        """
+        tradutor = GoogleTranslator(source="en", target="pt")
+        name = tradutor.translate(error.name)
+        # desc = tradutor.translate(error.description)
+
+        if error.code == 405:
+            return redirect(url_for("dash.dashboard"))
+
+        return (
+            render_template(
+                "handler/index.html", name=name, desc="Erro Interno", code=error.code
+            ),
+            error.code,
+        )
 
 
 # from app import app
