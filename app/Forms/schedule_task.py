@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 
 # from pytz import all_timezones
-from wtforms import (  # TimeField,
+from wtforms import (
     IntegerField,
     SelectField,
     SelectMultipleField,
