@@ -180,7 +180,7 @@ class CadastroModelos(FlaskForm):
 
 
 class Cautela(FlaskForm):
-    select_funcionario = SelectField(
+    funcionario = SelectField(
         label="Selecione o Funcionário",
         validators=[DataRequired()],
         choices=[("Não Especificado", "Não Especificado")],
@@ -189,17 +189,17 @@ class Cautela(FlaskForm):
     nome_epi = SelectField(
         id="selectNomeEpi",
         label="Selecione a EPI",
-        choices=[("Não Especificado", "Não Especificado")],
+        choices=[],
     )
 
     tipo_grade = SelectField(
         id="selectNomeEpi",
         label="Selecione a Grade",
-        choices=[("Não Especificado", "Não Especificado")],
+        choices=[],
     )
 
     qtd_entregar = IntegerField(
-        label="Quantidade para entregar", validators=[Length(min=1)]
+        label="Quantidade para entregar", validators=[Length(min=1)], default=1
     )
     submit_cautela = SubmitField(id="submit_cautela", label="Emitir documento")
 
@@ -209,5 +209,5 @@ class Cautela(FlaskForm):
         self.nome_epi.choices.append(("Selecione", "Selecione"))
         self.nome_epi.choices.extend(set_EpiCautelaChoices())
 
-        self.select_funcionario.choices.append(("Selecione", "Selecione"))
-        self.select_funcionario.choices.extend(set_ChoicesFuncionario())
+        self.funcionario.choices.append(("Selecione", "Selecione"))
+        self.funcionario.choices.extend(set_ChoicesFuncionario())

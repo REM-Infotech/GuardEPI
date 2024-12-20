@@ -23,7 +23,7 @@
           <div class="col-md-6">
             <div class="form-floating mb-3">
               {{ form.cpf_funcionario(class="form-control", id="cpf_funcionario", placeholder="...",
-              oninput="formatDocument(this)") }}
+                            oninput="formatDocument(this)") }}
               {{ form.cpf_funcionario.label(for="cpf_funcionario") }}
             </div>
           </div>
@@ -57,7 +57,7 @@
           {{ form.cargo(class="form-control", placeholder=form.cargo.label.text) }}
         </div>
         <div class="mb-3 border border-black p-2 border-2 rounded">
-          {{ form.departamento.label(class=" form-label") }} {{ form.departamento(class="form-control" ) }}
+          {{ form.departamento.label(class=" form-label") }} {{ form.departamento(class="form-control") }}
         </div>
         <div class="footer m-3">
           <div class="d-grid gap-2">
@@ -65,7 +65,7 @@
             {{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
           </div>
         </div>
-    </div>
+      </div>
     </form>
   </div>
 </div>

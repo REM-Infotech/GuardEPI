@@ -12,10 +12,14 @@
             <div class="d-flex justify-content-center align-items-center">
               <br>
               {% if not url_image %}
-              {% set url_image = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png" %}
+                {% set url_image = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png" %}
               {% endif %}
-              <img id="preview" src="{{ url_image }}" alt="Image preview"
-                class="img-fluid border border-primary border-5 rounded-3 custom-img" width="300" height="300">
+              <img id="preview"
+                   src="{{ url_image }}"
+                   alt="Image preview"
+                   class="img-fluid border border-primary border-5 rounded-3 custom-img"
+                   width="300"
+                   height="300">
               <br>
             </div>
           </div>
@@ -23,7 +27,7 @@
             <div class="mb-3">
               {{ form.filename.label(for="formFile", class="form-label") }}
               {{ form.filename(class="form-control", type="file", id="formFile",
-              onchange="previewImage(event, 'preview')") }}
+                            onchange="previewImage(event, 'preview')") }}
             </div>
             <hr>
             <div class="form-floating mb-3">
@@ -32,17 +36,14 @@
             </div>
             <div class="form-floating mb-3">
               {{ form.cnpj_empresa(class="form-control", id="cnpj_empresa", placeholder="...",
-              onkeyup="formatarComoCNPJ(this)") }}
+                            onkeyup="formatarComoCNPJ(this)") }}
               {{ form.cnpj_empresa.label(for="empresa") }}
             </div>
-
           </div>
         </div>
         <hr>
         <div class="footer">
-          <div class="d-grid gap-2">
-            {{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
-          </div>
+          <div class="d-grid gap-2">{{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}</div>
         </div>
       </form>
     </div>

@@ -64,3 +64,7 @@ add-ignore = "D100,D101,D102,D103,D104,D105,D106,D107"
 
 [tool.bandit]
 exclude_dirs = ["tests", ".venv"]
+
+[tool.djlint]
+indent = 2
+ignore = "T002,H029"

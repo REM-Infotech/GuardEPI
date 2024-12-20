@@ -47,15 +47,14 @@
           <div class="col-12">
             <div class="form-floating mb-3">
               {{ form.valor_total(class="form-control", id="valor_total", placeholder="",
-              onkeyup="formatarComoMoeda(this)") }}
+                            onkeyup="formatarComoMoeda(this)") }}
               {{ form.valor_total.label(for="valor_total") }}
             </div>
           </div>
           <hr class="mt-4 mb-4">
         </div>
         <div class="footer">
-          <div class="d-grid gap-2">{{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}
-          </div>
+          <div class="d-grid gap-2">{{ form.submit(class="btn btn-success form-control", onclick="showLoad()") }}</div>
         </div>
       </form>
     </div>
