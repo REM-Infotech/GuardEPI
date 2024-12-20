@@ -68,3 +68,4 @@ exclude_dirs = ["tests", ".venv"]
 [tool.djlint]
 indent = 2
 ignore = "T002,H029"
+profile = "jinja"
