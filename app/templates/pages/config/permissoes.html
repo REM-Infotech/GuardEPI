@@ -1,75 +1,75 @@
 <div class="container-fluid px-4">
-    <div class="mt-4 card mb-4">
-        <div class="card-header">
-            <h2 class="m-2">Permissões</h2>
-            <hr>
-            <button type="button"
-                    class="btn btn-success me-2"
-                    data-bs-toggle="modal"
-                    data-bs-target="#CreateRuleForm">
-                <span class="icon text-white-50">
-                    <i class="fa-solid fa-plus"></i>
-                </span>
-                <span class="text">Configurar Nova Regra</span>
-            </button>
-            <a href="#!" class="btn btn-primary btn-icon-split me-2">
-                <span class="icon text-white-50">
-                    <i class="fa-solid fa-file-csv"></i>
-                </span>
-                <span class="text">Gerar Relatório</span>
-            </a>
-        </div>
-        <div class="card-body table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Nome</th>
-                        <th>Membros</th>
-                        <th data-sortable="false">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if database %}
-                        {% for item in database %}
-                            <tr>
-                                <td>{{ item.id }}</td>
-                                <td>{{ item.name_rule }}</td>
-                                {% if not item.groups_members %}
-                                    <td>Sem Membros</td>
-                                {% else %}
-                                    <td>{{ item.groups_members.replace('[', '').replace(']', '') }}</td>
-                                {% endif %}
-                                <td>
-                                    <button type="button"
-                                            id="DeleteEstoqueButton"
-                                            class="btn btn-danger btn-sm me-2"
-                                            hx-post="{{ url_for('deleteGroup', id = item.id) }}"
-                                            hx-trigger="click"
-                                            hx-target="#results">
-                                        <span class="icon text-white-50">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </span>
-                                        <span class="text">Deletar</span>
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>#</th>
-                        <th>Nome</th>
-                        <th>Membros</th>
-                        <th>Ações</th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+  <div class="mt-4 card mb-4">
+    <div class="card-header">
+      <h2 class="m-2">Permissões</h2>
+      <hr>
+      <button type="button"
+              class="btn btn-success me-2"
+              data-bs-toggle="modal"
+              data-bs-target="#CreateRuleForm">
+        <span class="icon text-white-50">
+          <i class="fa-solid fa-plus"></i>
+        </span>
+        <span class="text">Configurar Nova Regra</span>
+      </button>
+      <a href="#!" class="btn btn-primary btn-icon-split me-2">
+        <span class="icon text-white-50">
+          <i class="fa-solid fa-file-csv"></i>
+        </span>
+        <span class="text">Gerar Relatório</span>
+      </a>
     </div>
-    {% if form %}
-        {% include 'pages/forms/permissions/create.html' %}
-    {% endif %}
-    <div id="results"></div>
+    <div class="card-body table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Membros</th>
+            <th data-sortable="false">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if database %}
+            {% for item in database %}
+              <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.name_rule }}</td>
+                {% if not item.groups_members %}
+                  <td>Sem Membros</td>
+                {% else %}
+                  <td>{{ item.groups_members.replace('[', '').replace(']', '') }}</td>
+                {% endif %}
+                <td>
+                  <button type="button"
+                          id="DeleteEstoqueButton"
+                          class="btn btn-danger btn-sm me-2"
+                          hx-post="{{ url_for('deleteGroup', id = item.id) }}"
+                          hx-trigger="click"
+                          hx-target="#results">
+                    <span class="icon text-white-50">
+                      <i class="fa-solid fa-trash"></i>
+                    </span>
+                    <span class="text">Deletar</span>
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
+          {% endif %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Membros</th>
+            <th>Ações</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  {% if form %}
+    {% include 'pages/forms/permissions/create.html' %}
+  {% endif %}
+  <div id="results"></div>
 </div>

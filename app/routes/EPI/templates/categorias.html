@@ -3,20 +3,25 @@
     <div class="card-header">
       <h2 class="m-2">Categorias EPI</h2>
       <hr>
-      <a type="button" href="{{ url_for('epi.cadastrar_categoria') }}" class="btn btn-success me-2">
+      <a type="button"
+         href="{{ url_for("epi.cadastrar_categoria") }}"
+         class="btn btn-success me-2">
         <span class="icon text-white-50">
           <i class="fa-solid fa-plus"></i>
         </span>
         <span class="text">Cadastrar</span>
       </a>
-      <button type="button" class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#importarquivo">
+      <button type="button"
+              class="btn btn-warning me-2"
+              data-bs-toggle="modal"
+              data-bs-target="#importarquivo">
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-import"></i>
         </span>
         <span class="text">Import em lotes</span>
       </button>
-      <a href="{{ url_for('index.gerar_relatorio', dbase=request.endpoint.split('.')[-1]) }}"
-        class="btn btn-primary btn-icon-split me-2">
+      <a href="{{ url_for('index.gerar_relatorio', dbase=request.endpoint.split('.')[-1] ) }}"
+         class="btn btn-primary btn-icon-split me-2">
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-csv"></i>
         </span>
@@ -35,33 +40,38 @@
         </thead>
         <tbody>
           {% if database %}
-          {% for item in database %}
-          <tr>
-            <td>{{ item.id }}</td>
-            <td>{{ item.classe }}</td>
-            {% if not item.descricao %}
-            <td>Sem descrição</td>
-            {% else %}
-            <td>{{ item.descricao }}</td>
-            {% endif %}
-            <td>
-              <a type="button" class="btn btn-warning btn-sm me-2"
-                href="{{ url_for('epi.editar_equipamento', id=item.id) }}">
-                <span class="icon text-white-50">
-                  <i class="fa-solid fa-pen"></i>
-                </span>
-                <span class="text">Editar</span>
-              </a>
-              <button type="button" id="DeleteEpiButton" class="btn btn-danger btn-sm me-2"
-                hx-post="{{ url_for('epi.deletar_equipamento',id=item.id) }}" hx-trigger="click" hx-target="#results">
-                <span class="icon text-white-50">
-                  <i class="fa-solid fa-trash"></i>
-                </span>
-                <span class="text">Deletar</span>
-              </button>
-            </td>
-          </tr>
-          {% endfor %}
+            {% for item in database %}
+              <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.classe }}</td>
+                {% if not item.descricao %}
+                  <td>Sem descrição</td>
+                {% else %}
+                  <td>{{ item.descricao }}</td>
+                {% endif %}
+                <td>
+                  <a type="button"
+                     class="btn btn-warning btn-sm me-2"
+                     href="{{ url_for('epi.editar_equipamento', id=item.id) }}">
+                    <span class="icon text-white-50">
+                      <i class="fa-solid fa-pen"></i>
+                    </span>
+                    <span class="text">Editar</span>
+                  </a>
+                  <button type="button"
+                          id="DeleteEpiButton"
+                          class="btn btn-danger btn-sm me-2"
+                          hx-post="{{ url_for('epi.deletar_equipamento',id=item.id) }}"
+                          hx-trigger="click"
+                          hx-target="#results">
+                    <span class="icon text-white-50">
+                      <i class="fa-solid fa-trash"></i>
+                    </span>
+                    <span class="text">Deletar</span>
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
           {% endif %}
         </tbody>
         <tfoot>

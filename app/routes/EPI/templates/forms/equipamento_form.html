@@ -12,10 +12,14 @@
             <div class="d-flex justify-content-center align-items-center">
               <br>
               {% if not url_image %}
-              {% set url_image = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png" %}
+                {% set url_image = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png" %}
               {% endif %}
-              <img id="preview" src="{{ url_image }}" alt="Image preview"
-                class="img-fluid border border-primary border-5 rounded-3 preview-image" width="300" height="300">
+              <img id="preview"
+                   src="{{ url_image }}"
+                   alt="Image preview"
+                   class="img-fluid border border-primary border-5 rounded-3 preview-image"
+                   width="300"
+                   height="300">
               <br>
             </div>
           </div>
@@ -23,7 +27,7 @@
             <div class="mb-3">
               {{ form.filename.label(for="formFile", class="form-label") }}
               {{ form.filename(class="form-control", type="file", id="formFile",
-              onchange="previewImage(event, 'preview')") }}
+                            onchange="previewImage(event, 'preview')") }}
             </div>
             <hr>
             <div class="form-floating mb-3">
@@ -72,22 +76,22 @@
           <div class="col-md-6">
             <div class="form-floating mb-3">
               {{ form.valor_unitario(type="text", class="form-control", id="valor_unitario",
-              placeholder="",
-              onkeyup="formatarComoMoeda(this)") }}
+                            placeholder="",
+                            onkeyup="formatarComoMoeda(this)") }}
               {{ form.valor_unitario.label(for="valor_unitario") }}
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-floating mb-3">
               {{ form.qtd_entregar(type="text", class="form-control", id="qtd_entregar",
-              placeholder="") }}
+                            placeholder="") }}
               {{ form.qtd_entregar.label(for="qtd_entregar") }}
             </div>
           </div>
           <div class="col-12">
             <div class="form-floating mb-3">
               {{ form.periodicidade_item(type="text", class="form-control", id="periodicidade_item",
-              placeholder="") }}
+                            placeholder="") }}
               {{ form.periodicidade_item.label(for="periodicidade_item") }}
             </div>
           </div>
@@ -101,7 +105,7 @@
         <hr>
         <div class="footer">
           <div class="d-grid gap-2">
-            {{ form.submit(class="btn btn-success form-control", onclick="showLoad()")
+            {{ form.submit(class="btn btn-success form-control", onclick="showLoad()") 
             }}
           </div>
         </div>

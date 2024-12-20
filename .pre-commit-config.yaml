@@ -13,7 +13,7 @@ repos:
 
   # 3. Faz linting e correções adicionais no final
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.0
+    rev: v0.8.4
     hooks:
       - id: ruff
         args: ["--fix"]
@@ -49,15 +49,19 @@ repos:
           - B404,B603,B105,B605
         additional_dependencies: ["bandit[toml]"]
 
-  # - repo: https://github.com/djlint/djLint
-  #   rev: v1.36.3
-  #   hooks:
-  #     - id: djlint-reformat-handlebars
-  #       files: "\\.html"
-  #       types_or: ["html"]
-  #       args: ["--profile", "jinja"]
+  - repo: https://github.com/djlint/djLint
+    rev: v1.36.3
+    hooks:
+      - id: djlint-reformat-handlebars
+        files: "\\.html"
+        types_or: ["html"]
+        args:
+          - --configuration
+          - "pyproject.toml"
 
-  #     - id: djlint-handlebars
-  #       files: "\\.html"
-  #       types_or: ["html"]
-  #       args: ["--profile", "jinja"]
+      - id: djlint-handlebars
+        files: "\\.html"
+        types_or: ["html"]
+        args:
+          - --configuration
+          - "pyproject.toml"
