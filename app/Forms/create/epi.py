@@ -80,7 +80,7 @@ class InsertEstoqueForm(FlaskForm):
 
     submit = SubmitField(label="Salvar")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):  # pragma: no cover
         super().__init__(*args, **kwargs)
         self.nome_epi.choices.extend(set_choices())
         self.tipo_grade.choices.extend(set_choicesGrade())

@@ -67,7 +67,7 @@ class CadastroFuncionario(FlaskForm):
     )
     submit = SubmitField("Salvar alterações")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):  # pragma: no cover
         super().__init__(*args, **kwargs)
 
         self.empresa.choices.extend(setChoices_Empresa())

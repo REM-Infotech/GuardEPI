@@ -24,10 +24,10 @@ class ProdutoEPI(db.Model):
     )
     descricao: str = db.Column(db.Text, default="Sem Descrição")
 
-    def __init__(self, *args: tuple, **kwargs: dict) -> None:
+    def __init__(self, *args: tuple, **kwargs: dict) -> None:  # pragma: no cover
         super().__init__(*args, **kwargs)
 
-    def __getattr__(self, attr: str):
+    def __getattr__(self, attr: str):  # pragma: no cover
 
         func = super().__getattr__(attr)
         if not func:

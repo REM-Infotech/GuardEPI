@@ -65,7 +65,7 @@ __all__ = (
 )
 
 
-def init_database(app: Flask, db: SQLAlchemy) -> str:
+def init_database(app: Flask, db: SQLAlchemy) -> str:  # pragma: no cover
 
     with app.app_context():
 

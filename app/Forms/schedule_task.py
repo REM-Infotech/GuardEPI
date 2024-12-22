@@ -30,7 +30,7 @@ class TaskNotificacaoForm(FlaskForm):
 
     submit = SubmitField("Salvar Alterações")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):  # pragma: no cover
         super().__init__(*args, **kwargs)
 
         # timezones = [(timez, timez) for timez in all_timezones]

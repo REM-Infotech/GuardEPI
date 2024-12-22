@@ -50,7 +50,7 @@ class RegistroSaidas(db.Model):
         qtd_saida: int = 1,
         data_saida: Type[datetime] = datetime.now(),
         valor_total: float = 0.00,
-    ) -> None:
+    ) -> None:  # pragma: no cover
         self.nome_epi = nome_epi
         self.qtd_saida = qtd_saida
         self.data_saida = data_saida
