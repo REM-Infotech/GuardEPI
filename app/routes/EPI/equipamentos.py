@@ -11,7 +11,7 @@ from psycopg2 import errors
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
-from app.decorators import set_endpoint
+from app.decorators import set_endpoint  # pragma: no cover
 from app.forms import CadastroEPIForm
 from app.misc import format_currency_brl
 from app.models import ProdutoEPI

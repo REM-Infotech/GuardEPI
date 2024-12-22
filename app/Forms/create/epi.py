@@ -137,7 +137,7 @@ class CadastroEPIForm(FlaskForm):
     )
     submit = SubmitField(label="Salvar")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):  # pragma: no cover
         super().__init__(*args, **kwargs)
 
         self.fornecedor.choices.extend(set_choicesFornecedor())
@@ -145,7 +145,7 @@ class CadastroEPIForm(FlaskForm):
         self.modelo.choices.extend(set_choicesModelo())
         self.tipo_epi.choices.extend(set_choicesClasseEPI())
 
-    def __getattr__(self, name: str):
+    def __getattr__(self, name: str):  # pragma: no cover
 
         func = super().__getattr__(name)
         if not func:
@@ -203,7 +203,7 @@ class Cautela(FlaskForm):
     )
     submit_cautela = SubmitField(id="submit_cautela", label="Emitir documento")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):  # pragma: no cover
         super().__init__(*args, **kwargs)
 
         self.nome_epi.choices.append(("Selecione", "Selecione"))

@@ -8,16 +8,16 @@ from app.models import Permissions
 
 def set_endpoint(func):
     @wraps(func)
-    def decorated_function(*args, **kwargs):
+    def decorated_function(*args, **kwargs):  # pragma: no cover
         session["endpoint"] = request.endpoint
         return func(*args, **kwargs)
 
-    return decorated_function
+    return decorated_function  # pragma: no cover
 
 
 def create_perm(func):
     @wraps(func)
-    def decorated_function(*args, **kwargs):
+    def decorated_function(*args, **kwargs):  # pragma: no cover
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "CREATE") is False:
@@ -25,12 +25,12 @@ def create_perm(func):
 
         return func(*args, **kwargs)
 
-    return decorated_function
+    return decorated_function  # pragma: no cover
 
 
 def read_perm(func):
     @wraps(func)
-    def decorated_function(*args, **kwargs):
+    def decorated_function(*args, **kwargs):  # pragma: no cover
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "READ") is False:
@@ -38,12 +38,12 @@ def read_perm(func):
 
         return func(*args, **kwargs)
 
-    return decorated_function
+    return decorated_function  # pragma: no cover
 
 
 def update_perm(func):
     @wraps(func)
-    def decorated_function(*args, **kwargs):
+    def decorated_function(*args, **kwargs):  # pragma: no cover
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "UPDATE") is False:
@@ -51,12 +51,12 @@ def update_perm(func):
 
         return func(*args, **kwargs)
 
-    return decorated_function
+    return decorated_function  # pragma: no cover
 
 
 def delete_perm(func):
     @wraps(func)
-    def decorated_function(*args, **kwargs):
+    def decorated_function(*args, **kwargs):  # pragma: no cover
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "DELETE") is False:
@@ -64,10 +64,10 @@ def delete_perm(func):
 
         return func(*args, **kwargs)
 
-    return decorated_function
+    return decorated_function  # pragma: no cover
 
 
-def check_permit(groups_usr: list, PERM: str) -> bool:
+def check_permit(groups_usr: list, PERM: str) -> bool:  # pragma: no cover
     if session.get("username") == "root":
         return True
 

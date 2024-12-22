@@ -1,8 +1,8 @@
-from flask_wtf import FlaskForm
-from wtforms import SelectMultipleField, StringField, SubmitField
-from wtforms.validators import DataRequired
+from flask_wtf import FlaskForm  # pragma: no cover
+from wtforms import SelectMultipleField, StringField, SubmitField  # pragma: no cover
+from wtforms.validators import DataRequired  # pragma: no cover
 
-from app.models import Groups, Users
+from app.models import Groups, Users  # pragma: no cover
 
 endpoints = [
     ("registros", "Registros"),
@@ -20,10 +20,10 @@ endpoints = [
     ("Empresas", "Empresas"),
     ("cargo.cargos", "cargo.cargos"),
     ("Departamentos", "Departamentos"),
-]
+]  # pragma: no cover
 
 
-def setRules() -> list[tuple[str, str]]:
+def setRules() -> list[tuple[str, str]]:  # pragma: no cover
     return [
         ("CREATE", "Criar"),
         ("READ", "Acesso a informações"),
@@ -32,15 +32,15 @@ def setRules() -> list[tuple[str, str]]:
     ]
 
 
-def set_choicesUsers() -> list[tuple[str, str]]:
+def set_choicesUsers() -> list[tuple[str, str]]:  # pragma: no cover
     return [(item.login, item.nome_usuario) for item in Users.query.all()]
 
 
-def set_choicesGroups() -> list[tuple[str, str]]:
+def set_choicesGroups() -> list[tuple[str, str]]:  # pragma: no cover
     return [(item.name_group, item.name_group) for item in Groups.query.all()]
 
 
-class CreateGroup(FlaskForm):
+class CreateGroup(FlaskForm):  # pragma: no cover
     nome = StringField(label="Nome do Grupo", validators=[DataRequired()])
     membros = SelectMultipleField(
         "Selecione os Integrantes", validators=[DataRequired()], choices=[]

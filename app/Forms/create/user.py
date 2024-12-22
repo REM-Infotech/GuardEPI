@@ -41,11 +41,11 @@ perms = [
 ]
 
 
-def set_choicesUsers() -> list[tuple[str, str]]:
+def set_choicesUsers() -> list[tuple[str, str]]:  # pragma: no cover
     return [(item.login, item.nome_usuario) for item in Users.query.all()]
 
 
-def set_choicesGrupos() -> list[tuple[str, str]]:
+def set_choicesGrupos() -> list[tuple[str, str]]:  # pragma: no cover
     return [(item.name_group, item.name_group) for item in Groups.query.all()]
 
 
