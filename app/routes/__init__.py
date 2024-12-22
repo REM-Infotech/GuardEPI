@@ -45,14 +45,17 @@ def register_routes(app: Flask):
         """
         tradutor = GoogleTranslator(source="en", target="pt")
         name = tradutor.translate(error.name)
-        # desc = tradutor.translate(error.description)
+        desc = tradutor.translate(error.description)
+
+        if error.code == 500:
+            desc = "Erro do sistema"
 
         if error.code == 405:
             return redirect(url_for("dash.dashboard"))
 
         return (
             render_template(
-                "handler/index.html", name=name, desc="Erro Interno", code=error.code
+                "handler/index.html", name=name, desc=desc, code=error.code
             ),
             error.code,
         )

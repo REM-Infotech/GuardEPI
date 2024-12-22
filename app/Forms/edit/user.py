@@ -15,7 +15,7 @@ class ProfileEditForm(FlaskForm):
     filename = FileField(label="Foto de perfil", id="imagem", validators=[file_allowed])
     submit = SubmitField(label="Salvar Alterações")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):  # pragma: no cover
         super().__init__(*args, **kwargs)
 
 
