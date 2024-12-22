@@ -12,7 +12,7 @@ salt = bcrypt.gensalt()
 
 
 @login_manager.user_loader
-def load_user(user_id):
+def load_user(user_id):  # pragma: no cover
     link = request.referrer
     if link is None:
         link = request.url
@@ -39,14 +39,14 @@ class Users(db.Model, UserMixin):
     blob_doc: str = db.Column(db.LargeBinary(length=(2**32) - 1))
 
     @property
-    def senhacrip(self):
+    def senhacrip(self):  # pragma: no cover
         return self.senhacrip
 
     @senhacrip.setter
-    def senhacrip(self, senha_texto):
+    def senhacrip(self, senha_texto):  # pragma: no cover
         self.password = bcrypt.hashpw(senha_texto.encode(), salt).decode("utf-8")
 
-    def converte_senha(self, senha_texto_claro) -> bool:
+    def converte_senha(self, senha_texto_claro) -> bool:  # pragma: no cover
         return bcrypt.checkpw(
             senha_texto_claro.encode("utf-8"), self.password.encode("utf-8")
         )

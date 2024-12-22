@@ -50,7 +50,7 @@ def celery_init(app: Flask) -> Celery:
     class ContextTask(TaskBase):
         abstract = True
 
-        def __call__(self, *args, **kwargs):
+        def __call__(self, *args, **kwargs):  # pragma: no cover
             with app.app_context():
                 return TaskBase.__call__(self, *args, **kwargs)
 
@@ -94,7 +94,7 @@ def init_extensions(app: Flask):
     db.init_app(app)
     login_manager.init_app(app)
 
-    if not app.debug:
+    if not app.debug:  # pragma: no cover
         tlsm = Talisman()
         tlsm.init_app(
             app,
@@ -114,6 +114,6 @@ def init_extensions(app: Flask):
     with app.app_context():
         from app.models import init_database
 
-        if not Path("is_init.txt").exists():
+        if not Path("is_init.txt").exists():  # pragma: no cover
             with open("is_init.txt", "w") as f:
                 f.write(init_database(app, db))

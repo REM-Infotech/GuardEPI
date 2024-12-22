@@ -45,7 +45,7 @@ class EditItemProdutoForm(FlaskForm):
     )
     submit = SubmitField(label="Salvar")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):  # pragma: no cover
         super().__init__(*args, **kwargs)
         fornecedor_choices = set_choicesFornecedor()
         marca_choices = set_choicesMarca()

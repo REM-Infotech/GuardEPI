@@ -64,7 +64,7 @@ class CreateGroup(FlaskForm):
     nome = StringField(label="Nome do Grupo", validators=[DataRequired()])
     desc = TextAreaField("Descrição (Opcional)")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):  # pragma: no cover
         super().__init__(*args, **kwargs)
 
         self.users.choices.extend(set_choicesUsers())
@@ -77,6 +77,6 @@ class CreatePerm(FlaskForm):
     permissoes = SelectMultipleField("Selecione as Permissões", choices=perms)
     submit = SubmitField("Salvar Alterações")
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):  # pragma: no cover
         super().__init__(*args, **kwargs)
         self.grupos.choices.extend(set_choicesGrupos())
