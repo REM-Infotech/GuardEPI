@@ -10,6 +10,39 @@ from app.misc import generate_pid
 
 salt = bcrypt.gensalt()
 
+members = db.Table(
+    "members",
+    db.Column("users_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
+    db.Column(
+        "groups_id",
+        db.Integer,
+        db.ForeignKey("groups.id"),
+        primary_key=True,
+    ),
+)
+
+group_roles = db.Table(
+    "group_roles",
+    db.Column("roles_id", db.Integer, db.ForeignKey("roles.id"), primary_key=True),
+    db.Column(
+        "groups_id",
+        db.Integer,
+        db.ForeignKey("groups.id"),
+        primary_key=True,
+    ),
+)
+
+route_roles = db.Table(
+    "route_roles",
+    db.Column("roles_id", db.Integer, db.ForeignKey("roles.id"), primary_key=True),
+    db.Column(
+        "routes_id",
+        db.Integer,
+        db.ForeignKey("routes.id"),
+        primary_key=True,
+    ),
+)
+
 
 @login_manager.user_loader
 def load_user(user_id):  # pragma: no cover
@@ -21,6 +54,7 @@ def load_user(user_id):  # pragma: no cover
 
 
 class Users(db.Model, UserMixin):
+
     __tablename__ = "users"
     id: int = db.Column(db.Integer, primary_key=True)
     login: str = db.Column(db.String(length=30), nullable=False, unique=True)
@@ -53,20 +87,31 @@ class Users(db.Model, UserMixin):
 
 
 class Groups(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name_group = db.Column(db.String(length=30), nullable=False, unique=True)
-    members = db.Column(db.Text)
-    roles = db.Column(db.Text)
+
+    __tablename__ = "groups"
+    id: int = db.Column(db.Integer, primary_key=True)
+    name_group: str = db.Column(db.String(length=30), nullable=False, unique=True)
+    members = db.relationship("Users", secondary="members", backref="group")
+    description: str = db.Column(db.String(length=128))
 
 
-class Permissions(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name_rule = db.Column(db.String(length=30), nullable=False, unique=True)
-    groups_members = db.Column(db.Text)
-    perms = db.Column(db.Text)
+class Routes(db.Model):
+
+    __tablename__ = "routes"
+    id: int = db.Column(db.Integer, primary_key=True)
+    endpoint = db.Column(db.String(length=32), nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey("roles.id"))
+    roles = db.relationship("Roles", backref=db.backref("route_roles", lazy=True))
+    CREATE = db.Column(db.Boolean, default=False)
+    READ = db.Column(db.Boolean, default=False)
+    UPDATE = db.Column(db.Boolean, default=False)
+    DELETE = db.Column(db.Boolean, default=False)
 
 
-class EndPoints(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    endpoint = db.Column(db.String(length=30), nullable=False, unique=True)
-    displayName = db.Column(db.Text)
+class Roles(db.Model):
+
+    __tablename__ = "roles"
+    id: int = db.Column(db.Integer, primary_key=True)
+    name_role: str = db.Column(db.String(length=30), nullable=False, unique=True)
+    groups = db.relationship("Groups", secondary="group_roles", backref="role")
+    description: str = db.Column(db.String(length=128))

@@ -55,16 +55,14 @@ class CadastroFuncionario(FlaskForm):
     empresa = SelectField(
         "Empresa",
         validators=[DataRequired("Informe uma empresa!")],
-        choices=setChoices_Empresa(),
+        choices=[],
     )
     cargo = SelectField(
         "Cargo",
         validators=[DataRequired("Informe um Cargo!")],
-        choices=setChoices_Cargo(),
+        choices=[],
     )
-    departamento = SelectField(
-        "Departamento", validators=[DataRequired()], choices=setChoices_Departamento()
-    )
+    departamento = SelectField("Departamento", validators=[DataRequired()], choices=[])
     submit = SubmitField("Salvar alterações")
 
     def __init__(self, *args, **kwargs):  # pragma: no cover

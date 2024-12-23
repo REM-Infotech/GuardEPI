@@ -9,6 +9,7 @@ from app.forms import CadastroGrade
 from app.misc import format_currency_brl
 from app.models import GradeEPI
 
+from ...decorators import create_perm, delete_perm, update_perm
 from . import epi
 
 
@@ -47,6 +48,7 @@ def Grade():
 
 @epi.route("/Grade/cadastrar", methods=["GET", "POST"])
 @login_required
+@create_perm
 def cadastrar_grade():
     """
     Handles the creation and registration of a new GradeEPI entry.
@@ -95,6 +97,7 @@ def cadastrar_grade():
 
 @epi.route("/Grade/editar/<int:id>", methods=["GET", "POST"])
 @login_required
+@update_perm
 def editar_grade(id):
     """
     Edit a GradeEPI entry in the database.
@@ -145,6 +148,7 @@ def editar_grade(id):
 
 @epi.route("/grades/deletar/<int:id>", methods=["POST"])
 @login_required
+@delete_perm
 def deletar_grade(id: int):
     """
     Deletes a GradeEPI record from the database based on the provided ID.

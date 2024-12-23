@@ -8,6 +8,7 @@ from psycopg2 import errors
 from app.forms import CadastroMarcas
 from app.models import Marcas
 
+from ...decorators import create_perm, delete_perm, update_perm
 from . import epi
 
 
@@ -27,6 +28,7 @@ def marcas():
 
 @epi.route("/marca/cadastrar", methods=["GET", "POST"])
 @login_required
+@create_perm
 def cadastrar_marca():
     """
     Handles the registration of a new brand (marca).
@@ -76,6 +78,7 @@ def cadastrar_marca():
 
 @epi.route("/marca/editar/<int:id>", methods=["GET", "POST"])
 @login_required
+@update_perm
 def editar_marca(id):
     """
     Edit a brand (marca) based on the given ID.
@@ -127,6 +130,7 @@ def editar_marca(id):
 
 @epi.route("/marcas/deletar/<int:id>", methods=["POST"])
 @login_required
+@delete_perm
 def deletar_marca(id: int):
     """
     Deletes a brand entry from the database based on the provided ID.

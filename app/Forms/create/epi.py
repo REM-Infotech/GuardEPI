@@ -41,7 +41,6 @@ tipo_choices = [
     ("Conjunto", "Conjunto"),
     ("Lote", "Lote"),
     ("Fardo", "Fardo"),
-    ("Não Especificado", "Não Especificado"),
 ]
 
 
@@ -59,12 +58,12 @@ class InsertEstoqueForm(FlaskForm):
     nome_epi = SelectField(
         label="EPI",
         validators=[DataRequired()],
-        choices=[("Não Especificado", "Não Especificado")],
+        choices=[],
     )
     tipo_grade = SelectField(
         label="Grade",
         validators=[DataRequired()],
-        choices=[("Não Especificado", "Não Especificado")],
+        choices=[],
     )
     tipo_qtd = SelectField(
         label="Tipo de Quantidade(Peça, Unidade, Par, etc)",
@@ -103,7 +102,7 @@ class CadastroEPIForm(FlaskForm):
     tipo_epi = SelectField(
         label="Tipo do EPI",
         validators=[DataRequired()],
-        choices=[("Não Especificado", "Não Especificado")],
+        choices=[],
     )
     # tipo_epi = StringField(label="Tipo do EPI", validators=[DataRequired()])
 
@@ -118,15 +117,15 @@ class CadastroEPIForm(FlaskForm):
 
     fornecedor = SelectField(
         label="Fornecedor",
-        choices=[("Não Especificado", "Não Especificado")],
+        choices=[],
     )
     marca = SelectField(
         label="Marca",
-        choices=[("Não Especificado", "Não Especificado")],
+        choices=[],
     )
     modelo = SelectField(
         label="Modelo",
-        choices=[("Não Especificado", "Não Especificado")],
+        choices=[],
     )
 
     descricao = TextAreaField("Descrição (Opcional)", default="Sem Descrição")
@@ -183,7 +182,7 @@ class Cautela(FlaskForm):
     funcionario = SelectField(
         label="Selecione o Funcionário",
         validators=[DataRequired()],
-        choices=[("Não Especificado", "Não Especificado")],
+        choices=[],
     )
 
     nome_epi = SelectField(

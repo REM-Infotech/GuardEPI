@@ -13,12 +13,12 @@ from app.forms import InsertEstoqueForm
 from app.misc import format_currency_brl
 from app.models import EstoqueEPI, EstoqueGrade, ProdutoEPI, RegistroEntradas
 
-from . import epi
+from . import estoque
 
 
-@epi.route("/Estoque")
+@estoque.route("/dashboard")
 @login_required
-def Estoque():
+def dashboard_estoque():
     """
     Handles the retrieval and rendering of the stock (Estoque) page.
     This function queries the database for all entries in the EstoqueEPI table,
@@ -50,12 +50,9 @@ def Estoque():
         abort(500, description=str(e))
 
 
-# Estoque_Grade
-
-
-@epi.route("/Estoque_Grade", methods=["GET"])
+@estoque.route("/grade", methods=["GET"])
 @login_required
-def Estoque_Grade():
+def grade():
     """
     Fetches all records from the EstoqueGrade database table and renders the 'estoque_grade.html' page.
     This function queries all entries from the EstoqueGrade table and passes the data to the 'index.html' template
@@ -81,9 +78,9 @@ def Estoque_Grade():
         abort(500, description=str(e))
 
 
-@epi.route("/Entradas")
+@estoque.route("/registro_entradas")
 @login_required
-def Entradas():
+def registro_entradas():
     """
     Handles the route for displaying the list of EPI (Personal Protective Equipment) entries.
     This function retrieves all entries from the RegistroEntradas database and renders the
@@ -105,7 +102,7 @@ def Entradas():
     )
 
 
-@epi.route("/lancamento_estoque", methods=["POST"])
+@estoque.route("/lancamento_estoque", methods=["POST"])
 @login_required
 @create_perm
 def lancamento_produto():

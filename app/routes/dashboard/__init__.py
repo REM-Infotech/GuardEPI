@@ -7,7 +7,6 @@ from flask import Blueprint, abort, jsonify, make_response, render_template, req
 from flask_login import login_required
 from sqlalchemy import extract
 
-from ...decorators import set_endpoint
 from ...misc import format_currency_brl
 from ...models import RegistroEntradas, RegistroSaidas, RegistrosEPI
 
@@ -17,7 +16,6 @@ dash = Blueprint("dash", __name__, template_folder=template_folder)
 
 @dash.route("/dashboard", methods=["GET"])
 @login_required
-@set_endpoint
 def dashboard():
     """
     Renders the dashboard page with various statistics and data for the current month.
