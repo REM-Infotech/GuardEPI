@@ -5,7 +5,7 @@ from werkzeug.exceptions import HTTPException
 from .auth import auth
 from .corporativo import corp
 from .dashboard import dash
-from .epi import epi, estoque
+from .epi import epi, estoque_bp
 from .index import index as ind
 from .serving import serve
 
@@ -29,7 +29,7 @@ def register_routes(app: Flask):
         - /politica_privacidade (GET): Serves the "Política de Privacidade.pdf" file from the configured PDF path.
     """
 
-    blueprints = [auth, dash, corp, epi, serve, ind, estoque]
+    blueprints = [auth, dash, corp, epi, serve, ind, estoque_bp]
 
     for blueprint in blueprints:
         app.register_blueprint(blueprint)

@@ -5,7 +5,7 @@ from flask import Blueprint, redirect, url_for
 
 template_folder = Path(__file__).parent.resolve().joinpath("templates")
 epi = Blueprint("epi", __name__, template_folder=template_folder, url_prefix="/epi")
-estoque = Blueprint(
+estoque_bp = Blueprint(
     "estoque", __name__, template_folder=template_folder, url_prefix="/estoque"
 )
 

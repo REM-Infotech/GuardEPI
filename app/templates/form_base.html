@@ -9,14 +9,14 @@
         {{ form.hidden_tag() }}
         <div class="row g-3">
           {% for field in form %}
-            {% if field.name != "submit" and field.name != "csrf_token" %}
-              <div class="col-12">
-                <div class="form-floating mb-3">
-                  {{ field(class="form-control", id=field.id, placeholder = field.label.text) }}
-                  {{ field.label(class="form-label", for=field.id) }}
-                </div>
-              </div>
-            {% endif %}
+          {% if field.name != "submit" and field.name != "csrf_token" %}
+          <div class="col-12">
+            <div class="form-floating mb-3">
+              {{ field(class="form-control", id=field.id, placeholder = field.label.text) }}
+              {{ field.label(class="form-label", for=field.id) }}
+            </div>
+          </div>
+          {% endif %}
           {% endfor %}
           <div class="footer">
             <div class="d-grid gap-2">
