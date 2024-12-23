@@ -3,15 +3,12 @@
     <div class="card-header">
       <h2 class="m-2">Cautelas</h2>
       <hr>
-      <button type="button"
-              class="btn btn-success me-2"
-              data-bs-toggle="modal"
-              data-bs-target="#EmissãoCautela">
+      <a type="button" class="btn btn-success me-2" href="{{ url_for('estoque.emitir_cautela') }}">
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-pdf"></i>
         </span>
         <span class="text">Emitir Cautela</span>
-      </button>
+      </a>
       <a href="#!" class="btn btn-primary btn-icon-split me-2">
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-csv"></i>
@@ -32,25 +29,23 @@
         </thead>
         <tbody>
           {% if database %}
-            {% for item in database %}
-              <tr>
-                <td>{{ item.id }}</td>
-                <td>{{ item.nome_epis }}</td>
-                <td>{{ item.funcionario }}</td>
-                <td>{{ item.data_solicitacao.strftime("%d/%m/%Y") }}</td>
-                <td>
-                  <button type="button"
-                          class="btn btn-danger btn-sm  mb-2 open-pdf"
-                          name="{{ item.filename }}"
-                          data-pdf-url="{{ url_for('serve_pdf', md = request.endpoint, index = item.id, _external=True, _scheme='https') }}">
-                    <span class="icon text-white-50">
-                      <i class="fa-solid fa-file-pdf"></i>
-                    </span>
-                    <span cl<span class="text">Ver PDF</span>
-                  </button>
-                </td>
-              </tr>
-            {% endfor %}
+          {% for item in database %}
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.nome_epis }}</td>
+            <td>{{ item.funcionario }}</td>
+            <td>{{ item.data_solicitacao.strftime("%d/%m/%Y") }}</td>
+            <td>
+              <button type="button" class="btn btn-danger btn-sm  mb-2 open-pdf" name="{{ item.filename }}"
+                data-pdf-url="{{ url_for('serve_pdf', md = request.endpoint, index = item.id, _external=True, _scheme='https') }}">
+                <span class="icon text-white-50">
+                  <i class="fa-solid fa-file-pdf"></i>
+                </span>
+                <span cl<span class="text">Ver PDF</span>
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
           {% endif %}
         </tbody>
         <tfoot>
