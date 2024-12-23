@@ -8,11 +8,13 @@ from psycopg2 import errors
 from app.forms import CadastroFornecedores
 from app.models import Fornecedores
 
+from ...decorators import create_perm, delete_perm, read_perm, update_perm
 from . import epi
 
 
 @epi.route("/fornecedores", methods=["GET"])
 @login_required
+@read_perm
 def fornecedores():
     """
     Renders the 'fornecedores' page with an empty database.
@@ -31,6 +33,7 @@ def fornecedores():
 
 @epi.route("/fornecedores/cadastrar", methods=["GET", "POST"])
 @login_required
+@create_perm
 def cadastrar_fornecedores():
     """
     Handles the registration of suppliers.
@@ -79,6 +82,7 @@ def cadastrar_fornecedores():
 
 @epi.route("/fornecedores/editar/<int:id>", methods=["GET", "POST"])
 @login_required
+@update_perm
 def editar_fornecedores(id: int):
     """
     Edit a supplier's information in the database.
@@ -128,6 +132,7 @@ def editar_fornecedores(id: int):
 
 @epi.route("/fornecedores/deletar/<int:id>", methods=["POST"])
 @login_required
+@delete_perm
 def deletar_fornecedores(id: int):
     """
     Deletes a supplier from the database based on the provided ID.

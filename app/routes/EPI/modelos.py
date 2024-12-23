@@ -8,6 +8,7 @@ from psycopg2 import errors
 from app.forms import CadastroModelos
 from app.models import ModelosEPI
 
+from ...decorators import create_perm, delete_perm, update_perm
 from . import epi
 
 
@@ -27,6 +28,7 @@ def modelos():
 
 @epi.route("/modelos/cadastrar", methods=["GET", "POST"])
 @login_required
+@create_perm
 def cadastrar_modelos():
     """
     Handles the registration of new "modelos" (models) in the application.
@@ -75,6 +77,7 @@ def cadastrar_modelos():
 
 @epi.route("/modelos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
+@update_perm
 def editar_modelos(id: int):
     """
     Edit an existing 'ModelosEPI' entry in the database.
@@ -125,6 +128,7 @@ def editar_modelos(id: int):
 
 @epi.route("/modeloss/deletar/<int:id>", methods=["POST"])
 @login_required
+@delete_perm
 def deletar_modelos(id: int):
     """
     Deletes a ModelosEPI record from the database based on the provided ID.

@@ -37,10 +37,10 @@ from app.models import (
     RegistrosEPI,
 )
 
-from . import epi
+from . import estoque
 
 
-@epi.before_request
+@estoque.before_request
 def setgroups():
 
     if request.endpoint == "Cautelas":
@@ -60,7 +60,7 @@ def setgroups():
                 f.write(json_obj)
 
 
-@epi.route("/add_itens", methods=["GET", "POST"])
+@estoque.route("/add_itens", methods=["GET", "POST"])
 @login_required
 def add_itens():
 
@@ -89,7 +89,7 @@ def add_itens():
         abort(500, description=str(e))
 
 
-@epi.route("/remove-itens", methods=["GET", "POST"])
+@estoque.route("/remove-itens", methods=["GET", "POST"])
 @login_required
 def remove_itens():
 
@@ -103,9 +103,9 @@ def remove_itens():
     return item_html
 
 
-@epi.route("/Registro_Saidas", methods=["GET"])
+@estoque.route("/registro_Saidas", methods=["GET"])
 @login_required
-def Registro_Saidas():
+def registro_Saidas():
 
     page = "registro_saidas.html"
     database = RegistroSaidas.query.all()
@@ -120,9 +120,9 @@ def Registro_Saidas():
     )
 
 
-@epi.route("/Cautelas", methods=["GET"])
+@estoque.route("/cautelas", methods=["GET"])
 @login_required
-def Cautelas():
+def cautelas():
 
     page = "cautelas.html"
     database = RegistrosEPI.query.all()
@@ -139,7 +139,7 @@ def Cautelas():
     )
 
 
-@epi.route("/get-grade", methods=["POST"])
+@estoque.route("/get_grade", methods=["POST"])
 @login_required
 def get_grade():
     # >> Issue: [B110:try_except_pass] Try, Except, Pass detected.
@@ -173,7 +173,7 @@ def get_grade():
         abort(500, description=str(e))
 
 
-@epi.route("/emitir_cautela", methods=["POST"])
+@estoque.route("/emitir_cautela", methods=["POST"])
 @login_required
 @create_perm
 def emitir_cautela():
@@ -182,7 +182,7 @@ def emitir_cautela():
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         form = Cautela()
-        if form.validate_on_submit:
+        if form.validate_on_submit():
 
             # Lista EPI Solicitadas
             list_epis_solict = []

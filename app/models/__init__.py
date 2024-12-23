@@ -22,35 +22,15 @@ from .EPI import (
     RegistrosEPI,
 )
 from .Funcionários import Cargos, Departamento, Empresa, Funcionarios
-from .users import EndPoints, Groups, Permissions, Users
-
-endpoints = [
-    ("Equipamentos", "Equipamentos"),
-    ("Fornecedores", "Fornecedores"),
-    ("Marcas", "Marcas"),
-    ("Modelos", "Modelos"),
-    ("Classes", "Classes"),
-    ("Estoque", "Estoque"),
-    ("Estoque_Grade", "Estoque_Grade"),
-    ("Entradas", "Entradas"),
-    ("Registro_Saidas", "Registro_Saidas"),
-    ("Cautelas", "Cautelas"),
-    ("Grade", "Grade"),
-    ("cargo.cargos", "cargo.cargos"),
-    ("Empresas", "Empresas"),
-    ("funcionarios", "funcionarios"),
-    ("Departamentos", "Departamentos"),
-    ("users", "users"),
-    ("groups", "groups"),
-    ("Permissoes", "Permissoes"),
-]
+from .users import Groups, Roles, Routes, Users
 
 __all__ = (
     Funcionarios,
     Empresa,
     Cargos,
     Departamento,
-    Permissions,
+    Routes,
+    Roles,
     ProdutoEPI,
     EstoqueEPI,
     EstoqueGrade,
@@ -64,12 +44,13 @@ __all__ = (
     RegistrosEPI,
 )
 
+endpoints = ["/epi", "/corp", "/config"]
+
 
 def init_database(app: Flask, db: SQLAlchemy) -> str:  # pragma: no cover
 
     with app.app_context():
 
-        db.drop_all()
         db.create_all()
 
         to_add = []
@@ -104,25 +85,31 @@ def init_database(app: Flask, db: SQLAlchemy) -> str:  # pragma: no cover
             usr.senhacrip = root_pw
             to_add.append(usr)
 
-        group = Groups.query.filter(Groups.name_group == "Grupo Root").first()
+        group = (
+            db.session.query(Groups).filter(Groups.name_group == "Grupo Root").first()
+        )
 
         if group is None:
-            grp = Groups(name_group="Grupo Root", members=json.dumps(["root"]))
-            to_add.append(grp)
+            group = Groups(name_group="Grupo Root")
+            group.members.append(usr)
 
-        group = Groups.query.filter(Groups.name_group == "Default").first()
+            role = db.session.query(Roles).filter(Roles.name_role == "Root").first()
+            if role is None:
+                role = Roles(name_role="Root")
+                role.groups.append(group)
 
-        if group is None:
-            grp = Groups(name_group="Default")
-            to_add.append(grp)
+                for endpoint in endpoints:
+                    route = Routes(endpoint=endpoint)
+                    route.CREATE = True
+                    route.READ = True
+                    route.UPDATE = True
+                    route.DELETE = True
+                    route.roles = role
+                    to_add.append(route)
 
-        for endpoint, displayName in endpoints:
-            checkend = EndPoints.query.filter(EndPoints.endpoint == endpoint).first()
+                to_add.append(role)
 
-            if not checkend:
-                add = EndPoints(endpoint=endpoint, displayName=displayName)
-
-                to_add.append(add)
+            to_add.append(group)
 
         if len(to_add) > 0:
             db.session.add_all(to_add)
