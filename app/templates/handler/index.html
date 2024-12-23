@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
-    <meta name="keywords"
-          content="error, GuardEPI, dashboard, privacy policy, terms and conditions" />
+    <meta name="keywords" content="error, GuardEPI, dashboard, privacy policy, terms and conditions" />
     <meta name="author" content="" />
     <title>Erro {{ code }} - GuardEPI</title>
-    <link href="{{ url_for('static', filename = 'css/styles.css') }}"
-          rel="stylesheet" />
-    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
-            crossorigin="anonymous"></script>
+    <link href="{{ url_for('static', filename = 'css/styles.css') }}" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
   </head>
+
   <body>
     <div id="layoutError">
       <div id="layoutError_content">
@@ -42,9 +40,9 @@
             <div class="d-flex align-items-center justify-content-between small">
               <div class="text-muted">Copyright © GuardEPI 2024</div>
               <div>
-                <a href="{{ url_for("index.politica_privacidade") }}">Política de Privacidade</a>
+                <a href="{{ url_for('index.politica_privacidade') }}">Política de Privacidade</a>
                 ·
-                <a href="{{ url_for("index.termos_uso") }}">Termos &amp; Condições</a>
+                <a href="{{ url_for('index.termos_uso') }}">Termos &amp; Condições</a>
               </div>
             </div>
           </div>
@@ -52,7 +50,8 @@
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-            crossorigin="anonymous"></script>
+      crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename = 'js/scripts.js') }}"></script>
   </body>
+
 </html>

@@ -37,10 +37,10 @@ from app.models import (
     RegistrosEPI,
 )
 
-from . import estoque
+from . import estoque_bp
 
 
-@estoque.before_request
+@estoque_bp.before_request
 def setgroups():
 
     if request.endpoint == "Cautelas":
@@ -60,7 +60,7 @@ def setgroups():
                 f.write(json_obj)
 
 
-@estoque.route("/add_itens", methods=["GET", "POST"])
+@estoque_bp.route("/add_itens", methods=["GET", "POST"])
 @login_required
 def add_itens():
 
@@ -89,7 +89,7 @@ def add_itens():
         abort(500, description=str(e))
 
 
-@estoque.route("/remove-itens", methods=["GET", "POST"])
+@estoque_bp.route("/remove-itens", methods=["GET", "POST"])
 @login_required
 def remove_itens():
 
@@ -103,9 +103,9 @@ def remove_itens():
     return item_html
 
 
-@estoque.route("/registro_Saidas", methods=["GET"])
+@estoque_bp.route("/registro_saidas", methods=["GET"])
 @login_required
-def registro_Saidas():
+def registro_saidas():
 
     page = "registro_saidas.html"
     database = RegistroSaidas.query.all()
@@ -120,7 +120,7 @@ def registro_Saidas():
     )
 
 
-@estoque.route("/cautelas", methods=["GET"])
+@estoque_bp.route("/cautelas", methods=["GET"])
 @login_required
 def cautelas():
 
@@ -139,7 +139,7 @@ def cautelas():
     )
 
 
-@estoque.route("/get_grade", methods=["POST"])
+@estoque_bp.route("/get_grade", methods=["POST"])
 @login_required
 def get_grade():
     # >> Issue: [B110:try_except_pass] Try, Except, Pass detected.
@@ -173,7 +173,7 @@ def get_grade():
         abort(500, description=str(e))
 
 
-@estoque.route("/emitir_cautela", methods=["POST"])
+@estoque_bp.route("/emitir_cautela", methods=["POST"])
 @login_required
 @create_perm
 def emitir_cautela():

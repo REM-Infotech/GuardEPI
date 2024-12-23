@@ -1,49 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="keywords" content="GuardEPI, safety, equipment, management" />
     <meta name="author" content="" />
     {% if not title %}
-      {% set title = request.endpoint.split(".")[1].capitalize() %}
+    {% set title = request.endpoint.split(".")[1].capitalize() %}
     {% endif %}
     <title>GuardEPI - {{ title }}</title>
     <script src="https://code.jquery.com/jquery-3.7.1.js"
-            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-            crossorigin="anonymous"></script>
+      integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/htmx.org@1.9.12/dist/htmx.js"
-            integrity="sha384-qbtR4rS9RrUMECUWDWM2+YGgN3U4V4ZncZ0BvUcg9FGct0jqXz3PUdVpU1p0yrXS"
-            crossorigin="anonymous"></script>
+      integrity="sha384-qbtR4rS9RrUMECUWDWM2+YGgN3U4V4ZncZ0BvUcg9FGct0jqXz3PUdVpU1p0yrXS"
+      crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
     <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+      href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-            integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-            crossorigin="anonymous"></script>
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-            integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-            crossorigin="anonymous"></script>
-    <link rel="stylesheet"
-          href="https://cdn.datatables.net/2.1.2/css/dataTables.bootstrap5.min.css">
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.2/css/dataTables.bootstrap5.min.css">
     <script src="https://cdn.datatables.net/2.1.2/js/dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/2.1.2/js/dataTables.bootstrap5.min.js"></script>
-    <link href="{{ url_for('static', filename = 'css/styles.css') }}"
-          rel="stylesheet" />
+    <link href="{{ url_for('static', filename = 'css/styles.css') }}" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/js/all.min.js"
-            integrity="sha512-6sSYJqDreZRZGkJ3b+YfdhB3MzmuP9R7X1QZ6g5aIXhRvR1Y/N/P47jmnkENm7YL3oqsmI6AK+V6AD99uWDnIw=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"></script>
-    <link rel="shortcut icon"
-          href="{{ url_for('static', filename = 'assets/img/favicon.ico') }}"
-          type="image/x-icon">
+      integrity="sha512-6sSYJqDreZRZGkJ3b+YfdhB3MzmuP9R7X1QZ6g5aIXhRvR1Y/N/P47jmnkENm7YL3oqsmI6AK+V6AD99uWDnIw=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="shortcut icon" href="{{ url_for('static', filename = 'assets/img/favicon.ico') }}" type="image/x-icon">
   </head>
+
   <body class="justify-content-center sb-nav-fixed bg-primary bg-opacity-25">
     {% include 'includes/navbar.html' %}
     <div id="layoutSidenav">
@@ -51,34 +45,34 @@
       <div id="layoutSidenav_content">
         <main>
           {% if page %}
-            {% include page %}
+          {% include page %}
           {% endif %}
         </main>
         {% include 'includes/footer.html' %}
         {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            {% include 'includes/message.html' %}
-            <script src="{{url_for('static', filename='js/show_modal.js')}}"></script>
-          {% endif %}
+        {% if messages %}
+        {% include 'includes/message.html' %}
+        <script src="{{url_for('static', filename='js/show_modal.js')}}"></script>
+        {% endif %}
         {% endwith %}
         {% if importForm %}
-          {% include 'pages/forms/importform.html' %}
+        {% include 'pages/forms/importform.html' %}
         {% endif %}
       </div>
     </div>
     {% include 'includes/loading.html' %}
     <script src="{{ url_for('static', filename = 'js/scripts.js') }}"></script>
     {% if request.endpoint == 'dash.dashboard' %}
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"
-              crossorigin="anonymous"></script>
-      <script src="{{ url_for('static', filename = 'js/charts/BarraFuncionario.js' ) }}"></script>
-      <script src="{{ url_for('static', filename = 'js/charts/BarraChartDiaSemana.js' ) }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename = 'js/charts/BarraFuncionario.js' ) }}"></script>
+    <script src="{{ url_for('static', filename = 'js/charts/BarraChartDiaSemana.js' ) }}"></script>
     {% endif %}
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
-            crossorigin="anonymous"></script>
+      crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename = 'js/DataTables/DataTables.js' ) }}"></script>
     <script src="{{ url_for('static', filename = 'js/ImagePreview.js') }}"></script>
     <script src="{{ url_for('static', filename = 'js/format_moeda.js') }}"></script>
     <script src="{{ url_for('static', filename='js/showLoad.js') }}"></script>
   </body>
+
 </html>

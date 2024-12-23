@@ -13,10 +13,10 @@ from app.forms import InsertEstoqueForm
 from app.misc import format_currency_brl
 from app.models import EstoqueEPI, EstoqueGrade, ProdutoEPI, RegistroEntradas
 
-from . import estoque
+from . import estoque_bp
 
 
-@estoque.route("/dashboard")
+@estoque_bp.route("/dashboard")
 @login_required
 def dashboard_estoque():
     """
@@ -50,7 +50,7 @@ def dashboard_estoque():
         abort(500, description=str(e))
 
 
-@estoque.route("/grade", methods=["GET"])
+@estoque_bp.route("/grade", methods=["GET"])
 @login_required
 def grade():
     """
@@ -78,7 +78,7 @@ def grade():
         abort(500, description=str(e))
 
 
-@estoque.route("/registro_entradas")
+@estoque_bp.route("/registro_entradas")
 @login_required
 def registro_entradas():
     """
@@ -102,7 +102,7 @@ def registro_entradas():
     )
 
 
-@estoque.route("/lancamento_estoque", methods=["POST"])
+@estoque_bp.route("/lancamento_estoque", methods=["POST"])
 @login_required
 @create_perm
 def lancamento_produto():
