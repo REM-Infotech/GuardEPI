@@ -102,24 +102,23 @@ def registro_entradas():
     )
 
 
-@estoque_bp.route("/lancamento_estoque", methods=["POST"])
+@estoque_bp.route("/lancamento_estoque", methods=["GET", "POST"])
 @login_required
 @create_perm
 def lancamento_produto():
     """
     Handles the product entry process in the inventory system.
-    This function processes the form submission for adding a new product entry to the inventory.
-    It performs the following steps:
+    This function performs the following steps:
     1. Validates the form submission.
     2. Checks if the product and its grade already exist in the inventory.
     3. Adds or updates the product and its grade in the inventory.
-    4. Records the entry in the RegistroEntradas table.
-    5. Saves the uploaded invoice file, if provided.
-    6. Updates the unit price of the product.
-    7. Commits the changes to the database.
-    If the form submission is invalid or an error occurs during the process, appropriate error messages are flashed.
+    4. Records the entry details including the total value and optional invoice file.
+    5. Updates the unit value of the product.
+    6. Commits the changes to the database.
+    Returns:
+        Redirects to the inventory page with a success or error message.
     Raises:
-        Exception: If any error occurs during the process, a 500 error is raised with the error description.
+        500 Internal Server Error: If any exception occurs during the process.
     """
 
     try:
@@ -127,6 +126,7 @@ def lancamento_produto():
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         form = InsertEstoqueForm()
         if form.validate_on_submit():
+
             query_Estoque = EstoqueEPI.query
             query_EstoqueGrade = EstoqueGrade.query
 
@@ -212,6 +212,9 @@ def lancamento_produto():
         if form.errors:
             flash("Campos Obrigatórios não preenchidos!")
             return redirect(url_for("Estoque"))
+
+        page = "forms/estoque/estoque_form.html"
+        return render_template("index.html", page=page, form=form)
 
     except Exception as e:
         abort(500, description=str(e))

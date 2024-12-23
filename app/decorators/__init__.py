@@ -57,11 +57,10 @@ def delete_perm(func):
     return decorated_function  # pragma: no cover
 
 
-def check_permit():
-    pass
+def check_permit(groups_usr: list, PERM: str) -> bool:
+    return True
 
 
-# def check_permit(groups_usr: list, PERM: str) -> bool:  # pragma: no cover
 #     if session.get("username") == "root":
 #         return True
 
