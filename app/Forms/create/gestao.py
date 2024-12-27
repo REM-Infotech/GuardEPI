@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField, FileRequired
 from wtforms import (
@@ -40,7 +42,9 @@ def setChoices_Cargo() -> list[tuple[str, str]]:
 
 class CadastroFuncionario(FlaskForm):
     codigo = StringField(
-        "Código de Identificação", validators=[DataRequired(), Length(max=6)]
+        "Código de Identificação",
+        validators=[DataRequired(), Length(max=6)],
+        default="000001",
     )
     nome_funcionario = StringField(
         "Nome do funcionário", validators=[DataRequired("Informe o nome!")]
@@ -50,8 +54,8 @@ class CadastroFuncionario(FlaskForm):
         validators=[Length(min=11, max=14), DataRequired("Informe o CPF!")],
     )
     email_funcionario = EmailField("Email")
-    deficiencia = StringField("Deficiência")
-    data_admissao = DateField("Data Admissão")
+    deficiencia = StringField("Deficiência", default="Não Consta")
+    data_admissao = DateField("Data Admissão", default=datetime.now())
     empresa = SelectField(
         "Empresa",
         validators=[DataRequired("Informe uma empresa!")],

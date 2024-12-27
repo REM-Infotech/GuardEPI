@@ -60,6 +60,11 @@
         {% endif %}
       </div>
     </div>
+
+    {% if "estoque.emitir_cautela" == request.endpoint %}
+    <script src="{{ url_for('static', filename='js/DataTables/epi/CautelasTable.js') }}"></script>
+    {% endif %}
+
     {% include 'includes/loading.html' %}
     <script src="{{ url_for('static', filename = 'js/scripts.js') }}"></script>
     {% if request.endpoint == 'dash.dashboard' %}

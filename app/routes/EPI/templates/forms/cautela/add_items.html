@@ -1,0 +1,8 @@
+{% for i in item %}
+<tr>
+  <td>{{ i.get("ID") }}</td>
+  <td>{{ i.get("NOME_EPI") }}</td>
+  <td>{{ i.get("GRADE") }}</td>
+  <td>{{ i.get("QTD") }}</td>
+</tr>
+{% endfor %}

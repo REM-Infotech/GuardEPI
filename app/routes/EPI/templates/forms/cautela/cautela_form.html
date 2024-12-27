@@ -1,7 +1,7 @@
 <div class="container px-4">
   <div class="mt-4 card mb-4">
     <div class="card-header">
-      <h2 class="m-2">{{ act }} - {{ endpoint }}</h2>
+      <h2 class="m-2">{{ title }}</h2>
       <hr>
     </div>
     <div class="card-body table-responsive">
@@ -9,39 +9,65 @@
         {{ form.hidden_tag() }}
         <div class="row g-3">
           <div class="col-12">
-            <div class="form-group">
-              {{ form.funcionario.label(for="funcionario", class="form-label") }}
-              {{ form.funcionario(class="form-control", id="funcionario") }}
+            <div class="m-3 border border-black p-2 border-2 rounded">
+              <div class="form-group m-3">
+                {{ form.funcionario.label(for="funcionario", class="form-label") }}
+                {{ form.funcionario(class="form-control", id="funcionario") }}
+              </div>
+              <hr>
+              <div class="form-group m-3">
+                {{ form.nome_epi.label(for="selectNomeEpi", class="form-label") }}
+                {{ form.nome_epi(**{"hx-post": url_for("estoque.get_grade"), "hx-target": "#gradeContainer",
+                          "hx-trigger": "change", "id":"selectNomeEpi", "class":"form-control", "onchange": "showhideLoad()" }) }}
+              </div>
             </div>
           </div>
-          <div class="mb-3 border border-black p-2 border-2 rounded">
-            {{ form.nome_epi.label(for="selectNomeEpi", class="form-label") }}
-            {{ form.nome_epi(**{"hx-post": "/get_grade", "hx-target": "#gradeContainer",
-                        "hx-trigger": "change", "id":"selectNomeEpi", "class":"form-control" }) }}
-          </div>
-          <div class="col-12" id="gradeContainer"></div>
           <div class="col-12">
-            <ul id="entregas-table" class="list-group">
-            </ul>
+            <div class="m-3 border border-black p-2 border-2 rounded" id="gradeContainer">
+
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="m-3 border border-black p-2 border-2 rounded" id="gradeContainer">
+              <table class="table table-striped" id="CautelasTable">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Produto</th>
+                    <th>Grade</th>
+                    <th>Quantidade</th>
+                  </tr>
+                </thead>
+                <tbody id="entregas-table">
+                </tbody>
+              </table>
+            </div>
+
           </div>
           <div class="col-12 m-1">
             <hr>
-            <button type="button" id="addEpiButton" class="btn btn-outline-warning" hx-post="/add_itens"
-              hx-trigger="click" hx-target="#entregas-table">Adicionar</button>
-            <button type="button" id="addEpiButton" class="btn btn-outline-danger" hx-post="/remove-itens"
-              hx-trigger="click" hx-target="#entregas-table">
-              Limpar
-              Lista
+            <button type="button" id="addEpiButton" class="btn btn-icon-split btn-success"
+              hx-post="{{ url_for('estoque.add_itens') }}" hx-trigger="click" hx-target="#entregas-table"
+              onclick=showhideLoad()>
+              <span class="icon text-white-50">
+                <i class="fa-solid fa-plus"></i>
+              </span>
+              <span class="text">Adicionar Item</span>
+            </button>
+
+            <button type="button" id="addEpiButton" class="btn btn-icon-split btn-danger"
+              hx-post="{{ url_for('estoque.remove_itens') }}" hx-trigger="click" hx-target="#entregas-table"
+              onclick=showhideLoad()>
+              <span class="icon text-white-50">
+                <i class="fa-solid fa-trash"></i>
+              </span>
+              <span class="text">Limpar Lista</span>
             </button>
             <hr>
           </div>
         </div>
         <div class="card-footer d-grid gap-2">
-          {{ form.submit_cautela(**{"hx-post": "/emitir_cautela", "hx-target": "#render_pdf_cautela",
-                    "hx-trigger": "click", "id":"submit_cautela", "class":"btn btn btn-outline-success btn-login text-uppercase
-                    fw-bold",
-                    "onclick": "showLoadCautela()"
-                    }) }}
+          {{ form.submit_cautela(class = "btn btn btn-success btn-login text-uppercase fw-bold") }}
         </div>
       </form>
     </div>
