@@ -219,19 +219,19 @@ def draw_table(c, x, y, data, max_width=5.5 * inch, min_font_size=4):
     table.drawOn(c, x, y - table._height)  # Draw the table on the canvas
 
 
-def create_EPI_control_sheet(filename, employee_data, d, item_data, logo_path):
+def create_EPI_control_sheet(
+    filename: str, employee_data: dict[str, str], item_data: list[str], logo_path: str
+):
     """
     Creates a PDF document for EPI (Personal Protective Equipment) control and delivery sheet.
     Args:
-        filename (str): The name of the file where the PDF will be saved.
-        employee_data (dict): A dictionary containing employee information such as company, name, registration, department, and position.
-        d (dict): A dictionary containing additional data (not used in the current implementation).
-        item_data (list): A list of dictionaries containing item information to be included in the table.
-        logo_path (str): The file path to the logo image to be included in the PDF.
+        filename (str): The name of the PDF file to be created.
+        employee_data (dict[str, str]): A dictionary containing employee details such as company, name, registration, department, and position.
+        item_data (list[str]): A list of strings representing the items to be included in the document.
+        logo_path (str): The file path to the company logo image.
     Returns:
         None
     """
-
     c = canvas.Canvas(filename, pagesize=letter)
     logo_width = 75  # Largura em pontos
 

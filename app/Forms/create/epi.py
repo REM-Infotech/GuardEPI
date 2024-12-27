@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
 from wtforms import (
@@ -8,7 +10,7 @@ from wtforms import (
     SubmitField,
     TextAreaField,
 )
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired
 
 from app.forms.choices import (
     set_choices,
@@ -77,6 +79,8 @@ class InsertEstoqueForm(FlaskForm):
     nota_fiscal = FileField(label="Nota Fiscal", validators=[permited_file])
     cod_notafiscal = StringField(label="Cód. Nota Fiscal")
 
+    justificativa = TextAreaField("Justificativa (Para Estornos)", default="...")
+
     submit = SubmitField(label="Salvar")
 
     def __init__(self, *args, **kwargs):  # pragma: no cover
@@ -108,7 +112,7 @@ class CadastroEPIForm(FlaskForm):
 
     valor_unitario = StringField(label="Valor Unitário", validators=[DataRequired()])
     qtd_entregar = IntegerField(label="Quantidade a Entregar", default=1)
-    vencimento = DateField(label="Vencimento CA")
+    vencimento = DateField(label="Vencimento CA", default=datetime(2045, 1, 1, 0, 0, 0))
     periodicidade_item = IntegerField(label="Periodicidade do Item", default=90)
 
     # fornecedor = StringField(label="Fornecedor")
@@ -197,12 +201,12 @@ class Cautela(FlaskForm):
         choices=[],
     )
 
-    qtd_entregar = IntegerField(
-        label="Quantidade para entregar", validators=[Length(min=1)], default=1
-    )
+    qtd_entregar = IntegerField(label="Quantidade para entregar", default=1)
     submit_cautela = SubmitField(id="submit_cautela", label="Emitir documento")
 
-    def __init__(self, *args, **kwargs):  # pragma: no cover
+    def __init__(
+        self, choices_grade: list[tuple[str, str]] = None, *args, **kwargs
+    ):  # pragma: no cover
         super().__init__(*args, **kwargs)
 
         self.nome_epi.choices.append(("Selecione", "Selecione"))
@@ -210,3 +214,6 @@ class Cautela(FlaskForm):
 
         self.funcionario.choices.append(("Selecione", "Selecione"))
         self.funcionario.choices.extend(set_ChoicesFuncionario())
+
+        if choices_grade:
+            self.tipo_grade.choices.extend(choices_grade)

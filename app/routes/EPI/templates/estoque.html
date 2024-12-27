@@ -3,28 +3,22 @@
     <div class="card-header">
       <h2 class="m-2">Estoque</h2>
       <hr>
-      <button type="button"
-              class="btn btn-success me-2"
-              data-bs-toggle="modal"
-              data-bs-target="#cadastroEstoque">
+      <a type="button" class="btn btn-success me-2" href='{{ url_for("estoque.lancamento_produto") }}'>
         <span class="icon text-white-50">
           <i class="fa-solid fa-plus"></i>
         </span>
-        <span class="text">Lançamento Produto</span>
-      </button>
+        <span class="text">Cadastrar</span>
+      </a>
       {% if session["nome_usuario"] == "Root" %}
-        <button type="button"
-                class="btn btn-warning me-2"
-                data-bs-toggle="modal"
-                data-bs-target="#importarquivo">
-          <span class="icon text-white-50">
-            <i class="fa-solid fa-file-import"></i>
-          </span>
-          <span class="text">Import em lotes</span>
-        </button>
+      <button type="button" class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#importarquivo">
+        <span class="icon text-white-50">
+          <i class="fa-solid fa-file-import"></i>
+        </span>
+        <span class="text">Import em lotes</span>
+      </button>
       {% endif %}
       <a href="{{ url_for('index.gerar_relatorio', dbase=request.endpoint.split('.')[-1] ) }}"
-         class="btn btn-primary btn-icon-split me-2">
+        class="btn btn-primary btn-icon-split me-2">
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-csv"></i>
         </span>
@@ -43,14 +37,14 @@
         </thead>
         <tbody>
           {% if database %}
-            {% for item in database %}
-              <tr>
-                <td>{{ item.id }}</td>
-                <td>{{ item.nome_epi }}</td>
-                <td>{{ item.tipo_qtd }}</td>
-                <td class="text-start">{{ item.qtd_estoque }}</td>
-              </tr>
-            {% endfor %}
+          {% for item in database %}
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.nome_epi }}</td>
+            <td>{{ item.tipo_qtd }}</td>
+            <td class="text-start">{{ item.qtd_estoque }}</td>
+          </tr>
+          {% endfor %}
           {% endif %}
         </tbody>
         <tfoot>

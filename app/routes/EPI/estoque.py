@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 from flask import abort
 from flask import current_app as app
@@ -6,6 +6,7 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
 from app.decorators import create_perm  # pragma: no cover
@@ -122,6 +123,7 @@ def lancamento_produto():
     """
 
     try:
+        title = "Lançamento de Estoque"
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         form = InsertEstoqueForm()
@@ -183,10 +185,10 @@ def lancamento_produto():
                 valor_total=data_insert,
             )
 
-            file_nf = form.nota_fiscal.data
+            file_nf: FileStorage = form.nota_fiscal.data
             if file_nf:
-                file_path = os.path.join(
-                    app.config["PDF_TEMP_PATH"], secure_filename(file_nf.filename)
+                file_path = Path(app.config["PDF_TEMP_PATH"]).joinpath(
+                    secure_filename(file_nf.filename)
                 )
                 file_nf.save(file_path)
                 with open(file_path, "rb") as f:
@@ -207,14 +209,14 @@ def lancamento_produto():
                 abort(500, description="Item já cadastrado!")
 
             flash("Informações salvas com sucesso!", "success")
-            return redirect(url_for("Estoque"))
+            return redirect(url_for("estoque.dashboard_estoque"))
 
         if form.errors:
             flash("Campos Obrigatórios não preenchidos!")
-            return redirect(url_for("Estoque"))
+            return redirect(url_for("estoque.dashboard_estoque"))
 
         page = "forms/estoque/estoque_form.html"
-        return render_template("index.html", page=page, form=form)
+        return render_template("index.html", page=page, form=form, title=title)
 
     except Exception as e:
         abort(500, description=str(e))

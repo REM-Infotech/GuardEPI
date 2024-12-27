@@ -1,0 +1,30 @@
+<div class="modal fade" id="NotEstoqueMsg" tabindex="-1" role="dialog" aria-labelledby="NotEstoqueMsg"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="NotEstoqueMsg">Mensagem</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <span>
+          {% if not message %}
+          {% if epi_name %}
+          {% set message = 'EPI "' + epi_name + '" sem estoque!' %}
+          {% endif %}
+          {% endif %}
+
+          {{ message }}
+
+        </span>
+        <div class="modal-footer mt-3">
+          <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $("#NotEstoqueMsg").modal("show");
+</script>

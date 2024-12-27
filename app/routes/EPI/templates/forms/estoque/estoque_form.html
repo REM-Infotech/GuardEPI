@@ -1,7 +1,7 @@
 <div class="container px-4">
   <div class="mt-4 card mb-4">
     <div class="card-header">
-      <h2 class="m-2">{{ act }} - {{ endpoint }}</h2>
+      <h2 class="m-2">Inserção de produto no Estoque</h2>
       <hr>
     </div>
     <div class="card-body table-responsive">
@@ -49,6 +49,12 @@
               {{ form.valor_total(class="form-control", id="valor_total", placeholder="",
                             onkeyup="formatarComoMoeda(this)") }}
               {{ form.valor_total.label(for="valor_total") }}
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group">
+              {{ form.justificativa.label(for="justificativa", class="form-label") }}
+              {{ form.justificativa(class="form-control", id="justificativa") }}
             </div>
           </div>
           <hr class="mt-4 mb-4">

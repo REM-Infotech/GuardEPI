@@ -79,9 +79,13 @@ if (selectors.length > 0) {
             ? $(element).closest(".modal")
             : null, // Verifica se o select está em um modal
         })
-        .on("change", function (e) {
+        .on("change", function () {
           // Dispara o evento change para o htmx
-          this.dispatchEvent(new Event("change", { bubbles: true }));
+          if (!this.classList.contains("htmx-dispatched")) {
+            this.classList.add("htmx-dispatched");
+            this.dispatchEvent(new Event("change", { bubbles: true }));
+            this.classList.remove("htmx-dispatched");
+          }
         });
     });
   }

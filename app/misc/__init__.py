@@ -23,7 +23,7 @@ __all__ = (
 )
 
 
-def format_currency_brl(value) -> str:
+def format_currency_brl(value: int | float | str) -> str:
     number = numbers.format_currency(value, "BRL", locale="pt_BR")
     number = unicodedata.normalize("NFKD", number)
     return number

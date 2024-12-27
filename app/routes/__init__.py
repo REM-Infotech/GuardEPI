@@ -16,12 +16,15 @@ def register_routes(app: Flask):
     This function registers blueprints and error handlers, and defines routes for terms of use and privacy policy PDFs.
     Args:
         app (Flask): The Flask application instance.
+
     Blueprints:
+
         - auth: Authentication blueprint.
         - dash: Dashboard blueprint.
         - corp: Corporate blueprint.
         - epi: EPI blueprint.
         - serve: Serve blueprint.
+
     Error Handlers:
         - HTTPException: Handles HTTP exceptions, translates error names to Portuguese, and redirects 405 errors to the dashboard.
     Routes:
