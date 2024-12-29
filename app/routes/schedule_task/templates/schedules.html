@@ -4,16 +4,14 @@
     <div class="card-header">
       <h2>Tarefas de Notificação</h2>
       <hr>
-      <button type="button"
-              class="btn btn-success me-2"
-              data-bs-toggle="modal"
-              data-bs-target="#cadastroFuncionario">
+      <button type="button" class="btn btn-success me-2 mb-1 btn-icon-split" data-bs-toggle="modal"
+        data-bs-target="#cadastroFuncionario">
         <span class="icon text-white-50">
           <i class="fa-solid fa-plus"></i>
         </span>
         <span class="text">Criar Tarefa</span>
       </button>
-      <a href="#!" class="btn btn-primary btn-icon-split me-2">
+      <a href="#!" class="btn btn-primary me-2 mb-1 btn-icon-split">
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-csv"></i>
         </span>
@@ -34,38 +32,32 @@
         </thead>
         <tbody>
           {% if database %}
-            {% for item in database %}
-              <tr>
-                <td>{{ item.id }}</td>
-                <td>{{ item.nome_funcionario }}</td>
-                <td>{{ item.cargo }}</td>
-                <td>{{ item.departamento }}</td>
-                <td>{{ item.empresa }}</td>
-                <td>
-                  <button type="button"
-                          id="DeleteEstoqueButton"
-                          class="btn btn-danger btn-sm me-2"
-                          hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}"
-                          hx-trigger="click"
-                          hx-target="#results">
-                    <span class="icon text-white-50">
-                      <i class="fa-solid fa-trash"></i>
-                    </span>
-                    <span class="text">Deletar</span>
-                  </button>
-                  <button type="button"
-                          id="EditEstoqueButton"
-                          class="btn btn-warning btn-sm me-2"
-                          hx-get="{{ url_for('set_editar', tipo = request.endpoint, item = item.id) }}"
-                          hx-target="#results">
-                    <span class="icon text-white-50">
-                      <i class="fa-solid fa-pen"></i>
-                    </span>
-                    <span class="text">Editar</span>
-                  </button>
-                </td>
-              </tr>
-            {% endfor %}
+          {% for item in database %}
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.nome_funcionario }}</td>
+            <td>{{ item.cargo }}</td>
+            <td>{{ item.departamento }}</td>
+            <td>{{ item.empresa }}</td>
+            <td>
+              <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm me-2"
+                hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}" hx-trigger="click"
+                hx-target="#results">
+                <span class="icon text-white-50">
+                  <i class="fa-solid fa-trash"></i>
+                </span>
+                <span class="text">Deletar</span>
+              </button>
+              <button type="button" id="EditEstoqueButton" class="btn btn-warning btn-sm me-2"
+                hx-get="{{ url_for('set_editar', tipo = request.endpoint, item = item.id) }}" hx-target="#results">
+                <span class="icon text-white-50">
+                  <i class="fa-solid fa-pen"></i>
+                </span>
+                <span class="text">Editar</span>
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
           {% endif %}
         </tbody>
         <tfoot>
@@ -83,5 +75,5 @@
   </div>
 </div>
 {% if form %}
-  {% include 'form_page.html' %}
+{% include 'form_page.html' %}
 {% endif %}
