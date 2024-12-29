@@ -32,12 +32,12 @@
           {% for item in database %}
           <tr>
             <td>{{ item.id }}</td>
-            <td>{{ item.nome_epis }}</td>
+            <td>{{ item.nome_epis | map(attribute='nome_epi') | join(' - ') }}</td>
             <td>{{ item.funcionario }}</td>
             <td>{{ item.data_solicitacao.strftime("%d/%m/%Y") }}</td>
             <td>
               <button type="button" class="btn btn-danger btn-sm  mb-2 open-pdf" name="{{ item.filename }}"
-                data-pdf-url="{{ url_for('serve_pdf', md = request.endpoint, index = item.id, _external=True, _scheme='https') }}">
+                data-pdf-url="#">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-file-pdf"></i>
                 </span>

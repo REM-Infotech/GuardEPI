@@ -116,4 +116,5 @@ def init_extensions(app: Flask):
 
         if not Path("is_init.txt").exists():  # pragma: no cover
             with open("is_init.txt", "w") as f:
+                db.drop_all()
                 f.write(init_database(app, db))

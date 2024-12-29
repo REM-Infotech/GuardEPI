@@ -6,6 +6,8 @@ from app import db
 
 
 class ProdutoEPI(db.Model):
+
+    __tablename__ = "produto_epi"
     id: int = db.Column(db.Integer, primary_key=True, unique=True)
     ca: str = db.Column(db.String(length=64), nullable=False)
     cod_ca: int = db.Column(db.Integer)
