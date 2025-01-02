@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
 from flask import Blueprint, abort
@@ -87,6 +88,27 @@ def politica_privacidade():
 def gerar_relatorio(dbase: str):
     try:
 
+        modelo = {
+            "categorias": "categorias",
+            "equipamentos": "equipamentos",
+            "grades": "grades",
+            "estoque_produto": "estoque_produto",
+            "estoque_grade": "estoque_grade",
+            "estoque_entradas": "estoque_entradas",
+            "estoque_cautelas": "estoque_cautelas",
+            "funcionarios": "funcionarios",
+            "empresas": "empresas",
+            "departamentos": "departamentos",
+            "cargos": "cargos",
+            "users": "users",
+            "groups": "groups",
+        }
+
+        dbase = modelo.get(dbase)
+
+        if not dbase:
+            abort(400)
+
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         referrer = (
@@ -105,8 +127,8 @@ def gerar_relatorio(dbase: str):
 
         now = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")  # Change colon to hyphen
         filename = f"Relatório {" ".join([i.capitalize() for i in dbase.split("_")])} - {now}.xlsx"
-        file_path = os.path.join(app.config["CSV_TEMP_PATH"], filename)
 
+        file_path = Path(app.config["CSV_TEMP_PATH"]).joinpath(filename)
         model = get_models(dbase.lower())
         query = db.session.query(model).all()
 
@@ -125,7 +147,7 @@ def gerar_relatorio(dbase: str):
 
         df.to_excel(file_path, index=False)
 
-        response = make_response(send_file(f"{file_path}", as_attachment=True))
+        response = make_response(send_file(file_path, as_attachment=True))
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
