@@ -95,6 +95,11 @@ def gerar_relatorio(dbase: str):
 
         referrer.remove(request.host)
 
+        if "?" in referrer:
+            chk_login = referrer.split("?")[0]
+            if chk_login == "login":
+                return redirect(url_for("dash.dashboard"))
+
         if "estoque" in referrer:
             dbase = "_".join(referrer)
 
@@ -111,6 +116,7 @@ def gerar_relatorio(dbase: str):
                 for k, v in item.__dict__.items()
                 if k != "_sa_instance_state"
                 and not isinstance(item.__table__.columns[k].type, LargeBinary)
+                and k != "filename"
             }
             for item in query
         ]

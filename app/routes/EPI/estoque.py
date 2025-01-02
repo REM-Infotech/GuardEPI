@@ -82,9 +82,9 @@ def grade():
         abort(500, description=str(e))
 
 
-@estoque_bp.route("/registro_entradas")
+@estoque_bp.route("/entradas")
 @login_required
-def registro_entradas():
+def entradas():
     """
     Handles the route for displaying the list of EPI (Personal Protective Equipment) entries.
     This function retrieves all entries from the RegistroEntradas database and renders the
