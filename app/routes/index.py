@@ -128,7 +128,11 @@ def gerar_relatorio(dbase: str):
         now = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")  # Change colon to hyphen
         filename = f"Relatório {" ".join([i.capitalize() for i in dbase.split("_")])} - {now}.xlsx"
 
-        file_path = Path(app.config["CSV_TEMP_PATH"]).joinpath(filename)
+        base_path = Path(app.config["CSV_TEMP_PATH"])
+        file_path = base_path.joinpath(filename).resolve()
+        if not str(file_path).startswith(str(base_path)):
+            raise Exception("Invalid file path")
+
         model = get_models(dbase.lower())
         query = db.session.query(model).all()
 
