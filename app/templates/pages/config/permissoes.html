@@ -1,7 +1,7 @@
-<div class="container-fluid px-4">
+<div class="container px-4">
   <div class="mt-4 card mb-4">
     <div class="card-header">
-      <h2 class="m-2">{{ title }}</h2>
+      <h2 class="m-2 p-1">{{ title }}</h2>2>
       <hr>
       <button type="button" class="btn btn-success me-2 mb-1 btn-icon-split" data-bs-toggle="modal"
         data-bs-target="#CreateRuleForm">
@@ -39,7 +39,7 @@
             <td>{{ item.groups_members.replace('[', '').replace(']', '') }}</td>
             {% endif %}
             <td>
-              <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm me-2"
+              <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-icon-split btn-sm m-1"
                 hx-post="{{ url_for('deleteGroup', id = item.id) }}" hx-trigger="click" hx-target="#results">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-trash"></i>

@@ -1,7 +1,7 @@
-<div class="container-fluid px-4">
+<div class="container px-4">
   <div class="mt-4 card mb-4">
     <div class="card-header">
-      <h2 class="m-2">{{ title }}</h2>
+      <h2 class="m-2 p-1">{{ title }}</h2>2>
       <hr>
       <a type="button" class="btn btn-success me-2 mb-1 btn-icon-split"
         href="{{ url_for('epi.cadastro_equipamento') }}">
@@ -47,14 +47,14 @@
             <td>{{ format_currency_brl(item.valor_unitario).replace("\\xa", "") }}</td>
             <td>{{ item.marca }}</td>
             <td>
-              <a type="button" class="btn btn-warning btn-sm me-2"
+              <a type="button" class="btn btn-secondary btn-icon-split btn-sm m-1"
                 href="{{ url_for('epi.editar_equipamento', id=item.id) }}">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-pen"></i>
                 </span>
                 <span class="text">Editar</span>
               </a>
-              <button type="button" id="DeleteEpiButton" class="btn btn-danger btn-sm me-2"
+              <button type="button" id="DeleteEpiButton" class="btn btn-danger btn-icon-split btn-sm m-1"
                 hx-post="{{ url_for('epi.deletar_equipamento',id=item.id) }}" hx-trigger="click" hx-target="#results">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-trash"></i>

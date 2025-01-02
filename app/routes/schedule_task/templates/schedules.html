@@ -1,4 +1,4 @@
-<div class="container-fluid px-4">
+<div class="container px-4">
   <script src="{{ url_for('static', filename = 'js/Formatadores/CNPJ.js') }}"></script>
   <div class="card mt-4 mb-4">
     <div class="card-header">
@@ -40,7 +40,7 @@
             <td>{{ item.departamento }}</td>
             <td>{{ item.empresa }}</td>
             <td>
-              <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-sm me-2"
+              <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-icon-split btn-sm m-1"
                 hx-post="{{ url_for('deletar_item', database = request.endpoint, id = item.id) }}" hx-trigger="click"
                 hx-target="#results">
                 <span class="icon text-white-50">
@@ -48,7 +48,7 @@
                 </span>
                 <span class="text">Deletar</span>
               </button>
-              <button type="button" id="EditEstoqueButton" class="btn btn-warning btn-sm me-2"
+              <button type="button" id="EditEstoqueButton" class="btn btn-secondary btn-icon-split btn-sm m-1"
                 hx-get="{{ url_for('set_editar', tipo = request.endpoint, item = item.id) }}" hx-target="#results">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-pen"></i>

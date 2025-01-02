@@ -1,8 +1,8 @@
-<div class="container-fluid px-4">
+<div class="container px-4">
   <script src="{{ url_for('static', filename = 'js/Formatadores/CNPJ.js') }}"></script>
   <div class="card mt-4 mb-4">
     <div class="card-header">
-      <h2>Cargos</h2>
+      <h2 class="m-2 p-1">{{ title }}</h2>
       <hr>
       <a type="button" class="btn btn-success me-2 mb-1 btn-icon-split" href="{{ url_for("corp.cadastrar_cargos") }}">
         <span class="icon text-white-50">
@@ -43,14 +43,14 @@
             <td>{{ item.cargo }}</td>
             <td>{{ item.descricao }}</td>
             <td>
-              <a type="button" class="btn btn-warning btn-sm me-2"
+              <a type="button" class="btn btn-secondary btn-icon-split btn-sm m-1"
                 href="{{ url_for('corp.editar_cargos', id=item.id) }}">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-pen"></i>
                 </span>
                 <span class="text">Editar</span>
               </a>
-              <button type="button" id="DeleteEpiButton" class="btn btn-danger btn-sm me-2"
+              <button type="button" id="DeleteEpiButton" class="btn btn-danger btn-icon-split btn-sm m-1"
                 hx-post="{{ url_for('corp.deletar_cargos',id=item.id) }}" hx-trigger="click" hx-target="#results">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-trash"></i>
