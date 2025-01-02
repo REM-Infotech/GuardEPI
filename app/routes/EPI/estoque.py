@@ -2,7 +2,7 @@ from pathlib import Path
 
 from flask import abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
@@ -35,7 +35,7 @@ def dashboard_estoque():
 
     try:
         database = EstoqueEPI.query.all()
-        title = request.endpoint.split(".")[1].capitalize()
+        title = "Dashboard Estoque"
         page = "estoque.html"
         form = InsertEstoqueForm()
 
@@ -66,6 +66,8 @@ def grade():
     """
 
     try:
+
+        title = "Estoque - Grades"
         database = EstoqueGrade.query.all()
 
         page = "estoque_grade.html"
@@ -74,6 +76,7 @@ def grade():
             "index.html",
             page=page,
             database=database,
+            title=title,
         )
     except Exception as e:
         abort(500, description=str(e))

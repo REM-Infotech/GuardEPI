@@ -22,10 +22,11 @@ def categorias():
         A rendered HTML template with the page name and database entries.
     """
 
+    title = "Categorias"
     page = "categorias.html"
     database = ClassesEPI.query.all()
 
-    return render_template("index.html", page=page, database=database)
+    return render_template("index.html", page=page, database=database, title=title)
 
 
 @epi.route("/categorias/cadastrar", methods=["GET", "POST"])

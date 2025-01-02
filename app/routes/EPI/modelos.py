@@ -21,9 +21,10 @@ def modelos():
         str: Rendered HTML template with the specified page and database records.
     """
 
+    title = "Modelos"
     page = "modelos.html"
     database = ModelosEPI.query.all()
-    return render_template("index.html", page=page, database=database)
+    return render_template("index.html", page=page, database=database, title=title)
 
 
 @epi.route("/modelos/cadastrar", methods=["GET", "POST"])

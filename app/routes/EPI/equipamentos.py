@@ -142,27 +142,29 @@ def editar_equipamento(id: int):
 
             if key == "blob_doc":
 
-                img_path = (
-                    Path(app.config.get("TEMP_PATH"))
-                    .joinpath("IMG")
-                    .joinpath(epi_data.get("filename"))
-                )
-                with img_path.open("wb") as file:
-                    file.write(value)
+                if epi_data.get("filename"):
 
-                with img_path.open("rb") as file:
-                    form_data.update(
-                        {
-                            "filename": FileStorage(
-                                filename=secure_filename(epi.filename),
-                                stream=file.read(),
-                            )
-                        }
+                    img_path = (
+                        Path(app.config.get("TEMP_PATH"))
+                        .joinpath("IMG")
+                        .joinpath(epi_data.get("filename"))
                     )
+                    with img_path.open("wb") as file:
+                        file.write(value)
 
-                    url_image = url_for(
-                        "serve.serve_img", filename=epi.filename, _external=True
-                    )
+                    with img_path.open("rb") as file:
+                        form_data.update(
+                            {
+                                "filename": FileStorage(
+                                    filename=secure_filename(epi.filename),
+                                    stream=file.read(),
+                                )
+                            }
+                        )
+
+                        url_image = url_for(
+                            "serve.serve_img", filename=epi.filename, _external=True
+                        )
 
             if key == "valor_unitario":
                 value = format_currency_brl(value).replace("\\xa", "")

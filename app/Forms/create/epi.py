@@ -148,15 +148,6 @@ class CadastroEPIForm(FlaskForm):
         self.modelo.choices.extend(set_choicesModelo())
         self.tipo_epi.choices.extend(set_choicesClasseEPI())
 
-    def __getattr__(self, name: str):  # pragma: no cover
-
-        func = super().__getattr__(name)
-        if not func:
-            func = getattr(self, name)
-            if not func:
-                raise AttributeError(f"Attribute {name} not found")
-        return
-
 
 class CadastroCategorias(FlaskForm):
     classe = StringField("Classificação EPI", validators=[DataRequired()])

@@ -26,9 +26,10 @@ def fornecedores():
         and an empty 'database'.
     """
 
+    title = "Fornecedores"
     page = "fornecedores.html"
     database = Fornecedores.query.all()
-    return render_template("index.html", page=page, database=database)
+    return render_template("index.html", page=page, database=database, title=title)
 
 
 @epi.route("/fornecedores/cadastrar", methods=["GET", "POST"])

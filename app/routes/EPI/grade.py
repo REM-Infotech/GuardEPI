@@ -6,7 +6,6 @@ from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 
 from app.forms import CadastroGrade
-from app.misc import format_currency_brl
 from app.models import GradeEPI
 
 from ...decorators import create_perm, delete_perm, update_perm
@@ -40,7 +39,6 @@ def Grade():
             page=page,
             title=title,
             database=database,
-            format_currency_brl=format_currency_brl,
         )
     except Exception as e:
         abort(500, description=str(e))

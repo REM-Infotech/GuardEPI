@@ -21,9 +21,10 @@ def marcas():
         str: Rendered HTML template with the specified page and database records.
     """
 
+    title = "Marcas"
     page = "marcas.html"
     database = Marcas.query.all()
-    return render_template("index.html", page=page, database=database)
+    return render_template("index.html", page=page, database=database, title=title)
 
 
 @epi.route("/marca/cadastrar", methods=["GET", "POST"])
