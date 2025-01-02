@@ -121,25 +121,27 @@
                 <th data-sortable="false">Cautela</th>
               </tr>
             </thead>
-            {# <tbody>
-                            {% if database %}
-                            {% for item in database %}
-                            <tr>
-                                <td>{{ item.id }}</td>
-                                <td>{{ item.nome_epis }}</td>
-                                <td>{{ item.funcionario }}</td>
-                                <td>{{ item.data_solicitacao.strftime("%d/%m/%Y") }}</td>
-                                <td>
-                                    <button type="button" class="btn btn-primary btn-icon-split btn-sm  mb-2 open-pdf" name="{{ item.filename}}" data-pdf-url="{{ url_for('serve_pdf', index = item.id, md = request.endpoint, _external=True, _scheme='https') }}"><span class="icon text-white-50">
-                                            <i class="fa-solid fa-file-pdf"></i>
-                                        </span>
-                                        <span cl<span class="text">Ver PDF</span>
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            {% endif %}
-                        </tbody> #}
+            <tbody>
+              {% if database %}
+              {% for item in database %}
+              <tr>
+                <td>{{ item.id }}</td>
+                <td class="fw-bold">{{ item.nome_epis | map(attribute='nome_epi') | join(' - ') }}</td>
+                <td>{{ item.funcionario }}</td>
+                <td>{{ item.data_solicitacao.strftime("%d/%m/%Y") }}</td>
+                <td>
+                  <button type="button" class="btn btn-danger btn-sm btn-icon-split mb-2 open-pdf"
+                    name="{{ item.filename }}" data-pdf-url="{{ url_for('estoque.cautela_pdf', uuid_pasta=item.id) }}">
+                    <span class="icon text-white-50">
+                      <i class="fa-solid fa-file-pdf"></i>
+                    </span>
+                    <span cl<span class="text">Ver PDF</span>
+                  </button>
+                </td>
+              </tr>
+              {% endfor %}
+              {% endif %}
+            </tbody>
             <tfoot>
               <tr>
                 <th>#</th>

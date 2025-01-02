@@ -1,6 +1,7 @@
 from pathlib import Path
 from uuid import uuid4
 
+from flask import abort
 from flask import current_app as app
 from flask import render_template, request, send_from_directory, session, url_for
 from flask_login import login_required
@@ -64,21 +65,36 @@ def cautela_pdf(uuid_pasta: str):
     Returns:
         Response: A Flask response object that sends the requested image file from the directory specified in the app configuration.
     """
+
+    path_cautela = ""
+    filename = ""
+
     path_cautela = Path(app.config["DOCS_PATH"]).joinpath(uuid_pasta)
 
     if path_cautela.exists():
         filename = next(path_cautela.glob("*.pdf")).name
 
-    if not path_cautela.exists():
+    elif not path_cautela.exists():
 
-        db: SQLAlchemy = app.extensions["sqlalchemy"]
-        query_file = db.session.query(RegistrosEPI).filter_by(id=uuid_pasta).first()
+        try:
+            uuid_pasta = int(uuid_pasta)
 
-        filename = query_file.filename
-        path_cautela = Path(app.config["DOCS_PATH"]).joinpath(str(uuid4()))
-        path_cautela.mkdir(exist_ok=True)
+        except ValueError:
+            uuid_pasta = uuid_pasta
 
-        with path_cautela.joinpath(filename).open("wb") as file:
-            file.write(query_file.blob_doc)
+        if isinstance(uuid_pasta, int):
+
+            db: SQLAlchemy = app.extensions["sqlalchemy"]
+            query_file = db.session.query(RegistrosEPI).filter_by(id=uuid_pasta).first()
+
+            filename = query_file.filename
+            path_cautela = Path(app.config["DOCS_PATH"]).joinpath(str(uuid4()))
+            path_cautela.mkdir(exist_ok=True)
+
+            with path_cautela.joinpath(filename).open("wb") as file:
+                file.write(query_file.blob_doc)
+
+        else:
+            abort(404, description="Arquivo não encontrado")
 
     return send_from_directory(path_cautela, filename)
