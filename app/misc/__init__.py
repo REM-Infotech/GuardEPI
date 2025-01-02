@@ -6,6 +6,7 @@ import unicodedata
 import babel.numbers as numbers
 import bcrypt
 from babel.dates import format_date
+from flask_sqlalchemy.model import Model
 
 from app.misc.generate_doc import (
     add_watermark,
@@ -52,3 +53,44 @@ def generate_pid(count: int = 6) -> str:
 
 def hash_str() -> str:
     return bcrypt.hashpw(generate_pid().encode(), salt).decode("utf-8")
+
+
+def get_models(tipo: str) -> Model:
+
+    from ..models import (
+        Cargos,
+        ClassesEPI,
+        Departamento,
+        Empresa,
+        EstoqueEPI,
+        EstoqueGrade,
+        Funcionarios,
+        GradeEPI,
+        ProdutoEPI,
+        RegistroEntradas,
+        RegistrosEPI,
+    )
+    from ..models.users import Groups, Users
+
+    modelo = {
+        "categorias": ClassesEPI,
+        "equipamentos": ProdutoEPI,
+        "grades": GradeEPI,
+        "estoque": EstoqueEPI,
+        "estoque_grade": EstoqueGrade,
+        "entradas": RegistroEntradas,
+        "cautelas": RegistrosEPI,
+        "funcionarios": Funcionarios,
+        "empresas": Empresa,
+        "departamentos": Departamento,
+        "cargo.cargos": Cargos,
+        "users": Users,
+        "groups": Groups,
+    }
+
+    model = modelo.get(tipo)
+    if model is None:
+        message = "".join(("Modelo ", f'"{tipo}"', " não encontrado."))
+        raise AttributeError(message)
+
+    return model

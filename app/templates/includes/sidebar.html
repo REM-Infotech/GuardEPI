@@ -59,9 +59,9 @@
                 <div class="collapse" id="pagesEntradas" aria-labelledby="headingOne"
                   data-bs-parent="#sidenavAccordionPages">
                   <nav class="sb-sidenav-menu-nested nav">
+                    <a class="nav-link" href="{{ url_for('estoque.registro_entradas') }}">Geral</a>
                     <a class="nav-link" href="{{ url_for('estoque.grade') }}">Por grade</a>
                     <a class="nav-link" href="{{ url_for('estoque.produto_epi') }}">Por produto</a>
-                    <a class="nav-link" href="{{ url_for('estoque.registro_entradas') }}">Geral</a>
                   </nav>
                 </div>
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesLiberacoes"
@@ -74,8 +74,8 @@
                 <div class="collapse" id="pagesLiberacoes" aria-labelledby="headingOne"
                   data-bs-parent="#sidenavAccordionPages">
                   <nav class="sb-sidenav-menu-nested nav">
-                    <a class="nav-link" href="{{ url_for('estoque.cautelas') }}">Cautelas</a>
-                    <a class="nav-link" href="{{ url_for('estoque.registro_saidas') }}">Registro Saídas</a>
+                    <a class="nav-link" href="{{ url_for('estoque.cautelas') }}">Geral</a>
+                    <a class="nav-link" href="{{ url_for('estoque.registro_saidas') }}">Por Grade</a>
                   </nav>
                 </div>
               </nav>

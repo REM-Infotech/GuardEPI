@@ -19,7 +19,7 @@ def registro_saidas():
 
     page = "registro_saidas.html"
     database = RegistroSaidas.query.all()
-    title = request.endpoint.split(".")[1].capitalize().replace("_", " ")
+    title = "Registro Saídas"
 
     return render_template(
         "index.html",
@@ -42,7 +42,7 @@ def cautelas(to_show: str = None):
 
     page = "cautelas.html"
     database = RegistrosEPI.query.all()
-    title = request.endpoint.split(".")[1].capitalize()
+    title = "Liberações de EPI's"
 
     session["itens_lista_cautela"] = []
     return render_template(

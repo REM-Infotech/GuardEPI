@@ -1,3 +1,7 @@
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed, FileField, FileRequired
+from wtforms import SubmitField
+
 from .auth import LoginForm
 from .create.epi import (
     CadastroCategorias,
@@ -29,7 +33,6 @@ from .edit import (
     EditSaldoGrade,
     ProfileEditForm,
 )
-from .globals import IMPORTEPIForm
 from .recovery import ByPassRecover, ForgotPassword
 from .schedule_task import TaskNotificacaoForm
 
@@ -54,7 +57,6 @@ __all__ = [
     CreateGroup,
     ForgotPassword,
     ByPassRecover,
-    IMPORTEPIForm,
     EditDepartamentos,
     EditFuncionario,
     EditEmpresa,
@@ -68,3 +70,14 @@ __all__ = [
     ChangePassWord,
     TaskNotificacaoForm,
 ]
+
+
+permited_file = FileAllowed(["xlsx", "xls"], 'Apenas arquivos ".xlsx" são permitidos!')
+
+
+class ImporteLotesForm(FlaskForm):
+    arquivo = FileField(
+        label="Arquivo de importação. Máximo 50Mb",
+        validators=[FileRequired(), permited_file],
+    )
+    submit = SubmitField(label="Importar")

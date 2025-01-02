@@ -32,9 +32,8 @@ def Equipamentos():
     Returns:
         A rendered HTML template for the 'equipamentos' page.
     """
-
     page = "equipamentos.html"
-    title = request.endpoint.split(".")[1].capitalize()
+    title = "Equipamentos"
     database = ProdutoEPI.query.all()
     url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
     return render_template(

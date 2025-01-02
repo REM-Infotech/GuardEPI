@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 import pytz
-from flask import Blueprint, abort, jsonify, make_response, render_template, request
+from flask import Blueprint, abort, jsonify, make_response, render_template
 from flask_login import login_required
 from sqlalchemy import extract
 
@@ -63,7 +63,7 @@ def dashboard():
         # valor_totalEntradas = sum(map(lambda item: float(item.valor_total), dbase2))
 
         database = RegistrosEPI.query.all()
-        title = request.endpoint.split(".")[1].capitalize()
+        title = "Dashboard"
         page = "dashboard.html"
 
         # today = datetime.now().strftime("%d/%m/%Y")

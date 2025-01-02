@@ -4,10 +4,23 @@ from datetime import datetime
 import pandas as pd
 from flask import Blueprint, abort
 from flask import current_app as app
-from flask import make_response, send_file, send_from_directory
+from flask import (
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    send_file,
+    send_from_directory,
+    url_for,
+)
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import LargeBinary
+from werkzeug.utils import secure_filename
+
+from app.forms import ImporteLotesForm
+from app.misc import get_models
 
 index = Blueprint("index", __name__)
 
@@ -69,45 +82,6 @@ def politica_privacidade():
         abort(500, description=str(e))
 
 
-def get_models(tipo: str):
-
-    from ..models import (
-        Cargos,
-        Departamento,
-        Empresa,
-        EstoqueEPI,
-        EstoqueGrade,
-        Funcionarios,
-        GradeEPI,
-        ProdutoEPI,
-        RegistroEntradas,
-        RegistrosEPI,
-    )
-    from ..models.users import Groups, Users
-
-    modelo = {
-        "equipamentos": ProdutoEPI,
-        "grades": GradeEPI,
-        "estoque": EstoqueEPI,
-        "estoque_grade": EstoqueGrade,
-        "entradas": RegistroEntradas,
-        "cautelas": RegistrosEPI,
-        "funcionarios": Funcionarios,
-        "empresas": Empresa,
-        "departamentos": Departamento,
-        "cargo.cargos": Cargos,
-        "users": Users,
-        "groups": Groups,
-    }
-
-    model = modelo.get(tipo)
-    if model is None:
-        message = "".join(("Modelo ", f'"{tipo}"', " não encontrado."))
-        raise AttributeError(message)
-
-    return
-
-
 @index.route("/gerar_relatorio/<dbase>")
 @login_required
 def gerar_relatorio(dbase: str):
@@ -115,8 +89,17 @@ def gerar_relatorio(dbase: str):
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
+        referrer = (
+            request.referrer.replace("http://", "").replace("https://", "").split("/")
+        )
+
+        referrer.remove(request.host)
+
+        if "estoque" in referrer:
+            dbase = "_".join(referrer)
+
         now = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")  # Change colon to hyphen
-        filename = f"Relatório {dbase.capitalize()} - {now}.xlsx"
+        filename = f"Relatório {" ".join([i.capitalize() for i in dbase.split("_")])} - {now}.xlsx"
         file_path = os.path.join(app.config["CSV_TEMP_PATH"], filename)
 
         model = get_models(dbase.lower())
@@ -135,6 +118,119 @@ def gerar_relatorio(dbase: str):
         df = pd.DataFrame(data)
 
         df.to_excel(file_path, index=False)
+
+        response = make_response(send_file(f"{file_path}", as_attachment=True))
+        response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+        return response
+
+    except Exception as e:
+        abort(500, description=str(e))
+
+
+@index.route("/import_lotes/<tipo>", methods=["GET", "POST"])
+@login_required
+def import_lotes(tipo: str = None):
+    try:
+
+        action = request.path
+
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        form = ImporteLotesForm()
+
+        model = get_models(tipo.lower())
+        if form.validate_on_submit():
+            doc = form.arquivo.raw_data[0]
+
+            docname = secure_filename(doc.filename)
+            doc.save(os.path.join(app.config["CSV_TEMP_PATH"], f"{docname}"))
+            doc_path = os.path.join(app.config["CSV_TEMP_PATH"], f"{docname}")
+
+            df = pd.read_excel(doc_path)
+            df.columns = df.columns.str.lower()
+
+            try:
+                data_admissao = df["data_admissao"]
+            except Exception:
+                data_admissao = None
+
+            if data_admissao is not None:
+                df["data_admissao"] = pd.to_datetime(
+                    df["data_admissao"], errors="coerce"
+                )
+
+            data = []
+            for _, row in df.iterrows():
+                row = row.dropna()
+                data_info = row.to_dict()
+
+                appends = model(**data_info)
+                data.append(appends)
+
+            if tipo.lower() == "grade":
+                data = []
+                for _, row in df.iterrows():
+                    data_info = row.to_dict()
+                    d = data_info.get("grade")
+
+                    check_entry = model.query.filter_by(grade=d).first()
+
+                    if not check_entry:
+                        data_info.update({"grade": str(d)})
+                        appends = model(**data_info)
+                        data.append(appends)
+
+            db.session.add_all(data)
+            db.session.commit()
+
+            flash("Informação cadastrada com sucesso!", "success")
+            return redirect(url_for(tipo))
+
+        return render_template(
+            "forms/importform.html", form=form, action=action, model=tipo
+        )
+
+    except Exception as e:
+        abort(400, description=str(e))
+
+
+@index.route("/gen_model/<model>", methods=["GET"])
+@login_required
+def gen_model(model: str):
+
+    try:
+        database_model = get_models(model.lower())
+
+        columns = {}
+
+        columns.update(database_model.__dict__)
+
+        name_list = [i.capitalize() for i in model.split("_")]
+        name_list.append(datetime.now().strftime("%d-%m-%Y_%H-%M-%S"))
+
+        str_model = " ".join(name_list)
+
+        to_filter = list(columns.keys())
+        for key in to_filter:
+            if (
+                key.startswith("_")
+                or key == "filename"
+                or key == "blob_doc"
+                or key == "id"
+            ):
+                columns.pop(key)
+                continue
+
+            columns.update({key: ""})
+
+        # Criando um DataFrame com as colunas
+        df = pd.DataFrame(data=[columns])
+
+        # Salvando o DataFrame em uma planilha
+        filename = f"{str_model}.xlsx"
+        file_path = os.path.join(app.config["TEMP_PATH"], filename)
+
+        with pd.ExcelWriter(file_path, engine="auto") as writer:
+            df.to_excel(writer, index=False, sheet_name="Sheet1")
 
         response = make_response(send_file(f"{file_path}", as_attachment=True))
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"

@@ -3,16 +3,10 @@
     <div class="card-header">
       <h2 class="m-2 p-1">{{ title }}</h2>
       <hr>
-      <a type="button" class="btn btn-success me-2 mb-1 btn-icon-split"
-        href='{{ url_for("estoque.lancamento_produto") }}'>
-        <span class="icon text-white-50">
-          <i class="fa-solid fa-upload"></i>
-        </span>
-        <span class="text">Lançamento Estoque</span>
-      </a>
       {% if session["nome_usuario"] == "Root" %}
-      <button type="button" class="btn btn-secondary me-2 mb-1 btn-icon-split" data-bs-toggle="modal"
-        data-bs-target="#importarquivo">
+      {% set type_ = request.url_rule.endpoint.split(".")[-1].lower() %}
+      <button type="button" class="btn btn-secondary me-2 btn-icon-split"
+        hx-get="{{ url_for('index.import_lotes',tipo=type_) }}" hx-trigger="click" hx-target="#results">
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-import"></i>
         </span>
@@ -20,7 +14,7 @@
       </button>
       {% endif %}
       <a href="{{ url_for('index.gerar_relatorio', dbase=request.endpoint.split('.')[-1] ) }}"
-        class="btn btn-primary me-2 mb-1 btn-icon-split">
+        class="btn btn-primary me-2 btn-icon-split">
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-csv"></i>
         </span>

@@ -1,0 +1,39 @@
+<div class="modal fade" id="importarquivo" tabindex="-1" aria-labelledby="importarquivoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title fs-5" id="importarquivoLabel">Importação em Lotes</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {% set action = "" %}
+        <form method="POST" enctype="multipart/form-data" action="{{ action }}">
+          {{ form.hidden_tag() }}
+          <div class="form-group mb-4">
+            {{ form.arquivo.label(class="form-label") }}
+            {{ form.arquivo(class="form-control", id="formFile", accept=".xls, .xlsx, .csv") }}
+          </div>
+          <div class="modal-footer">
+            <a href="{{ url_for('index.gen_model', model=model) }}" class="btn btn-primary btn-icon-split">
+              <span class="icon text-white-50">
+                <i class="fa-solid fa-file-csv"></i>
+              </span>
+              <span class="text text-uppercase fw-bold">Gerar Modelo</span>
+            </a>
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-success btn-icon-split">
+                <span class="icon text-white-50">
+                  <i class="fa-solid fa-file-import"></i>
+                </span>
+                <span class="text text-uppercase fw-bold">Importar</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $("#importarquivo").modal("show");
+</script>
