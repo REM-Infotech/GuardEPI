@@ -62,8 +62,7 @@ def cadastro_funcionarios():
         ValueError: If there is an issue with form data conversion or file handling.
     """
 
-    endpoint = "Funcionários"
-    act = "Cadastro"
+    title = "Cadastro de Funcionário"
 
     form = CadastroFuncionario()
 
@@ -107,9 +106,7 @@ def cadastro_funcionarios():
         return redirect(url_for("corp.funcionarios"))
 
     page = "forms/funcionario_form.html"
-    return render_template(
-        "index.html", act=act, endpoint=endpoint, page=page, form=form
-    )
+    return render_template("index.html", title=title, page=page, form=form)
 
 
 @corp.route("/funcionarios/editar/<int:id>", methods=["GET", "POST"])
@@ -126,9 +123,7 @@ def editar_funcionarios(id: int):
         Response: A rendered template for the form on GET request, or a redirect to the employee list page on successful form submission.
     """
 
-    endpoint = "Funcionários"
-    act = "Editar"
-
+    title = "Editar Funcionário"
     db: SQLAlchemy = app.extensions["sqlalchemy"]
     func = db.session.query(Funcionarios).filter_by(id=id).first()
 
@@ -214,8 +209,7 @@ def editar_funcionarios(id: int):
     page = "forms/funcionario_form.html"
     return render_template(
         "index.html",
-        act=act,
-        endpoint=endpoint,
+        title=title,
         page=page,
         form=form,
         url_image=url_image,

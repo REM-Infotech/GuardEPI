@@ -1,8 +1,10 @@
 from pathlib import Path
+from uuid import uuid4
 
 from flask import current_app as app
 from flask import render_template, request, send_from_directory, session, url_for
 from flask_login import login_required
+from flask_sqlalchemy import SQLAlchemy
 
 from app.misc import format_currency_brl
 from app.models import RegistroSaidas, RegistrosEPI
@@ -31,15 +33,11 @@ def registro_saidas():
 @login_required
 def cautelas(to_show: str = None):
 
+    url = None
+    to_show = request.args.get("to_show", to_show)
     if to_show:
 
-        url = url_for(
-            "cautela_pdf",
-            uuid_pasta=to_show,
-            _external=True,
-            _scheme="https",
-        )
-        print(url)
+        url = url_for("estoque.cautela_pdf", uuid_pasta=to_show)
 
     page = "cautelas.html"
     database = RegistrosEPI.query.all()
@@ -51,6 +49,7 @@ def cautelas(to_show: str = None):
         page=page,
         title=title,
         database=database,
+        url=url,
     )
 
 
@@ -67,6 +66,19 @@ def cautela_pdf(uuid_pasta: str):
     """
     path_cautela = Path(app.config["DOCS_PATH"]).joinpath(uuid_pasta)
 
-    filename = next(path_cautela.glob("*.pdf")).name
+    if path_cautela.exists():
+        filename = next(path_cautela.glob("*.pdf")).name
+
+    if not path_cautela.exists():
+
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        query_file = db.session.query(RegistrosEPI).filter_by(id=uuid_pasta).first()
+
+        filename = query_file.filename
+        path_cautela = Path(app.config["DOCS_PATH"]).joinpath(str(uuid4()))
+        path_cautela.mkdir(exist_ok=True)
+
+        with path_cautela.joinpath(filename).open("wb") as file:
+            file.write(query_file.blob_doc)
 
     return send_from_directory(path_cautela, filename)

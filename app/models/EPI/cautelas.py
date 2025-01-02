@@ -1,8 +1,6 @@
 from datetime import datetime
-from typing import Optional
 
 import pytz
-from sqlalchemy.orm import Mapped
 
 from app import db
 
@@ -24,7 +22,7 @@ class RegistrosEPI(db.Model):
 
     __tablename__ = "registros_epi"
     id = db.Column(db.Integer, primary_key=True)
-    nome_epis: Mapped[Optional[list]] = db.relationship(
+    nome_epis = db.relationship(
         "ProdutoEPI", secondary="epis_cautela", backref="registros_epi"
     )
     valor_total: float = db.Column(db.Float, nullable=False)

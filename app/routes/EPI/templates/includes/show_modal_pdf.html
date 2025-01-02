@@ -1,0 +1,9 @@
+<input type="text" value="{{ url }}" type="hidden" id="pdfUrl">
+<script>
+  $(document).ready(function () {
+
+    const pdfUrl = $("#pdfUrl").val();
+    document.getElementById("pdfFrame").src = pdfUrl;
+    $("#ExibirPDF").modal("show");
+  });
+</script>

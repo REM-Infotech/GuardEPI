@@ -90,33 +90,38 @@ def add_watermark(input_pdf: str, output_pdf: str, watermark_pdf: str):
     Returns:
         None
     """
-    input_file = open(input_pdf, "rb")  # Open the input PDF file in read-binary mode
-    watermark_file = open(
-        watermark_pdf, "rb"
-    )  # Open the watermark PDF file in read-binary mode
 
-    input_pdf_reader = PdfFileReader(
-        input_file
-    )  # Create a PDF reader object for the input PDF
-    watermark_pdf_reader = PdfFileReader(
-        watermark_file
-    )  # Create a PDF reader object for the watermark PDF
+    with open(input_pdf, "rb") as input_file:
 
-    output_pdf_writer = PdfFileWriter()  # Create a PDF writer object for the output PDF
+        with open(watermark_pdf, "rb") as watermark_file:
 
-    for page_num in range(len(input_pdf_reader.pages)):
-        page = input_pdf_reader.pages[page_num]  # Get each page from the input PDF
-        watermark_page = watermark_pdf_reader.pages[
-            0
-        ]  # Get the first page of the watermark PDF
-        page.merge_page(watermark_page)  # Merge the watermark with the current page
-        output_pdf_writer.add_page(page)  # Add the watermarked page to the output PDF
+            input_pdf_reader = PdfFileReader(
+                input_file
+            )  # Create a PDF reader object for the input PDF
+            watermark_pdf_reader = PdfFileReader(
+                watermark_file
+            )  # Create a PDF reader object for the watermark PDF
 
-    with open(output_pdf, "wb") as output_file:
-        output_pdf_writer.write(output_file)  # Write the output PDF to a file
+            output_pdf_writer = (
+                PdfFileWriter()
+            )  # Create a PDF writer object for the output PDF
 
-    input_file.close()  # Close the input PDF file
-    watermark_file.close()  # Close the watermark PDF file
+            for page_num in range(len(input_pdf_reader.pages)):
+                page = input_pdf_reader.pages[
+                    page_num
+                ]  # Get each page from the input PDF
+                watermark_page = watermark_pdf_reader.pages[
+                    0
+                ]  # Get the first page of the watermark PDF
+                page.merge_page(
+                    watermark_page
+                )  # Merge the watermark with the current page
+                output_pdf_writer.add_page(
+                    page
+                )  # Add the watermarked page to the output PDF
+
+            with open(output_pdf, "wb") as output_file:
+                output_pdf_writer.write(output_file)  # Write the output PDF to a file
 
 
 def adjust_image_transparency(image_path: str, output_path: str, transparency):

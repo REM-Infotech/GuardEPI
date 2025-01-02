@@ -129,7 +129,7 @@ def remove_itens():
     with open(pathj, "w") as f:
         f.write(json_obj)
 
-    item_html = render_template("includes/add_items.html")
+    item_html = render_template("forms/cautela/add_items.html")
     return item_html
 
 
@@ -195,78 +195,87 @@ def emitir_cautela():
 
 def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str):
 
-    epis_lista = []
-    para_registro = []
-    list_epis_solict = []
+    try:
+        epis_lista = []
+        para_registro = []
+        list_epis_solict = []
 
-    path_json = Path(app.config["TEMP_PATH"]).joinpath(
-        f"{session["uuid_Cautelas"]}.json"
-    )
-
-    with path_json.open("rb") as f:
-        list_epis: list = json.load(f)
-
-    if len(list_epis) == 0:
-
-        raise ValueError("Adicione ao menos 1a EPI!")
-
-    for item_epi in list_epis:
-
-        nome_epi = item_epi.get("NOME_EPI")
-        grade_epi = item_epi.get("GRADE")
-        qtd_entrega = item_epi.get("QTD")
-        if nome_epi is None:
-            continue
-
-        equip = (
-            db.session.query(ProdutoEPI).filter(ProdutoEPI.nome_epi == nome_epi).first()
+        path_json = Path(app.config["TEMP_PATH"]).joinpath(
+            f"{session["uuid_Cautelas"]}.json"
         )
 
-        data_estoque = (
-            db.session.query(EstoqueEPI).filter(EstoqueEPI.nome_epi == nome_epi).first()
-        )
-        estoque_grade = (
-            db.session.query(EstoqueGrade)
-            .filter(
-                EstoqueGrade.nome_epi == nome_epi,
-                EstoqueGrade.grade == grade_epi,
+        with path_json.open("rb") as f:
+            list_epis: list = json.load(f)
+
+        if len(list_epis) == 0:
+
+            raise ValueError("Adicione ao menos 1a EPI!")
+
+        for item_epi in list_epis:
+
+            nome_epi = item_epi.get("NOME_EPI")
+            grade_epi = item_epi.get("GRADE")
+            qtd_entrega = item_epi.get("QTD")
+            if nome_epi is None:
+                continue
+
+            equip = (
+                db.session.query(ProdutoEPI)
+                .filter(ProdutoEPI.nome_epi == nome_epi)
+                .first()
             )
-            .first()
+
+            data_estoque = (
+                db.session.query(EstoqueEPI)
+                .filter(EstoqueEPI.nome_epi == nome_epi)
+                .first()
+            )
+            estoque_grade = (
+                db.session.query(EstoqueGrade)
+                .filter(
+                    EstoqueGrade.nome_epi == nome_epi,
+                    EstoqueGrade.grade == grade_epi,
+                )
+                .first()
+            )
+
+            if estoque_grade:
+                if all([estoque_grade.qtd_estoque > 0, data_estoque.qtd_estoque > 0]):
+
+                    list_epis_solict.append(
+                        [str(nome_epi), qtd_entrega, grade_epi, equip.ca]
+                    )
+                    epis_lista.append(equip)
+                    para_registro.append(
+                        RegistroSaidas(
+                            nome_epi=nome_epi,
+                            qtd_saida=int(qtd_entrega),
+                            valor_total=equip.valor_unitario * int(qtd_entrega),
+                        )
+                    )
+
+                    estoque_grade.qtd_estoque = estoque_grade.qtd_estoque - 1
+                    data_estoque.qtd_estoque = data_estoque.qtd_estoque - 1
+                    valor_calc = equip.valor_unitario * int(qtd_entrega)
+
+        funcionario = form.funcionario.data
+
+        registrar = RegistrosEPI(
+            funcionario=funcionario,
+            data_solicitacao=datetime.now(),
+            filename=nomefilename,
+            valor_total=valor_calc,
         )
 
-        if estoque_grade:
-            if all([estoque_grade.qtd_estoque > 0, data_estoque.qtd_estoque > 0]):
+        registrar.nome_epis = epis_lista
+        db.session.add(registrar)
+        db.session.add_all(para_registro)
+        db.session.commit()
 
-                list_epis_solict.append(
-                    [str(nome_epi), qtd_entrega, grade_epi, equip.ca]
-                )
-                epis_lista.append(equip)
-                para_registro.append(
-                    RegistroSaidas(
-                        nome_epi=nome_epi,
-                        qtd_saida=int(qtd_entrega),
-                        valor_total=equip.valor_unitario * int(qtd_entrega),
-                    )
-                )
+        return list_epis_solict
 
-                estoque_grade.qtd_estoque = estoque_grade.qtd_estoque - 1
-                data_estoque.qtd_estoque = data_estoque.qtd_estoque - 1
-                valor_calc = equip.valor_unitario * int(qtd_entrega)
-
-    funcionario = form.funcionario.data
-
-    registrar = RegistrosEPI(
-        funcionario=funcionario,
-        data_solicitacao=datetime.now(),
-        filename=nomefilename,
-        valor_total=valor_calc,
-    )
-    registrar.nome_epis.extend(epis_lista)
-    db.session.add(registrar)
-    db.session.add_all(para_registro)
-    db.session.commit()
-
-    return list_epis_solict
+    except Exception as e:
+        raise e
 
 
 def employee_info(form: Cautela, db: SQLAlchemy):
@@ -299,9 +308,8 @@ def emit_doc(
 ):
 
     count_ = db.session.query(RegistrosEPI).all()
-    count_cautelas = len(count_)
     year = datetime.now().year
-    cod_lancamento = str(str(count_cautelas + 1).zfill(6))
+    cod_lancamento = "".join((str(len(count_)).zfill(6), "-", str(year)))
 
     employee_data = {
         "company": str(data_funcionario.empresa),
@@ -309,7 +317,7 @@ def emit_doc(
         "cargo": str(data_funcionario.cargo),
         "departamento": str(data_funcionario.departamento),
         "registration": str(data_funcionario.codigo).zfill(6),
-        "lancamento_code": f"{cod_lancamento}-{year}",
+        "lancamento_code": cod_lancamento,
     }
 
     item_data = [
@@ -348,15 +356,12 @@ def emit_doc(
         set_cautela = RegistrosEPI.query.filter_by(filename=nomefilename).first()
 
         if set_cautela is None:
-            url = ""
-            item_html = render_template("includes/show_pdf.html", url=url)
-            return item_html
+            abort(400, description="Erro ao emitir a Cautela!")
 
         with open(path_cautela, "rb") as file:
             cautela_data = file.read()
-
-        set_cautela.blob_doc = cautela_data
-        db.session.commit()
+            set_cautela.blob_doc = cautela_data
+            db.session.commit()
 
         pathj = os.path.join(
             app.config["TEMP_PATH"], f"{session["uuid_Cautelas"]}.json"
@@ -366,13 +371,11 @@ def emit_doc(
         with open(pathj, "w") as f:
             f.write(json_obj)
 
-        item_html = render_template("includes/show_pdf.html", url=url)
-
         folder_to_show = str(uuid.uuid4())
         path_toshow = Path(path_cautela).parent.resolve().joinpath(folder_to_show)
         path_toshow.mkdir(exist_ok=True)
-
-        shutil.copyfile(path_cautela, path_toshow)
+        str_foldertoshow = str(path_toshow.joinpath(nomefilename))
+        shutil.copy(path_cautela, str_foldertoshow)
 
         return redirect(url_for("estoque.cautelas", to_show=folder_to_show))
 

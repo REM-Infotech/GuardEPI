@@ -10,7 +10,7 @@ from wtforms import (
     SubmitField,
     TextAreaField,
 )
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length
 
 from app.forms.choices import (
     set_choices,
@@ -79,7 +79,12 @@ class InsertEstoqueForm(FlaskForm):
     nota_fiscal = FileField(label="Nota Fiscal", validators=[permited_file])
     cod_notafiscal = StringField(label="Cód. Nota Fiscal")
 
-    justificativa = TextAreaField("Justificativa (Para Estornos)", default="...")
+    justificativa = TextAreaField(
+        "Justificativa (Para Estornos)",
+        default="...",
+        render_kw={"maxlength": "128"},
+        validators=[Length(max=128)],
+    )
 
     submit = SubmitField(label="Salvar")
 

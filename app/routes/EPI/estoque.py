@@ -17,9 +17,9 @@ from app.models import EstoqueEPI, EstoqueGrade, ProdutoEPI, RegistroEntradas
 from . import estoque_bp
 
 
-@estoque_bp.route("/dashboard")
+@estoque_bp.get("/produto")
 @login_required
-def dashboard_estoque():
+def produto_epi():
     """
     Handles the retrieval and rendering of the stock (Estoque) page.
     This function queries the database for all entries in the EstoqueEPI table,
@@ -35,7 +35,7 @@ def dashboard_estoque():
 
     try:
         database = EstoqueEPI.query.all()
-        title = "Dashboard Estoque"
+        title = "Estoque Geral (Por Produto)"
         page = "estoque.html"
         form = InsertEstoqueForm()
 
@@ -67,7 +67,7 @@ def grade():
 
     try:
 
-        title = "Estoque - Grades"
+        title = "Estoque Geral (Por Grades)"
         database = EstoqueGrade.query.all()
 
         page = "estoque_grade.html"
@@ -132,6 +132,10 @@ def lancamento_produto():
         form = InsertEstoqueForm()
         if form.validate_on_submit():
 
+            if form.justificativa.data == "..." or not form.nota_fiscal.data:
+                flash("Inserir nota fiscal ou informar justificativa de estorno!")
+                return redirect(url_for("estoque.produto_epi"))
+
             query_Estoque = EstoqueEPI.query
             query_EstoqueGrade = EstoqueGrade.query
 
@@ -188,6 +192,9 @@ def lancamento_produto():
                 valor_total=data_insert,
             )
 
+            if form.justificativa.data != "...":
+                EntradaEPI.justificativa = form.justificativa.data
+
             file_nf: FileStorage = form.nota_fiscal.data
             if file_nf:
                 file_path = Path(app.config["PDF_TEMP_PATH"]).joinpath(
@@ -212,11 +219,11 @@ def lancamento_produto():
                 abort(500, description="Item já cadastrado!")
 
             flash("Informações salvas com sucesso!", "success")
-            return redirect(url_for("estoque.dashboard_estoque"))
+            return redirect(url_for("estoque.produto_epi"))
 
         if form.errors:
             flash("Campos Obrigatórios não preenchidos!")
-            return redirect(url_for("estoque.dashboard_estoque"))
+            return redirect(url_for("estoque.produto_epi"))
 
         page = "forms/estoque/estoque_form.html"
         return render_template("index.html", page=page, form=form, title=title)

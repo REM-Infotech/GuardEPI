@@ -60,7 +60,7 @@ def cadastro_equipamento():
         Response: A redirect response to the Equipamentos page if the form is successfully submitted,
                   or a rendered template of the form page if the form is not submitted or is invalid.
     """
-
+    title = "Cadastro de Equipamento"
     form = CadastroEPIForm()
 
     if form.validate_on_submit():
@@ -103,7 +103,7 @@ def cadastro_equipamento():
         return redirect(url_for("epi.Equipamentos"))
 
     page = "forms/equipamento_form.html"
-    return render_template("index.html", page=page, form=form)
+    return render_template("index.html", page=page, form=form, title=title)
 
 
 @epi.route("/equipamentos/editar/<int:id>", methods=["GET", "POST"])
@@ -126,7 +126,7 @@ def editar_equipamento(id: int):
     form_data = {}
 
     form = CadastroEPIForm()
-
+    title = "Editar Equipamento"
     if request.method == "GET":
 
         url_image = ""
@@ -213,7 +213,9 @@ def editar_equipamento(id: int):
         return redirect(url_for("epi.Equipamentos"))
 
     page = "forms/equipamento_form.html"
-    return render_template("index.html", page=page, form=form, url_image=url_image)
+    return render_template(
+        "index.html", page=page, form=form, url_image=url_image, title=title
+    )
 
 
 @epi.route("/equipamentos/deletar/<int:id>")
