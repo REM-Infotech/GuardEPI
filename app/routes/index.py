@@ -83,31 +83,11 @@ def politica_privacidade():
         abort(500, description=str(e))
 
 
-@index.route("/gerar_relatorio/<dbase>")
+@index.route("/gerar_relatorio")
 @login_required
-def gerar_relatorio(dbase: str):
+def gerar_relatorio():
+
     try:
-
-        modelo = {
-            "categorias": "categorias",
-            "equipamentos": "equipamentos",
-            "grades": "grades",
-            "estoque_produto": "estoque_produto",
-            "estoque_grade": "estoque_grade",
-            "estoque_entradas": "estoque_entradas",
-            "estoque_cautelas": "estoque_cautelas",
-            "funcionarios": "funcionarios",
-            "empresas": "empresas",
-            "departamentos": "departamentos",
-            "cargos": "cargos",
-            "users": "users",
-            "groups": "groups",
-        }
-
-        dbase = modelo.get(dbase)
-
-        if not dbase:
-            abort(400)
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
@@ -117,13 +97,16 @@ def gerar_relatorio(dbase: str):
 
         referrer.remove(request.host)
 
-        if "?" in referrer:
-            chk_login = referrer.split("?")[0]
+        if "?" in referrer[-1]:
+            chk_login = referrer[-1].split("?")[0]
             if chk_login == "login":
                 return redirect(url_for("dash.dashboard"))
 
         if "estoque" in referrer:
             dbase = "_".join(referrer)
+
+        elif "estoque" not in referrer:
+            dbase = referrer[-1]
 
         now = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")  # Change colon to hyphen
         filename = f"Relatório {" ".join([i.capitalize() for i in dbase.split("_")])} - {now}.xlsx"
