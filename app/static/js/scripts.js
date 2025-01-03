@@ -50,11 +50,20 @@ function formatDocument(element) {
   element.value = value;
 }
 
+function isValidUrl(url) {
+  const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+  return urlPattern.test(url);
+}
+
 document.querySelectorAll(".open-pdf").forEach((button) => {
   button.addEventListener("click", function () {
     const pdfUrl = button.getAttribute("data-pdf-url");
-    document.getElementById("pdfFrame").src = pdfUrl;
-    $("#ExibirPDF").modal("show");
+    if (isValidUrl(pdfUrl)) {
+      document.getElementById("pdfFrame").src = pdfUrl;
+      $("#ExibirPDF").modal("show");
+    } else {
+      // Exibe uma mensagem de erro
+    }
   });
 });
 
