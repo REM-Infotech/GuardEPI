@@ -89,6 +89,22 @@ def gerar_relatorio():
 
     try:
 
+        modelo = {
+            "categorias": "categorias",
+            "equipamentos": "equipamentos",
+            "grades": "grades",
+            "estoque_produto": "estoque_produto",
+            "estoque_grade": "estoque_grade",
+            "estoque_entradas": "estoque_entradas",
+            "estoque_cautelas": "estoque_cautelas",
+            "funcionarios": "funcionarios",
+            "empresas": "empresas",
+            "departamentos": "departamentos",
+            "cargos": "cargos",
+            "users": "users",
+            "groups": "groups",
+        }
+
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         referrer = (
@@ -115,6 +131,11 @@ def gerar_relatorio():
         file_path = base_path.joinpath(filename).resolve()
         if not str(file_path).startswith(str(base_path)):
             raise Exception("Invalid file path")
+
+        dbase = modelo.get(dbase)
+
+        if not dbase:
+            raise ValueError("Not Found!")
 
         model = get_models(dbase.lower())
         query = db.session.query(model).all()
