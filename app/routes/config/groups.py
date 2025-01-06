@@ -16,7 +16,7 @@
 #         session["name_group"] = ""
 #         form = CreateGroup()
 #         database = Groups.query.all()
-#         page = f"pages/config/{request.endpoint}.html"
+#         page = f"{request.endpoint}.html"
 
 #         return render_template("index.html", form=form, database=database, page=page)
 

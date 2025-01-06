@@ -1,3 +1,4 @@
+from importlib import import_module
 from pathlib import Path
 
 from flask import Blueprint, redirect, url_for
@@ -17,3 +18,6 @@ def redirecting():
     """
 
     return redirect(url_for("epi.Equipamentos"))
+
+
+import_module(".users", __package__)
