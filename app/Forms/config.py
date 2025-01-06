@@ -74,9 +74,14 @@ class GroupForm(FlaskForm):
         membros = SelectMultipleField("Selecione os Membros", choices=[])
         desc = TextAreaField("Descrição (Opcional)")
 
-        def __init__(self, *args, **kwargs):
+        def __init__(
+            self,
+            edit: bool = False,
+            choices: list[tuple[str, str]] = None,
+            *args,
+            **kwargs
+        ):
             super().__init__(*args, **kwargs)
-
             self.membros.choices.extend(set_choicesUsers())
 
     except Exception as e:

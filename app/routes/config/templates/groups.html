@@ -33,20 +33,21 @@
           <tr>
             <td>{{ item.id }}</td>
             <td>{{ item.name_group }}</td>
-            <td>{{ item.members| map(attribute='nome_usuario') | join(' - ') }}</td>
+            <td>{{ item.members | map(attribute='nome_usuario') | join(' - ') }}</td>
             {% set desc = item.description %}
             {% if not desc %}
             {% set desc = "Sem Descrição" %}
             {% endif %}
             <td>{{ desc }}</td>
             <td>
-              <button type="button" id="EditEstoqueButton" class="btn btn-secondary btn-icon-split btn-sm m-1" hx-get=""
-                hx-target="#results" onclick="showLoad()">
+              <a href="{{ url_for('config.editar_grupo', id = item.id) }}"
+                class="btn btn-secondary btn-icon-split btn-sm m-1" onclick="showLoad()">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-pen"></i>
                 </span>
                 <span class="text">Editar</span>
-              </button>
+              </a>
+
               <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-icon-split btn-sm m-1" hx-post=""
                 hx-trigger="click" hx-target="#results">
                 <span class="icon text-white-50">
@@ -64,6 +65,7 @@
             <th>#</th>
             <th>Nome</th>
             <th>Membros</th>
+            <th>Descrição</th>
             <th>Ações</th>
           </tr>
         </tfoot>
