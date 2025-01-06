@@ -45,7 +45,7 @@ route_roles = db.Table(
 
 
 @login_manager.user_loader
-def load_user(user_id):  # pragma: no cover
+def load_user(user_id):
     link = request.referrer
     if link is None:
         link = request.url
@@ -73,14 +73,14 @@ class Users(db.Model, UserMixin):
     blob_doc: str = db.Column(db.LargeBinary(length=(2**32) - 1))
 
     @property
-    def senhacrip(self):  # pragma: no cover
+    def senhacrip(self):
         return self.senhacrip
 
     @senhacrip.setter
-    def senhacrip(self, senha_texto):  # pragma: no cover
+    def senhacrip(self, senha_texto):
         self.password = bcrypt.hashpw(senha_texto.encode(), salt).decode("utf-8")
 
-    def converte_senha(self, senha_texto_claro) -> bool:  # pragma: no cover
+    def converte_senha(self, senha_texto_claro) -> bool:
         return bcrypt.checkpw(
             senha_texto_claro.encode("utf-8"), self.password.encode("utf-8")
         )

@@ -9,7 +9,7 @@ from psycopg2 import errors
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
-from app.decorators import create_perm  # pragma: no cover
+from app.decorators import create_perm
 from app.forms import InsertEstoqueForm
 from app.misc import format_currency_brl
 from app.models import EstoqueEPI, EstoqueGrade, ProdutoEPI, RegistroEntradas

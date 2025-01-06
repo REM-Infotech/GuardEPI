@@ -9,6 +9,6 @@ class TaskNotificacao(db.Model):
 
     contagem_dias_notificacao: int = db.Column(db.Integer, nullable=False, default=1)
 
-    def __init__(self, nome_task: str, periodicidade: int) -> None:  # pragma: no cover
+    def __init__(self, nome_task: str, periodicidade: int) -> None:
         self.nome_task = nome_task
         self.periodicidade = periodicidade

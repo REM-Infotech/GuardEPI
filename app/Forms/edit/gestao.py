@@ -14,14 +14,14 @@ from app import app
 from app.models import Cargos, Departamento, Empresa
 
 
-def setChoices_Empresa() -> list[tuple[str, str]]:  # pragma: no cover
+def setChoices_Empresa() -> list[tuple[str, str]]:
     with app.app_context():
         return [
             (query.nome_empresa, query.nome_empresa) for query in Empresa.query.all()
         ]
 
 
-def setChoices_Departamento() -> list[tuple[str, str]]:  # pragma: no cover
+def setChoices_Departamento() -> list[tuple[str, str]]:
     with app.app_context():
         return [
             (query.departamento, query.departamento)
@@ -29,7 +29,7 @@ def setChoices_Departamento() -> list[tuple[str, str]]:  # pragma: no cover
         ]
 
 
-def setChoices_Cargo() -> list[tuple[str, str]]:  # pragma: no cover
+def setChoices_Cargo() -> list[tuple[str, str]]:
     with app.app_context():
         return [(query.cargo, query.cargo) for query in Cargos.query.all()]
 
@@ -57,7 +57,7 @@ class EditFuncionario(FlaskForm):
     departamento = SelectField("Departamento", validators=[DataRequired()], choices=[])
     submit = SubmitField("Salvar alterações")
 
-    def __init__(self, *args, **kwargs):  # pragma: no cover
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.empresa.choices.extend(setChoices_Empresa())

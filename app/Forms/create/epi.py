@@ -88,7 +88,7 @@ class InsertEstoqueForm(FlaskForm):
 
     submit = SubmitField(label="Salvar")
 
-    def __init__(self, *args, **kwargs):  # pragma: no cover
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.nome_epi.choices.extend(set_choices())
         self.tipo_grade.choices.extend(set_choicesGrade())
@@ -145,7 +145,7 @@ class CadastroEPIForm(FlaskForm):
     )
     submit = SubmitField(label="Salvar")
 
-    def __init__(self, *args, **kwargs):  # pragma: no cover
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fornecedor.choices.extend(set_choicesFornecedor())
@@ -200,9 +200,7 @@ class Cautela(FlaskForm):
     qtd_entregar = IntegerField(label="Quantidade para entregar", default=1)
     submit_cautela = SubmitField(id="submit_cautela", label="Emitir documento")
 
-    def __init__(
-        self, choices_grade: list[tuple[str, str]] = None, *args, **kwargs
-    ):  # pragma: no cover
+    def __init__(self, choices_grade: list[tuple[str, str]] = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.nome_epi.choices.append(("Selecione", "Selecione"))

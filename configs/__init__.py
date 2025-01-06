@@ -16,10 +16,10 @@ class Configurator:
     def __init__(self):
 
         debug_flag = Path(".debug").exists()
-        if debug_flag:  # pragma: no cover
+        if debug_flag:
             self.env_file = ".testing"
 
-    def get_configurator(self):  # pragma: no cover
+    def get_configurator(self):
 
         class ConfigObject:
 
@@ -106,7 +106,7 @@ class Configurator:
         return ConfigObject
 
 
-def csp() -> dict[str]:  # pragma: no cover
+def csp() -> dict[str]:
     csp_vars = {
         "default-src": ["'self'"],
         "script-src": [

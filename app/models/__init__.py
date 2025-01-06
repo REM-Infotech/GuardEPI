@@ -47,7 +47,7 @@ __all__ = (
 endpoints = ["/epi", "/corp", "/config"]
 
 
-def init_database(app: Flask, db: SQLAlchemy) -> str:  # pragma: no cover
+def init_database(app: Flask, db: SQLAlchemy) -> str:
 
     with app.app_context():
 
