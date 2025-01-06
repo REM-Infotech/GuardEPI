@@ -5,7 +5,7 @@ from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 
-from app.forms import CadastroMarcas
+from app.forms import FormMarcas
 from app.models import Marcas
 
 from ...decorators import create_perm, delete_perm, update_perm
@@ -46,7 +46,7 @@ def cadastrar_marca():
 
     endpoint = "marca"
     act = "Cadastro"
-    form = CadastroMarcas()
+    form = FormMarcas()
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
 
@@ -100,12 +100,12 @@ def editar_marca(id):
     act = "Cadastro"
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
-    form = CadastroMarcas()
+    form = FormMarcas()
 
     classe = db.session.query(Marcas).filter(Marcas.id == id).first()
 
     if request.method == "GET":
-        form = CadastroMarcas(**classe.__dict__)
+        form = FormMarcas(**classe.__dict__)
 
     if form.validate_on_submit():
 

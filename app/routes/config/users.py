@@ -1,6 +1,18 @@
-from flask import abort, render_template
-from flask_login import login_required
+import json
 
+from flask import abort
+from flask import current_app as app
+from flask import flash, redirect, render_template, request, session, url_for
+from flask_login import login_required
+from flask_sqlalchemy import SQLAlchemy
+
+from ...forms import (
+    AdmChangeEmail,
+    AdmChangePassWord,
+    ChangeEmail,
+    ChangePassWord,
+    FormUser,
+)
 from ...models import Users
 from . import config
 
@@ -18,6 +30,158 @@ def users():
             page=page,
             database=database,
         )
+
+    except Exception as e:
+        abort(500, description=str(e))
+
+
+@config.route("/cadastro_usuario", methods=["GET", "POST"])
+@login_required
+# @create_perm
+def cadastro_usuario():
+    form = FormUser()
+    if request.method == "GET" and request.headers.get("HX-Request") == "true":
+        html = "forms/FormUser.html"
+        return render_template(html, form=form)
+
+    elif request.method == "POST" and form.validate_on_submit():
+
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        usuario = Users(
+            login=form.login.data,
+            nome_usuario=form.nome.data,
+            email=form.email.data,
+            grupos=json.dumps(["Default"]),
+        )
+
+        usuario.senhacrip = form.password.data
+
+        try:
+            db.session.add(usuario)
+            db.session.commit()
+
+            flash("Usuário criado com sucesso!", "success")
+            return redirect(url_for("users"))
+
+        except Exception as e:
+            abort(500, description=str(e))
+
+    else:
+        if form.errors:
+            pass
+
+        else:
+            return redirect(url_for("users"))
+
+
+@config.route("/changepw_usr", methods=["GET", "POST"])
+@login_required
+# @update_perm
+def changepw_usr():
+    try:
+        form = AdmChangePassWord()
+
+        html = "forms/AdmChangePasswordForm.html"
+        endpoint = (
+            request.referrer.replace("http://", "")
+            .replace("https://", "")
+            .split("/")[-1]
+        )
+        if endpoint == "profile_config":
+            form = ChangePassWord()
+            html = "pages/forms/user/ChangePasswordForm.html"
+
+        if form.validate_on_submit():
+
+            db: SQLAlchemy = app.extensions["sqlalchemy"]
+            if form.new_password.data != form.repeat_password.data:
+                flash("Senhas não coincidem")
+                return redirect(url_for("users"))
+
+            login_usr = form.data.get("user_to_change", session.get("login"))
+            password = Users.query.filter_by(login=login_usr).first()
+            password.senhacrip = form.new_password.data
+            db.session.commit()
+
+            flash("Senha alterada com sucesso!", "success")
+            return redirect(url_for("users"))
+
+        return render_template(html, form=form)
+
+    except Exception as e:
+        abort(500, description=str(e))
+
+
+@config.route("/changemail_usr", methods=["GET", "POST"])
+@login_required
+# @update_perm
+def changemail_usr():
+    try:
+        form = AdmChangeEmail()
+
+        html = "forms/AdmChangeMailForm.html"
+        endpoint = (
+            request.referrer.replace("http://", "")
+            .replace("https://", "")
+            .split("/")[-1]
+        )
+        if endpoint == "profile_config":
+            form = ChangeEmail()
+            html = "pages/forms/user/ChangeMailForm.html"
+
+        if form.validate_on_submit():
+
+            db: SQLAlchemy = app.extensions["sqlalchemy"]
+            login_usr = form.data.get("user_to_change", session.get("login"))
+            mail = Users.query.filter_by(login=login_usr).first()
+            if form.new_email.data != form.repeat_email.data:
+                flash("E-mails não coincidem")
+                return redirect(url_for("users"))
+
+            mail.email = form.new_email.data
+            db.session.commit()
+
+            flash("E-mail alterado com sucesso!", "success")
+            return redirect(url_for("users"))
+
+        return render_template(html, form=form)
+
+    except Exception as e:
+        abort(500, description=str(e))
+
+
+@config.route("/delete_user/<usuario>", methods=["GET"])
+@login_required
+# @delete_perm
+def delete_user(usuario: str):
+    try:
+
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+
+        set_delete = True
+
+        atual_admin = session.get("username")
+        # license_key = session.get("license_token", "")
+
+        message = ""
+        query = db.session.query(Users).filter(Users.login == usuario).first()
+        # if session.get("tipo-usuario") == "super_admin":
+
+        # elif session.get("tipo-usuario") == "admin":
+        #     query = Users.query.filter(Users.license_key == license_key).all()
+        userto_delete = query
+        message = "Usuário deletado com sucesso!"
+
+        if usuario == atual_admin:
+            message = "Você nao pode deletar seu usuário"
+            set_delete = False
+
+        if set_delete is True:
+            db.session.delete(userto_delete)
+            db.session.commit()
+
+        template = "includes/show.html"
+        return render_template(template, message=message)
 
     except Exception as e:
         abort(500, description=str(e))

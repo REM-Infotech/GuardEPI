@@ -1,34 +1,62 @@
-# import json
+from flask import abort, flash, redirect, render_template, url_for
+from flask_login import login_required
 
-# from flask import abort, flash, redirect, render_template, request, session, url_for
-# from flask_login import login_required
-
-# from app import app, db
-# from app.decorators import create_perm, delete_perm, update_perm
-# from app.forms import CreateGroup
-# from app.models import Groups, Users
+from ...forms import GroupForm
+from ...models import Groups
+from . import config
 
 
-# @app.route("/groups", methods=["GET"])
-# @login_required
-# def groups():
-#     try:
-#         session["name_group"] = ""
-#         form = CreateGroup()
-#         database = Groups.query.all()
-#         page = f"{request.endpoint}.html"
+@config.route("/groups", methods=["GET"])
+@login_required
+def groups():
+    try:
 
-#         return render_template("index.html", form=form, database=database, page=page)
+        title = "Grupos"
+        database = Groups.query.all()
+        page = "groups.html"
 
-#     except Exception as e:
-#         abort(500, description=str(e))
+        return render_template("index.html", title=title, database=database, page=page)
+
+    except Exception as e:
+        abort(500, description=str(e))
 
 
-# @app.route("/create_group", methods=["POST"])
+@config.route("/cadastro_grupo", methods=["GET", "POST"])
+@login_required
+def cadastro_grupo():
+
+    form = GroupForm()
+    if form.validate_on_submit():
+
+        flash("Grupo Criado com sucesso!")
+        return redirect(url_for("config.groups"))
+
+    # if request.method == "GET" and request.headers.get("HX-Request") == "true":
+    #     html = "forms/GroupForm.html"
+    #     return render_template(html, form=form)
+
+    # elif request.method == "POST" and form.validate_on_submit():
+    #     db: SQLAlchemy = app.extensions["sqlalchemy"]
+    #     group = Groups(
+    #         name_group=form.name.data,
+    #         members=json.dumps(form.members.data),
+    #     )
+
+    #     try:
+    #         db.session.add(group)
+    #         db.session.commit()
+    #         flash("Grupo criado com sucesso!")
+    #     except Exception as e:
+    #         flash(f"Erro ao criar grupo: {str(e)}", "error")
+
+    # return redirect(url_for("groups", _scheme="https"))
+
+
+# @config.route("/create_group", methods=["POST"])
 # @login_required
 # @create_perm
 # def create_group():
-#     form = CreateGroup()
+#     form = GroupForm()
 #     group = Groups.query.filter(Groups.name_group == form.nome.data).first()
 
 #     if not group:
@@ -55,9 +83,9 @@
 #     return redirect(url_for("groups", _scheme="https"))
 
 
-# @app.route("/setEditGroup/<item>", methods=["GET"])
+# @config.route("/setEditGroup/<item>", methods=["GET"])
 # @login_required
-# @update_perm
+# # @update_perm
 # def setEditGroup(item: int):
 #     database = Groups.query.filter(Groups.id == item).first()
 #     session["name_group"] = database.name_group
@@ -67,7 +95,7 @@
 #     if database.members:
 #         membros = json.loads(database.members)
 
-#     form = CreateGroup(**{"nome": database.name_group, "membros": membros})
+#     form = GroupForm(**{"nome": database.name_group, "membros": membros})
 
 #     route = request.referrer.replace("https://", "").replace("http://", "")
 #     route = route.split("/")[1]
@@ -76,11 +104,11 @@
 #     return render_template(grade_results, form=form, tipo=route, id=item)
 
 
-# @app.route("/update_group", methods=["POST"])
+# @config.route("/update_group", methods=["POST"])
 # @login_required
-# @update_perm
+# # @update_perm
 # def update_group():
-#     form = CreateGroup()
+#     form = GroupForm()
 
 #     gp_name = form.nome.data
 
@@ -129,7 +157,7 @@
 #     return redirect(url_for("groups", _scheme="https"))
 
 
-# @app.route("/deleteGroup/<id>", methods=["POST"])
+# @config.route("/deleteGroup/<id>", methods=["POST"])
 # @login_required
 # @delete_perm
 # def deleteGroup(id: int):

@@ -40,7 +40,7 @@ def setChoices_Cargo() -> list[tuple[str, str]]:
         return [(query.cargo, query.cargo) for query in Cargos.query.all()]
 
 
-class CadastroFuncionario(FlaskForm):
+class FuncionarioForm(FlaskForm):
     codigo = StringField(
         "Código de Identificação",
         validators=[DataRequired(), Length(max=6)],
@@ -77,7 +77,7 @@ class CadastroFuncionario(FlaskForm):
         self.cargo.choices.extend(setChoices_Cargo())
 
 
-class CadastroEmpresa(FlaskForm):
+class EmpresaForm(FlaskForm):
     nome_empresa = StringField("Nome da Empresa", validators=[DataRequired()])
     cnpj_empresa = StringField(
         "CNPJ empresa", validators=[Length(min=14, max=18), DataRequired()]
@@ -86,13 +86,13 @@ class CadastroEmpresa(FlaskForm):
     submit = SubmitField("Salvar")
 
 
-class CadastroCargo(FlaskForm):
+class CargoForm(FlaskForm):
     cargo = StringField("Nome do Cargo", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
     submit = SubmitField("Salvar")
 
 
-class CadastroDepartamentos(FlaskForm):
+class FormDepartamentos(FlaskForm):
     departamento = StringField("Nome do departamento", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
     submit = SubmitField("Salvar")

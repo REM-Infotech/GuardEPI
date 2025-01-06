@@ -7,7 +7,7 @@
 
 # from app import app, db
 # from app.decorators import create_perm
-# from app.forms import CreatePerm
+# from app.forms import FormRoles
 # from app.models import Permissions
 
 
@@ -35,7 +35,7 @@
 # @login_required
 # def add_itens_perms():
 
-#     form = CreatePerm()
+#     form = FormRoles()
 #     list = [form.rota.data, form.grupos.data, form.permissoes.data]
 
 #     pathj = os.path.join(app.config["TEMP_PATH"], f"{session["uuid_Permissoes"]}.json")
@@ -73,7 +73,7 @@
 # @login_required
 # def Permissoes():
 
-#     form = CreatePerm()
+#     form = FormRoles()
 #     page = f"{request.endpoint.lower()}.html"
 #     title = request.endpoint.split(".")[1].capitalize()
 #     database = Permissions.query.all()
@@ -87,7 +87,7 @@
 # @create_perm
 # def create_role():
 
-#     form = CreatePerm()
+#     form = FormRoles()
 #     perms = {}
 
 #     pathj = os.path.join(app.config["TEMP_PATH"], f"{session["uuid_Permissoes"]}.json")

@@ -11,7 +11,7 @@ from psycopg2 import errors
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
-from app.forms import CadastroFuncionario
+from app.forms import FuncionarioForm
 from app.models import Funcionarios
 
 from . import corp
@@ -64,7 +64,7 @@ def cadastro_funcionarios():
 
     title = "Cadastro de Funcionário"
 
-    form = CadastroFuncionario()
+    form = FuncionarioForm()
 
     if form.validate_on_submit():
         db: SQLAlchemy = app.extensions["sqlalchemy"]
@@ -129,7 +129,7 @@ def editar_funcionarios(id: int):
 
     form_data = {}
 
-    form = CadastroFuncionario()
+    form = FuncionarioForm()
 
     if request.method == "GET":
 
@@ -170,7 +170,7 @@ def editar_funcionarios(id: int):
 
             form_data.update({key: value})
 
-        form = CadastroFuncionario(**form_data)
+        form = FuncionarioForm(**form_data)
 
     if form.validate_on_submit():
 

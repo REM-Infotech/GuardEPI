@@ -5,7 +5,7 @@ from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 
-from app.forms import CadastroDepartamentos
+from app.forms import FormDepartamentos
 from app.models import Departamento
 
 from . import corp
@@ -58,7 +58,7 @@ def cadastrar_departamentos():
 
     endpoint = "Departamentos"
     act = "Cadastro"
-    form = CadastroDepartamentos()
+    form = FormDepartamentos()
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
 
@@ -108,12 +108,12 @@ def editar_departamentos(id):
     act = "Cadastro"
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
-    form = CadastroDepartamentos()
+    form = FormDepartamentos()
 
     Departamentos = db.session.query(Departamento).filter(Departamento.id == id).first()
 
     if request.method == "GET":
-        form = CadastroDepartamentos(**Departamentos.__dict__)
+        form = FormDepartamentos(**Departamentos.__dict__)
 
     if form.validate_on_submit():
 

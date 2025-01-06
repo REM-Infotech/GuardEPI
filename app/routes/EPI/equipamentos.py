@@ -12,7 +12,7 @@ from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
 # pragma: no cover
-from app.forms import CadastroEPIForm
+from app.forms import FormProduto
 from app.misc import format_currency_brl
 from app.models import ProdutoEPI
 
@@ -60,7 +60,7 @@ def cadastro_equipamento():
                   or a rendered template of the form page if the form is not submitted or is invalid.
     """
     title = "Cadastro de Equipamento"
-    form = CadastroEPIForm()
+    form = FormProduto()
 
     if form.validate_on_submit():
         db: SQLAlchemy = app.extensions["sqlalchemy"]
@@ -124,7 +124,7 @@ def editar_equipamento(id: int):
 
     form_data = {}
 
-    form = CadastroEPIForm()
+    form = FormProduto()
     title = "Editar Equipamento"
     if request.method == "GET":
 
@@ -170,7 +170,7 @@ def editar_equipamento(id: int):
 
             form_data.update({key: value})
 
-        form = CadastroEPIForm(**form_data)
+        form = FormProduto(**form_data)
 
     if form.validate_on_submit():
 

@@ -5,7 +5,7 @@ from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 
-from app.forms import CadastroGrade
+from app.forms import FormGrade
 from app.models import GradeEPI
 
 from ...decorators import create_perm, delete_perm, update_perm
@@ -62,7 +62,7 @@ def cadastrar_grade():
 
     endpoint = "Grade"
     act = "Cadastro"
-    form = CadastroGrade()
+    form = FormGrade()
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
 
@@ -115,12 +115,12 @@ def editar_grade(id):
     act = "Cadastro"
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
-    form = CadastroGrade()
+    form = FormGrade()
 
     grade = db.session.query(GradeEPI).filter(GradeEPI.id == id).first()
 
     if request.method == "GET":
-        form = CadastroGrade(**grade.__dict__)
+        form = FormGrade(**grade.__dict__)
 
     if form.validate_on_submit():
 

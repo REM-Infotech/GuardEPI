@@ -5,7 +5,7 @@ from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 
-from app.forms import CadastroModelos
+from app.forms import FormModelos
 from app.models import ModelosEPI
 
 from ...decorators import create_perm, delete_perm, update_perm
@@ -44,7 +44,7 @@ def cadastrar_modelos():
 
     endpoint = "modelos"
     act = "Cadastro"
-    form = CadastroModelos()
+    form = FormModelos()
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
 
@@ -98,12 +98,12 @@ def editar_modelos(id: int):
     act = "Cadastro"
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
-    form = CadastroModelos()
+    form = FormModelos()
 
     classe = db.session.query(ModelosEPI).filter(ModelosEPI.id == id).first()
 
     if request.method == "GET":
-        form = CadastroModelos(**classe.__dict__)
+        form = FormModelos(**classe.__dict__)
 
     if form.validate_on_submit():
 

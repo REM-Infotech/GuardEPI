@@ -1,8 +1,6 @@
 <h4 class="card-header mb-4 text-black">Criar Usuário</h4>
 <div class="card-body">
-  <form action="{{ url_for("caduser_end") }}"
-        method="post"
-        class="text-black">
+  <form action="{{ url_for('config.cadastro_usuario') }}" method="post" class="text-black">
     {{ form.hidden_tag() }}
     <div class="form-floating mb-3">
       {{ form.nome(id="nome_sobrenome", class="form-control", placeholder="Nome", autocomplete="given-name") }}
@@ -31,15 +29,15 @@
   </form>
 </div>
 <script>
-    $(document).ready(function(){
-        $('#show_password').change(function(){
-            var passwordField = $('#floatingPassword');
-            var passwordFieldType = passwordField.attr('type');
-            if ($(this).is(':checked')) {
-                passwordField.attr('type', 'text');
-            } else {
-                passwordField.attr('type', 'password');
-            }
-        });
+  $(document).ready(function () {
+    $('#show_password').change(function () {
+      var passwordField = $('#floatingPassword');
+      var passwordFieldType = passwordField.attr('type');
+      if ($(this).is(':checked')) {
+        passwordField.attr('type', 'text');
+      } else {
+        passwordField.attr('type', 'password');
+      }
     });
+  });
 </script>

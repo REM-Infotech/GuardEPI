@@ -5,7 +5,7 @@ from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 
-from app.forms import CadastroCargo
+from app.forms import CargoForm
 from app.models import Cargos
 
 from . import corp
@@ -55,7 +55,7 @@ def cadastrar_cargos():
 
     endpoint = "Cargos"
     act = "Cadastro"
-    form = CadastroCargo()
+    form = CargoForm()
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
 
@@ -108,12 +108,12 @@ def editar_cargos(id):
     act = "Cadastro"
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
-    form = CadastroCargo()
+    form = CargoForm()
 
     cargos = db.session.query(Cargos).filter(Cargos.id == id).first()
 
     if request.method == "GET":
-        form = CadastroCargo(**cargos.__dict__)
+        form = CargoForm(**cargos.__dict__)
 
     if form.validate_on_submit():
 

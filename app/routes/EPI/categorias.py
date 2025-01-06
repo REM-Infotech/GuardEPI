@@ -5,7 +5,7 @@ from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 
-from app.forms import CadastroCategorias
+from app.forms import FormCategorias
 from app.models import ClassesEPI
 
 from . import epi
@@ -45,7 +45,7 @@ def cadastrar_categoria():
 
     endpoint = "Categoria"
     act = "Cadastro"
-    form = CadastroCategorias()
+    form = FormCategorias()
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
 
@@ -95,12 +95,12 @@ def editar_categoria(id):
     act = "Cadastro"
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
-    form = CadastroCategorias()
+    form = FormCategorias()
 
     classe = db.session.query(ClassesEPI).filter(ClassesEPI.id == id).first()
 
     if request.method == "GET":
-        form = CadastroCategorias(**classe.__dict__)
+        form = FormCategorias(**classe.__dict__)
 
     if form.validate_on_submit():
 

@@ -11,7 +11,7 @@ from psycopg2 import errors
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
-from app.forms import CadastroEmpresa
+from app.forms import EmpresaForm
 from app.models import Empresa
 
 from . import corp
@@ -24,7 +24,7 @@ form_content = Union[str, FileStorage, int, float, datetime]
 def Empresas():
     """
     Handles the route for displaying the 'Empresas' page.
-    This function creates an instance of the CadastroEmpresa form and retrieves all records from the Empresa database.
+    This function creates an instance of the EmpresaForm form and retrieves all records from the Empresa database.
     It then renders the 'index.html' template with the 'empresas.html' page, the form, and the database records.
     Returns:
         Response: The rendered template for the 'Empresas' page.
@@ -67,7 +67,7 @@ def cadastro_empresas():
     endpoint = "Empresas"
     act = "Cadastro"
 
-    form = CadastroEmpresa()
+    form = EmpresaForm()
 
     if form.validate_on_submit():
         db: SQLAlchemy = app.extensions["sqlalchemy"]
@@ -137,7 +137,7 @@ def editar_empresas(id: int):
 
     form_data = {}
 
-    form = CadastroEmpresa()
+    form = EmpresaForm()
 
     if request.method == "GET":
 
@@ -178,7 +178,7 @@ def editar_empresas(id: int):
 
             form_data.update({key: value})
 
-        form = CadastroEmpresa(**form_data)
+        form = EmpresaForm(**form_data)
 
     if form.validate_on_submit():
 

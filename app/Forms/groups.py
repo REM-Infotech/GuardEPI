@@ -40,7 +40,7 @@ def set_choicesGroups() -> list[tuple[str, str]]:
     return [(item.name_group, item.name_group) for item in Groups.query.all()]
 
 
-class CreateGroup(FlaskForm):
+class GroupForm(FlaskForm):
     nome = StringField(label="Nome do Grupo", validators=[DataRequired()])
     membros = SelectMultipleField(
         "Selecione os Integrantes", validators=[DataRequired()], choices=[]
