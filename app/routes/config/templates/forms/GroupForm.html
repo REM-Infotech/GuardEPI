@@ -1,0 +1,41 @@
+<div class="container px-4">
+  <div class="mt-4 card mb-4">
+    <div class="card-header">
+      <h2 class="m-2 p-1">{{ title }}</h2>
+      <hr>
+    </div>
+    <div class="card-body table-responsive">
+      <form method="post" enctype="multipart/form-data" class="form-floating">
+        {{ form.hidden_tag() }}
+        <div class="row g-3 justify-content-center p-3">
+          <div class="col-md-12">
+            <div class="form-floating mb-3">
+              {{ form.nome(type="text", class="form-control", placeholder="") }}
+              {{ form.nome.label(for=form.nome.id) }}
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-floating mb-3">
+              {{ form.desc(class="form-control", placeholder="") }}
+              {{ form.desc.label(for=form.desc.id) }}
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="mb-3 border border-black p-2 border-2 rounded border-opacity-25">
+              {{ form.membros.label(class="form-label") }}
+              {{ form.membros(class="form-control", placeholder="") }}
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="footer">
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-success form-control" onclick="showLoad()">
+              Salvar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

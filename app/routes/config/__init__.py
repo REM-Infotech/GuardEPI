@@ -21,3 +21,4 @@ def redirecting():
 
 
 import_module(".users", __package__)
+import_module(".groups", __package__)

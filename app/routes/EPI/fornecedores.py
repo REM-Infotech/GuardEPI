@@ -5,7 +5,7 @@ from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 
-from app.forms import CadastroFornecedores
+from app.forms import FornecedoresForm
 from app.models import Fornecedores
 
 from ...decorators import create_perm, delete_perm, read_perm, update_perm
@@ -50,7 +50,7 @@ def cadastrar_fornecedores():
 
     endpoint = "fornecedores"
     act = "Cadastro"
-    form = CadastroFornecedores()
+    form = FornecedoresForm()
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
 
@@ -102,12 +102,12 @@ def editar_fornecedores(id: int):
     act = "Cadastro"
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
-    form = CadastroFornecedores()
+    form = FornecedoresForm()
 
     fornecedor = db.session.query(Fornecedores).filter(Fornecedores.id == id).first()
 
     if request.method == "GET":
-        form = CadastroFornecedores(**fornecedor.__dict__)
+        form = FornecedoresForm(**fornecedor.__dict__)
 
     if form.validate_on_submit():
 

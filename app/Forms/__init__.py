@@ -20,8 +20,10 @@ from .epi import (
     FormMarcas,
     FormModelos,
     FormProduto,
+    FornecedoresForm,
     InsertEstoqueForm,
 )
+from .gestao import CargoForm, EmpresaForm, FormDepartamentos, FuncionarioForm
 
 __all__ = [
     AdmChangeEmail,
@@ -40,6 +42,11 @@ __all__ = [
     InsertEstoqueForm,
     Cautela,
     GroupForm,
+    FormDepartamentos,
+    FuncionarioForm,
+    CargoForm,
+    EmpresaForm,
+    FornecedoresForm,
 ]
 
 permited_file = FileAllowed(["xlsx", "xls"], 'Apenas arquivos ".xlsx" são permitidos!')

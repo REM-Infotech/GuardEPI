@@ -44,7 +44,7 @@ __all__ = (
     RegistrosEPI,
 )
 
-endpoints = ["/epi", "/corp", "/config"]
+endpoints = ["/epi", "/corp", "/config", "/estoque"]
 
 
 def init_database(app: Flask, db: SQLAlchemy) -> str:

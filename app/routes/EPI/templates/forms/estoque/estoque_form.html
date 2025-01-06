@@ -8,7 +8,7 @@
       <form method="post" enctype="multipart/form-data" class="form-floating">
         {{ form.hidden_tag() }}
         <div class="row g-3 justify-content-center p-3">
-          <div class="col-12 border border-black p-2 border-2 rounded">
+          <div class="col-12 border border-black p-2 border-2 rounded border-opacity-25">
             <div class="mb-3">
               {{ form.nota_fiscal.label(for="formFile", class="form-label") }}
               {{ form.nota_fiscal(class="form-control", type="file", id="formFile", accept=".pdf") }}
@@ -21,19 +21,19 @@
             </div>
           </div>
           <div class="col-md-4">
-            <div class="mb-3 border border-black p-2 border-2 rounded">
+            <div class="mb-3 border border-black p-2 border-2 rounded border-opacity-25">
               {{ form.nome_epi.label(class="form-label") }}
               {{ form.nome_epi(class="form-control", id="nome_epi", placeholder="") }}
             </div>
           </div>
           <div class="col-md-4">
-            <div class="mb-3 border border-black p-2 border-2 rounded">
+            <div class="mb-3 border border-black p-2 border-2 rounded border-opacity-25">
               {{ form.tipo_grade.label(class="form-label") }}
               {{ form.tipo_grade(class="form-control", id="tipo_grade", placeholder="") }}
             </div>
           </div>
           <div class="col-md-4">
-            <div class="mb-3 border border-black p-2 border-2 rounded">
+            <div class="mb-3 border border-black p-2 border-2 rounded border-opacity-25">
               {{ form.tipo_qtd.label(class="form-label") }}
               {{ form.tipo_qtd(type="text", class="form-control", id="tipo_qtd", placeholder="") }}
             </div>

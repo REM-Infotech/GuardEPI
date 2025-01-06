@@ -1,8 +1,11 @@
-from flask import abort, flash, redirect, render_template, url_for
+from flask import abort
+from flask import current_app as app
+from flask import flash, redirect, render_template
 from flask_login import login_required
+from flask_sqlalchemy import SQLAlchemy
 
 from ...forms import GroupForm
-from ...models import Groups
+from ...models import Groups, Users
 from . import config
 
 
@@ -24,32 +27,49 @@ def groups():
 @config.route("/cadastro_grupo", methods=["GET", "POST"])
 @login_required
 def cadastro_grupo():
+    """
+    Handles the creation of a new group.
+    Renders a form for creating a new group and processes the form submission.
+    If the form is valid and the group does not already exist, a new group is created
+    and added to the database along with its members.
+    Returns:
+        - On successful group creation, redirects to the groups configuration page.
+        - On form validation failure or if the group already exists, re-renders the form with an error message.
+    """
 
     form = GroupForm()
+    title = "Criar Grupo"
+    page = "forms/GroupForm.html"
+
     if form.validate_on_submit():
 
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+
+        query = (
+            db.session.query(Groups).filter(Groups.name_group == form.nome.data).first()
+        )
+
+        if query:
+            flash("Grupo já existente!", "error")
+            return render_template("index.html", page=page, form=form, title=title)
+
+        new_group = Groups(
+            name_group=form.nome.data,
+            description=form.desc.data,
+        )
+
+        for member in form.membros.data:
+
+            usr = db.session.query(Users).filter(Users.login == member).first()
+            new_group.members.append(usr)
+
+        db.session.add(new_group)
+        db.session.commit()
+
         flash("Grupo Criado com sucesso!")
-        return redirect(url_for("config.groups"))
+        return redirect("/config/groups")
 
-    # if request.method == "GET" and request.headers.get("HX-Request") == "true":
-    #     html = "forms/GroupForm.html"
-    #     return render_template(html, form=form)
-
-    # elif request.method == "POST" and form.validate_on_submit():
-    #     db: SQLAlchemy = app.extensions["sqlalchemy"]
-    #     group = Groups(
-    #         name_group=form.name.data,
-    #         members=json.dumps(form.members.data),
-    #     )
-
-    #     try:
-    #         db.session.add(group)
-    #         db.session.commit()
-    #         flash("Grupo criado com sucesso!")
-    #     except Exception as e:
-    #         flash(f"Erro ao criar grupo: {str(e)}", "error")
-
-    # return redirect(url_for("groups", _scheme="https"))
+    return render_template("index.html", page=page, form=form, title=title)
 
 
 # @config.route("/create_group", methods=["POST"])

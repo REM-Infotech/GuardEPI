@@ -160,7 +160,7 @@ class FormCategorias(FlaskForm):
     submit = SubmitField("Cadastrar")
 
 
-class CadastroFornecedores(FlaskForm):
+class FornecedoresForm(FlaskForm):
     fornecedor = StringField("Fornecedor", validators=[DataRequired()])
     descricao = TextAreaField("Descrição (Opcional)", default="Sem descrição")
     submit = SubmitField("Cadastrar")

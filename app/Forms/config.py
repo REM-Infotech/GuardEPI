@@ -1,3 +1,5 @@
+from os import abort
+
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
 from wtforms import (
@@ -66,13 +68,19 @@ class FormUser(FlaskForm):
 
 
 class GroupForm(FlaskForm):
-    nome = StringField(label="Nome do Grupo", validators=[DataRequired()])
-    desc = TextAreaField("Descrição (Opcional)")
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    try:
+        nome = StringField(label="Nome do Grupo", validators=[DataRequired()])
+        membros = SelectMultipleField("Selecione os Membros", choices=[])
+        desc = TextAreaField("Descrição (Opcional)")
 
-        self.users.choices.extend(set_choicesUsers())
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+            self.membros.choices.extend(set_choicesUsers())
+
+    except Exception as e:
+        abort(500, description=str(e))
 
 
 class FormRoles(FlaskForm):

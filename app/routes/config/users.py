@@ -6,13 +6,7 @@ from flask import flash, redirect, render_template, request, session, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
-from ...forms import (
-    AdmChangeEmail,
-    AdmChangePassWord,
-    ChangeEmail,
-    ChangePassWord,
-    FormUser,
-)
+from ...forms import AdmChangeEmail, AdmChangePassWord, FormUser
 from ...models import Users
 from . import config
 
@@ -81,15 +75,7 @@ def changepw_usr():
     try:
         form = AdmChangePassWord()
 
-        html = "forms/AdmChangePasswordForm.html"
-        endpoint = (
-            request.referrer.replace("http://", "")
-            .replace("https://", "")
-            .split("/")[-1]
-        )
-        if endpoint == "profile_config":
-            form = ChangePassWord()
-            html = "pages/forms/user/ChangePasswordForm.html"
+        html = "forms/ChangePasswordForm.html"
 
         if form.validate_on_submit():
 
@@ -119,15 +105,7 @@ def changemail_usr():
     try:
         form = AdmChangeEmail()
 
-        html = "forms/AdmChangeMailForm.html"
-        endpoint = (
-            request.referrer.replace("http://", "")
-            .replace("https://", "")
-            .split("/")[-1]
-        )
-        if endpoint == "profile_config":
-            form = ChangeEmail()
-            html = "pages/forms/user/ChangeMailForm.html"
+        html = "forms/ChangeMailForm.html"
 
         if form.validate_on_submit():
 
