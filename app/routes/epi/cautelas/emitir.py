@@ -11,6 +11,7 @@ from flask import current_app as app
 from flask import redirect, render_template, request, session, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.wrappers.response import Response
 
 from app.decorators import create_perm
 from app.forms import Cautela
@@ -34,7 +35,7 @@ from .. import estoque_bp
 
 
 @estoque_bp.before_request
-def setgroups():
+def setgroups() -> None:
 
     if request.endpoint == "estoque.emitir_cautela":
         if not session.get("uuid_Cautelas", None):
@@ -55,7 +56,8 @@ def setgroups():
 
 @estoque_bp.route("/add_itens", methods=["GET", "POST"])
 @login_required
-def add_itens():
+@create_perm
+def add_itens() -> str:
 
     try:
 
@@ -121,7 +123,8 @@ def add_itens():
 
 @estoque_bp.route("/remove-itens", methods=["GET", "POST"])
 @login_required
-def remove_itens():
+@create_perm
+def remove_itens() -> str:
 
     pathj = os.path.join(app.config["TEMP_PATH"], f"{session["uuid_Cautelas"]}.json")
     json_obj = json.dumps([])
@@ -135,7 +138,8 @@ def remove_itens():
 
 @estoque_bp.route("/get_grade", methods=["POST"])
 @login_required
-def get_grade():
+@create_perm
+def get_grade() -> str:
 
     try:
         form = Cautela()
@@ -154,7 +158,7 @@ def get_grade():
 @estoque_bp.route("/emitir_cautela", methods=["GET", "POST"])
 @login_required
 @create_perm
-def emitir_cautela():
+def emitir_cautela() -> Response | str:
 
     try:
 
@@ -193,7 +197,7 @@ def emitir_cautela():
         abort(code, description=description)
 
 
-def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str):
+def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
 
     try:
         epis_lista = []
@@ -278,7 +282,7 @@ def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str):
         raise e
 
 
-def employee_info(form: Cautela, db: SQLAlchemy):
+def employee_info(form: Cautela, db: SQLAlchemy) -> tuple[Path, Funcionarios | None]:
 
     funcionario_data = (
         db.session.query(Funcionarios)

@@ -2,6 +2,7 @@ from importlib import import_module
 from pathlib import Path
 
 from flask import Blueprint, redirect, url_for
+from werkzeug.wrappers.response import Response
 
 template_folder = Path(__file__).parent.resolve().joinpath("templates")
 epi = Blueprint("epi", __name__, template_folder=template_folder, url_prefix="/epi")
@@ -11,7 +12,7 @@ estoque_bp = Blueprint(
 
 
 @epi.get("/")
-def redirecting():
+def redirecting() -> Response:
     """
     Redirects to the 'Equipamentos' endpoint within the 'epi' blueprint.
     Returns:
@@ -23,7 +24,7 @@ def redirecting():
 
 if epi is not None:
 
-    def epi_bp():
+    def epi_bp() -> None:
         """
         Import various modules related to 'epi' (personal protective equipment).
         This function imports the following modules:

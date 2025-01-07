@@ -4,17 +4,19 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from werkzeug.wrappers.response import Response
 
 from app.forms import FormGrade
 from app.models import GradeEPI
 
-from ...decorators import create_perm, delete_perm, update_perm
+from ...decorators import create_perm, delete_perm, read_perm, update_perm
 from . import epi
 
 
 @epi.route("/Grade")
 @login_required
-def Grade():
+@read_perm
+def Grade() -> str:
     """
     Handles the request to display the grades page.
     This function queries the GradeEPI database for all entries and renders the
@@ -47,7 +49,7 @@ def Grade():
 @epi.route("/Grade/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_grade():
+def cadastrar_grade() -> Response | str:
     """
     Handles the creation and registration of a new GradeEPI entry.
     This function processes a form submission for creating a new GradeEPI.
@@ -96,7 +98,7 @@ def cadastrar_grade():
 @epi.route("/Grade/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_grade(id):
+def editar_grade(id) -> Response | str:
     """
     Edit a GradeEPI entry in the database.
     This function handles the editing of a GradeEPI entry identified by the given id.
@@ -147,7 +149,7 @@ def editar_grade(id):
 @epi.route("/grades/deletar/<int:id>", methods=["POST"])
 @login_required
 @delete_perm
-def deletar_grade(id: int):
+def deletar_grade(id: int) -> str:
     """
     Deletes a GradeEPI record from the database based on the provided ID.
     Args:

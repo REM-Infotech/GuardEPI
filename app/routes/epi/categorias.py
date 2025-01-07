@@ -4,7 +4,9 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from werkzeug.wrappers.response import Response
 
+from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import FormCategorias
 from app.models import ClassesEPI
 
@@ -13,7 +15,8 @@ from . import epi
 
 @epi.route("/categorias", methods=["GET"])
 @login_required
-def categorias():
+@read_perm
+def categorias() -> str:
     """
     Renders the 'categorias' page with data from the ClassesEPI database.
     This function queries all entries from the ClassesEPI database and passes
@@ -31,7 +34,8 @@ def categorias():
 
 @epi.route("/categorias/cadastrar", methods=["GET", "POST"])
 @login_required
-def cadastrar_categoria():
+@create_perm
+def cadastrar_categoria() -> Response | str:
     """
     Handles the creation of a new category.
     This function processes the form submission for creating a new category.
@@ -78,7 +82,8 @@ def cadastrar_categoria():
 
 @epi.route("/categorias/editar/<int:id>", methods=["GET", "POST"])
 @login_required
-def editar_categoria(id):
+@update_perm
+def editar_categoria(id) -> Response | str:
     """
     Edit an existing category based on the provided ID.
     This function handles both GET and POST requests. On a GET request, it populates
@@ -126,7 +131,8 @@ def editar_categoria(id):
 
 @epi.route("/categorias/deletar/<int:id>", methods=["POST"])
 @login_required
-def deletar_categoria(id: int):
+@delete_perm
+def deletar_categoria(id: int) -> str:
     """
     Deletes a category from the database based on the provided ID.
     Args:

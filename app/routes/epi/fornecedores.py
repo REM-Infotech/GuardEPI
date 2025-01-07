@@ -4,6 +4,7 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from werkzeug.wrappers.response import Response
 
 from app.forms import FornecedoresForm
 from app.models import Fornecedores
@@ -15,7 +16,7 @@ from . import epi
 @epi.route("/fornecedores", methods=["GET"])
 @login_required
 @read_perm
-def fornecedores():
+def fornecedores() -> str:
     """
     Renders the 'fornecedores' page with an empty database.
     This function sets the 'page' variable to "fornecedores.html" and initializes
@@ -35,7 +36,7 @@ def fornecedores():
 @epi.route("/fornecedores/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_fornecedores():
+def cadastrar_fornecedores() -> Response | str:
     """
     Handles the registration of suppliers.
     This function processes the form submission for registering new suppliers.
@@ -84,7 +85,7 @@ def cadastrar_fornecedores():
 @epi.route("/fornecedores/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_fornecedores(id: int):
+def editar_fornecedores(id: int) -> Response | str:
     """
     Edit a supplier's information in the database.
     This function handles the editing of supplier information based on the provided supplier ID.
@@ -134,7 +135,7 @@ def editar_fornecedores(id: int):
 @epi.route("/fornecedores/deletar/<int:id>", methods=["POST"])
 @login_required
 @delete_perm
-def deletar_fornecedores(id: int):
+def deletar_fornecedores(id: int) -> str:
     """
     Deletes a supplier from the database based on the provided ID.
     Args:

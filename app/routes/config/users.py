@@ -11,8 +11,11 @@ from flask import (
     url_for,
     make_response,
 )
+from flask.wrappers import Response
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+
+from app.decorators import create_perm
 
 from ...forms import AdmChangeEmail, AdmChangePassWord, FormUser
 from ...models import Users
@@ -21,7 +24,7 @@ from . import config
 
 @config.get("/users")
 @login_required
-def users():
+def users() -> Response:
     try:
 
         database = Users.query.order_by(Users.login_time.desc()).all()
@@ -37,8 +40,8 @@ def users():
 
 @config.route("/cadastro_usuario", methods=["GET", "POST"])
 @login_required
-# @create_perm
-def cadastro_usuario():
+@create_perm
+def cadastro_usuario() -> str | Response | None:
     form = FormUser()
     if request.method == "GET" and request.headers.get("HX-Request") == "true":
         html = "forms/FormUser.html"

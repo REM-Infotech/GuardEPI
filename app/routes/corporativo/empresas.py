@@ -10,7 +10,9 @@ from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
+from werkzeug.wrappers.response import Response
 
+from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import EmpresaForm
 from app.models import Empresa
 
@@ -21,7 +23,8 @@ form_content = Union[str, FileStorage, int, float, datetime]
 
 @corp.route("/Empresas", methods=["GET"])
 @login_required
-def Empresas():
+@read_perm
+def Empresas() -> str:
     """
     Handles the route for displaying the 'Empresas' page.
     This function creates an instance of the EmpresaForm form and retrieves all records from the Empresa database.
@@ -49,7 +52,8 @@ def Empresas():
 
 @corp.route("/Empresas/cadastro", methods=["GET", "POST"])
 @login_required
-def cadastro_empresas():
+@create_perm
+def cadastro_empresas() -> Response | str:
     """
     Handles the registration of companies.
     This function processes the form data submitted for company registration,
@@ -116,7 +120,8 @@ def cadastro_empresas():
 
 @corp.route("/Empresas/editar/<int:id>", methods=["GET", "POST"])
 @login_required
-def editar_empresas(id: int):
+@update_perm
+def editar_empresas(id: int) -> Response | str:
     """
     Edit an existing company record in the database.
     This function handles both GET and POST requests to edit a company's details.
@@ -227,7 +232,8 @@ def editar_empresas(id: int):
 
 @corp.route("/Empresas/deletar/<int:id>")
 @login_required
-def deletar_empresas(id: int):
+@delete_perm
+def deletar_empresas(id: int) -> str:
     """
     Deletes a company record from the database based on the provided ID.
     Args:

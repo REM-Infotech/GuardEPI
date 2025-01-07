@@ -4,7 +4,9 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from werkzeug.wrappers.response import Response
 
+from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import FormDepartamentos
 from app.models import Departamento
 
@@ -13,7 +15,8 @@ from . import corp
 
 @corp.route("/Departamentos")
 @login_required
-def Departamentos():
+@read_perm
+def Departamentos() -> str:
     """
     Handles the route for displaying the departments page.
     This function queries all departments from the database and renders the
@@ -44,7 +47,8 @@ def Departamentos():
 
 @corp.route("/Departamentos/cadastrar", methods=["GET", "POST"])
 @login_required
-def cadastrar_departamentos():
+@create_perm
+def cadastrar_departamentos() -> Response | str:
     """
     Handles the creation and registration of new departments.
     This function processes a form submission for creating new departments.
@@ -91,7 +95,8 @@ def cadastrar_departamentos():
 
 @corp.route("/Departamentos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
-def editar_departamentos(id):
+@update_perm
+def editar_departamentos(id) -> Response | str:
     """
     Edit a department by its ID.
     This function handles the editing of a department's details. It retrieves the department
@@ -139,7 +144,8 @@ def editar_departamentos(id):
 
 @corp.route("/Departamentoss/deletar/<int:id>", methods=["POST"])
 @login_required
-def deletar_departamentos(id: int):
+@delete_perm
+def deletar_departamentos(id: int) -> str:
     """
     Deletes a department from the database based on the provided ID.
     Args:

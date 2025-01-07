@@ -10,8 +10,10 @@ from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
+from werkzeug.wrappers.response import Response
 
 # pragma: no cover
+from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import FormProduto
 from app.misc import format_currency_brl
 from app.models import ProdutoEPI
@@ -23,7 +25,8 @@ form_content = Union[str, FileStorage, int, float, datetime]
 
 @epi.route("/equipamentos")
 @login_required
-def Equipamentos():
+@read_perm
+def Equipamentos() -> str:
     """
     Renders the 'equipamentos' page with the necessary context.
     This function retrieves all entries from the ProdutoEPI database, constructs
@@ -48,7 +51,8 @@ def Equipamentos():
 
 @epi.route("/equipamentos/cadastro", methods=["GET", "POST"])
 @login_required
-def cadastro_equipamento():
+@create_perm
+def cadastro_equipamento() -> Response | str:
     """
     Handles the registration of new EPI (Personal Protective Equipment).
     This function processes the form data submitted for registering a new EPI.
@@ -107,7 +111,8 @@ def cadastro_equipamento():
 
 @epi.route("/equipamentos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
-def editar_equipamento(id: int):
+@update_perm
+def editar_equipamento(id: int) -> Response | str:
     """
     Edit an existing EPI (Equipamento de Proteção Individual) record in the database.
     This function handles both GET and POST requests. On a GET request, it retrieves the EPI data from the database,
@@ -219,7 +224,8 @@ def editar_equipamento(id: int):
 
 @epi.route("/equipamentos/deletar/<int:id>")
 @login_required
-def deletar_equipamento(id: int):
+@delete_perm
+def deletar_equipamento(id: int) -> str:
     """
     Deletes an equipment record from the database based on the provided ID.
     Args:

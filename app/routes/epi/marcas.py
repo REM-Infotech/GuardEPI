@@ -4,17 +4,19 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from werkzeug.wrappers.response import Response
 
 from app.forms import FormMarcas
 from app.models import Marcas
 
-from ...decorators import create_perm, delete_perm, update_perm
+from ...decorators import create_perm, delete_perm, read_perm, update_perm
 from . import epi
 
 
 @epi.route("/marcas", methods=["GET"])
 @login_required
-def marcas():
+@read_perm
+def marcas() -> str:
     """
     Fetches all records from the Marcas table and renders the 'index.html' template with the 'marcas.html' page and the retrieved database records.
     Returns:
@@ -30,7 +32,7 @@ def marcas():
 @epi.route("/marca/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_marca():
+def cadastrar_marca() -> Response | str:
     """
     Handles the registration of a new brand (marca).
     This function processes the form submission for registering a new brand.
@@ -80,7 +82,7 @@ def cadastrar_marca():
 @epi.route("/marca/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_marca(id):
+def editar_marca(id) -> Response | str:
     """
     Edit a brand (marca) based on the given ID.
     This function handles the editing of a brand by retrieving the brand's
@@ -132,7 +134,7 @@ def editar_marca(id):
 @epi.route("/marcas/deletar/<int:id>", methods=["POST"])
 @login_required
 @delete_perm
-def deletar_marca(id: int):
+def deletar_marca(id: int) -> str:
     """
     Deletes a brand entry from the database based on the provided ID.
     Args:

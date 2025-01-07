@@ -10,7 +10,9 @@ from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
+from werkzeug.wrappers.response import Response
 
+from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import FuncionarioForm
 from app.models import Funcionarios
 
@@ -21,7 +23,8 @@ form_content = Union[str, FileStorage, int, float, datetime]
 
 @corp.get("/funcionarios")
 @login_required
-def funcionarios():
+@read_perm
+def funcionarios() -> str:
     """
     Fetches all records from the Funcionarios table and renders the 'index.html' template with the data.
     This function queries all records from the Funcionarios table in the database and passes the data to the
@@ -48,7 +51,8 @@ def funcionarios():
 
 @corp.route("/funcionarios/cadastro", methods=["GET", "POST"])
 @login_required
-def cadastro_funcionarios():
+@create_perm
+def cadastro_funcionarios() -> Response | str:
     """
     Handles the registration of employees.
     This function processes the form data submitted for employee registration,
@@ -111,7 +115,8 @@ def cadastro_funcionarios():
 
 @corp.route("/funcionarios/editar/<int:id>", methods=["GET", "POST"])
 @login_required
-def editar_funcionarios(id: int):
+@update_perm
+def editar_funcionarios(id: int) -> Response | str:
     """
     Edit an employee's information based on the given ID.
     This function handles both GET and POST requests. On a GET request, it retrieves the employee's data from the database,
@@ -218,7 +223,8 @@ def editar_funcionarios(id: int):
 
 @corp.route("/funcionarios/deletar/<int:id>")
 @login_required
-def deletar_funcionarios(id: int):
+@delete_perm
+def deletar_funcionarios(id: int) -> str:
     """
     Deletes an employee record from the database based on the provided ID.
     Args:

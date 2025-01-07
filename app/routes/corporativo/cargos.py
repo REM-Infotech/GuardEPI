@@ -4,7 +4,9 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from werkzeug.wrappers.response import Response
 
+from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import CargoForm
 from app.models import Cargos
 
@@ -13,7 +15,8 @@ from . import corp
 
 @corp.route("/cargos")
 @login_required
-def cargos():
+@read_perm
+def cargos() -> str:
     """
     Route to display the cargos page.
     This route is protected by login and will render the cargos page with data
@@ -38,7 +41,8 @@ def cargos():
 
 @corp.route("/cargos/cadastrar", methods=["GET", "POST"])
 @login_required
-def cadastrar_cargos():
+@create_perm
+def cadastrar_cargos() -> Response | str:
     """
     Handles the creation and registration of new 'Cargos' (positions) in the system.
     This function processes a form submission for creating a new 'Cargo'. It validates the form,
@@ -88,7 +92,8 @@ def cadastrar_cargos():
 
 @corp.route("/cargos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
-def editar_cargos(id):
+@update_perm
+def editar_cargos(id) -> Response | str:
     """
     Edits an existing position in the database.
     Args:
@@ -139,7 +144,8 @@ def editar_cargos(id):
 
 @corp.route("/cargos/deletar/<int:id>", methods=["POST"])
 @login_required
-def deletar_cargos(id: int):
+@delete_perm
+def deletar_cargos(id: int) -> str:
     """
     Deletes a cargo record from the database based on the provided ID.
     Args:

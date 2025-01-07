@@ -4,17 +4,19 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from flask.wrappers import Response
 
 from app.forms import FormModelos
 from app.models import ModelosEPI
 
-from ...decorators import create_perm, delete_perm, update_perm
+from ...decorators import create_perm, delete_perm, read_perm, update_perm
 from . import epi
 
 
 @epi.route("/modelos", methods=["GET"])
 @login_required
-def modelos():
+@read_perm
+def modelos() -> str:
     """
     Fetches all records from the ModelosEPI database and renders the 'index.html' template with the 'modelos.html' page and the database records.
     Returns:
@@ -30,7 +32,7 @@ def modelos():
 @epi.route("/modelos/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_modelos():
+def cadastrar_modelos() -> Response | str:
     """
     Handles the registration of new "modelos" (models) in the application.
     This function processes the form submission for registering new models.
@@ -79,7 +81,7 @@ def cadastrar_modelos():
 @epi.route("/modelos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_modelos(id: int):
+def editar_modelos(id: int) -> Response | str:
     """
     Edit an existing 'ModelosEPI' entry in the database.
     This function handles the editing of a 'ModelosEPI' entry identified by the given ID.
@@ -130,7 +132,7 @@ def editar_modelos(id: int):
 @epi.route("/modeloss/deletar/<int:id>", methods=["POST"])
 @login_required
 @delete_perm
-def deletar_modelos(id: int):
+def deletar_modelos(id: int) -> str:
     """
     Deletes a ModelosEPI record from the database based on the provided ID.
     Args:

@@ -1,8 +1,11 @@
 from flask import abort
 from flask import current_app as app
 from flask import flash, redirect, render_template, make_response
+from flask.wrappers import Response
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+
+from app.decorators import create_perm, read_perm
 
 from ...forms import GroupForm
 from ...models import Groups, Users
@@ -11,7 +14,8 @@ from . import config
 
 @config.route("/groups", methods=["GET"])
 @login_required
-def groups():
+@read_perm
+def groups() -> Response:
     try:
 
         title = "Grupos"
@@ -28,7 +32,8 @@ def groups():
 
 @config.route("/cadastro_grupo", methods=["GET", "POST"])
 @login_required
-def cadastro_grupo():
+@create_perm
+def cadastro_grupo() -> str | Response:
     """
     Handles the creation of a new group.
     Renders a form for creating a new group and processes the form submission.
@@ -76,7 +81,7 @@ def cadastro_grupo():
 
 @config.route("/editar_grupo/<int:id>", methods=["GET", "POST"])
 @login_required
-def editar_grupo(id: int):
+def editar_grupo(id: int) -> Response | str:
     """
     Handles the creation of a new group.
     Renders a form for creating a new group and processes the form submission.

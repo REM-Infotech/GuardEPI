@@ -4,9 +4,11 @@ from uuid import uuid4
 from flask import abort
 from flask import current_app as app
 from flask import render_template, request, send_from_directory, session, url_for
+from flask.wrappers import Response
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
+from app.decorators import read_perm
 from app.misc import format_currency_brl
 from app.models import RegistroSaidas, RegistrosEPI
 
@@ -15,7 +17,8 @@ from .. import estoque_bp
 
 @estoque_bp.route("/registro_saidas", methods=["GET"])
 @login_required
-def registro_saidas():
+@read_perm
+def registro_saidas() -> str:
 
     page = "registro_saidas.html"
     database = RegistroSaidas.query.all()
@@ -32,7 +35,8 @@ def registro_saidas():
 
 @estoque_bp.route("/cautelas", methods=["GET"])
 @login_required
-def cautelas(to_show: str = None):
+@read_perm
+def cautelas(to_show: str = None) -> str:
 
     url = None
     to_show = request.args.get("to_show", to_show)
@@ -55,7 +59,8 @@ def cautelas(to_show: str = None):
 
 
 @estoque_bp.get("/cautela_pdf/<uuid_pasta>")
-def cautela_pdf(uuid_pasta: str):
+@read_perm
+def cautela_pdf(uuid_pasta: str) -> Response:
     """
     Route to serve an image file.
     This route handles GET requests to serve an image file from a specified directory.
