@@ -3,11 +3,11 @@
     <div class="card-header">
       <h2 class="m-2 p-1">{{ title }}</h2>
       <hr>
-      <a href="{{ url_for('config.cadastro_grupo') }}" class="btn btn-success me-2 btn-icon-split">
+      <a href="{{ url_for('config.cadastro_regra') }}" class="btn btn-success me-2 btn-icon-split">
         <span class="icon text-white-50">
           <i class="fa-solid fa-plus"></i>
         </span>
-        <span class="text">Adicionar Grupo</span>
+        <span class="text">Criar Regra</span>
       </a>
       <a href="{{ url_for('index.gerar_relatorio') }}" class="btn btn-primary me-2 btn-icon-split">
         <span class="icon text-white-50">
@@ -22,7 +22,7 @@
           <tr>
             <th>#</th>
             <th>Nome</th>
-            <th>Membros</th>
+            <th>Grupos</th>
             <th>Descrição</th>
             <th data-sortable="false">Ações</th>
           </tr>
@@ -32,8 +32,8 @@
           {% for item in database %}
           <tr>
             <td>{{ item.id }}</td>
-            <td>{{ item.name_group }}</td>
-            <td>{{ item.members | map(attribute='nome_usuario') | join(' - ') }}</td>
+            <td>{{ item.name_role }}</td>
+            <td>{{ item.groups | map(attribute='name_group') | join(' - ') }}</td>
             {% set desc = item.description %}
             {% if not desc %}
             {% set desc = "Sem Descrição" %}

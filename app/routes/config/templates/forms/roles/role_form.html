@@ -1,0 +1,75 @@
+<div class="container px-4">
+  <div class="mt-4 card mb-4">
+    <div class="card-header">
+      <h2 class="m-2 p-1">{{ title }}</h2>
+      <hr>
+    </div>
+    <div class="card-body table-responsive">
+      <form id="cautela-form" method="post">
+        {{ form.hidden_tag() }}
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="m-3 border border-black p-2 border-2 rounded border-opacity-25">
+              <div class="form-group m-3">
+                {{ form.funcionario.label(for="funcionario", class="form-label") }}
+                {{ form.funcionario(class="form-control", id="funcionario") }}
+              </div>
+              <hr>
+              <div class="form-group m-3">
+                {{ form.nome_epi.label(for="selectNomeEpi", class="form-label") }}
+                {{ form.nome_epi(**{"hx-post": url_for("estoque.get_grade"), "hx-target": "#gradeContainer",
+                          "hx-trigger": "change", "id":"selectNomeEpi", "class":"form-control", "onchange": "showhideLoad()" }) }}
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="m-3 border border-black p-2 border-2 rounded border-opacity-25" id="gradeContainer">
+
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="m-3 border border-black p-2 border-2 rounded border-opacity-25" id="gradeContainer">
+              <table class="table table-striped" id="CautelasTable">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Produto</th>
+                    <th>Grade</th>
+                    <th>Quantidade</th>
+                  </tr>
+                </thead>
+                <tbody id="entregas-table">
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+          <div class="col-12 m-1">
+            <hr>
+            <button type="button" id="addEpiButton" class="btn btn-icon-split btn-success"
+              hx-post="{{ url_for('estoque.add_itens') }}" hx-trigger="click" hx-target="#entregas-table"
+              onclick=showhideLoad()>
+              <span class="icon text-white-50">
+                <i class="fa-solid fa-plus"></i>
+              </span>
+              <span class="text">Adicionar Item</span>
+            </button>
+
+            <button type="button" id="addEpiButton" class="btn btn-icon-split btn-danger"
+              hx-post="{{ url_for('estoque.remove_itens') }}" hx-trigger="click" hx-target="#entregas-table"
+              onclick=showhideLoad()>
+              <span class="icon text-white-50">
+                <i class="fa-solid fa-trash"></i>
+              </span>
+              <span class="text">Limpar Lista</span>
+            </button>
+            <hr>
+          </div>
+        </div>
+        <div class="card-footer d-grid gap-2">
+          {{ form.submit_cautela(class = "btn btn btn-success btn-login text-uppercase fw-bold") }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

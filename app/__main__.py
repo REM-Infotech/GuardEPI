@@ -11,4 +11,4 @@ celery_app = flask_app.extensions["celery"]
 flask_app.app_context().push()
 
 if __name__ == "__main__":
-    server(listen(("localhost", 5002)), flask_app, log=flask_app.logger)
+    server(listen(("localhost", 5007)), flask_app, log=flask_app.logger)
