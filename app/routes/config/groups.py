@@ -1,6 +1,6 @@
 from flask import abort
 from flask import current_app as app
-from flask import flash, redirect, render_template
+from flask import flash, redirect, render_template, make_response
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
@@ -18,7 +18,9 @@ def groups():
         database = Groups.query.all()
         page = "groups.html"
 
-        return render_template("index.html", title=title, database=database, page=page)
+        return make_response(
+            render_template("index.html", title=title, database=database, page=page)
+        )
 
     except Exception as e:
         abort(500, description=str(e))

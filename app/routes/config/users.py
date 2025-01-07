@@ -2,7 +2,15 @@ import json
 
 from flask import abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, session, url_for
+from flask import (
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+    make_response,
+)
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
@@ -17,12 +25,10 @@ def users():
     try:
 
         database = Users.query.order_by(Users.login_time.desc()).all()
-
+        title = "Usuários"
         page = "users.html"
-        return render_template(
-            "index.html",
-            page=page,
-            database=database,
+        return make_response(
+            render_template("index.html", title=title, database=database, page=page)
         )
 
     except Exception as e:

@@ -1,0 +1,92 @@
+<div class="container px-4">
+  <div class="mt-4 card mb-4">
+    <div class="card-header">
+      <h2 class="m-2 p-1">{{ title }}</h2>
+      <hr>
+    </div>
+    <div class="card-body table-responsive">
+      <form id="cautela-form" method="post">
+        {{ form.hidden_tag() }}
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="form-floating mb-3">
+              {{ form.name_rule(type="text", class="form-control", placeholder="") }}
+              {{ form.name_rule.label(for=form.name_rule.id) }}
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-floating mb-3">
+              {{ form.desc(class="form-control", placeholder="") }}
+              {{ form.desc.label(for=form.desc.id) }}
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="mb-3 border border-black p-2 border-2 rounded border-opacity-25">
+              {{ form.grupos.label(class="form-label") }}
+              {{ form.grupos(class="form-control", placeholder="") }}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3 border border-black p-2 border-2 rounded border-opacity-25">
+              {{ form.rota.label(class="form-label") }}
+              {{ form.rota(class="form-control", placeholder="") }}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3 border border-black p-2 border-2 rounded border-opacity-25">
+              {{ form.permissoes.label(class="form-label") }}
+              {{ form.permissoes(class="form-control", placeholder="") }}
+            </div>
+          </div>
+          <div class="col-12 m-1">
+            <hr>
+            <button type="button" id="addEpiButton" class="btn btn-icon-split btn-success"
+              hx-post="{{ url_for('config.add_itens') }}" hx-trigger="click" hx-target="#entregas-table"
+              onclick=showhideLoad()>
+              <span class="icon text-white-50">
+                <i class="fa-solid fa-plus"></i>
+              </span>
+              <span class="text">Adicionar Item</span>
+            </button>
+
+            <button type="button" id="addEpiButton" class="btn btn-icon-split btn-danger"
+              hx-post="{{ url_for('config.remove_itens') }}" hx-trigger="click" hx-target="#entregas-table"
+              onclick=showhideLoad()>
+              <span class="icon text-white-50">
+                <i class="fa-solid fa-trash"></i>
+              </span>
+              <span class="text">Limpar Lista</span>
+            </button>
+            <hr>
+          </div>
+          <div class="col-12">
+            <div class="m-3 border border-black p-2 border-2 rounded border-opacity-25" id="gradeContainer">
+              <table class="table table-striped" id="DataTable">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>ROTA</th>
+                    <th>REGRAS</th>
+                  </tr>
+                </thead>
+                <tbody id="entregas-table">
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th>#</th>
+                    <th>ROTA</th>
+                    <th>REGRAS</th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+          </div>
+        </div>
+        <div class="card-footer d-grid gap-2">
+          {{ form.submit(class="btn btn btn-success btn-login text-uppercase fw-bold") }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

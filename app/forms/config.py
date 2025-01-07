@@ -20,24 +20,10 @@ file_allowed = FileAllowed(["jpg", "png", "jpeg"], "Images only!")
 
 
 endpoints = [
-    ("Equipamentos", "Equipamentos"),
-    ("Grade", "Grades"),
-    ("Fornecedores", "Fornecedores"),
-    ("Marcas", "Marcas"),
-    ("Modelos", "Modelos"),
-    ("Classes", "Classes"),
-    ("Estoque", "Estoque Geral"),
-    ("Estoque_Grade", "Estoque por Grade"),
-    ("Entradas", "Registro Entradas"),
-    ("Registro_Saidas", "Registro Saídas"),
-    ("Cautelas", "Cautelas"),
-    ("funcionarios", "Funcionarios"),
-    ("Empresas", "Empresas"),
-    ("cargo.cargos", "cargo.cargos"),
-    ("Departamentos", "Departamentos"),
-    ("users", "Usuários"),
-    ("groups", "Grupos"),
-    ("Permissoes", "Permissoes"),
+    ("/epi", "EPI"),
+    ("/config", "Configurações"),
+    ("/corp", "Corporativo"),
+    ("/estoque", "Estoque"),
 ]
 
 perms = [
@@ -93,6 +79,7 @@ class FormRoles(FlaskForm):
     grupos = SelectMultipleField("Selecione os Grupos", choices=[])
     rota = SelectField("Selecione a Página", choices=endpoints)
     permissoes = SelectMultipleField("Selecione as Permissões", choices=perms)
+    desc = TextAreaField("Descrição (Opcional)")
     submit = SubmitField("Salvar Alterações")
 
     def __init__(self, *args, **kwargs):

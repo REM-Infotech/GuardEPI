@@ -1,7 +1,10 @@
 from importlib import import_module
+import json
 from pathlib import Path
+import secrets
 
-from flask import Blueprint, redirect, url_for
+from flask import Blueprint, redirect, url_for, Response, request, session
+from flask import current_app as app
 
 template_folder = Path(__file__).parent.resolve().joinpath("templates")
 config = Blueprint(
@@ -9,8 +12,39 @@ config = Blueprint(
 )
 
 
+@config.before_request
+def before_request_roles():
+    """
+    A function to be executed before handling requests to the roles configuration route.
+    This function checks if the request path does not start with "/config/roles". If it does not,
+    it ensures that a session variable "json_filename" is set. If the session variable is not set,
+    it generates a new UUID, stores it in the session, and creates a temporary directory and JSON file
+    associated with this UUID.
+    The JSON file is initialized with an empty list.
+    Side Effects:
+        - Modifies the session to include a "json_filename" key with a generated UUID.
+        - Creates a temporary directory and JSON file in the specified TEMP_PATH configuration.
+        - Writes an empty JSON array to the created JSON file.
+    """
+
+    if not request.path.startswith("/config/roles"):
+        if not session.get("json_filename", None):
+
+            hex_name_json = secrets.token_hex(16)
+            session["json_filename"] = hex_name_json
+
+            path_json = Path(app.config["TEMP_PATH"]).joinpath(hex_name_json).resolve()
+
+            path_json.mkdir(exist_ok=True)
+
+            json_file = path_json.joinpath(hex_name_json).with_suffix(".json").resolve()
+
+            with open(json_file, "w") as f:
+                f.write(json.dumps([]))
+
+
 @config.get("/")
-def redirecting():
+def redirecting() -> Response:
     """
     Redirects to the 'Equipamentos' endpoint within the 'epi' blueprint.
     Returns:
