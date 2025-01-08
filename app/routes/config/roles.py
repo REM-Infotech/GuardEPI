@@ -91,7 +91,7 @@ def roles() -> Response:
 @config.route("/cadastro_regra", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastro_regra() -> str | Response:
+def cadastro_regra() -> Response:
     """
     Handles the creation of a new group.
     Renders a form for creating a new group and processes the form submission.
@@ -175,4 +175,21 @@ def cadastro_regra() -> str | Response:
         flash("Regra criada com sucesso")
         return redirect("/config/roles")
 
-    return render_template("index.html", page=page, form=form, title=title)
+    return make_response(
+        render_template("index.html", page=page, form=form, title=title)
+    )
+
+
+@config.get("/deletar_regra/<int:id>", methods=["GET"])
+def deletar_regra(id: int) -> Response:
+
+    db: SQLAlchemy = app.extensions["sqlalchemy"]
+    query = db.session.query(Roles).filter(Roles.id == id).first()
+
+    message = f'Regra "{query.name_role}" deletada com sucesso!'
+
+    db.session.delete(query)
+    db.session.commit()
+
+    template = "includes/show.html"
+    return make_response(render_template(template, message=message))

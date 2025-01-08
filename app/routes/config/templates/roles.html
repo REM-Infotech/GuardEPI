@@ -40,12 +40,12 @@
             {% endif %}
             <td>{{ desc }}</td>
             <td>
-              <a href="{{ url_for('config.editar_grupo', id = item.id) }}"
+              <a href="{{ url_for('config.deletar_regra', id = item.id) }}"
                 class="btn btn-secondary btn-icon-split btn-sm m-1" onclick="showLoad()">
                 <span class="icon text-white-50">
-                  <i class="fa-solid fa-pen"></i>
+                  <i class="fa-solid fa-trash"></i>
                 </span>
-                <span class="text">Editar</span>
+                <span class="text">Deletar</span>
               </a>
             </td>
           </tr>
