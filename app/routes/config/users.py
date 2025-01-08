@@ -11,9 +11,9 @@ from flask import (
     url_for,
     make_response,
 )
-from flask.wrappers import Response
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.wrappers.response import Response
 
 from app.decorators import create_perm
 
@@ -80,7 +80,7 @@ def cadastro_usuario() -> str | Response | None:
 @config.route("/changepw_usr", methods=["GET", "POST"])
 @login_required
 # @update_perm
-def changepw_usr():
+def changepw_usr() -> Response | str:
     try:
         form = AdmChangePassWord()
 
@@ -110,7 +110,7 @@ def changepw_usr():
 @config.route("/changemail_usr", methods=["GET", "POST"])
 @login_required
 # @update_perm
-def changemail_usr():
+def changemail_usr() -> Response | str:
     try:
         form = AdmChangeEmail()
 
@@ -140,7 +140,7 @@ def changemail_usr():
 @config.route("/delete_user/<usuario>", methods=["GET"])
 @login_required
 # @delete_perm
-def delete_user(usuario: str):
+def delete_user(usuario: str) -> str:
     try:
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]

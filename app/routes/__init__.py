@@ -1,5 +1,7 @@
+from typing import Any, Literal
 from deep_translator import GoogleTranslator
 from flask import Flask, redirect, render_template, url_for
+from werkzeug import Response
 from werkzeug.exceptions import HTTPException
 
 from .auth import auth
@@ -11,7 +13,7 @@ from .index import index as ind
 from .serving import serve
 
 
-def register_routes(app: Flask):
+def register_routes(app: Flask) -> None:
     """
     Register routes and error handlers for the Flask application.
     This function registers blueprints and error handlers, and defines routes for terms of use and privacy policy PDFs.
@@ -39,7 +41,7 @@ def register_routes(app: Flask):
         app.register_blueprint(blueprint)
 
     @app.errorhandler(HTTPException)
-    def handle_http_exception(error):
+    def handle_http_exception(error) -> Response | tuple[str, Any | Literal[500]]:
         """
         Handles HTTP exceptions by translating the error name to Portuguese and rendering an error template.
         Args:

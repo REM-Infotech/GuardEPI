@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 import pytz
-from flask import Blueprint, abort, jsonify, make_response, render_template
+from flask import Blueprint, Response, abort, jsonify, make_response, render_template
 from flask_login import login_required
 from sqlalchemy import extract
 
@@ -16,7 +16,7 @@ dash = Blueprint("dash", __name__, template_folder=template_folder)
 
 @dash.route("/dashboard", methods=["GET"])
 @login_required
-def dashboard():
+def dashboard() -> Response:
     """
     Renders the dashboard page with various statistics and data for the current month.
     This function retrieves data from the database for the current month, including
@@ -90,7 +90,7 @@ def dashboard():
 
 @dash.route("/saidasEquipamento", methods=["GET"])
 @login_required
-def saidasEquipamento():
+def saidasEquipamento() -> Response:
     """
     Retrieves equipment output data for the current month and returns it in JSON format.
     This function queries the database for equipment output records for the current month,
@@ -143,7 +143,7 @@ def saidasEquipamento():
 
 @dash.route("/saidasFuncionario", methods=["GET"])
 @login_required
-def saidasFuncionario():
+def saidasFuncionario() -> Response:
     """
     Retrieves and processes employee data for the current month to generate chart data.
     This function queries the database for records of employee deliveries (RegistrosEPI)

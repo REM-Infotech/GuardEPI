@@ -19,6 +19,7 @@ from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import LargeBinary
 from werkzeug.utils import secure_filename
+from werkzeug.wrappers.response import Response
 
 from app.forms import ImporteLotesForm
 from app.misc import get_models
@@ -27,7 +28,7 @@ index = Blueprint("index", __name__)
 
 
 @index.route("/termos_uso", methods=["GET"])
-def termos_uso():
+def termos_uso() -> Response:
     """
     Rota para servir o arquivo "Termos de Uso.pdf".
 
@@ -56,7 +57,7 @@ def termos_uso():
 
 
 @index.route("/politica_privacidade", methods=["GET"])
-def politica_privacidade():
+def politica_privacidade() -> Response:
     """
     Rota para servir o arquivo de Política de Privacidade em formato PDF.
 
@@ -85,7 +86,7 @@ def politica_privacidade():
 
 @index.route("/gerar_relatorio")
 @login_required
-def gerar_relatorio():
+def gerar_relatorio() -> Response | Response:
 
     try:
 
@@ -165,7 +166,7 @@ def gerar_relatorio():
 
 @index.route("/import_lotes/<tipo>", methods=["GET", "POST"])
 @login_required
-def import_lotes(tipo: str = None):
+def import_lotes(tipo: str = None) -> Response | str:
     try:
 
         action = request.path
@@ -231,7 +232,7 @@ def import_lotes(tipo: str = None):
 
 @index.route("/gen_model/<model>", methods=["GET"])
 @login_required
-def gen_model(model: str):
+def gen_model(model: str) -> Response:
 
     try:
         database_model = get_models(model.lower())

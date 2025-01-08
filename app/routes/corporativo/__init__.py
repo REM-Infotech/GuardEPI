@@ -2,6 +2,7 @@ from importlib import import_module
 from pathlib import Path
 
 from flask import Blueprint, redirect, url_for
+from werkzeug import Response
 
 template_folder = Path(__file__).parent.resolve().joinpath("templates")
 corp = Blueprint(
@@ -10,14 +11,14 @@ corp = Blueprint(
 
 
 @corp.get("/")
-def redirecting():
+def redirecting() -> Response:
 
     return redirect(url_for("corp.Empresas"))
 
 
 if corp is not None:
 
-    def corp_bp():
+    def corp_bp() -> None:
         """
         Initialize the corporate blueprint by importing necessary modules.
 

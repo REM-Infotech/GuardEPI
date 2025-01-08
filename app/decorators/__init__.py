@@ -8,7 +8,7 @@ from typing import Any, Callable
 
 def create_perm(func) -> _Wrapped[Callable[..., Any], Any, Callable[..., Any], Any]:
     @wraps(func)
-    def decorated_function(*args, **kwargs):
+    def decorated_function(*args, **kwargs) -> Any:
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "CREATE") is False:
@@ -21,7 +21,7 @@ def create_perm(func) -> _Wrapped[Callable[..., Any], Any, Callable[..., Any], A
 
 def read_perm(func) -> _Wrapped[Callable[..., Any], Any, Callable[..., Any], Any]:
     @wraps(func)
-    def decorated_function(*args, **kwargs):
+    def decorated_function(*args, **kwargs) -> Any:
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "READ") is False:
@@ -34,7 +34,7 @@ def read_perm(func) -> _Wrapped[Callable[..., Any], Any, Callable[..., Any], Any
 
 def update_perm(func) -> _Wrapped[Callable[..., Any], Any, Callable[..., Any], Any]:
     @wraps(func)
-    def decorated_function(*args, **kwargs):
+    def decorated_function(*args, **kwargs) -> Any:
         group_usr = session.get("groups_usr", None)
         if group_usr:
             if check_permit(group_usr, "UPDATE") is False:

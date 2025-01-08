@@ -13,7 +13,7 @@ config = Blueprint(
 
 
 @config.before_request
-def before_request_roles():
+def before_request_roles() -> None:
     """
     A function to be executed before handling requests to the roles configuration route.
     This function checks if the request path does not start with "/config/roles". If it does not,

@@ -17,7 +17,7 @@ from . import config
 @config.route("/add_itens", methods=["GET", "POST"])
 @login_required
 @read_perm
-def add_itens():
+def add_itens() -> str:
 
     try:
 
@@ -57,7 +57,7 @@ def add_itens():
 @config.route("/remove-itens", methods=["GET", "POST"])
 @login_required
 @read_perm
-def remove_itens():
+def remove_itens() -> str:
 
     hex_name_json = session["json_filename"]
     path_json = Path(app.config["TEMP_PATH"]).joinpath(hex_name_json).resolve()
