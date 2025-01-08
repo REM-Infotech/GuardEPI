@@ -15,7 +15,7 @@ flask_app.app_context().push()
 
 if __name__ == "__main__":
 
-    def get_random_port():
+    def get_random_port() -> int:
         return secrets.randbelow(65535 - 1024) + 1024
 
     port = int(dotenv_values(".env").get("PORT", get_random_port()))

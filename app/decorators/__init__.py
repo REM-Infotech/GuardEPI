@@ -1,7 +1,12 @@
 from functools import wraps
 
-from flask import abort, session
+from flask import current_app as app
+from flask import abort, redirect, session, url_for, request
 from typing import Any
+
+from flask_sqlalchemy import SQLAlchemy
+
+from ..models import Users
 
 # from app.models import Permissions
 
@@ -9,10 +14,13 @@ from typing import Any
 def create_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs) -> Any:
-        group_usr = session.get("groups_usr", None)
-        if group_usr:
-            if check_permit(group_usr, "CREATE") is False:
+        user = session.get("username")
+        if user:
+            if check_permit(user, "CREATE") is False:
                 abort(403)
+
+        elif not user:
+            return redirect(url_for("auth.login"))
 
         return func(*args, **kwargs)
 
@@ -22,10 +30,13 @@ def create_perm(func):
 def read_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs) -> Any:
-        group_usr = session.get("groups_usr", None)
-        if group_usr:
-            if check_permit(group_usr, "READ") is False:
+        user = session.get("username")
+        if user:
+            if check_permit(user, "READ") is False:
                 abort(403)
+
+        elif not user:
+            return redirect(url_for("auth.login"))
 
         return func(*args, **kwargs)
 
@@ -35,10 +46,13 @@ def read_perm(func):
 def update_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs) -> Any:
-        group_usr = session.get("groups_usr", None)
-        if group_usr:
-            if check_permit(group_usr, "UPDATE") is False:
+        user = session.get("username")
+        if user:
+            if check_permit(user, "UPDATE") is False:
                 abort(403)
+
+        elif not user:
+            return redirect(url_for("auth.login"))
 
         return func(*args, **kwargs)
 
@@ -48,10 +62,13 @@ def update_perm(func):
 def delete_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
-        group_usr = session.get("groups_usr", None)
-        if group_usr:
-            if check_permit(group_usr, "DELETE") is False:
+        user = session.get("username")
+        if user:
+            if check_permit(user, "DELETE") is False:
                 abort(403)
+
+        elif not user:
+            return redirect(url_for("auth.login"))
 
         return func(*args, **kwargs)
 
@@ -59,28 +76,26 @@ def delete_perm(func):
 
 
 def check_permit(groups_usr: list, PERM: str) -> bool:
-    return True
 
+    db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-#     if session.get("username") == "root":
-#         return True
+    endpoint = f"/{request.blueprint}"
 
-#     end = session.get("endpoint", None)
+    user = db.session.query(Users).filter(Users.login == groups_usr).first()
 
-#     if not end:
-#         return redirect(url_for("dash.dashboard"))
+    for grupo in user.group:
+        for rule in grupo.role:
 
-#     for grp in groups_usr:
-#         rules = Permissions.query.all()
+            end = rule.routes
 
-#         for rule in rules:
-#             if any(
-#                 grp == grupo_membro for grupo_membro in json.loads(rule.groups_members)
-#             ):
-#                 perms = json.loads(rule.perms)
-#                 for rota in perms:
-#                     grant = perms[rota]
-#                     if any(PERM == perms and rota == end for perms in grant):
-#                         return True
+            for route in end:
 
-#     return False
+                if route.endpoint != endpoint:
+                    continue
+
+                route = route[0]
+                permit = getattr(route, PERM) is True
+
+                return permit
+
+    return False

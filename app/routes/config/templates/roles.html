@@ -40,13 +40,13 @@
             {% endif %}
             <td>{{ desc }}</td>
             <td>
-              <a href="{{ url_for('config.deletar_regra', id = item.id) }}"
-                class="btn btn-secondary btn-icon-split btn-sm m-1" onclick="showLoad()">
+              <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-icon-split btn-sm m-1"
+                hx-post="{{ url_for('config.deletar_regra', id = item.id) }}" hx-trigger="click" hx-target="#results">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-trash"></i>
                 </span>
                 <span class="text">Deletar</span>
-              </a>
+              </button>
             </td>
           </tr>
           {% endfor %}

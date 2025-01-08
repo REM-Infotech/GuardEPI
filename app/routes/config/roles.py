@@ -146,9 +146,9 @@ def cadastro_regra() -> Response:
 
         keys_routes.pop("id")
         keys_routes.pop("roles")
-        keys_routes.pop("role_id")
 
-        [keys_routes.pop(x) for x in ["CREATE", "READ", "UPDATE", "DELETE"]]
+        list_r = ["CREATE", "READ", "UPDATE", "DELETE"]
+        [keys_routes.pop(x) for x in list_roles]
 
         for item in list_roles:
             to_add = keys_routes
@@ -160,10 +160,15 @@ def cadastro_regra() -> Response:
 
                 if key == "REGRAS":
 
-                    for rule in value.split(" - "):
-                        to_add.update({rule: True})
+                    for r in list_r:
 
-            routes_add.append(Routes(**to_add))
+                        to_add.update(
+                            {rule: (rule == r) for rule in value.split(" - ")}
+                        )
+
+            end_cfg = Routes(**to_add)
+            end_cfg.roles.append(new_ruleset)
+            routes_add.append(end_cfg)
 
         db.session.add(new_ruleset)
         db.session.add_all(routes_add)
@@ -180,7 +185,7 @@ def cadastro_regra() -> Response:
     )
 
 
-@config.get("/deletar_regra/<int:id>", methods=["GET"])
+@config.post("/deletar_regra/<int:id>")
 def deletar_regra(id: int) -> Response:
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]

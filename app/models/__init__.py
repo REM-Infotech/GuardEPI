@@ -51,11 +51,14 @@ def init_database(app: Flask, db: SQLAlchemy) -> str:
 
     with app.app_context():
 
-        db.create_all()
-
         to_add = []
 
         values = dotenv_values()
+
+        if values.get("clear_db", "False") in ("True", "true"):
+            db.drop_all()
+
+        db.create_all()
 
         loginsys = values.get("loginsys")
         nomeusr = values.get("nomeusr")
@@ -104,7 +107,7 @@ def init_database(app: Flask, db: SQLAlchemy) -> str:
                     route.READ = True
                     route.UPDATE = True
                     route.DELETE = True
-                    route.roles = role
+                    route.roles.append(role)
                     to_add.append(route)
 
                 to_add.append(role)

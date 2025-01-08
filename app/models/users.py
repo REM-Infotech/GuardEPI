@@ -99,13 +99,13 @@ class Routes(db.Model):
 
     __tablename__ = "routes"
     id: int = db.Column(db.Integer, primary_key=True)
-    endpoint = db.Column(db.String(length=32), nullable=False)
-    role_id = db.Column(db.Integer, db.ForeignKey("roles.id"))
-    roles = db.relationship("Roles", backref=db.backref("route_roles", lazy=True))
-    CREATE = db.Column(db.Boolean, default=False)
-    READ = db.Column(db.Boolean, default=False)
-    UPDATE = db.Column(db.Boolean, default=False)
-    DELETE = db.Column(db.Boolean, default=False)
+    endpoint: str = db.Column(db.String(length=32), nullable=False)
+    roles = db.relationship("Roles", secondary="route_roles", backref="route")
+
+    CREATE: bool = db.Column(db.Boolean, default=False)
+    READ: bool = db.Column(db.Boolean, default=False)
+    UPDATE: bool = db.Column(db.Boolean, default=False)
+    DELETE: bool = db.Column(db.Boolean, default=False)
 
 
 class Roles(db.Model):

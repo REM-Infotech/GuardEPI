@@ -15,7 +15,7 @@ from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.wrappers.response import Response
 
-from app.decorators import create_perm
+from ...decorators import create_perm, delete_perm, read_perm, update_perm
 
 from ...forms import AdmChangeEmail, AdmChangePassWord, FormUser
 from ...models import Users
@@ -24,6 +24,7 @@ from . import config
 
 @config.get("/users")
 @login_required
+@read_perm
 def users() -> Response:
     try:
 
@@ -64,7 +65,7 @@ def cadastro_usuario() -> str | Response | None:
             db.session.commit()
 
             flash("Usuário criado com sucesso!", "success")
-            return redirect(url_for("users"))
+            return redirect(url_for("config.users"))
 
         except Exception as e:
             abort(500, description=str(e))
@@ -74,12 +75,12 @@ def cadastro_usuario() -> str | Response | None:
             pass
 
         else:
-            return redirect(url_for("users"))
+            return redirect(url_for("config.users"))
 
 
 @config.route("/changepw_usr", methods=["GET", "POST"])
 @login_required
-# @update_perm
+@update_perm
 def changepw_usr() -> Response | str:
     try:
         form = AdmChangePassWord()
@@ -91,7 +92,7 @@ def changepw_usr() -> Response | str:
             db: SQLAlchemy = app.extensions["sqlalchemy"]
             if form.new_password.data != form.repeat_password.data:
                 flash("Senhas não coincidem")
-                return redirect(url_for("users"))
+                return redirect(url_for("config.users"))
 
             login_usr = form.data.get("user_to_change", session.get("login"))
             password = Users.query.filter_by(login=login_usr).first()
@@ -99,7 +100,7 @@ def changepw_usr() -> Response | str:
             db.session.commit()
 
             flash("Senha alterada com sucesso!", "success")
-            return redirect(url_for("users"))
+            return redirect(url_for("config.users"))
 
         return render_template(html, form=form)
 
@@ -109,7 +110,7 @@ def changepw_usr() -> Response | str:
 
 @config.route("/changemail_usr", methods=["GET", "POST"])
 @login_required
-# @update_perm
+@update_perm
 def changemail_usr() -> Response | str:
     try:
         form = AdmChangeEmail()
@@ -123,13 +124,13 @@ def changemail_usr() -> Response | str:
             mail = Users.query.filter_by(login=login_usr).first()
             if form.new_email.data != form.repeat_email.data:
                 flash("E-mails não coincidem")
-                return redirect(url_for("users"))
+                return redirect(url_for("config.users"))
 
             mail.email = form.new_email.data
             db.session.commit()
 
             flash("E-mail alterado com sucesso!", "success")
-            return redirect(url_for("users"))
+            return redirect(url_for("config.users"))
 
         return render_template(html, form=form)
 
@@ -139,7 +140,7 @@ def changemail_usr() -> Response | str:
 
 @config.route("/delete_user/<usuario>", methods=["GET"])
 @login_required
-# @delete_perm
+@delete_perm
 def delete_user(usuario: str) -> str:
     try:
 
