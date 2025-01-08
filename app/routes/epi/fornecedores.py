@@ -78,7 +78,12 @@ def cadastrar_fornecedores() -> Response | str:
         return redirect(url_for("epi.fornecedores"))
 
     return render_template(
-        "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
+        "index.html",
+        page="form_base.html",
+        form=form,
+        endpoint=endpoint,
+        act=act,
+        title=" ".join([act.capitalize(), endpoint.capitalize()]),
     )
 
 
@@ -128,7 +133,12 @@ def editar_fornecedores(id: int) -> Response | str:
         return redirect(url_for("epi.fornecedores"))
 
     return render_template(
-        "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
+        "index.html",
+        page="form_base.html",
+        form=form,
+        endpoint=endpoint,
+        act=act,
+        title=" ".join([act.capitalize(), endpoint.capitalize()]),
     )
 
 

@@ -114,7 +114,12 @@ def cadastro_empresas() -> Response | str:
 
     page = "forms/empresa_form.html"
     return render_template(
-        "index.html", act=act, endpoint=endpoint, page=page, form=form
+        "index.html",
+        act=act,
+        endpoint=endpoint,
+        page=page,
+        form=form,
+        title=" ".join([act.capitalize(), endpoint.capitalize()]),
     )
 
 
@@ -227,6 +232,7 @@ def editar_empresas(id: int) -> Response | str:
         page=page,
         form=form,
         url_image=url_image,
+        title=" ".join([act.capitalize(), endpoint.capitalize()]),
     )
 
 

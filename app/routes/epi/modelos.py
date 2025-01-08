@@ -74,7 +74,12 @@ def cadastrar_modelos() -> Response | str:
         return redirect(url_for("epi.modelos"))
 
     return render_template(
-        "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
+        "index.html",
+        page="form_base.html",
+        form=form,
+        endpoint=endpoint,
+        act=act,
+        title=" ".join([act.capitalize(), endpoint.capitalize()]),
     )
 
 
@@ -125,7 +130,12 @@ def editar_modelos(id: int) -> Response | str:
         return redirect(url_for("epi.modelos"))
 
     return render_template(
-        "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
+        "index.html",
+        page="form_base.html",
+        form=form,
+        endpoint=endpoint,
+        act=act,
+        title=" ".join([act.capitalize(), endpoint.capitalize()]),
     )
 
 

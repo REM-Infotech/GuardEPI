@@ -86,7 +86,12 @@ def cadastrar_cargos() -> Response | str:
         return redirect(url_for("corp.cargos"))
 
     return render_template(
-        "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
+        "index.html",
+        page="form_base.html",
+        form=form,
+        endpoint=endpoint,
+        act=act,
+        title=" ".join([act.capitalize(), endpoint.capitalize()]),
     )
 
 
@@ -138,7 +143,12 @@ def editar_cargos(id) -> Response | str:
         return redirect(url_for("corp.cargos"))
 
     return render_template(
-        "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
+        "index.html",
+        page="form_base.html",
+        form=form,
+        endpoint=endpoint,
+        act=act,
+        title=" ".join([act.capitalize(), endpoint.capitalize()]),
     )
 
 

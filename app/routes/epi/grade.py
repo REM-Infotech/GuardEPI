@@ -91,7 +91,12 @@ def cadastrar_grade() -> Response | str:
         return redirect(url_for("epi.Grade"))
 
     return render_template(
-        "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
+        "index.html",
+        page="form_base.html",
+        form=form,
+        endpoint=endpoint,
+        act=act,
+        title=" ".join([act.capitalize(), endpoint.capitalize()]),
     )
 
 
@@ -142,7 +147,12 @@ def editar_grade(id) -> Response | str:
         return redirect(url_for("epi.Grade"))
 
     return render_template(
-        "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
+        "index.html",
+        page="form_base.html",
+        form=form,
+        endpoint=endpoint,
+        act=act,
+        title=" ".join([act.capitalize(), endpoint.capitalize()]),
     )
 
 

@@ -76,7 +76,12 @@ def cadastrar_categoria() -> Response | str:
         return redirect(url_for("epi.categorias"))
 
     return render_template(
-        "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
+        "index.html",
+        page="form_base.html",
+        form=form,
+        endpoint=endpoint,
+        act=act,
+        title=" ".join([act.capitalize(), endpoint.capitalize()]),
     )
 
 
@@ -125,7 +130,12 @@ def editar_categoria(id) -> Response | str:
         return redirect(url_for("epi.categorias"))
 
     return render_template(
-        "index.html", page="form_base.html", form=form, endpoint=endpoint, act=act
+        "index.html",
+        page="form_base.html",
+        form=form,
+        endpoint=endpoint,
+        act=act,
+        title=" ".join([act.capitalize(), endpoint.capitalize()]),
     )
 
 

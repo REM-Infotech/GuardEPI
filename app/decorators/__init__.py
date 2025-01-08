@@ -1,12 +1,12 @@
-from functools import wraps, _Wrapped
+from functools import wraps
 
 from flask import abort, session
-from typing import Any, Callable
+from typing import Any
 
 # from app.models import Permissions
 
 
-def create_perm(func) -> _Wrapped[Callable[..., Any], Any, Callable[..., Any], Any]:
+def create_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs) -> Any:
         group_usr = session.get("groups_usr", None)
@@ -19,7 +19,7 @@ def create_perm(func) -> _Wrapped[Callable[..., Any], Any, Callable[..., Any], A
     return decorated_function
 
 
-def read_perm(func) -> _Wrapped[Callable[..., Any], Any, Callable[..., Any], Any]:
+def read_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs) -> Any:
         group_usr = session.get("groups_usr", None)
@@ -32,7 +32,7 @@ def read_perm(func) -> _Wrapped[Callable[..., Any], Any, Callable[..., Any], Any
     return decorated_function
 
 
-def update_perm(func) -> _Wrapped[Callable[..., Any], Any, Callable[..., Any], Any]:
+def update_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs) -> Any:
         group_usr = session.get("groups_usr", None)
@@ -45,7 +45,7 @@ def update_perm(func) -> _Wrapped[Callable[..., Any], Any, Callable[..., Any], A
     return decorated_function
 
 
-def delete_perm(func) -> _Wrapped[Callable[..., Any], Any, Callable[..., Any], Any]:
+def delete_perm(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
         group_usr = session.get("groups_usr", None)
