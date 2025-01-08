@@ -17,6 +17,7 @@ def register_routes(app: Flask) -> None:
     """
     Register routes and error handlers for the Flask application.
     This function registers blueprints and error handlers, and defines routes for terms of use and privacy policy PDFs.
+
     Args:
         app (Flask): The Flask application instance.
 
