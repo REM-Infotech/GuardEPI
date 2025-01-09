@@ -1,9 +1,11 @@
 from datetime import timedelta
 from pathlib import Path
+from typing import Any
 
 from celery import Celery
 
 # from celery.schedules import crontab
+from dotenv import dotenv_values
 from flask import Flask
 from flask_login import LoginManager
 from flask_mail import Mail
@@ -11,13 +13,18 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 
 from app.logs.setup import initialize_logging
-from configs import Configurator, csp
 
 app = None
 db = None
 login_manager = None
 mail = None
 celery_app = None
+
+objects_config = {
+    "development": "app.config.DevelopmentConfig",
+    "production": "app.config.ProductionConfig",
+    "testing": "app.config.TestingConfig",
+}
 
 
 def celery_init(app: Flask) -> Celery:
@@ -50,7 +57,7 @@ def celery_init(app: Flask) -> Celery:
     class ContextTask(TaskBase):
         abstract = True
 
-        def __call__(self, *args, **kwargs):
+        def __call__(self, *args, **kwargs) -> Any:
             with app.app_context():
                 return TaskBase.__call__(self, *args, **kwargs)
 
@@ -59,16 +66,17 @@ def celery_init(app: Flask) -> Celery:
     return celery_app
 
 
-def create_app():
+def create_app() -> Flask:
     global app
 
     template_folder = Path(__file__).parent.resolve().joinpath("templates").resolve()
     static_folder = Path(__file__).parent.resolve().joinpath("static").resolve()
     app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
 
-    config_obj = Configurator().get_configurator()
+    env_ambient = dotenv_values(".env")["AMBIENT_CONFIG"]
+    ambient = objects_config[env_ambient]
 
-    app.config.from_object(config_obj)
+    app.config.from_object(ambient)
 
     init_extensions(app)
     app.logger = initialize_logging()
@@ -85,7 +93,7 @@ def create_app():
     return app
 
 
-def init_extensions(app: Flask):
+def init_extensions(app: Flask) -> None:
     global db, login_manager, mail
     mail = Mail(app)
     db = SQLAlchemy()
@@ -93,12 +101,13 @@ def init_extensions(app: Flask):
 
     db.init_app(app)
     login_manager.init_app(app)
+    csp = app.config["CSP"]
 
     if not app.debug:
         tlsm = Talisman()
         tlsm.init_app(
             app,
-            content_security_policy=csp(),
+            content_security_policy=csp,
             session_cookie_http_only=True,
             session_cookie_samesite="Lax",
             strict_transport_security=True,
@@ -118,3 +127,9 @@ def init_extensions(app: Flask):
             with open("is_init.txt", "w") as f:
                 db.drop_all()
                 f.write(init_database(app, db))
+
+        from .models import Users
+
+        if not db.engine.dialect.has_table(db.engine.connect(), Users.__tablename__):
+            with open("is_init.txt", "w") as f:
+                f.write(f"{init_database(app, db)}")
