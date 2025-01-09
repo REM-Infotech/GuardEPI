@@ -121,15 +121,14 @@ def init_extensions(app: Flask) -> None:
     login_manager.login_message_category = "info"
 
     with app.app_context():
-        from app.models import init_database
+        from .models import init_database, Users
 
         if not Path("is_init.txt").exists():
+            passw = init_database(app, db)
             with open("is_init.txt", "w") as f:
-                db.drop_all()
-                f.write(init_database(app, db))
+                f.write(passw)
 
-        from .models import Users
-
-        if not db.engine.dialect.has_table(db.engine.connect(), Users.__tablename__):
+        elif not db.engine.dialect.has_table(db.engine.connect(), Users.__tablename__):
+            passw = init_database(app, db)
             with open("is_init.txt", "w") as f:
-                f.write(f"{init_database(app, db)}")
+                f.write(passw)

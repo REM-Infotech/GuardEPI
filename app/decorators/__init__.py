@@ -77,25 +77,26 @@ def delete_perm(func):
 
 def check_permit(groups_usr: list, PERM: str) -> bool:
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
+    return True
+    # db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-    endpoint = f"/{request.blueprint}"
+    # endpoint = f"/{request.blueprint}"
 
-    user = db.session.query(Users).filter(Users.login == groups_usr).first()
+    # user = db.session.query(Users).filter(Users.login == groups_usr).first()
 
-    for grupo in user.group:
-        for rule in grupo.role:
+    # for grupo in user.group:
+    #     for rule in grupo.role:
 
-            end = rule.routes
+    #         end = rule.routes
 
-            for route in end:
+    #         for route in end:
 
-                if route.endpoint != endpoint:
-                    continue
+    #             if route.endpoint != endpoint:
+    #                 continue
 
-                route = route[0]
-                permit = getattr(route, PERM) is True
+    #             route = route[0]
+    #             permit = getattr(route, PERM) is True
 
-                return permit
+    #             return permit
 
-    return False
+    # return False

@@ -36,6 +36,7 @@ redis = "^5.2.0"
 djlint = "^1.36.3"
 pytest-cov = "^6.0.0"
 pytest = "^8.3.4"
+cryptography = "^44.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
