@@ -12,6 +12,7 @@ from flask import (
     url_for,
 )
 from flask_login import current_user, login_user, logout_user
+from werkzeug import Response
 
 from app.forms import LoginForm
 from app.models.users import Users
@@ -21,7 +22,7 @@ auth = Blueprint("auth", __name__, template_folder=template_folder)
 
 
 @auth.route("/", methods=["GET"])
-def index():
+def index() -> Response:
     """
     Redirects the user based on their authentication status.
     If the current user is not authenticated, they are redirected to the dashboard.
@@ -37,7 +38,7 @@ def index():
 
 
 @auth.route("/login", methods=["GET", "POST"])
-def login():
+def login() -> Response | str:
     """
     Handle user login.
     This route handles the user login process. If the user is already logged in,
@@ -84,7 +85,7 @@ def login():
 
 
 @auth.route("/logout", methods=["GET"])
-def logout():
+def logout() -> Response:
     """
     Logs out the current user, flashes a logout message, and redirects to the login page.
     This function performs the following actions:
