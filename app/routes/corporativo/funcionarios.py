@@ -221,7 +221,7 @@ def editar_funcionarios(id: int) -> Response | str:
     )
 
 
-@corp.route("/funcionarios/deletar/<int:id>")
+@corp.post("/funcionarios/deletar/<int:id>")
 @login_required
 @delete_perm
 def deletar_funcionarios(id: int) -> str:

@@ -139,7 +139,7 @@ def editar_categoria(id) -> Response | str:
     )
 
 
-@epi.route("/categorias/deletar/<int:id>", methods=["POST"])
+@epi.post("/categorias/deletar/<int:id>")
 @login_required
 @delete_perm
 def deletar_categoria(id: int) -> str:

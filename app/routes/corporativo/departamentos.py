@@ -152,7 +152,7 @@ def editar_departamentos(id) -> Response | str:
     )
 
 
-@corp.route("/Departamentoss/deletar/<int:id>", methods=["POST"])
+@corp.post("/Departamentoss/deletar/<int:id>")
 @login_required
 @delete_perm
 def deletar_departamentos(id: int) -> str:

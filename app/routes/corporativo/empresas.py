@@ -236,7 +236,7 @@ def editar_empresas(id: int) -> Response | str:
     )
 
 
-@corp.route("/Empresas/deletar/<int:id>")
+@corp.post("/Empresas/deletar/<int:id>")
 @login_required
 @delete_perm
 def deletar_empresas(id: int) -> str:

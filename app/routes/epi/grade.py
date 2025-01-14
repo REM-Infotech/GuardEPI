@@ -156,7 +156,7 @@ def editar_grade(id) -> Response | str:
     )
 
 
-@epi.route("/grades/deletar/<int:id>", methods=["POST"])
+@epi.post("/grades/deletar/<int:id>")
 @login_required
 @delete_perm
 def deletar_grade(id: int) -> str:

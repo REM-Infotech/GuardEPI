@@ -222,7 +222,7 @@ def editar_equipamento(id: int) -> Response | str:
     )
 
 
-@epi.route("/equipamentos/deletar/<int:id>")
+@epi.post("/equipamentos/deletar/<int:id>")
 @login_required
 @delete_perm
 def deletar_equipamento(id: int) -> str:

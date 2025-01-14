@@ -142,7 +142,7 @@ def editar_fornecedores(id: int) -> Response | str:
     )
 
 
-@epi.route("/fornecedores/deletar/<int:id>", methods=["POST"])
+@epi.post("/fornecedores/deletar/<int:id>")
 @login_required
 @delete_perm
 def deletar_fornecedores(id: int) -> str:

@@ -136,7 +136,7 @@ def remove_itens() -> str:
     return item_html
 
 
-@estoque_bp.route("/get_grade", methods=["POST"])
+@estoque_bp.post("/get_grade")
 @login_required
 @create_perm
 def get_grade() -> str:

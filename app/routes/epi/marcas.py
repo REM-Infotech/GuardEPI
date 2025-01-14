@@ -141,7 +141,7 @@ def editar_marca(id) -> Response | str:
     )
 
 
-@epi.route("/marcas/deletar/<int:id>", methods=["POST"])
+@epi.post("/marcas/deletar/<int:id>")
 @login_required
 @delete_perm
 def deletar_marca(id: int) -> str:

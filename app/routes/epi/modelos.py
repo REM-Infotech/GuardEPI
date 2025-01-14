@@ -139,7 +139,7 @@ def editar_modelos(id: int) -> Response | str:
     )
 
 
-@epi.route("/modeloss/deletar/<int:id>", methods=["POST"])
+@epi.post("/modeloss/deletar/<int:id>")
 @login_required
 @delete_perm
 def deletar_modelos(id: int) -> str:
