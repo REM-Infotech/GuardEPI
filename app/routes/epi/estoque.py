@@ -123,6 +123,7 @@ def lancamento_produto() -> Response | str:
     4. Records the entry details including the total value and optional invoice file.
     5. Updates the unit value of the product.
     6. Commits the changes to the database.
+
     Returns:
         Redirects to the inventory page with a success or error message.
     Raises:
@@ -136,9 +137,11 @@ def lancamento_produto() -> Response | str:
         form = InsertEstoqueForm()
         if form.validate_on_submit():
 
-            if form.justificativa.data == "..." or not form.nota_fiscal.data:
-                flash("Inserir nota fiscal ou informar justificativa de estorno!")
-                return redirect(url_for("estoque.produto_epi"))
+            if not form.nota_fiscal.data:
+                if form.justificativa.data == "...":
+
+                    flash("Inserir nota fiscal ou informar justificativa de estorno!")
+                    return redirect(url_for("estoque.produto_epi"))
 
             query_Estoque = EstoqueEPI.query
             query_EstoqueGrade = EstoqueGrade.query
