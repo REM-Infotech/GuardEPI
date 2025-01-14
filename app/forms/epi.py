@@ -105,7 +105,7 @@ class FormProduto(FlaskForm):
             ("Não Aplicável", "Não Aplicável"),
         ],
     )
-    cod_ca = IntegerField(label="Cod CA", validators=[DataRequired()], default="9999")
+    cod_ca = IntegerField(label="Cod CA", default=9999)
     nome_epi = StringField(label="EPI", validators=[DataRequired()])
 
     tipo_epi = SelectField(
