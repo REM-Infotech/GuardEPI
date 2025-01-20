@@ -1,15 +1,12 @@
 from functools import wraps
 from typing import Any
 
-# from flask import current_app as app
-from flask import abort, redirect, session, url_for
+from flask import abort
+from flask import current_app as app
+from flask import redirect, request, session, url_for
+from flask_sqlalchemy import SQLAlchemy
 
-# from flask import request
-# from flask_sqlalchemy import SQLAlchemy
-
-# from ..models import Users
-
-# from app.models import Permissions
+from ..models import Groups, Roles, Routes, Users
 
 
 def create_perm(func):
@@ -121,28 +118,55 @@ def delete_perm(func):
     return decorated_function
 
 
-def check_permit(groups_usr: list, PERM: str) -> bool:
+def check_permit(user: str, PERM: str) -> bool:
 
-    return True
-    # db: SQLAlchemy = app.extensions["sqlalchemy"]
+    db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-    # endpoint = f"/{request.blueprint}"
+    endpoint = f"/{request.blueprint}"
 
-    # user = db.session.query(Users).filter(Users.login == groups_usr).first()
+    # user = db.session.query(Users).filter(Users.login == groups_usr).subquery()
+    # alias_usr = aliased(user, Users)
 
-    # for grupo in user.group:
-    #     for rule in grupo.role:
+    from_groups = (
+        db.session.query(Groups)
+        .select_from(Users)
+        .join(Groups.members)
+        .filter(Users.login == user)
+        .all()
+    )
 
-    #         end = rule.routes
+    for grupo in from_groups:
+        for rule in grupo.role:
+            route = (
+                db.session.query(Routes)
+                .select_from(Roles)
+                .join(Routes.roles)
+                .filter(Roles.id == rule.id)
+                .filter(Routes.endpoint == endpoint)
+                .first()
+            )
 
-    #         for route in end:
+            if not route:
+                continue
 
-    #             if route.endpoint != endpoint:
-    #                 continue
+            perm: bool = getattr(route, PERM, False)
+            if perm is False:
+                continue
 
-    #             route = route[0]
-    #             permit = getattr(route, PERM) is True
+            return perm
 
-    #             return permit
+        # for rule in grupo.role:
 
-    # return False
+        #     end = rule.routes
+
+        #     for route in end:
+
+        #         if route.endpoint != endpoint:
+        #             continue
+
+        #         route = route[0]
+        #         permit = getattr(route, PERM) is True
+
+        #         return permit
+
+    return False

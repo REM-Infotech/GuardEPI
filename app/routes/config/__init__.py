@@ -28,7 +28,7 @@ def before_request_roles() -> None:
         - Writes an empty JSON array to the created JSON file.
     """
 
-    if request.endpoint == "config.cadastro_regra":
+    if request.endpoint == "config.cadastro_regra" and request.method == "POST":
 
         hex_name_json = secrets.token_hex(16)
         session["json_filename"] = hex_name_json
