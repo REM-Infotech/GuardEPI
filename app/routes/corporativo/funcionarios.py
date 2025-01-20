@@ -2,15 +2,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Union
 
-from flask import abort
+from flask import Response, abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, make_response, redirect, render_template, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
-from werkzeug.wrappers.response import Response
 
 from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import FuncionarioForm
@@ -24,7 +23,7 @@ form_content = Union[str, FileStorage, int, float, datetime]
 @corp.get("/funcionarios")
 @login_required
 @read_perm
-def funcionarios() -> str:
+def funcionarios() -> Response:
     """
     Fetches all records from the Funcionarios table and renders the 'index.html' template with the data.
     This function queries all records from the Funcionarios table in the database and passes the data to the
@@ -40,10 +39,12 @@ def funcionarios() -> str:
 
         page = "funcionarios.html"
         database = Funcionarios.query.all()
-        return render_template(
-            "index.html",
-            page=page,
-            database=database,
+        return make_response(
+            render_template(
+                "index.html",
+                page=page,
+                database=database,
+            )
         )
     except Exception as e:
         abort(500, description=str(e))
@@ -52,7 +53,7 @@ def funcionarios() -> str:
 @corp.route("/funcionarios/cadastro", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastro_funcionarios() -> Response | str:
+def cadastro_funcionarios() -> Response:
     """
     Handles the registration of employees.
     This function processes the form data submitted for employee registration,
@@ -99,24 +100,26 @@ def cadastro_funcionarios() -> Response | str:
 
             to_add.update({key: value})
 
-        func = Funcionarios(**to_add)
-        db.session.add(func)
+        item = Funcionarios(**to_add)
+        db.session.add(item)
         try:
             db.session.commit()
         except errors.UniqueViolation:
             abort(500, description="Item já cadastrado!")
 
         flash("func cadastrado com sucesso!", "success")
-        return redirect(url_for("corp.funcionarios"))
+        return make_response(redirect(url_for("corp.funcionarios")))
 
     page = "forms/funcionario_form.html"
-    return render_template("index.html", title=title, page=page, form=form)
+    return make_response(
+        render_template("index.html", title=title, page=page, form=form)
+    )
 
 
 @corp.route("/funcionarios/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_funcionarios(id: int) -> Response | str:
+def editar_funcionarios(id: int) -> Response:
     """
     Edit an employee's information based on the given ID.
     This function handles both GET and POST requests. On a GET request, it retrieves the employee's data from the database,
@@ -134,48 +137,44 @@ def editar_funcionarios(id: int) -> Response | str:
 
     form_data = {}
 
-    form = FuncionarioForm()
+    url_image = ""
+    emp_data = func.__dict__
 
-    if request.method == "GET":
+    items_emp_data = list(emp_data.items())
 
-        url_image = ""
-        emp_data = func.__dict__
+    for key, value in items_emp_data:
 
-        items_emp_data = list(emp_data.items())
+        if key == "_sa_instance_state" or key == "id" or key == "filename":
 
-        for key, value in items_emp_data:
+            continue
 
-            if key == "_sa_instance_state" or key == "id" or key == "filename":
+        if key == "blob_doc":
 
-                continue
+            img_path = (
+                Path(app.config.get("TEMP_PATH"))
+                .joinpath("IMG")
+                .joinpath(emp_data.get("filename"))
+            )
+            with img_path.open("wb") as file:
+                file.write(value)
 
-            if key == "blob_doc":
-
-                img_path = (
-                    Path(app.config.get("TEMP_PATH"))
-                    .joinpath("IMG")
-                    .joinpath(emp_data.get("filename"))
+            with img_path.open("rb") as file:
+                form_data.update(
+                    {
+                        "filename": FileStorage(
+                            filename=secure_filename(func.filename),
+                            stream=file.read(),
+                        )
+                    }
                 )
-                with img_path.open("wb") as file:
-                    file.write(value)
 
-                with img_path.open("rb") as file:
-                    form_data.update(
-                        {
-                            "filename": FileStorage(
-                                filename=secure_filename(func.filename),
-                                stream=file.read(),
-                            )
-                        }
-                    )
+                url_image = url_for(
+                    "serve.serve_img", filename=func.filename, _external=True
+                )
 
-                    url_image = url_for(
-                        "serve.serve_img", filename=func.filename, _external=True
-                    )
+        form_data.update({key: value})
 
-            form_data.update({key: value})
-
-        form = FuncionarioForm(**form_data)
+    form = FuncionarioForm(**form_data)
 
     if form.validate_on_submit():
 
@@ -209,22 +208,24 @@ def editar_funcionarios(id: int) -> Response | str:
             abort(500, description="Item já cadastrado!")
 
         flash("Edições Salvas con sucesso!", "success")
-        return redirect(url_for("corp.funcionarios"))
+        return make_response(redirect(url_for("corp.funcionarios")))
 
     page = "forms/funcionario_form.html"
-    return render_template(
-        "index.html",
-        title=title,
-        page=page,
-        form=form,
-        url_image=url_image,
+    return make_response(
+        render_template(
+            "index.html",
+            title=title,
+            page=page,
+            form=form,
+            url_image=url_image,
+        )
     )
 
 
 @corp.post("/funcionarios/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_funcionarios(id: int) -> str:
+def deletar_funcionarios(id: int) -> Response:
     """
     Deletes an employee record from the database based on the provided ID.
     Args:
@@ -241,4 +242,4 @@ def deletar_funcionarios(id: int) -> str:
 
     template = "includes/show.html"
     message = "Informação deletada com sucesso!"
-    return render_template(template, message=message)
+    return make_response(render_template(template, message=message))

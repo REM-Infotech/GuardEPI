@@ -96,8 +96,8 @@ def cadastro_equipamento() -> Response:
 
             to_add.update({key: value})
 
-        epi = ProdutoEPI(**to_add)
-        db.session.add(epi)
+        item = ProdutoEPI(**to_add)
+        db.session.add(item)
         try:
             db.session.commit()
         except errors.UniqueViolation:

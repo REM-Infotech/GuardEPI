@@ -1,8 +1,4 @@
-from typing import Any, Literal
-
-from deep_translator import GoogleTranslator
-from flask import Flask, redirect, render_template, url_for
-from werkzeug import Response
+from flask import Flask, Response, make_response, redirect, render_template, url_for
 from werkzeug.exceptions import HTTPException
 
 from .auth import auth
@@ -43,7 +39,7 @@ def register_routes(app: Flask) -> None:
         app.register_blueprint(blueprint)
 
     @app.errorhandler(HTTPException)
-    def handle_http_exception(error) -> Response | tuple[str, Any | Literal[500]]:
+    def handle_http_exception(error) -> Response:
         """
         Handles HTTP exceptions by translating the error name to Portuguese and rendering an error template.
         Args:
@@ -51,17 +47,18 @@ def register_routes(app: Flask) -> None:
         Returns:
             Response: A Flask response object with the rendered error template and the appropriate HTTP status code.
         """
-        tradutor = GoogleTranslator(source="en", target="pt")
-        name = tradutor.translate(error.name)
-        desc = tradutor.translate(error.description)
+        # tradutor = GoogleTranslator(source="en", target="pt")
+        # name = tradutor.translate(error.name)
+        # desc = tradutor.translate(error.description)
 
-        if error.code == 500:
-            desc = "Erro do sistema"
+        name: str = "Erro interno"
+        if error.code == 500 and "já cadastrado" not in error.desc:
+            desc: str = "Erro do sistema"
 
         if error.code == 405:
-            return redirect(url_for("dash.dashboard"))
+            return make_response(redirect(url_for("dash.dashboard")))
 
-        return (
+        return make_response(
             render_template(
                 "handler/index.html", name=name, desc=desc, code=error.code
             ),

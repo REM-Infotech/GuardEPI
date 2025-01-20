@@ -1,9 +1,9 @@
 from functools import wraps
 from typing import Any
 
-from flask import abort, make_response, render_template
+from flask import abort
 from flask import current_app as app
-from flask import redirect, request, session, url_for
+from flask import make_response, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 from ..models import Groups, Roles, Routes, Users

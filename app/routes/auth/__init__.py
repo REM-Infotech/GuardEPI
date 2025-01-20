@@ -3,8 +3,10 @@ from pathlib import Path
 
 from flask import (
     Blueprint,
+    Response,
     abort,
     flash,
+    make_response,
     redirect,
     render_template,
     request,
@@ -12,7 +14,6 @@ from flask import (
     url_for,
 )
 from flask_login import current_user, login_user, logout_user
-from werkzeug import Response
 
 from app.forms import LoginForm
 from app.models.users import Users
@@ -32,13 +33,13 @@ def index() -> Response:
     """
 
     if not current_user.is_authenticated:
-        return redirect(url_for("dash.dashboard"))
+        return make_response(redirect(url_for("dash.dashboard")))
 
-    return redirect(url_for("auth.login"))
+    return make_response(redirect(url_for("auth.login")))
 
 
 @auth.route("/login", methods=["GET", "POST"])
-def login() -> Response | str:
+def login() -> Response:
     """
     Handle user login.
     This route handles the user login process. If the user is already logged in,
@@ -53,7 +54,7 @@ def login() -> Response | str:
 
     try:
         if session.get("_user_id", None) is not None:
-            return redirect(url_for("dash.dashboard"))
+            return make_response(redirect(url_for("dash.dashboard")))
 
         if not session.get("next"):
             session["next"] = request.args.get("next", url_for("dash.dashboard"))
@@ -74,12 +75,11 @@ def login() -> Response | str:
                 if "?" in location:
                     location = location.split("?")[0]
 
-                return redirect(location)
+                return make_response(redirect(location))
 
             flash("Usuário/Senha Incorretos!", "error")
 
-        return render_template("login.html", form=form)
-
+        return make_response(render_template("login.html", form=form))
     except Exception as e:
         abort(500, description=str(e))
 
@@ -99,4 +99,4 @@ def logout() -> Response:
     logout_user()
     flash("Sessão encerrada", "info")
     location = url_for("auth.login")
-    return redirect(location)
+    return make_response(redirect(location))

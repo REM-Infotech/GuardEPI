@@ -1,10 +1,9 @@
-from flask import abort
+from flask import Response, abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, make_response, redirect, render_template, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
-from werkzeug.wrappers.response import Response
 
 from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import CargoForm
@@ -16,7 +15,7 @@ from . import corp
 @corp.route("/cargos")
 @login_required
 @read_perm
-def cargos() -> str:
+def cargos():
     """
     Route to display the cargos page.
     This route is protected by login and will render the cargos page with data
@@ -30,10 +29,12 @@ def cargos() -> str:
         page = "cargos.html"
         database = Cargos.query.all()
 
-        return render_template(
-            "index.html",
-            page=page,
-            database=database,
+        return make_response(
+            render_template(
+                "index.html",
+                page=page,
+                database=database,
+            )
         )
     except Exception as e:
         abort(500, description=str(e))
@@ -42,7 +43,7 @@ def cargos() -> str:
 @corp.route("/cargos/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_cargos() -> Response | str:
+def cadastrar_cargos() -> Response:
     """
     Handles the creation and registration of new 'Cargos' (positions) in the system.
     This function processes a form submission for creating a new 'Cargo'. It validates the form,
@@ -75,30 +76,32 @@ def cadastrar_cargos() -> Response | str:
 
             to_add.update({key: value})
 
-        cargos = Cargos(**to_add)
-        db.session.add(cargos)
+        item = Cargos(**to_add)
+        db.session.add(item)
         try:
             db.session.commit()
         except errors.UniqueViolation:
             abort(500, description="Item já cadastrado!")
 
         flash("Cargo cadastrado com sucesso!", "success")
-        return redirect(url_for("corp.cargos"))
+        return make_response(redirect(url_for("corp.cargos")))
 
-    return render_template(
-        "index.html",
-        page="form_base.html",
-        form=form,
-        endpoint=endpoint,
-        act=act,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
+    return make_response(
+        render_template(
+            "index.html",
+            page="form_base.html",
+            form=form,
+            endpoint=endpoint,
+            act=act,
+            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        )
     )
 
 
 @corp.route("/cargos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_cargos(id) -> Response | str:
+def editar_cargos(id) -> Response:
     """
     Edits an existing position in the database.
     Args:
@@ -118,12 +121,9 @@ def editar_cargos(id) -> Response | str:
     act = "Cadastro"
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
-    form = CargoForm()
 
     cargos = db.session.query(Cargos).filter(Cargos.id == id).first()
-
-    if request.method == "GET":
-        form = CargoForm(**cargos.__dict__)
+    form = CargoForm(**cargos.__dict__)
 
     if form.validate_on_submit():
 
@@ -140,15 +140,17 @@ def editar_cargos(id) -> Response | str:
             abort(500, description="Item já cadastrado!")
 
         flash("Cargo editado com sucesso!", "success")
-        return redirect(url_for("corp.cargos"))
+        return make_response(redirect(url_for("corp.cargos")))
 
-    return render_template(
-        "index.html",
-        page="form_base.html",
-        form=form,
-        endpoint=endpoint,
-        act=act,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
+    return make_response(
+        render_template(
+            "index.html",
+            page="form_base.html",
+            form=form,
+            endpoint=endpoint,
+            act=act,
+            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        )
     )
 
 
@@ -174,4 +176,4 @@ def deletar_cargos(id: int) -> str:
 
     template = "includes/show.html"
     message = "Informação deletada com sucesso!"
-    return render_template(template, message=message)
+    return make_response(render_template(template, message=message))

@@ -1,10 +1,9 @@
-from flask import abort
+from flask import Response, abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, make_response, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
-from werkzeug.wrappers.response import Response
 
 from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import FormCategorias
@@ -16,79 +15,92 @@ from . import epi
 @epi.route("/categorias", methods=["GET"])
 @login_required
 @read_perm
-def categorias() -> str:
-    """
-    Renders the 'categorias' page with data from the ClassesEPI database.
-    This function queries all entries from the ClassesEPI database and passes
-    the data to the 'index.html' template along with the page name 'categorias.html'.
-    Returns:
-        A rendered HTML template with the page name and database entries.
-    """
+def categorias() -> Response:
 
-    title = "Categorias"
-    page = "categorias.html"
-    database = ClassesEPI.query.all()
+    try:
+        """
+        Renders the 'categorias' page with data from the ClassesEPI database.
+        This function queries all entries from the ClassesEPI database and passes
+        the data to the 'index.html' template along with the page name 'categorias.html'.
+        Returns:
+            A rendered HTML template with the page name and database entries.
+        """
 
-    return render_template("index.html", page=page, database=database, title=title)
+        title = "Categorias"
+        page = "categorias.html"
+        database = ClassesEPI.query.all()
+
+        return make_response(
+            render_template("index.html", page=page, database=database, title=title)
+        )
+
+    except Exception:
+        abort(500)
 
 
 @epi.route("/categorias/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_categoria() -> Response | str:
-    """
-    Handles the creation of a new category.
-    This function processes the form submission for creating a new category.
-    It validates the form data, adds the new category to the database, and
-    provides feedback to the user.
-    Returns:
-        Response: A redirect to the categories page if the form is successfully
-        submitted and processed, or renders the form template with the appropriate
-        context if the form is not submitted or is invalid.
-    """
+def cadastrar_categoria() -> Response:
 
-    endpoint = "Categoria"
-    act = "Cadastro"
-    form = FormCategorias()
+    try:
+        """
+        Handles the creation of a new category.
+        This function processes the form submission for creating a new category.
+        It validates the form data, adds the new category to the database, and
+        provides feedback to the user.
+        Returns:
+            Response: A redirect to the categories page if the form is successfully
+            submitted and processed, or renders the form template with the appropriate
+            context if the form is not submitted or is invalid.
+        """
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
+        endpoint = "Categoria"
+        act = "Cadastro"
+        form = FormCategorias()
 
-    if form.validate_on_submit():
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-        to_add = {}
-        form_data = form.data
-        list_form_data = list(form_data.items())
+        if form.validate_on_submit():
 
-        for key, value in list_form_data:
-            if key.lower() == "csrf_token" or key.lower() == "submit":
-                continue
+            to_add = {}
+            form_data = form.data
+            list_form_data = list(form_data.items())
 
-            to_add.update({key: value})
+            for key, value in list_form_data:
+                if key.lower() == "csrf_token" or key.lower() == "submit":
+                    continue
 
-        classe = ClassesEPI(**to_add)
-        db.session.add(classe)
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
+                to_add.update({key: value})
 
-        flash("Categoria cadastrada com sucesso!", "success")
-        return redirect(url_for("epi.categorias"))
+            classe = ClassesEPI(**to_add)
+            db.session.add(classe)
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
-    return render_template(
-        "index.html",
-        page="form_base.html",
-        form=form,
-        endpoint=endpoint,
-        act=act,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
-    )
+            flash("Categoria cadastrada com sucesso!", "success")
+            return make_response(make_response(redirect(url_for("epi.categorias"))))
+
+        return make_response(
+            render_template(
+                "index.html",
+                page="form_base.html",
+                form=form,
+                endpoint=endpoint,
+                act=act,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
+        )
+    except Exception:
+        abort(500)
 
 
 @epi.route("/categorias/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_categoria(id) -> Response | str:
+def editar_categoria(id) -> Response:
     """
     Edit an existing category based on the provided ID.
     This function handles both GET and POST requests. On a GET request, it populates
@@ -127,22 +139,24 @@ def editar_categoria(id) -> Response | str:
             abort(500, description="Item já cadastrado!")
 
         flash("Categoria editada com sucesso!", "success")
-        return redirect(url_for("epi.categorias"))
+        return make_response(redirect(url_for("epi.categorias")))
 
-    return render_template(
-        "index.html",
-        page="form_base.html",
-        form=form,
-        endpoint=endpoint,
-        act=act,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
+    return make_response(
+        render_template(
+            "index.html",
+            page="form_base.html",
+            form=form,
+            endpoint=endpoint,
+            act=act,
+            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        )
     )
 
 
 @epi.post("/categorias/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_categoria(id: int) -> str:
+def deletar_categoria(id: int) -> Response:
     """
     Deletes a category from the database based on the provided ID.
     Args:
@@ -161,4 +175,4 @@ def deletar_categoria(id: int) -> str:
 
     template = "includes/show.html"
     message = "Informação deletada com sucesso!"
-    return render_template(template, message=message)
+    return make_response(render_template(template, message=message))

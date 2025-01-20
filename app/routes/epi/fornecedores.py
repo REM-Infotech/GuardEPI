@@ -1,10 +1,9 @@
-from flask import abort
+from flask import Response, abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, make_response, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
-from werkzeug.wrappers.response import Response
 
 from app.forms import FornecedoresForm
 from app.models import Fornecedores
@@ -16,7 +15,7 @@ from . import epi
 @epi.route("/fornecedores", methods=["GET"])
 @login_required
 @read_perm
-def fornecedores() -> str:
+def fornecedores() -> Response:
     """
     Renders the 'fornecedores' page with an empty database.
     This function sets the 'page' variable to "fornecedores.html" and initializes
@@ -30,67 +29,76 @@ def fornecedores() -> str:
     title = "Fornecedores"
     page = "fornecedores.html"
     database = Fornecedores.query.all()
-    return render_template("index.html", page=page, database=database, title=title)
+    return make_response(
+        render_template("index.html", page=page, database=database, title=title)
+    )
 
 
 @epi.route("/fornecedores/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_fornecedores() -> Response | str:
-    """
-    Handles the registration of suppliers.
-    This function processes the form submission for registering new suppliers.
-    It validates the form data, adds the new supplier to the database, and
-    commits the transaction. If the registration is successful, it flashes a
-    success message and redirects to the suppliers page.
-    Returns:
-        Response: A redirect response to the suppliers page if the form is
-        successfully submitted and processed. Otherwise, it renders the
-        registration form template.
-    """
+def cadastrar_fornecedores() -> Response:
 
-    endpoint = "fornecedores"
-    act = "Cadastro"
-    form = FornecedoresForm()
+    try:
+        """
+        Handles the registration of suppliers.
+        This function processes the form submission for registering new suppliers.
+        It validates the form data, adds the new supplier to the database, and
+        commits the transaction. If the registration is successful, it flashes a
+        success message and redirects to the suppliers page.
+        Returns:
+            Response: A redirect response to the suppliers page if the form is
+            successfully submitted and processed. Otherwise, it renders the
+            registration form template.
+        """
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
+        endpoint = "fornecedores"
+        act = "Cadastro"
+        form = FornecedoresForm()
 
-    if form.validate_on_submit():
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-        to_add = {}
-        form_data = form.data
-        list_form_data = list(form_data.items())
+        if form.validate_on_submit():
 
-        for key, value in list_form_data:
-            if key.lower() == "csrf_token" or key.lower() == "submit":
-                continue
+            to_add = {}
+            form_data = form.data
+            list_form_data = list(form_data.items())
 
-            to_add.update({key: value})
+            for key, value in list_form_data:
+                if key.lower() == "csrf_token" or key.lower() == "submit":
+                    continue
 
-        fornecedor = Fornecedores(**to_add)
-        db.session.add(fornecedor)
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
+                to_add.update({key: value})
 
-        flash("Fornecedor cadastrado com sucesso!", "success")
-        return redirect(url_for("epi.fornecedores"))
+            item = Fornecedores(**to_add)
+            db.session.add(item)
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
-    return render_template(
-        "index.html",
-        page="form_base.html",
-        form=form,
-        endpoint=endpoint,
-        act=act,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
-    )
+            flash("Fornecedor cadastrado com sucesso!", "success")
+            return make_response(redirect(url_for("epi.fornecedores")))
+
+        return make_response(
+            render_template(
+                "index.html",
+                page="form_base.html",
+                form=form,
+                endpoint=endpoint,
+                act=act,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
+        )
+
+    except Exception:
+        abort(500)
 
 
 @epi.route("/fornecedores/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_fornecedores(id: int) -> Response | str:
+def editar_fornecedores(id: int) -> Response:
     """
     Edit a supplier's information in the database.
     This function handles the editing of supplier information based on the provided supplier ID.
@@ -130,22 +138,24 @@ def editar_fornecedores(id: int) -> Response | str:
             abort(500, description="Item já cadastrado!")
 
         flash("Fornecedor editado com sucesso!", "success")
-        return redirect(url_for("epi.fornecedores"))
+        return make_response(redirect(url_for("epi.fornecedores")))
 
-    return render_template(
-        "index.html",
-        page="form_base.html",
-        form=form,
-        endpoint=endpoint,
-        act=act,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
+    return make_response(
+        render_template(
+            "index.html",
+            page="form_base.html",
+            form=form,
+            endpoint=endpoint,
+            act=act,
+            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        )
     )
 
 
 @epi.post("/fornecedores/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_fornecedores(id: int) -> str:
+def deletar_fornecedores(id: int):
     """
     Deletes a supplier from the database based on the provided ID.
     Args:
@@ -162,4 +172,4 @@ def deletar_fornecedores(id: int) -> str:
 
     template = "includes/show.html"
     message = "Informação deletada com sucesso!"
-    return render_template(template, message=message)
+    return make_response(render_template(template, message=message))

@@ -1,14 +1,13 @@
 from pathlib import Path
 
-from flask import abort
+from flask import Response, abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, url_for
+from flask import flash, make_response, redirect, render_template, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
-from werkzeug.wrappers.response import Response
 
 from app.decorators import create_perm, read_perm
 from app.forms import InsertEstoqueForm
@@ -21,7 +20,7 @@ from . import estoque_bp
 @estoque_bp.get("/produto")
 @login_required
 @read_perm
-def produto_epi() -> str:
+def produto_epi() -> Response:
     """
     Handles the retrieval and rendering of the stock (Estoque) page.
     This function queries the database for all entries in the EstoqueEPI table,
@@ -41,13 +40,15 @@ def produto_epi() -> str:
         page = "estoque.html"
         form = InsertEstoqueForm()
 
-        return render_template(
-            "index.html",
-            page=page,
-            title=title,
-            database=database,
-            form=form,
-            format_currency_brl=format_currency_brl,
+        return make_response(
+            render_template(
+                "index.html",
+                page=page,
+                title=title,
+                database=database,
+                form=form,
+                format_currency_brl=format_currency_brl,
+            )
         )
     except Exception as e:
         abort(500, description=str(e))
@@ -56,7 +57,7 @@ def produto_epi() -> str:
 @estoque_bp.route("/grade", methods=["GET"])
 @login_required
 @read_perm
-def grade() -> str:
+def grade():
     """
     Fetches all records from the EstoqueGrade database table and renders the 'estoque_grade.html' page.
     This function queries all entries from the EstoqueGrade table and passes the data to the 'index.html' template
@@ -75,11 +76,13 @@ def grade() -> str:
 
         page = "estoque_grade.html"
 
-        return render_template(
-            "index.html",
-            page=page,
-            database=database,
-            title=title,
+        return make_response(
+            render_template(
+                "index.html",
+                page=page,
+                database=database,
+                title=title,
+            )
         )
     except Exception as e:
         abort(500, description=str(e))
@@ -88,7 +91,7 @@ def grade() -> str:
 @estoque_bp.route("/entradas")
 @login_required
 @read_perm
-def entradas() -> str:
+def entradas() -> Response:
     """
     Handles the route for displaying the list of EPI (Personal Protective Equipment) entries.
     This function retrieves all entries from the RegistroEntradas database and renders the
@@ -101,19 +104,21 @@ def entradas() -> str:
     page = "entradas.html"
 
     database = RegistroEntradas.query.all()
-    return render_template(
-        "index.html",
-        page=page,
-        title=title,
-        database=database,
-        format_currency_brl=format_currency_brl,
+    return make_response(
+        render_template(
+            "index.html",
+            page=page,
+            title=title,
+            database=database,
+            format_currency_brl=format_currency_brl,
+        )
     )
 
 
 @estoque_bp.route("/lancamento_estoque", methods=["GET", "POST"])
 @login_required
 @create_perm
-def lancamento_produto() -> Response | str:
+def lancamento_produto():
     """
     Handles the product entry process in the inventory system.
     This function performs the following steps:
@@ -141,7 +146,7 @@ def lancamento_produto() -> Response | str:
                 if form.justificativa.data == "...":
 
                     flash("Inserir nota fiscal ou informar justificativa de estorno!")
-                    return redirect(url_for("estoque.produto_epi"))
+                    return make_response(redirect(url_for("estoque.produto_epi")))
 
             query_Estoque = EstoqueEPI.query
             query_EstoqueGrade = EstoqueGrade.query
@@ -226,14 +231,16 @@ def lancamento_produto() -> Response | str:
                 abort(500, description="Item já cadastrado!")
 
             flash("Informações salvas com sucesso!", "success")
-            return redirect(url_for("estoque.produto_epi"))
+            return make_response(redirect(url_for("estoque.produto_epi")))
 
         if form.errors:
             flash("Campos Obrigatórios não preenchidos!")
-            return redirect(url_for("estoque.produto_epi"))
+            return make_response(redirect(url_for("estoque.produto_epi")))
 
         page = "forms/estoque/estoque_form.html"
-        return render_template("index.html", page=page, form=form, title=title)
+        return make_response(
+            render_template("index.html", page=page, form=form, title=title)
+        )
 
     except Exception as e:
         abort(500, description=str(e))

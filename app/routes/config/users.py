@@ -1,6 +1,6 @@
 import json
 
-from flask import abort
+from flask import Response, abort
 from flask import current_app as app
 from flask import (
     flash,
@@ -13,7 +13,6 @@ from flask import (
 )
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.wrappers.response import Response
 
 from ...decorators import create_perm, delete_perm, read_perm, update_perm
 from ...forms import AdmChangeEmail, AdmChangePassWord, FormUser
@@ -41,106 +40,125 @@ def users() -> Response:
 @config.route("/cadastro_usuario", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastro_usuario() -> str | Response | None:
+def cadastro_usuario() -> Response:
+
     form = FormUser()
-    if request.method == "GET" and request.headers.get("HX-Request") == "true":
-        html = "forms/FormUser.html"
-        return render_template(html, form=form)
-
-    elif request.method == "POST" and form.validate_on_submit():
-
-        db: SQLAlchemy = app.extensions["sqlalchemy"]
-        usuario = Users(
-            login=form.login.data,
-            nome_usuario=form.nome.data,
-            email=form.email.data,
-            grupos=json.dumps(["Default"]),
-        )
-
-        usuario.senhacrip = form.password.data
+    if request.headers.get("HX-Request") == "true":
 
         try:
-            db.session.add(usuario)
-            db.session.commit()
+            html = "forms/FormUser.html"
 
-            flash("Usuário criado com sucesso!", "success")
-            return redirect(url_for("config.users"))
+            if form.validate_on_submit():
 
-        except Exception as e:
-            abort(500, description=str(e))
+                db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-    else:
-        if form.errors:
-            pass
+                if (
+                    db.session.query(Users)
+                    .filter(Users.login == form.login.data)
+                    .first()
+                ):
+                    flash("Já existe um usuário com este login!")
+                    return make_response(redirect(url_for("config.users")))
 
-        else:
-            return redirect(url_for("config.users"))
+                usuario = Users(
+                    login=form.login.data,
+                    nome_usuario=form.nome.data,
+                    email=form.email.data,
+                    grupos=json.dumps(["Default"]),
+                )
+
+                usuario.senhacrip = form.password.data
+
+                db.session.add(usuario)
+                db.session.commit()
+
+                flash("Usuário criado com sucesso!", "success")
+                return make_response(redirect(url_for("config.users")))
+
+            if form.errors:
+                flash(form.errors)
+
+            return make_response(render_template(html, form=form))
+
+        except Exception:
+            abort(500)
+
+    return make_response(render_template(html))
 
 
 @config.route("/changepw_usr", methods=["GET", "POST"])
 @login_required
 @update_perm
-def changepw_usr() -> Response | str:
-    try:
-        form = AdmChangePassWord()
+def changepw_usr() -> Response:
 
-        html = "forms/ChangePasswordForm.html"
+    if request.headers.get("HX-Request") == "true":
+        try:
+            form = AdmChangePassWord()
 
-        if form.validate_on_submit():
+            html = "forms/ChangePasswordForm.html"
 
-            db: SQLAlchemy = app.extensions["sqlalchemy"]
-            if form.new_password.data != form.repeat_password.data:
-                flash("Senhas não coincidem")
-                return redirect(url_for("config.users"))
+            if form.validate_on_submit():
 
-            login_usr = form.data.get("user_to_change", session.get("login"))
-            password = Users.query.filter_by(login=login_usr).first()
-            password.senhacrip = form.new_password.data
-            db.session.commit()
+                db: SQLAlchemy = app.extensions["sqlalchemy"]
+                if form.new_password.data != form.repeat_password.data:
+                    flash("Senhas não coincidem")
+                    return make_response(redirect(url_for("config.users")))
 
-            flash("Senha alterada com sucesso!", "success")
-            return redirect(url_for("config.users"))
+                login_usr = form.data.get("user_to_change", session.get("login"))
+                password = Users.query.filter_by(login=login_usr).first()
+                password.senhacrip = form.new_password.data
+                db.session.commit()
 
-        return render_template(html, form=form)
+                flash("Senha alterada com sucesso!", "success")
+                return make_response(redirect(url_for("config.users")))
 
-    except Exception as e:
-        abort(500, description=str(e))
+            return make_response(render_template(html, form=form))
+
+        except Exception as e:
+            abort(500, description=str(e))
+
+    return make_response(render_template(html))
 
 
 @config.route("/changemail_usr", methods=["GET", "POST"])
 @login_required
 @update_perm
-def changemail_usr() -> Response | str:
-    try:
-        form = AdmChangeEmail()
+def changemail_usr() -> Response:
 
-        html = "forms/ChangeMailForm.html"
+    if request.headers.get("HX-Request") == "true":
 
-        if form.validate_on_submit():
+        try:
+            form = AdmChangeEmail()
 
-            db: SQLAlchemy = app.extensions["sqlalchemy"]
-            login_usr = form.data.get("user_to_change", session.get("login"))
-            mail = Users.query.filter_by(login=login_usr).first()
-            if form.new_email.data != form.repeat_email.data:
-                flash("E-mails não coincidem")
-                return redirect(url_for("config.users"))
+            html = "forms/ChangeMailForm.html"
 
-            mail.email = form.new_email.data
-            db.session.commit()
+            if form.validate_on_submit():
 
-            flash("E-mail alterado com sucesso!", "success")
-            return redirect(url_for("config.users"))
+                db: SQLAlchemy = app.extensions["sqlalchemy"]
+                login_usr = form.data.get("user_to_change", session.get("login"))
+                mail = Users.query.filter_by(login=login_usr).first()
+                if form.new_email.data != form.repeat_email.data:
+                    flash("E-mails não coincidem")
+                    return make_response(redirect(url_for("config.users")))
 
-        return render_template(html, form=form)
+                mail.email = form.new_email.data
+                db.session.commit()
 
-    except Exception as e:
-        abort(500, description=str(e))
+                flash("E-mail alterado com sucesso!", "success")
+                return make_response(redirect(url_for("config.users")))
+
+            return make_response(render_template(html, form=form))
+
+        except Exception as e:
+            abort(500, description=str(e))
+
+    return make_response(render_template(html, form=form))
 
 
 @config.route("/delete_user/<id>", methods=["GET"])
 @login_required
 @delete_perm
-def delete_user(id: int) -> str:
+def delete_user(id: int) -> Response:
     """
     Deletes a user from the database based on the provided user ID.
 
@@ -188,7 +206,7 @@ def delete_user(id: int) -> str:
             db.session.commit()
 
         template = "includes/show.html"
-        return render_template(template, message=message)
+        return make_response(render_template(template, message=message))
 
     except Exception as e:
         abort(500, description=str(e))

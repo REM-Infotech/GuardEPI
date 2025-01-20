@@ -1,10 +1,9 @@
-from flask import abort
+from flask import Response, abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, make_response, redirect, render_template, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
-from werkzeug.wrappers.response import Response
 
 from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import FormDepartamentos
@@ -16,7 +15,7 @@ from . import corp
 @corp.route("/Departamentos")
 @login_required
 @read_perm
-def Departamentos() -> str:
+def Departamentos() -> Response:
     """
     Handles the route for displaying the departments page.
     This function queries all departments from the database and renders the
@@ -36,10 +35,12 @@ def Departamentos() -> str:
         page = "departamentos.html"
         database = Departamento.query.all()
 
-        return render_template(
-            "index.html",
-            page=page,
-            database=database,
+        return make_response(
+            render_template(
+                "index.html",
+                page=page,
+                database=database,
+            )
         )
     except Exception as e:
         abort(500, description=str(e))
@@ -48,7 +49,7 @@ def Departamentos() -> str:
 @corp.route("/Departamentos/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_departamentos() -> Response | str:
+def cadastrar_departamentos() -> Response:
     """
     Handles the creation and registration of new departments.
     This function processes a form submission for creating new departments.
@@ -78,30 +79,32 @@ def cadastrar_departamentos() -> Response | str:
 
             to_add.update({key: value})
 
-        Departamentos = Departamento(**to_add)
-        db.session.add(Departamentos)
+        item = Departamento(**to_add)
+        db.session.add(item)
         try:
             db.session.commit()
         except errors.UniqueViolation:
             abort(500, description="Item já cadastrado!")
 
         flash("Departamentos cadastrada com sucesso!", "success")
-        return redirect(url_for("corp.Departamentos"))
+        return make_response(redirect(url_for("corp.Departamentos")))
 
-    return render_template(
-        "index.html",
-        page="form_base.html",
-        form=form,
-        endpoint=endpoint,
-        act=act,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
+    return make_response(
+        render_template(
+            "index.html",
+            page="form_base.html",
+            form=form,
+            endpoint=endpoint,
+            act=act,
+            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        )
     )
 
 
 @corp.route("/Departamentos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_departamentos(id) -> Response | str:
+def editar_departamentos(id) -> Response:
     """
     Edit a department by its ID.
     This function handles the editing of a department's details. It retrieves the department
@@ -118,12 +121,9 @@ def editar_departamentos(id) -> Response | str:
     act = "Cadastro"
 
     db: SQLAlchemy = app.extensions["sqlalchemy"]
-    form = FormDepartamentos()
 
     Departamentos = db.session.query(Departamento).filter(Departamento.id == id).first()
-
-    if request.method == "GET":
-        form = FormDepartamentos(**Departamentos.__dict__)
+    form = FormDepartamentos(**Departamentos.__dict__)
 
     if form.validate_on_submit():
 
@@ -140,22 +140,24 @@ def editar_departamentos(id) -> Response | str:
             abort(500, description="Item já cadastrado!")
 
         flash("Departamentos editada com sucesso!", "success")
-        return redirect(url_for("corp.Departamentos"))
+        return make_response(redirect(url_for("corp.Departamentos")))
 
-    return render_template(
-        "index.html",
-        page="form_base.html",
-        form=form,
-        endpoint=endpoint,
-        act=act,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
+    return make_response(
+        render_template(
+            "index.html",
+            page="form_base.html",
+            form=form,
+            endpoint=endpoint,
+            act=act,
+            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        )
     )
 
 
 @corp.post("/Departamentoss/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_departamentos(id: int) -> str:
+def deletar_departamentos(id: int) -> Response:
     """
     Deletes a department from the database based on the provided ID.
     Args:
@@ -172,4 +174,4 @@ def deletar_departamentos(id: int) -> str:
 
     template = "includes/show.html"
     message = "Informação deletada com sucesso!"
-    return render_template(template, message=message)
+    return make_response(render_template(template, message=message))

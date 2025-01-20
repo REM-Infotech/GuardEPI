@@ -19,7 +19,7 @@ from . import config
 @config.route("/add_itens", methods=["GET", "POST"])
 @login_required
 @read_perm
-def add_itens() -> str:
+def add_itens() -> Response:
 
     try:
 
@@ -61,11 +61,10 @@ def add_itens() -> str:
             }
 
             to_view.append(dict_to_view)
-
-        item_html = render_template("forms/roles/add_items.html", item=to_view)
-
         # Retorna o HTML do item
-        return make_response(item_html)
+        return make_response(
+            render_template("forms/roles/add_items.html", item=to_view)
+        )
     except Exception as e:
         abort(500, description=str(e))
 
@@ -73,7 +72,7 @@ def add_itens() -> str:
 @config.route("/remove-itens", methods=["GET", "POST"])
 @login_required
 @read_perm
-def remove_itens() -> str:
+def remove_itens() -> Response:
 
     try:
         hex_name_json = session["json_filename"]
@@ -90,6 +89,7 @@ def remove_itens() -> str:
     except Exception:
         obj = traceback.format_exc()
         app.logger.exception(obj)
+        abort(500)
 
 
 @config.route("/roles", methods=["GET"])

@@ -1,10 +1,9 @@
-from flask import abort
+from flask import Response, abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, make_response, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
-from werkzeug.wrappers.response import Response
 
 from app.forms import FormGrade
 from app.models import GradeEPI
@@ -16,7 +15,7 @@ from . import epi
 @epi.route("/Grade")
 @login_required
 @read_perm
-def Grade() -> str:
+def Grade() -> Response:
     """
     Handles the request to display the grades page.
     This function queries the GradeEPI database for all entries and renders the
@@ -36,11 +35,13 @@ def Grade() -> str:
         page = "grade.html"
 
         database = GradeEPI.query.all()
-        return render_template(
-            "index.html",
-            page=page,
-            title=title,
-            database=database,
+        return make_response(
+            render_template(
+                "index.html",
+                page=page,
+                title=title,
+                database=database,
+            )
         )
     except Exception as e:
         abort(500, description=str(e))
@@ -49,7 +50,7 @@ def Grade() -> str:
 @epi.route("/Grade/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_grade() -> Response | str:
+def cadastrar_grade() -> Response:
     """
     Handles the creation and registration of a new GradeEPI entry.
     This function processes a form submission for creating a new GradeEPI.
@@ -80,30 +81,32 @@ def cadastrar_grade() -> Response | str:
 
             to_add.update({key: value})
 
-        grade = GradeEPI(**to_add)
-        db.session.add(grade)
+        item = GradeEPI(**to_add)
+        db.session.add(item)
         try:
             db.session.commit()
         except errors.UniqueViolation:
             abort(500, description="Item já cadastrado!")
 
         flash("Grade cadastrada com sucesso!", "success")
-        return redirect(url_for("epi.Grade"))
+        return make_response(redirect(url_for("epi.Grade")))
 
-    return render_template(
-        "index.html",
-        page="form_base.html",
-        form=form,
-        endpoint=endpoint,
-        act=act,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
+    return make_response(
+        render_template(
+            "index.html",
+            page="form_base.html",
+            form=form,
+            endpoint=endpoint,
+            act=act,
+            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        )
     )
 
 
 @epi.route("/Grade/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_grade(id) -> Response | str:
+def editar_grade(id) -> Response:
     """
     Edit a GradeEPI entry in the database.
     This function handles the editing of a GradeEPI entry identified by the given id.
@@ -144,22 +147,24 @@ def editar_grade(id) -> Response | str:
             abort(500, description="Item já cadastrado!")
 
         flash("Grade editada com sucesso!", "success")
-        return redirect(url_for("epi.Grade"))
+        return make_response(redirect(url_for("epi.Grade")))
 
-    return render_template(
-        "index.html",
-        page="form_base.html",
-        form=form,
-        endpoint=endpoint,
-        act=act,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
+    return make_response(
+        render_template(
+            "index.html",
+            page="form_base.html",
+            form=form,
+            endpoint=endpoint,
+            act=act,
+            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        )
     )
 
 
 @epi.post("/grades/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_grade(id: int) -> str:
+def deletar_grade(id: int):
     """
     Deletes a GradeEPI record from the database based on the provided ID.
     Args:
@@ -176,4 +181,4 @@ def deletar_grade(id: int) -> str:
 
     template = "includes/show.html"
     message = "Informação deletada com sucesso!"
-    return render_template(template, message=message)
+    return make_response(render_template(template, message=message))

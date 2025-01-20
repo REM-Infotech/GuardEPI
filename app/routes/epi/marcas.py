@@ -1,10 +1,9 @@
-from flask import abort
+from flask import Response, abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, make_response, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
-from werkzeug.wrappers.response import Response
 
 from app.forms import FormMarcas
 from app.models import Marcas
@@ -16,7 +15,7 @@ from . import epi
 @epi.route("/marcas", methods=["GET"])
 @login_required
 @read_perm
-def marcas() -> str:
+def marcas() -> Response:
     """
     Fetches all records from the Marcas table and renders the 'index.html' template with the 'marcas.html' page and the retrieved database records.
     Returns:
@@ -26,13 +25,15 @@ def marcas() -> str:
     title = "Marcas"
     page = "marcas.html"
     database = Marcas.query.all()
-    return render_template("index.html", page=page, database=database, title=title)
+    return make_response(
+        render_template("index.html", page=page, database=database, title=title)
+    )
 
 
 @epi.route("/marca/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_marca() -> Response | str:
+def cadastrar_marca() -> Response:
     """
     Handles the registration of a new brand (marca).
     This function processes the form submission for registering a new brand.
@@ -64,30 +65,32 @@ def cadastrar_marca() -> Response | str:
 
             to_add.update({key: value})
 
-        classe = Marcas(**to_add)
-        db.session.add(classe)
+        item = Marcas(**to_add)
+        db.session.add(item)
         try:
             db.session.commit()
         except errors.UniqueViolation:
             abort(500, description="Item já cadastrado!")
 
         flash("Marca cadastrada com sucesso!", "success")
-        return redirect(url_for("epi.marcas"))
+        return make_response(redirect(url_for("epi.marcas")))
 
-    return render_template(
-        "index.html",
-        page="form_base.html",
-        form=form,
-        endpoint=endpoint,
-        act=act,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
+    return make_response(
+        render_template(
+            "index.html",
+            page="form_base.html",
+            form=form,
+            endpoint=endpoint,
+            act=act,
+            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        )
     )
 
 
 @epi.route("/marca/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_marca(id) -> Response | str:
+def editar_marca(id) -> Response:
     """
     Edit a brand (marca) based on the given ID.
     This function handles the editing of a brand by retrieving the brand's
@@ -129,22 +132,24 @@ def editar_marca(id) -> Response | str:
             abort(500, description="Item já cadastrado!")
 
         flash("Marca editada com sucesso!", "success")
-        return redirect(url_for("epi.marcas"))
+        return make_response(redirect(url_for("epi.marcas")))
 
-    return render_template(
-        "index.html",
-        page="form_base.html",
-        form=form,
-        endpoint=endpoint,
-        act=act,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
+    return make_response(
+        render_template(
+            "index.html",
+            page="form_base.html",
+            form=form,
+            endpoint=endpoint,
+            act=act,
+            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        )
     )
 
 
 @epi.post("/marcas/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_marca(id: int) -> str:
+def deletar_marca(id: int) -> Response:
     """
     Deletes a brand entry from the database based on the provided ID.
     Args:
@@ -161,4 +166,4 @@ def deletar_marca(id: int) -> str:
 
     template = "includes/show.html"
     message = "Informação deletada com sucesso!"
-    return render_template(template, message=message)
+    return make_response(render_template(template, message=message))

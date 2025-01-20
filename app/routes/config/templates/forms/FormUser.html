@@ -1,3 +1,4 @@
+{% if form %}
 <h4 class="card-header mb-4 text-black">Criar Usuário</h4>
 <div class="card-body">
   <form action="{{ url_for('config.cadastro_usuario') }}" method="post" class="text-black">
@@ -41,3 +42,4 @@
     });
   });
 </script>
+{% endif %}

@@ -2,15 +2,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Union
 
-from flask import abort
+from flask import Response, abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, make_response, redirect, render_template, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
-from werkzeug.wrappers.response import Response
 
 from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import EmpresaForm
@@ -24,7 +23,7 @@ form_content = Union[str, FileStorage, int, float, datetime]
 @corp.route("/Empresas", methods=["GET"])
 @login_required
 @read_perm
-def Empresas() -> str:
+def Empresas() -> Response:
     """
     Handles the route for displaying the 'Empresas' page.
     This function creates an instance of the EmpresaForm form and retrieves all records from the Empresa database.
@@ -40,10 +39,12 @@ def Empresas() -> str:
         database = Empresa.query.all()
 
         page = "empresas.html"
-        return render_template(
-            "index.html",
-            page=page,
-            database=database,
+        return make_response(
+            render_template(
+                "index.html",
+                page=page,
+                database=database,
+            )
         )
 
     except Exception as e:
@@ -53,7 +54,7 @@ def Empresas() -> str:
 @corp.route("/Empresas/cadastro", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastro_empresas() -> Response | str:
+def cadastro_empresas() -> Response:
     """
     Handles the registration of companies.
     This function processes the form data submitted for company registration,
@@ -110,23 +111,25 @@ def cadastro_empresas() -> Response | str:
             abort(500, description="Item já cadastrado!")
 
         flash("emp cadastrado com sucesso!", "success")
-        return redirect(url_for("corp.Empresas"))
+        return make_response(redirect(url_for("corp.Empresas")))
 
     page = "forms/empresa_form.html"
-    return render_template(
-        "index.html",
-        act=act,
-        endpoint=endpoint,
-        page=page,
-        form=form,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
+    return make_response(
+        render_template(
+            "index.html",
+            act=act,
+            endpoint=endpoint,
+            page=page,
+            form=form,
+            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        )
     )
 
 
 @corp.route("/Empresas/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_empresas(id: int) -> Response | str:
+def editar_empresas(id: int) -> Response:
     """
     Edit an existing company record in the database.
     This function handles both GET and POST requests to edit a company's details.
@@ -147,48 +150,44 @@ def editar_empresas(id: int) -> Response | str:
 
     form_data = {}
 
-    form = EmpresaForm()
+    url_image = ""
+    emp_data = emp.__dict__
 
-    if request.method == "GET":
+    items_emp_data = list(emp_data.items())
 
-        url_image = ""
-        emp_data = emp.__dict__
+    for key, value in items_emp_data:
 
-        items_emp_data = list(emp_data.items())
+        if key == "_sa_instance_state" or key == "id" or key == "filename":
 
-        for key, value in items_emp_data:
+            continue
 
-            if key == "_sa_instance_state" or key == "id" or key == "filename":
+        if key == "blob_doc":
 
-                continue
+            img_path = (
+                Path(app.config.get("TEMP_PATH"))
+                .joinpath("IMG")
+                .joinpath(emp_data.get("filename"))
+            )
+            with img_path.open("wb") as file:
+                file.write(value)
 
-            if key == "blob_doc":
-
-                img_path = (
-                    Path(app.config.get("TEMP_PATH"))
-                    .joinpath("IMG")
-                    .joinpath(emp_data.get("filename"))
+            with img_path.open("rb") as file:
+                form_data.update(
+                    {
+                        "filename": FileStorage(
+                            filename=secure_filename(emp.filename),
+                            stream=file.read(),
+                        )
+                    }
                 )
-                with img_path.open("wb") as file:
-                    file.write(value)
 
-                with img_path.open("rb") as file:
-                    form_data.update(
-                        {
-                            "filename": FileStorage(
-                                filename=secure_filename(emp.filename),
-                                stream=file.read(),
-                            )
-                        }
-                    )
+                url_image = url_for(
+                    "serve.serve_img", filename=emp.filename, _external=True
+                )
 
-                    url_image = url_for(
-                        "serve.serve_img", filename=emp.filename, _external=True
-                    )
+        form_data.update({key: value})
 
-            form_data.update({key: value})
-
-        form = EmpresaForm(**form_data)
+    form = EmpresaForm(**form_data)
 
     if form.validate_on_submit():
 
@@ -222,24 +221,26 @@ def editar_empresas(id: int) -> Response | str:
             abort(500, description="Item já cadastrado!")
 
         flash("Edições Salvas con sucesso!", "success")
-        return redirect(url_for("corp.Empresas"))
+        return make_response(redirect(url_for("corp.Empresas")))
 
     page = "forms/empresa_form.html"
-    return render_template(
-        "index.html",
-        act=act,
-        endpoint=endpoint,
-        page=page,
-        form=form,
-        url_image=url_image,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
+    return make_response(
+        render_template(
+            "index.html",
+            act=act,
+            endpoint=endpoint,
+            page=page,
+            form=form,
+            url_image=url_image,
+            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        )
     )
 
 
 @corp.post("/Empresas/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_empresas(id: int) -> str:
+def deletar_empresas(id: int) -> Response:
     """
     Deletes a company record from the database based on the provided ID.
     Args:
@@ -258,4 +259,4 @@ def deletar_empresas(id: int) -> str:
 
     template = "includes/show.html"
     message = "Informação deletada com sucesso!"
-    return render_template(template, message=message)
+    return make_response(render_template(template, message=message))

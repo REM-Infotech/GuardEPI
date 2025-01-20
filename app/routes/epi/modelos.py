@@ -1,7 +1,6 @@
-from flask import abort
+from flask import Response, abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, request, url_for
-from flask.wrappers import Response
+from flask import flash, make_response, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
@@ -16,7 +15,7 @@ from . import epi
 @epi.route("/modelos", methods=["GET"])
 @login_required
 @read_perm
-def modelos() -> str:
+def modelos() -> Response:
     """
     Fetches all records from the ModelosEPI database and renders the 'index.html' template with the 'modelos.html' page and the database records.
     Returns:
@@ -26,13 +25,15 @@ def modelos() -> str:
     title = "Modelos"
     page = "modelos.html"
     database = ModelosEPI.query.all()
-    return render_template("index.html", page=page, database=database, title=title)
+    return make_response(
+        render_template("index.html", page=page, database=database, title=title)
+    )
 
 
 @epi.route("/modelos/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_modelos() -> Response | str:
+def cadastrar_modelos() -> Response:
     """
     Handles the registration of new "modelos" (models) in the application.
     This function processes the form submission for registering new models.
@@ -62,31 +63,32 @@ def cadastrar_modelos() -> Response | str:
 
             to_add.update({key: value})
 
-        classe = ModelosEPI(**to_add)
-        db.session.add(classe)
-
+        item = ModelosEPI(**to_add)
+        db.session.add(item)
         try:
             db.session.commit()
         except errors.UniqueViolation:
             abort(500, description="Item já cadastrado!")
 
         flash("modelos cadastrada com sucesso!", "success")
-        return redirect(url_for("epi.modelos"))
+        return make_response(redirect(url_for("epi.modelos")))
 
-    return render_template(
-        "index.html",
-        page="form_base.html",
-        form=form,
-        endpoint=endpoint,
-        act=act,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
+    return make_response(
+        render_template(
+            "index.html",
+            page="form_base.html",
+            form=form,
+            endpoint=endpoint,
+            act=act,
+            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        )
     )
 
 
 @epi.route("/modelos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_modelos(id: int) -> Response | str:
+def editar_modelos(id: int) -> Response:
     """
     Edit an existing 'ModelosEPI' entry in the database.
     This function handles the editing of a 'ModelosEPI' entry identified by the given ID.
@@ -127,22 +129,24 @@ def editar_modelos(id: int) -> Response | str:
             abort(500, description="Item já cadastrado!")
 
         flash("modelos editada com sucesso!", "success")
-        return redirect(url_for("epi.modelos"))
+        return make_response(redirect(url_for("epi.modelos")))
 
-    return render_template(
-        "index.html",
-        page="form_base.html",
-        form=form,
-        endpoint=endpoint,
-        act=act,
-        title=" ".join([act.capitalize(), endpoint.capitalize()]),
+    return make_response(
+        render_template(
+            "index.html",
+            page="form_base.html",
+            form=form,
+            endpoint=endpoint,
+            act=act,
+            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        )
     )
 
 
 @epi.post("/modeloss/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_modelos(id: int) -> str:
+def deletar_modelos(id: int) -> Response:
     """
     Deletes a ModelosEPI record from the database based on the provided ID.
     Args:
@@ -159,4 +163,4 @@ def deletar_modelos(id: int) -> str:
 
     template = "includes/show.html"
     message = "Informação deletada com sucesso!"
-    return render_template(template, message=message)
+    return make_response(render_template(template, message=message))

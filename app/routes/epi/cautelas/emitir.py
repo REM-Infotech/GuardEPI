@@ -7,12 +7,11 @@ from pathlib import Path
 from time import sleep
 from typing import List
 
-from flask import abort
+from flask import Response, abort
 from flask import current_app as app
-from flask import redirect, render_template, request, session, url_for
+from flask import make_response, redirect, render_template, request, session, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.wrappers.response import Response
 
 from ....decorators import create_perm
 from ....forms import Cautela
@@ -57,7 +56,7 @@ def setgroups() -> None:
 @estoque_bp.route("/add_itens", methods=["GET", "POST"])
 @login_required
 @create_perm
-def add_itens() -> str:
+def add_itens() -> Response:
 
     try:
 
@@ -88,14 +87,16 @@ def add_itens() -> str:
 
         if estoque_grade is not None:
             if all([estoque_grade.qtd_estoque == 0, data_estoque.qtd_estoque == 0]):
-                return render_template(
-                    "forms/cautela/not_estoque.html", epi_name=nome_epi
+                return make_response(
+                    render_template("forms/cautela/not_estoque.html", epi_name=nome_epi)
                 )
 
         elif estoque_grade is None:
-            return render_template(
-                "forms/cautela/not_estoque.html",
-                message="EPI não registrada no estoque!",
+            return make_response(
+                render_template(
+                    "forms/cautela/not_estoque.html",
+                    message="EPI não registrada no estoque!",
+                )
             )
 
         pathj = os.path.join(
@@ -116,7 +117,7 @@ def add_itens() -> str:
         item_html = render_template("forms/cautela/add_items.html", item=list_epis)
 
         # Retorna o HTML do item
-        return item_html
+        return make_response(item_html)
     except Exception as e:
         abort(500, description=str(e))
 
@@ -124,7 +125,7 @@ def add_itens() -> str:
 @estoque_bp.route("/remove-itens", methods=["GET", "POST"])
 @login_required
 @create_perm
-def remove_itens() -> str:
+def remove_itens() -> Response:
 
     pathj = os.path.join(app.config["TEMP_PATH"], f"{session["uuid_Cautelas"]}.json")
     json_obj = json.dumps([])
@@ -133,13 +134,13 @@ def remove_itens() -> str:
         f.write(json_obj)
 
     item_html = render_template("forms/cautela/add_items.html")
-    return item_html
+    return make_response(item_html)
 
 
 @estoque_bp.post("/get_grade")
 @login_required
 @create_perm
-def get_grade() -> str:
+def get_grade() -> Response:
 
     try:
         form = Cautela()
@@ -150,7 +151,7 @@ def get_grade() -> str:
         form.tipo_grade.choices.extend(lista)
 
         page = "forms/cautela/get_grade.html"
-        return render_template(page, form=form)
+        return make_response(render_template(page, form=form))
     except Exception as e:
         abort(500, description=str(e))
 
@@ -158,7 +159,7 @@ def get_grade() -> str:
 @estoque_bp.route("/emitir_cautela", methods=["GET", "POST"])
 @login_required
 @create_perm
-def emitir_cautela() -> Response | str:
+def emitir_cautela() -> Response:
 
     try:
 
@@ -187,9 +188,10 @@ def emitir_cautela() -> Response | str:
                 subtract_estoque(form, db, nomefilename),
                 nomefilename,
             )
-            return
 
-        return render_template("index.html", page=page, form=form, title=title)
+        return make_response(
+            render_template("index.html", page=page, form=form, title=title)
+        )
 
     except Exception as e:
 
@@ -318,7 +320,7 @@ def emit_doc(
     logo_empresa_path: Path,
     list_epis_solict: list,
     nomefilename: str,
-):
+) -> Response:
 
     count_ = db.session.query(RegistrosEPI).all()
     year = datetime.now().year
@@ -390,7 +392,9 @@ def emit_doc(
         str_foldertoshow = str(path_toshow.joinpath(nomefilename))
         shutil.copy(path_cautela, str_foldertoshow)
 
-        return redirect(url_for("estoque.cautelas", to_show=folder_to_show))
+        return make_response(
+            redirect(url_for("estoque.cautelas", to_show=folder_to_show))
+        )
 
     except Exception as e:
         raise e

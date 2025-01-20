@@ -38,7 +38,7 @@ class Departamento(db.Model):
 class Empresa(db.Model):
     __tablename__ = "empresa"
     id: int = db.Column(db.Integer, primary_key=True)
-    nome_empresa: str = db.Column(db.String(length=64))
-    cnpj_empresa: str = db.Column(db.String(length=64))
+    nome_empresa: str = db.Column(db.String(length=64), unique=True)
+    cnpj_empresa: str = db.Column(db.String(length=64), unique=True)
     filename: str = db.Column(db.String(length=128))
     blob_doc: LargeBinary = db.Column(db.LargeBinary(length=(2**32) - 1))

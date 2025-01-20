@@ -1,8 +1,7 @@
 from importlib import import_module
 from pathlib import Path
 
-from flask import Blueprint, redirect, url_for
-from werkzeug.wrappers.response import Response
+from flask import Blueprint, Response, make_response, redirect, url_for
 
 template_folder = Path(__file__).parent.resolve().joinpath("templates")
 epi = Blueprint("epi", __name__, template_folder=template_folder, url_prefix="/epi")
@@ -19,7 +18,7 @@ def redirecting() -> Response:
         Response: A redirect response object to the 'epi.Equipamentos' URL.
     """
 
-    return redirect(url_for("epi.Equipamentos"))
+    return make_response(redirect(url_for("epi.Equipamentos")))
 
 
 if epi is not None:
