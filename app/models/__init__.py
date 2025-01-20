@@ -20,6 +20,7 @@ from .EPI import (
     RegistroEntradas,
     RegistroSaidas,
     RegistrosEPI,
+    epis_cautela,
 )
 from .Funcionários import Cargos, Departamento, Empresa, Funcionarios
 from .users import Groups, Roles, Routes, Users
@@ -42,6 +43,7 @@ __all__ = (
     RegistroEntradas,
     RegistroSaidas,
     RegistrosEPI,
+    epis_cautela,
 )
 
 endpoints = ["/epi", "/corp", "/config", "/estoque"]

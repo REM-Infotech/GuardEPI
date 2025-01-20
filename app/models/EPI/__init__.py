@@ -1,4 +1,4 @@
-from .cautelas import RegistrosEPI
+from .cautelas import RegistrosEPI, epis_cautela
 from .equipamento import (
     ClassesEPI,
     Fornecedores,
@@ -23,4 +23,5 @@ __all__ = (
     RegistroSaidas,
     RegistroEntradas,
     TaskNotificacao,
+    epis_cautela,
 )

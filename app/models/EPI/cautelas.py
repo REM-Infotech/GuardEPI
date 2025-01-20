@@ -9,8 +9,8 @@ class epis_cautela(db.Model):
 
     __tablename__ = "epis_cautela"
     id = db.Column(db.Integer, primary_key=True)
-    produtos_epi_id: int = db.Column(db.Integer, db.ForeignKey("produto_epi.id"))
-    produtos_epi = db.relationship("ProdutoEPI", backref="epis_cautela_")
+    epis_saidas_id: int = db.Column(db.Integer, db.ForeignKey("registro_saidas.id"))
+    epis_saidas = db.relationship("RegistroSaidas", backref="epis_cautela_")
 
     registros_epi_id: int = db.Column(db.Integer, db.ForeignKey("registros_epi.id"))
     nome_epis = db.relationship("RegistrosEPI", backref="epis_cautela_")

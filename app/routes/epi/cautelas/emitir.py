@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+from typing import List
 import uuid
 from datetime import datetime
 from pathlib import Path
@@ -13,15 +14,15 @@ from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.wrappers.response import Response
 
-from app.decorators import create_perm
-from app.forms import Cautela
-from app.misc import (
+from ....decorators import create_perm
+from ....forms import Cautela
+from ....misc import (
     add_watermark,
     adjust_image_transparency,
     create_EPI_control_sheet,
     create_watermark_pdf,
 )
-from app.models import (
+from ....models import (
     Empresa,
     EstoqueEPI,
     EstoqueGrade,
@@ -29,6 +30,7 @@ from app.models import (
     ProdutoEPI,
     RegistroSaidas,
     RegistrosEPI,
+    epis_cautela,
 )
 
 from .. import estoque_bp
@@ -272,8 +274,16 @@ def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
             valor_total=valor_calc,
         )
 
-        registrar.nome_epis = epis_lista
+        secondary: List[epis_cautela] = []
+        for epi in para_registro:
+
+            registro_secondary = epis_cautela()
+            registro_secondary.epis_saidas = epi
+            registro_secondary.nome_epis = registrar
+            secondary.append(registro_secondary)
+
         db.session.add(registrar)
+        db.session.add_all(secondary)
         db.session.add_all(para_registro)
         db.session.commit()
 
