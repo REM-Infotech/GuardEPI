@@ -56,8 +56,11 @@ def cadastrar_marca() -> Response:
     try:
         endpoint = "marca"
         act = "Cadastro"
-        form = FormMarcas()
 
+        title = " ".join([act, endpoint])
+        page = "form_base.html"
+
+        form = FormMarcas()
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
@@ -77,20 +80,17 @@ def cadastrar_marca() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("Marca cadastrada com sucesso!", "success")
             return make_response(redirect(url_for("epi.marcas")))
 
         return make_response(
-            render_template(
-                "index.html",
-                page="form_base.html",
-                form=form,
-                endpoint=endpoint,
-                act=act,
-                title=" ".join([act.capitalize(), endpoint.capitalize()]),
-            )
+            render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:
@@ -122,6 +122,9 @@ def editar_marca(id) -> Response:
         endpoint = "marca"
         act = "Cadastro"
 
+        title = " ".join([act, endpoint])
+        page = "form_base.html"
+
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         form = FormMarcas()
 
@@ -142,20 +145,17 @@ def editar_marca(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("Marca editada com sucesso!", "success")
             return make_response(redirect(url_for("epi.marcas")))
 
         return make_response(
-            render_template(
-                "index.html",
-                page="form_base.html",
-                form=form,
-                endpoint=endpoint,
-                act=act,
-                title=" ".join([act.capitalize(), endpoint.capitalize()]),
-            )
+            render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:

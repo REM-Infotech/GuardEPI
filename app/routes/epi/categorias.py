@@ -60,6 +60,10 @@ def cadastrar_categoria() -> Response:
 
         endpoint = "Categoria"
         act = "Cadastro"
+
+        title = " ".join([act, endpoint])
+        page = "form_base.html"
+
         form = FormCategorias()
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]
@@ -81,20 +85,17 @@ def cadastrar_categoria() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("Categoria cadastrada com sucesso!", "success")
             return make_response(make_response(redirect(url_for("epi.categorias"))))
 
         return make_response(
-            render_template(
-                "index.html",
-                page="form_base.html",
-                form=form,
-                endpoint=endpoint,
-                act=act,
-                title=" ".join([act.capitalize(), endpoint.capitalize()]),
-            )
+            render_template("index.html", page=page, form=form, title=title)
         )
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -122,6 +123,9 @@ def editar_categoria(id) -> Response:
         endpoint = "Categoria"
         act = "Cadastro"
 
+        title = " ".join([act, endpoint])
+        page = "form_base.html"
+
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         form = FormCategorias()
 
@@ -142,20 +146,17 @@ def editar_categoria(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("Categoria editada com sucesso!", "success")
             return make_response(redirect(url_for("epi.categorias")))
 
         return make_response(
-            render_template(
-                "index.html",
-                page="form_base.html",
-                form=form,
-                endpoint=endpoint,
-                act=act,
-                title=" ".join([act.capitalize(), endpoint.capitalize()]),
-            )
+            render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:

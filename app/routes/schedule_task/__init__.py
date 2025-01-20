@@ -2,7 +2,7 @@ from os import path
 from pathlib import Path
 
 from celery import shared_task
-from flask import Blueprint
+from flask import Blueprint, Response
 from flask import current_app as app
 from flask import make_response, redirect, render_template, url_for
 from flask_login import login_required
@@ -19,7 +19,7 @@ schedule_bp = Blueprint(
 
 @schedule_bp.get("/dash")
 @login_required
-def dash():
+def dash() -> Response:
 
     form: FlaskForm | TaskNotificacaoForm = TaskNotificacaoForm()
     page = "schedules.html"
@@ -28,7 +28,7 @@ def dash():
 
 @schedule_bp.post("/new_schedule")
 @login_required
-def new_schedule():
+def new_schedule() -> Response:
 
     # form: FlaskForm | TaskNotificacaoForm = TaskNotificacaoForm()
 
@@ -40,7 +40,7 @@ def new_schedule():
 
 
 @shared_task(bind=True, ignore_result=False)
-def send_email(self, todo: str):
+def send_email(self, todo: str) -> None:
 
     mail = Mail(app)
 
@@ -48,8 +48,6 @@ def send_email(self, todo: str):
 
         msg = message_formatter(todo)
         mail.send(msg)
-
-    return
 
 
 def message_formatter(todo: str) -> Message:

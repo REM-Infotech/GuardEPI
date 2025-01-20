@@ -69,8 +69,11 @@ def cadastrar_grade() -> Response:
     try:
         endpoint = "Grade"
         act = "Cadastro"
-        form = FormGrade()
 
+        title = " ".join([act, endpoint])
+        page = "form_base.html"
+
+        form = FormGrade()
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
@@ -90,20 +93,17 @@ def cadastrar_grade() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("Grade cadastrada com sucesso!", "success")
             return make_response(redirect(url_for("epi.Grade")))
 
         return make_response(
-            render_template(
-                "index.html",
-                page="form_base.html",
-                form=form,
-                endpoint=endpoint,
-                act=act,
-                title=" ".join([act.capitalize(), endpoint.capitalize()]),
-            )
+            render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:
@@ -133,6 +133,9 @@ def editar_grade(id) -> Response:
         endpoint = "grade"
         act = "Cadastro"
 
+        title = " ".join([act, endpoint])
+        page = "form_base.html"
+
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         form = FormGrade()
 
@@ -153,20 +156,17 @@ def editar_grade(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("Grade editada com sucesso!", "success")
             return make_response(redirect(url_for("epi.Grade")))
 
         return make_response(
-            render_template(
-                "index.html",
-                page="form_base.html",
-                form=form,
-                endpoint=endpoint,
-                act=act,
-                title=" ".join([act.capitalize(), endpoint.capitalize()]),
-            )
+            render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:

@@ -36,10 +36,11 @@ def produto_epi() -> Response:
     """
 
     try:
-        database = EstoqueEPI.query.all()
+
         title = "Estoque Geral (Por Produto)"
         page = "estoque.html"
-        form = InsertEstoqueForm()
+
+        database = EstoqueEPI.query.all()
 
         return make_response(
             render_template(
@@ -47,7 +48,6 @@ def produto_epi() -> Response:
                 page=page,
                 title=title,
                 database=database,
-                form=form,
                 format_currency_brl=format_currency_brl,
             )
         )
@@ -74,9 +74,9 @@ def grade() -> Response:
     try:
 
         title = "Estoque Geral (Por Grades)"
-        database = EstoqueGrade.query.all()
-
         page = "estoque_grade.html"
+
+        database = EstoqueGrade.query.all()
 
         return make_response(
             render_template(
@@ -144,6 +144,7 @@ def lancamento_produto() -> Response:
 
     try:
         title = "Lançamento de Estoque"
+        page = "forms/estoque/estoque_form.html"
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         form = InsertEstoqueForm()
@@ -235,7 +236,11 @@ def lancamento_produto() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("Informações salvas com sucesso!", "success")
             return make_response(redirect(url_for("estoque.produto_epi")))
@@ -244,7 +249,6 @@ def lancamento_produto() -> Response:
             flash("Campos Obrigatórios não preenchidos!")
             return make_response(redirect(url_for("estoque.produto_epi")))
 
-        page = "forms/estoque/estoque_form.html"
         return make_response(
             render_template("index.html", page=page, form=form, title=title)
         )

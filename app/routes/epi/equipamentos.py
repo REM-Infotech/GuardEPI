@@ -68,6 +68,8 @@ def cadastro_equipamento() -> Response:
                     or a rendered template of the form page if the form is not submitted or is invalid.
         """
         title = "Cadastro de Equipamento"
+        page = "forms/equipamento_form.html"
+
         form = FormProduto()
 
         if form.validate_on_submit():
@@ -103,13 +105,17 @@ def cadastro_equipamento() -> Response:
             db.session.add(item)
             try:
                 db.session.commit()
+
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("EPI cadastrado com sucesso!", "success")
             return make_response(redirect(url_for("epi.Equipamentos")))
 
-        page = "forms/equipamento_form.html"
         return make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
@@ -142,11 +148,10 @@ def editar_equipamento(id: int) -> Response:
         form_data = {}
 
         title = "Editar Equipamento"
+        page = "forms/equipamento_form.html"
 
         url_image = ""
-
         epi_data = epi.__dict__
-
         items_epi_data = list(epi_data.items())
 
         for key, value in items_epi_data:
@@ -223,7 +228,17 @@ def editar_equipamento(id: int) -> Response:
                 db.session.commit()
 
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template(
+                        "index.html",
+                        title=title,
+                        page=page,
+                        form=form,
+                        url_image=url_image,
+                    )
+                )
 
             flash("Edições Salvas con sucesso!", "success")
             return make_response(redirect(url_for("epi.Equipamentos")))
@@ -231,10 +246,13 @@ def editar_equipamento(id: int) -> Response:
         if form.errors:
             pass
 
-        page = "forms/equipamento_form.html"
         return make_response(
             render_template(
-                "index.html", page=page, form=form, url_image=url_image, title=title
+                "index.html",
+                title=title,
+                page=page,
+                form=form,
+                url_image=url_image,
             )
         )
 

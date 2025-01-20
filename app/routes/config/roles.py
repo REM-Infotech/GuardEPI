@@ -99,8 +99,8 @@ def roles() -> Response:
     try:
 
         title = "Regras"
-        database = Roles.query.all()
         page = "roles.html"
+        database = Roles.query.all()
 
         return make_response(
             render_template("index.html", title=title, database=database, page=page)

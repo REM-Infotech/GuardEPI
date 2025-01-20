@@ -50,8 +50,11 @@ def cadastrar_modelos() -> Response:
     try:
         endpoint = "modelos"
         act = "Cadastro"
-        form = FormModelos()
 
+        title = " ".join([act, endpoint])
+        page = "form_base.html"
+
+        form = FormModelos()
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
@@ -71,20 +74,17 @@ def cadastrar_modelos() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("modelos cadastrada com sucesso!", "success")
             return make_response(redirect(url_for("epi.modelos")))
 
         return make_response(
-            render_template(
-                "index.html",
-                page="form_base.html",
-                form=form,
-                endpoint=endpoint,
-                act=act,
-                title=" ".join([act.capitalize(), endpoint.capitalize()]),
-            )
+            render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:
@@ -114,6 +114,9 @@ def editar_modelos(id: int) -> Response:
         endpoint = "modelos"
         act = "Cadastro"
 
+        title = " ".join([act, endpoint])
+        page = "form_base.html"
+
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         form = FormModelos()
 
@@ -134,20 +137,17 @@ def editar_modelos(id: int) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("modelos editada com sucesso!", "success")
             return make_response(redirect(url_for("epi.modelos")))
 
         return make_response(
-            render_template(
-                "index.html",
-                page="form_base.html",
-                form=form,
-                endpoint=endpoint,
-                act=act,
-                title=" ".join([act.capitalize(), endpoint.capitalize()]),
-            )
+            render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:

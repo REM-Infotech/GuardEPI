@@ -64,8 +64,11 @@ def cadastrar_cargos() -> Response:
     try:
         endpoint = "Cargos"
         act = "Cadastro"
-        form = CargoForm()
 
+        title = " ".join([act, endpoint])
+        page = "form_base.html"
+
+        form = CargoForm()
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
@@ -85,20 +88,16 @@ def cadastrar_cargos() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("Cargo cadastrado com sucesso!", "success")
             return make_response(redirect(url_for("corp.cargos")))
 
         return make_response(
-            render_template(
-                "index.html",
-                page="form_base.html",
-                form=form,
-                endpoint=endpoint,
-                act=act,
-                title=" ".join([act.capitalize(), endpoint.capitalize()]),
-            )
+            render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:
@@ -129,6 +128,9 @@ def editar_cargos(id) -> Response:
         endpoint = "cargos"
         act = "Cadastro"
 
+        title = " ".join([act, endpoint])
+        page = "form_base.html"
+
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         cargos = db.session.query(Cargos).filter(Cargos.id == id).first()
@@ -146,20 +148,17 @@ def editar_cargos(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("Cargo editado com sucesso!", "success")
             return make_response(redirect(url_for("corp.cargos")))
 
         return make_response(
-            render_template(
-                "index.html",
-                page="form_base.html",
-                form=form,
-                endpoint=endpoint,
-                act=act,
-                title=" ".join([act.capitalize(), endpoint.capitalize()]),
-            )
+            render_template("index.html", page=page, form=form, title=title)
         )
     except Exception:
         app.logger.exception(traceback.format_exc())

@@ -70,7 +70,9 @@ def cadastro_funcionarios() -> Response:
     """
 
     try:
+
         title = "Cadastro de Funcionário"
+        page = "forms/funcionario_form.html"
 
         form = FuncionarioForm()
 
@@ -108,12 +110,15 @@ def cadastro_funcionarios() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("func cadastrado com sucesso!", "success")
             return make_response(redirect(url_for("corp.funcionarios")))
 
-        page = "forms/funcionario_form.html"
         return make_response(
             render_template("index.html", title=title, page=page, form=form)
         )
@@ -140,6 +145,8 @@ def editar_funcionarios(id: int) -> Response:
 
     try:
         title = "Editar Funcionário"
+        page = "forms/funcionario_form.html"
+
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         func = db.session.query(Funcionarios).filter_by(id=id).first()
 
@@ -213,12 +220,21 @@ def editar_funcionarios(id: int) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template(
+                        "index.html",
+                        title=title,
+                        page=page,
+                        form=form,
+                        url_image=url_image,
+                    )
+                )
 
             flash("Edições Salvas con sucesso!", "success")
             return make_response(redirect(url_for("corp.funcionarios")))
 
-        page = "forms/funcionario_form.html"
         return make_response(
             render_template(
                 "index.html",

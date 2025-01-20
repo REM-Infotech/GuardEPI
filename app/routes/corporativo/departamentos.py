@@ -67,6 +67,10 @@ def cadastrar_departamentos() -> Response:
     try:
         endpoint = "Departamentos"
         act = "Cadastro"
+
+        title = " ".join([act, endpoint])
+        page = "form_base.html"
+
         form = FormDepartamentos()
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]
@@ -88,20 +92,17 @@ def cadastrar_departamentos() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("Departamentos cadastrada com sucesso!", "success")
             return make_response(redirect(url_for("corp.Departamentos")))
 
         return make_response(
-            render_template(
-                "index.html",
-                page="form_base.html",
-                form=form,
-                endpoint=endpoint,
-                act=act,
-                title=" ".join([act.capitalize(), endpoint.capitalize()]),
-            )
+            render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:
@@ -129,6 +130,9 @@ def editar_departamentos(id) -> Response:
         endpoint = "Departamentos"
         act = "Cadastro"
 
+        title = " ".join([act, endpoint])
+        page = "form_base.html"
+
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         Departamentos = (
@@ -148,20 +152,17 @@ def editar_departamentos(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("Departamentos editada com sucesso!", "success")
             return make_response(redirect(url_for("corp.Departamentos")))
 
         return make_response(
-            render_template(
-                "index.html",
-                page="form_base.html",
-                form=form,
-                endpoint=endpoint,
-                act=act,
-                title=" ".join([act.capitalize(), endpoint.capitalize()]),
-            )
+            render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:

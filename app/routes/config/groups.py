@@ -108,6 +108,9 @@ def editar_grupo(id: int) -> Response:
             - On form validation failure or if the group already exists, re-renders the form with an error message.
         """
 
+        title = "Criar Grupo"
+        page = "forms/GroupForm.html"
+
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         query = db.session.query(Groups).filter(Groups.id == id).first()
@@ -116,8 +119,6 @@ def editar_grupo(id: int) -> Response:
             choices.extend([member.login])
 
         form = GroupForm(membros=choices, desc=query.description, nome=query.name_group)
-        title = "Criar Grupo"
-        page = "forms/GroupForm.html"
 
         if form.validate_on_submit():
 

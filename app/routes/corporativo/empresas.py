@@ -75,6 +75,9 @@ def cadastro_empresas() -> Response:
         endpoint = "Empresas"
         act = "Cadastro"
 
+        page = "forms/empresa_form.html"
+        title = " ".join([act, endpoint])
+
         form = EmpresaForm()
 
         if form.validate_on_submit():
@@ -111,21 +114,17 @@ def cadastro_empresas() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("emp cadastrado com sucesso!", "success")
             return make_response(redirect(url_for("corp.Empresas")))
 
-        page = "forms/empresa_form.html"
         return make_response(
-            render_template(
-                "index.html",
-                act=act,
-                endpoint=endpoint,
-                page=page,
-                form=form,
-                title=" ".join([act.capitalize(), endpoint.capitalize()]),
-            )
+            render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:
@@ -153,6 +152,9 @@ def editar_empresas(id: int) -> Response:
 
         endpoint = "Empresas"
         act = "Editar"
+
+        page = "forms/empresa_form.html"
+        title = " ".join([act, endpoint])
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         emp = db.session.query(Empresa).filter_by(id=id).first()
@@ -227,21 +229,22 @@ def editar_empresas(id: int) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                abort(500, description="Item já cadastrado!")
+
+                flash("Item com informações duplicadas!")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
 
             flash("Edições Salvas con sucesso!", "success")
             return make_response(redirect(url_for("corp.Empresas")))
 
-        page = "forms/empresa_form.html"
         return make_response(
             render_template(
                 "index.html",
-                act=act,
-                endpoint=endpoint,
+                title=title,
                 page=page,
                 form=form,
                 url_image=url_image,
-                title=" ".join([act.capitalize(), endpoint.capitalize()]),
             )
         )
 

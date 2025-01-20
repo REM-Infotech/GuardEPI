@@ -27,9 +27,11 @@ from . import config
 def users() -> Response:
     try:
 
-        database = Users.query.order_by(Users.login_time.desc()).all()
         title = "Usuários"
         page = "users.html"
+
+        database = Users.query.order_by(Users.login_time.desc()).all()
+
         return make_response(
             render_template("index.html", title=title, database=database, page=page)
         )
