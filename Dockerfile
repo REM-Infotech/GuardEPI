@@ -20,4 +20,4 @@ WORKDIR /GuardEPI
 RUN poetry config virtualenvs.create false && poetry install --no-root
 
 # Comando padrão
-CMD ["poetry", "run", "python", "main.py"]
+CMD ["poetry", "run", "python", "-m", "app"]
