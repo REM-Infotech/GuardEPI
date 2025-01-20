@@ -1,4 +1,5 @@
 import json
+import traceback
 
 from flask import Response, abort
 from flask import current_app as app
@@ -33,8 +34,9 @@ def users() -> Response:
             render_template("index.html", title=title, database=database, page=page)
         )
 
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @config.route("/cadastro_usuario", methods=["GET", "POST"])
@@ -81,6 +83,7 @@ def cadastro_usuario() -> Response:
             return make_response(render_template(html, form=form))
 
         except Exception:
+            app.logger.exception(traceback.format_exc())
             abort(500)
 
     return make_response(render_template(html))
@@ -114,8 +117,9 @@ def changepw_usr() -> Response:
 
             return make_response(render_template(html, form=form))
 
-        except Exception as e:
-            abort(500, description=str(e))
+        except Exception:
+            app.logger.exception(traceback.format_exc())
+            abort(500)
 
     return make_response(render_template(html))
 
@@ -149,8 +153,9 @@ def changemail_usr() -> Response:
 
             return make_response(render_template(html, form=form))
 
-        except Exception as e:
-            abort(500, description=str(e))
+        except Exception:
+            app.logger.exception(traceback.format_exc())
+            abort(500)
 
     return make_response(render_template(html, form=form))
 
@@ -208,5 +213,11 @@ def delete_user(id: int) -> Response:
         template = "includes/show.html"
         return make_response(render_template(template, message=message))
 
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+
+        app.logger.exception(traceback.format_exc())
+
+        message = "Erro ao deletar"
+        template = "includes/show.html"
+
+    return make_response(render_template(template, message=message))

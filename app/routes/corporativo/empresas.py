@@ -1,3 +1,4 @@
+import traceback
 from datetime import datetime
 from pathlib import Path
 from typing import Union
@@ -47,8 +48,9 @@ def Empresas() -> Response:
             )
         )
 
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @corp.route("/Empresas/cadastro", methods=["GET", "POST"])
@@ -69,61 +71,66 @@ def cadastro_empresas() -> Response:
         will propagate up to the caller.
     """
 
-    endpoint = "Empresas"
-    act = "Cadastro"
+    try:
+        endpoint = "Empresas"
+        act = "Cadastro"
 
-    form = EmpresaForm()
+        form = EmpresaForm()
 
-    if form.validate_on_submit():
-        db: SQLAlchemy = app.extensions["sqlalchemy"]
-        to_add = {}
+        if form.validate_on_submit():
+            db: SQLAlchemy = app.extensions["sqlalchemy"]
+            to_add = {}
 
-        form_data: dict[str, form_content] = list(form.data.items())
-        for key, value in form_data:
-            if key == "csrf_token":
-                continue
+            form_data: dict[str, form_content] = list(form.data.items())
+            for key, value in form_data:
+                if key == "csrf_token":
+                    continue
 
-            if key == "submit":
-                continue
+                if key == "submit":
+                    continue
 
-            if key == "valor_unitario":
-                value = float(
-                    value.replace(",", ".").replace("R$", "").replace(" ", "")
-                )
+                if key == "valor_unitario":
+                    value = float(
+                        value.replace(",", ".").replace("R$", "").replace(" ", "")
+                    )
 
-            if isinstance(value, FileStorage):
-                filename = secure_filename(value.filename)
-                path_file = Path(app.config.get("TEMP_PATH")).joinpath(filename)
-                value.save(str(path_file))
-                with path_file.open("rb") as file:
-                    to_add.update({"blob_doc": file.read()})
+                if isinstance(value, FileStorage):
+                    filename = secure_filename(value.filename)
+                    path_file = Path(app.config.get("TEMP_PATH")).joinpath(filename)
+                    value.save(str(path_file))
+                    with path_file.open("rb") as file:
+                        to_add.update({"blob_doc": file.read()})
 
-                to_add.update({"filename": filename})
-                continue
+                    to_add.update({"filename": filename})
+                    continue
 
-            to_add.update({key: value})
+                to_add.update({key: value})
 
-        emp = Empresa(**to_add)
-        db.session.add(emp)
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
+            emp = Empresa(**to_add)
+            db.session.add(emp)
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
-        flash("emp cadastrado com sucesso!", "success")
-        return make_response(redirect(url_for("corp.Empresas")))
+            flash("emp cadastrado com sucesso!", "success")
+            return make_response(redirect(url_for("corp.Empresas")))
 
-    page = "forms/empresa_form.html"
-    return make_response(
-        render_template(
-            "index.html",
-            act=act,
-            endpoint=endpoint,
-            page=page,
-            form=form,
-            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        page = "forms/empresa_form.html"
+        return make_response(
+            render_template(
+                "index.html",
+                act=act,
+                endpoint=endpoint,
+                page=page,
+                form=form,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
         )
-    )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @corp.route("/Empresas/editar/<int:id>", methods=["GET", "POST"])
@@ -142,99 +149,105 @@ def editar_empresas(id: int) -> Response:
                   A redirect to the equipment page on successful form submission.
     """
 
-    endpoint = "Empresas"
-    act = "Editar"
+    try:
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    emp = db.session.query(Empresa).filter_by(id=id).first()
+        endpoint = "Empresas"
+        act = "Editar"
 
-    form_data = {}
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        emp = db.session.query(Empresa).filter_by(id=id).first()
 
-    url_image = ""
-    emp_data = emp.__dict__
+        form_data = {}
 
-    items_emp_data = list(emp_data.items())
+        url_image = ""
+        emp_data = emp.__dict__
 
-    for key, value in items_emp_data:
+        items_emp_data = list(emp_data.items())
 
-        if key == "_sa_instance_state" or key == "id" or key == "filename":
+        for key, value in items_emp_data:
 
-            continue
+            if key == "_sa_instance_state" or key == "id" or key == "filename":
 
-        if key == "blob_doc":
+                continue
 
-            img_path = (
-                Path(app.config.get("TEMP_PATH"))
-                .joinpath("IMG")
-                .joinpath(emp_data.get("filename"))
+            if key == "blob_doc":
+
+                img_path = (
+                    Path(app.config.get("TEMP_PATH"))
+                    .joinpath("IMG")
+                    .joinpath(emp_data.get("filename"))
+                )
+                with img_path.open("wb") as file:
+                    file.write(value)
+
+                with img_path.open("rb") as file:
+                    form_data.update(
+                        {
+                            "filename": FileStorage(
+                                filename=secure_filename(emp.filename),
+                                stream=file.read(),
+                            )
+                        }
+                    )
+
+                    url_image = url_for(
+                        "serve.serve_img", filename=emp.filename, _external=True
+                    )
+
+            form_data.update({key: value})
+
+        form = EmpresaForm(**form_data)
+
+        if form.validate_on_submit():
+
+            to_add = {}
+
+            form_data: dict[str, form_content] = list(form.data.items())
+            for key, value in form_data:
+
+                if value:
+                    if key == "csrf_token":
+                        continue
+
+                    if key == "submit":
+                        continue
+
+                    if isinstance(value, FileStorage):
+                        filename = secure_filename(value.filename)
+                        path_file = Path(app.config.get("TEMP_PATH")).joinpath(filename)
+                        value.save(str(path_file))
+                        with path_file.open("rb") as file:
+                            to_add.update({"blob_doc": file.read()})
+
+                        to_add.update({"filename": filename})
+                        continue
+
+                    setattr(emp, key, value)
+
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
+
+            flash("Edições Salvas con sucesso!", "success")
+            return make_response(redirect(url_for("corp.Empresas")))
+
+        page = "forms/empresa_form.html"
+        return make_response(
+            render_template(
+                "index.html",
+                act=act,
+                endpoint=endpoint,
+                page=page,
+                form=form,
+                url_image=url_image,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
             )
-            with img_path.open("wb") as file:
-                file.write(value)
-
-            with img_path.open("rb") as file:
-                form_data.update(
-                    {
-                        "filename": FileStorage(
-                            filename=secure_filename(emp.filename),
-                            stream=file.read(),
-                        )
-                    }
-                )
-
-                url_image = url_for(
-                    "serve.serve_img", filename=emp.filename, _external=True
-                )
-
-        form_data.update({key: value})
-
-    form = EmpresaForm(**form_data)
-
-    if form.validate_on_submit():
-
-        to_add = {}
-
-        form_data: dict[str, form_content] = list(form.data.items())
-        for key, value in form_data:
-
-            if value:
-                if key == "csrf_token":
-                    continue
-
-                if key == "submit":
-                    continue
-
-                if isinstance(value, FileStorage):
-                    filename = secure_filename(value.filename)
-                    path_file = Path(app.config.get("TEMP_PATH")).joinpath(filename)
-                    value.save(str(path_file))
-                    with path_file.open("rb") as file:
-                        to_add.update({"blob_doc": file.read()})
-
-                    to_add.update({"filename": filename})
-                    continue
-
-                setattr(emp, key, value)
-
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
-
-        flash("Edições Salvas con sucesso!", "success")
-        return make_response(redirect(url_for("corp.Empresas")))
-
-    page = "forms/empresa_form.html"
-    return make_response(
-        render_template(
-            "index.html",
-            act=act,
-            endpoint=endpoint,
-            page=page,
-            form=form,
-            url_image=url_image,
-            title=" ".join([act.capitalize(), endpoint.capitalize()]),
         )
-    )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @corp.post("/Empresas/deletar/<int:id>")
@@ -251,12 +264,22 @@ def deletar_empresas(id: int) -> Response:
         sqlalchemy.orm.exc.NoResultFound: If no company with the given ID is found.
     """
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    emp = db.session.query(Empresa).filter_by(id=id).first()
+    try:
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        emp = db.session.query(Empresa).filter_by(id=id).first()
 
-    db.session.delete(emp)
-    db.session.commit()
+        db.session.delete(emp)
+        db.session.commit()
 
-    template = "includes/show.html"
-    message = "Informação deletada com sucesso!"
+        template = "includes/show.html"
+        message = "Informação deletada com sucesso!"
+        return make_response(render_template(template, message=message))
+
+    except Exception:
+
+        app.logger.exception(traceback.format_exc())
+
+        message = "Erro ao deletar"
+        template = "includes/show.html"
+
     return make_response(render_template(template, message=message))

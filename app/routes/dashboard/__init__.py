@@ -1,9 +1,12 @@
+import traceback
 from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
 import pytz
-from flask import Blueprint, Response, abort, jsonify, make_response, render_template
+from flask import Blueprint, Response, abort
+from flask import current_app as app
+from flask import jsonify, make_response, render_template
 from flask_login import login_required
 from sqlalchemy import extract
 
@@ -67,7 +70,8 @@ def dashboard() -> Response:
         page = "dashboard.html"
 
         # today = datetime.now().strftime("%d/%m/%Y")
-        resp = make_response(
+
+        return make_response(
             render_template(
                 "index.html",
                 page=page,
@@ -83,9 +87,9 @@ def dashboard() -> Response:
             )
         )
 
-        return resp
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @dash.route("/saidasEquipamento", methods=["GET"])
@@ -104,41 +108,46 @@ def saidasEquipamento() -> Response:
                 "media": calculated average value
     """
 
-    chart_data = {"labels": [], "values": [], "media": 0}
+    try:
+        chart_data = {"labels": [], "values": [], "media": 0}
 
-    # Obtendo o mês e ano atuais
-    now = datetime.now()
-    # current_day = now.day
-    current_month = now.month
+        # Obtendo o mês e ano atuais
+        now = datetime.now()
+        # current_day = now.day
+        current_month = now.month
 
-    # Consulta os dados do banco de dados filtrando pelo mês e ano atuais
-    entregas = RegistroSaidas.query.filter(
-        extract("month", RegistroSaidas.data_saida) == current_month
-    ).all()
+        # Consulta os dados do banco de dados filtrando pelo mês e ano atuais
+        entregas = RegistroSaidas.query.filter(
+            extract("month", RegistroSaidas.data_saida) == current_month
+        ).all()
 
-    if entregas:
-        data = {
-            "Equipamento": [entrega.nome_epi for entrega in entregas],
-            "Valor": [entrega.valor_total for entrega in entregas],
-        }
+        if entregas:
+            data = {
+                "Equipamento": [entrega.nome_epi for entrega in entregas],
+                "Valor": [entrega.valor_total for entrega in entregas],
+            }
 
-        df = pd.DataFrame(data)
+            df = pd.DataFrame(data)
 
-        # Agrupando por 'Equipamento' e somando os valores
-        df_grouped = df.groupby("Equipamento").sum().reset_index()
+            # Agrupando por 'Equipamento' e somando os valores
+            df_grouped = df.groupby("Equipamento").sum().reset_index()
 
-        media_old = int(sorted(df_grouped["Valor"].tolist())[-1])
+            media_old = int(sorted(df_grouped["Valor"].tolist())[-1])
 
-        # Calcula a diferença
-        media = media_old + ((media_old // 100 + 1) * 100 - media_old)
+            # Calcula a diferença
+            media = media_old + ((media_old // 100 + 1) * 100 - media_old)
 
-        # Convertendo os dados para JSON
-        chart_data = {
-            "labels": df_grouped["Equipamento"].tolist(),
-            "values": df_grouped["Valor"].tolist(),
-            "media": media,
-        }
-    return jsonify(chart_data)
+            # Convertendo os dados para JSON
+            chart_data = {
+                "labels": df_grouped["Equipamento"].tolist(),
+                "values": df_grouped["Valor"].tolist(),
+                "media": media,
+            }
+        return make_response(jsonify(chart_data))
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @dash.route("/saidasFuncionario", methods=["GET"])
@@ -155,41 +164,46 @@ def saidasFuncionario() -> Response:
                   values (total values), and media (calculated media value).
     """
 
-    chart_data = {"labels": [], "values": [], "media": 0}
+    try:
+        chart_data = {"labels": [], "values": [], "media": 0}
 
-    # Obtendo o mês e ano atuais
-    now = datetime.now()
-    # current_day = now.day
-    current_month = now.month
+        # Obtendo o mês e ano atuais
+        now = datetime.now()
+        # current_day = now.day
+        current_month = now.month
 
-    # Consulta os dados do banco de dados filtrando pelo mês e ano atuais
-    entregas = RegistrosEPI.query.filter(
-        extract("month", RegistrosEPI.data_solicitacao) == current_month
-    ).all()
+        # Consulta os dados do banco de dados filtrando pelo mês e ano atuais
+        entregas = RegistrosEPI.query.filter(
+            extract("month", RegistrosEPI.data_solicitacao) == current_month
+        ).all()
 
-    if entregas:
-        # Construa o DataFrame
-        data = {
-            "Funcionario": [entrega.funcionario for entrega in entregas],
-            "Valor": [entrega.valor_total for entrega in entregas],
-        }
-        df = pd.DataFrame(data)
+        if entregas:
+            # Construa o DataFrame
+            data = {
+                "Funcionario": [entrega.funcionario for entrega in entregas],
+                "Valor": [entrega.valor_total for entrega in entregas],
+            }
+            df = pd.DataFrame(data)
 
-        # Agrupando por 'Funcionario' e somando os valores
-        df_grouped = df.groupby("Funcionario").sum().reset_index()
+            # Agrupando por 'Funcionario' e somando os valores
+            df_grouped = df.groupby("Funcionario").sum().reset_index()
 
-        media_old = int(sorted(df_grouped["Valor"].tolist())[-1])
-        # Calcula a diferença
-        media = media_old + ((media_old // 100 + 1) * 100 - media_old)
+            media_old = int(sorted(df_grouped["Valor"].tolist())[-1])
+            # Calcula a diferença
+            media = media_old + ((media_old // 100 + 1) * 100 - media_old)
 
-        # Convertendo os dados para JSON
-        chart_data = {
-            "labels": df_grouped["Funcionario"].tolist(),
-            "values": df_grouped["Valor"].tolist(),
-            "media": media,
-        }
+            # Convertendo os dados para JSON
+            chart_data = {
+                "labels": df_grouped["Funcionario"].tolist(),
+                "values": df_grouped["Valor"].tolist(),
+                "media": media,
+            }
 
-    return jsonify(chart_data)
+        return make_response(jsonify(chart_data))
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 # @dash.route("/test_celery", methods=["GET"])

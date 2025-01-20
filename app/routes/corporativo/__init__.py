@@ -1,7 +1,10 @@
+import traceback
 from importlib import import_module
 from pathlib import Path
 
-from flask import Blueprint, redirect, url_for
+from flask import Blueprint, abort
+from flask import current_app as app
+from flask import make_response, redirect, url_for
 from werkzeug import Response
 
 template_folder = Path(__file__).parent.resolve().joinpath("templates")
@@ -13,7 +16,12 @@ corp = Blueprint(
 @corp.get("/")
 def redirecting() -> Response:
 
-    return redirect(url_for("corp.Empresas"))
+    try:
+        return make_response(redirect(url_for("corp.Empresas")))
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 if corp is not None:

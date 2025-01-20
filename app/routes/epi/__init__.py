@@ -1,7 +1,10 @@
+import traceback
 from importlib import import_module
 from pathlib import Path
 
-from flask import Blueprint, Response, make_response, redirect, url_for
+from flask import Blueprint, Response, abort
+from flask import current_app as app
+from flask import make_response, redirect, url_for
 
 template_folder = Path(__file__).parent.resolve().joinpath("templates")
 epi = Blueprint("epi", __name__, template_folder=template_folder, url_prefix="/epi")
@@ -18,7 +21,12 @@ def redirecting() -> Response:
         Response: A redirect response object to the 'epi.Equipamentos' URL.
     """
 
-    return make_response(redirect(url_for("epi.Equipamentos")))
+    try:
+        return make_response(redirect(url_for("epi.Equipamentos")))
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 if epi is not None:

@@ -1,3 +1,5 @@
+import traceback
+
 from flask import Response, abort
 from flask import current_app as app
 from flask import flash, make_response, redirect, render_template, request, url_for
@@ -22,12 +24,16 @@ def marcas() -> Response:
         str: Rendered HTML template with the specified page and database records.
     """
 
-    title = "Marcas"
-    page = "marcas.html"
-    database = Marcas.query.all()
-    return make_response(
-        render_template("index.html", page=page, database=database, title=title)
-    )
+    try:
+        title = "Marcas"
+        page = "marcas.html"
+        database = Marcas.query.all()
+        return make_response(
+            render_template("index.html", page=page, database=database, title=title)
+        )
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @epi.route("/marca/cadastrar", methods=["GET", "POST"])
@@ -47,44 +53,49 @@ def cadastrar_marca() -> Response:
         template with the form for the user to fill out.
     """
 
-    endpoint = "marca"
-    act = "Cadastro"
-    form = FormMarcas()
+    try:
+        endpoint = "marca"
+        act = "Cadastro"
+        form = FormMarcas()
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-    if form.validate_on_submit():
+        if form.validate_on_submit():
 
-        to_add = {}
-        form_data = form.data
-        list_form_data = list(form_data.items())
+            to_add = {}
+            form_data = form.data
+            list_form_data = list(form_data.items())
 
-        for key, value in list_form_data:
-            if key.lower() == "csrf_token" or key.lower() == "submit":
-                continue
+            for key, value in list_form_data:
+                if key.lower() == "csrf_token" or key.lower() == "submit":
+                    continue
 
-            to_add.update({key: value})
+                to_add.update({key: value})
 
-        item = Marcas(**to_add)
-        db.session.add(item)
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
+            item = Marcas(**to_add)
+            db.session.add(item)
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
-        flash("Marca cadastrada com sucesso!", "success")
-        return make_response(redirect(url_for("epi.marcas")))
+            flash("Marca cadastrada com sucesso!", "success")
+            return make_response(redirect(url_for("epi.marcas")))
 
-    return make_response(
-        render_template(
-            "index.html",
-            page="form_base.html",
-            form=form,
-            endpoint=endpoint,
-            act=act,
-            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        return make_response(
+            render_template(
+                "index.html",
+                page="form_base.html",
+                form=form,
+                endpoint=endpoint,
+                act=act,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
         )
-    )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @epi.route("/marca/editar/<int:id>", methods=["GET", "POST"])
@@ -106,44 +117,50 @@ def editar_marca(id) -> Response:
         page.
     """
 
-    endpoint = "marca"
-    act = "Cadastro"
+    try:
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    form = FormMarcas()
+        endpoint = "marca"
+        act = "Cadastro"
 
-    classe = db.session.query(Marcas).filter(Marcas.id == id).first()
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        form = FormMarcas()
 
-    if request.method == "GET":
-        form = FormMarcas(**classe.__dict__)
+        classe = db.session.query(Marcas).filter(Marcas.id == id).first()
 
-    if form.validate_on_submit():
+        if request.method == "GET":
+            form = FormMarcas(**classe.__dict__)
 
-        form_data = form.data
-        list_form_data = list(form_data.items())
+        if form.validate_on_submit():
 
-        for key, value in list_form_data:
-            if key != "csrf_token" or key != "submit" and value:
-                setattr(classe, key, value)
+            form_data = form.data
+            list_form_data = list(form_data.items())
 
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
+            for key, value in list_form_data:
+                if key != "csrf_token" or key != "submit" and value:
+                    setattr(classe, key, value)
 
-        flash("Marca editada com sucesso!", "success")
-        return make_response(redirect(url_for("epi.marcas")))
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
-    return make_response(
-        render_template(
-            "index.html",
-            page="form_base.html",
-            form=form,
-            endpoint=endpoint,
-            act=act,
-            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            flash("Marca editada com sucesso!", "success")
+            return make_response(redirect(url_for("epi.marcas")))
+
+        return make_response(
+            render_template(
+                "index.html",
+                page="form_base.html",
+                form=form,
+                endpoint=endpoint,
+                act=act,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
         )
-    )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @epi.post("/marcas/deletar/<int:id>")
@@ -158,12 +175,22 @@ def deletar_marca(id: int) -> Response:
         Response: A rendered template with a success message indicating that the information has been deleted.
     """
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    classe = db.session.query(Marcas).filter(Marcas.id == id).first()
+    try:
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        classe = db.session.query(Marcas).filter(Marcas.id == id).first()
 
-    db.session.delete(classe)
-    db.session.commit()
+        db.session.delete(classe)
+        db.session.commit()
 
-    template = "includes/show.html"
-    message = "Informação deletada com sucesso!"
+        template = "includes/show.html"
+        message = "Informação deletada com sucesso!"
+        return make_response(render_template(template, message=message))
+
+    except Exception:
+
+        app.logger.exception(traceback.format_exc())
+
+        message = "Erro ao deletar"
+        template = "includes/show.html"
+
     return make_response(render_template(template, message=message))

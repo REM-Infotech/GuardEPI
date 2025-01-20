@@ -1,3 +1,5 @@
+import traceback
+
 from flask import Response, abort
 from flask import current_app as app
 from flask import flash, make_response, redirect, render_template, request, url_for
@@ -43,8 +45,9 @@ def Grade() -> Response:
                 database=database,
             )
         )
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @epi.route("/Grade/cadastrar", methods=["GET", "POST"])
@@ -63,44 +66,49 @@ def cadastrar_grade() -> Response:
                   and processed, or a rendered template with the form if not.
     """
 
-    endpoint = "Grade"
-    act = "Cadastro"
-    form = FormGrade()
+    try:
+        endpoint = "Grade"
+        act = "Cadastro"
+        form = FormGrade()
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-    if form.validate_on_submit():
+        if form.validate_on_submit():
 
-        to_add = {}
-        form_data = form.data
-        list_form_data = list(form_data.items())
+            to_add = {}
+            form_data = form.data
+            list_form_data = list(form_data.items())
 
-        for key, value in list_form_data:
-            if key.lower() == "csrf_token" or key.lower() == "submit":
-                continue
+            for key, value in list_form_data:
+                if key.lower() == "csrf_token" or key.lower() == "submit":
+                    continue
 
-            to_add.update({key: value})
+                to_add.update({key: value})
 
-        item = GradeEPI(**to_add)
-        db.session.add(item)
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
+            item = GradeEPI(**to_add)
+            db.session.add(item)
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
-        flash("Grade cadastrada com sucesso!", "success")
-        return make_response(redirect(url_for("epi.Grade")))
+            flash("Grade cadastrada com sucesso!", "success")
+            return make_response(redirect(url_for("epi.Grade")))
 
-    return make_response(
-        render_template(
-            "index.html",
-            page="form_base.html",
-            form=form,
-            endpoint=endpoint,
-            act=act,
-            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        return make_response(
+            render_template(
+                "index.html",
+                page="form_base.html",
+                form=form,
+                endpoint=endpoint,
+                act=act,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
         )
-    )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @epi.route("/Grade/editar/<int:id>", methods=["GET", "POST"])
@@ -121,50 +129,55 @@ def editar_grade(id) -> Response:
         page on successful form submission.
     """
 
-    endpoint = "grade"
-    act = "Cadastro"
+    try:
+        endpoint = "grade"
+        act = "Cadastro"
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    form = FormGrade()
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        form = FormGrade()
 
-    grade = db.session.query(GradeEPI).filter(GradeEPI.id == id).first()
+        grade = db.session.query(GradeEPI).filter(GradeEPI.id == id).first()
 
-    if request.method == "GET":
-        form = FormGrade(**grade.__dict__)
+        if request.method == "GET":
+            form = FormGrade(**grade.__dict__)
 
-    if form.validate_on_submit():
+        if form.validate_on_submit():
 
-        form_data = form.data
-        list_form_data = list(form_data.items())
+            form_data = form.data
+            list_form_data = list(form_data.items())
 
-        for key, value in list_form_data:
-            if key != "csrf_token" or key != "submit" and value:
-                setattr(grade, key, value)
+            for key, value in list_form_data:
+                if key != "csrf_token" or key != "submit" and value:
+                    setattr(grade, key, value)
 
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
-        flash("Grade editada com sucesso!", "success")
-        return make_response(redirect(url_for("epi.Grade")))
+            flash("Grade editada com sucesso!", "success")
+            return make_response(redirect(url_for("epi.Grade")))
 
-    return make_response(
-        render_template(
-            "index.html",
-            page="form_base.html",
-            form=form,
-            endpoint=endpoint,
-            act=act,
-            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        return make_response(
+            render_template(
+                "index.html",
+                page="form_base.html",
+                form=form,
+                endpoint=endpoint,
+                act=act,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
         )
-    )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @epi.post("/grades/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_grade(id: int):
+def deletar_grade(id: int) -> Response:
     """
     Deletes a GradeEPI record from the database based on the provided ID.
     Args:
@@ -173,12 +186,22 @@ def deletar_grade(id: int):
         Response: A rendered HTML template with a success message.
     """
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    grade = db.session.query(GradeEPI).filter(GradeEPI.id == id).first()
+    try:
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        grade = db.session.query(GradeEPI).filter(GradeEPI.id == id).first()
 
-    db.session.delete(grade)
-    db.session.commit()
+        db.session.delete(grade)
+        db.session.commit()
 
-    template = "includes/show.html"
-    message = "Informação deletada com sucesso!"
+        template = "includes/show.html"
+        message = "Informação deletada com sucesso!"
+        return make_response(render_template(template, message=message))
+
+    except Exception:
+
+        app.logger.exception(traceback.format_exc())
+
+        message = "Erro ao deletar"
+        template = "includes/show.html"
+
     return make_response(render_template(template, message=message))

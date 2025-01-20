@@ -1,3 +1,5 @@
+import traceback
+
 from flask import Response, abort
 from flask import current_app as app
 from flask import flash, make_response, redirect, render_template, request, url_for
@@ -35,6 +37,7 @@ def categorias() -> Response:
         )
 
     except Exception:
+        app.logger.exception(traceback.format_exc())
         abort(500)
 
 
@@ -73,8 +76,8 @@ def cadastrar_categoria() -> Response:
 
                 to_add.update({key: value})
 
-            classe = ClassesEPI(**to_add)
-            db.session.add(classe)
+            item = ClassesEPI(**to_add)
+            db.session.add(item)
             try:
                 db.session.commit()
             except errors.UniqueViolation:
@@ -94,6 +97,7 @@ def cadastrar_categoria() -> Response:
             )
         )
     except Exception:
+        app.logger.exception(traceback.format_exc())
         abort(500)
 
 
@@ -101,78 +105,95 @@ def cadastrar_categoria() -> Response:
 @login_required
 @update_perm
 def editar_categoria(id) -> Response:
-    """
-    Edit an existing category based on the provided ID.
-    This function handles both GET and POST requests. On a GET request, it populates
-    the form with the existing category data. On a POST request, it validates the form
-    and updates the category in the database if the form is valid.
-    Args:
-        id (int): The ID of the category to be edited.
-    Returns:
-        Response: Renders the form template on GET request or redirects to the categories
-        list on successful form submission.
-    """
 
-    endpoint = "Categoria"
-    act = "Cadastro"
+    try:
+        """
+        Edit an existing category based on the provided ID.
+        This function handles both GET and POST requests. On a GET request, it populates
+        the form with the existing category data. On a POST request, it validates the form
+        and updates the category in the database if the form is valid.
+        Args:
+            id (int): The ID of the category to be edited.
+        Returns:
+            Response: Renders the form template on GET request or redirects to the categories
+            list on successful form submission.
+        """
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    form = FormCategorias()
+        endpoint = "Categoria"
+        act = "Cadastro"
 
-    classe = db.session.query(ClassesEPI).filter(ClassesEPI.id == id).first()
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        form = FormCategorias()
 
-    if request.method == "GET":
-        form = FormCategorias(**classe.__dict__)
+        classe = db.session.query(ClassesEPI).filter(ClassesEPI.id == id).first()
 
-    if form.validate_on_submit():
+        if request.method == "GET":
+            form = FormCategorias(**classe.__dict__)
 
-        form_data = form.data
-        list_form_data = list(form_data.items())
+        if form.validate_on_submit():
 
-        for key, value in list_form_data:
-            if key != "csrf_token" or key != "submit" and value:
-                setattr(classe, key, value)
+            form_data = form.data
+            list_form_data = list(form_data.items())
 
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
+            for key, value in list_form_data:
+                if key != "csrf_token" or key != "submit" and value:
+                    setattr(classe, key, value)
 
-        flash("Categoria editada com sucesso!", "success")
-        return make_response(redirect(url_for("epi.categorias")))
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
-    return make_response(
-        render_template(
-            "index.html",
-            page="form_base.html",
-            form=form,
-            endpoint=endpoint,
-            act=act,
-            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            flash("Categoria editada com sucesso!", "success")
+            return make_response(redirect(url_for("epi.categorias")))
+
+        return make_response(
+            render_template(
+                "index.html",
+                page="form_base.html",
+                form=form,
+                endpoint=endpoint,
+                act=act,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
         )
-    )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @epi.post("/categorias/deletar/<int:id>")
 @login_required
 @delete_perm
 def deletar_categoria(id: int) -> Response:
-    """
-    Deletes a category from the database based on the provided ID.
-    Args:
-        id (int): The ID of the category to be deleted.
-    Returns:
-        Response: A rendered template with a success message.
-    Raises:
-        sqlalchemy.orm.exc.NoResultFound: If no category with the given ID is found.
-    """
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    classe = db.session.query(ClassesEPI).filter(ClassesEPI.id == id).first()
+    try:
+        """
+        Deletes a category from the database based on the provided ID.
+        Args:
+            id (int): The ID of the category to be deleted.
+        Returns:
+            Response: A rendered template with a success message.
+        Raises:
+            sqlalchemy.orm.exc.NoResultFound: If no category with the given ID is found.
+        """
 
-    db.session.delete(classe)
-    db.session.commit()
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        classe = db.session.query(ClassesEPI).filter(ClassesEPI.id == id).first()
 
-    template = "includes/show.html"
-    message = "Informação deletada com sucesso!"
+        db.session.delete(classe)
+        db.session.commit()
+
+        template = "includes/show.html"
+        message = "Informação deletada com sucesso!"
+        return make_response(render_template(template, message=message))
+
+    except Exception:
+
+        app.logger.exception(traceback.format_exc())
+
+        message = "Erro ao deletar regra"
+        template = "includes/show.html"
+
     return make_response(render_template(template, message=message))

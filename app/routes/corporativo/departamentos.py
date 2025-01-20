@@ -1,3 +1,5 @@
+import traceback
+
 from flask import Response, abort
 from flask import current_app as app
 from flask import flash, make_response, redirect, render_template, url_for
@@ -42,8 +44,9 @@ def Departamentos() -> Response:
                 database=database,
             )
         )
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @corp.route("/Departamentos/cadastrar", methods=["GET", "POST"])
@@ -61,44 +64,49 @@ def cadastrar_departamentos() -> Response:
                   otherwise renders the form template for department registration.
     """
 
-    endpoint = "Departamentos"
-    act = "Cadastro"
-    form = FormDepartamentos()
+    try:
+        endpoint = "Departamentos"
+        act = "Cadastro"
+        form = FormDepartamentos()
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-    if form.validate_on_submit():
+        if form.validate_on_submit():
 
-        to_add = {}
-        form_data = form.data
-        list_form_data = list(form_data.items())
+            to_add = {}
+            form_data = form.data
+            list_form_data = list(form_data.items())
 
-        for key, value in list_form_data:
-            if key.lower() == "csrf_token" or key.lower() == "submit":
-                continue
+            for key, value in list_form_data:
+                if key.lower() == "csrf_token" or key.lower() == "submit":
+                    continue
 
-            to_add.update({key: value})
+                to_add.update({key: value})
 
-        item = Departamento(**to_add)
-        db.session.add(item)
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
+            item = Departamento(**to_add)
+            db.session.add(item)
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
-        flash("Departamentos cadastrada com sucesso!", "success")
-        return make_response(redirect(url_for("corp.Departamentos")))
+            flash("Departamentos cadastrada com sucesso!", "success")
+            return make_response(redirect(url_for("corp.Departamentos")))
 
-    return make_response(
-        render_template(
-            "index.html",
-            page="form_base.html",
-            form=form,
-            endpoint=endpoint,
-            act=act,
-            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        return make_response(
+            render_template(
+                "index.html",
+                page="form_base.html",
+                form=form,
+                endpoint=endpoint,
+                act=act,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
         )
-    )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @corp.route("/Departamentos/editar/<int:id>", methods=["GET", "POST"])
@@ -117,41 +125,48 @@ def editar_departamentos(id) -> Response:
         department list page if the form is successfully submitted and processed.
     """
 
-    endpoint = "Departamentos"
-    act = "Cadastro"
+    try:
+        endpoint = "Departamentos"
+        act = "Cadastro"
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-    Departamentos = db.session.query(Departamento).filter(Departamento.id == id).first()
-    form = FormDepartamentos(**Departamentos.__dict__)
-
-    if form.validate_on_submit():
-
-        form_data = form.data
-        list_form_data = list(form_data.items())
-
-        for key, value in list_form_data:
-            if key != "csrf_token" or key != "submit" and value:
-                setattr(Departamentos, key, value)
-
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
-
-        flash("Departamentos editada com sucesso!", "success")
-        return make_response(redirect(url_for("corp.Departamentos")))
-
-    return make_response(
-        render_template(
-            "index.html",
-            page="form_base.html",
-            form=form,
-            endpoint=endpoint,
-            act=act,
-            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        Departamentos = (
+            db.session.query(Departamento).filter(Departamento.id == id).first()
         )
-    )
+        form = FormDepartamentos(**Departamentos.__dict__)
+
+        if form.validate_on_submit():
+
+            form_data = form.data
+            list_form_data = list(form_data.items())
+
+            for key, value in list_form_data:
+                if key != "csrf_token" or key != "submit" and value:
+                    setattr(Departamentos, key, value)
+
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
+
+            flash("Departamentos editada com sucesso!", "success")
+            return make_response(redirect(url_for("corp.Departamentos")))
+
+        return make_response(
+            render_template(
+                "index.html",
+                page="form_base.html",
+                form=form,
+                endpoint=endpoint,
+                act=act,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
+        )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @corp.post("/Departamentoss/deletar/<int:id>")
@@ -166,12 +181,24 @@ def deletar_departamentos(id: int) -> Response:
         Response: Renders a template with a success message indicating that the information was successfully deleted.
     """
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    Departamentos = db.session.query(Departamento).filter(Departamento.id == id).first()
+    try:
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        Departamentos = (
+            db.session.query(Departamento).filter(Departamento.id == id).first()
+        )
 
-    db.session.delete(Departamentos)
-    db.session.commit()
+        db.session.delete(Departamentos)
+        db.session.commit()
 
-    template = "includes/show.html"
-    message = "Informação deletada com sucesso!"
+        template = "includes/show.html"
+        message = "Informação deletada com sucesso!"
+        return make_response(render_template(template, message=message))
+
+    except Exception:
+
+        app.logger.exception(traceback.format_exc())
+
+        message = "Erro ao deletar"
+        template = "includes/show.html"
+
     return make_response(render_template(template, message=message))

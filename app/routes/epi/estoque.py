@@ -1,3 +1,4 @@
+import traceback
 from pathlib import Path
 
 from flask import Response, abort
@@ -50,14 +51,15 @@ def produto_epi() -> Response:
                 format_currency_brl=format_currency_brl,
             )
         )
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @estoque_bp.route("/grade", methods=["GET"])
 @login_required
 @read_perm
-def grade():
+def grade() -> Response:
     """
     Fetches all records from the EstoqueGrade database table and renders the 'estoque_grade.html' page.
     This function queries all entries from the EstoqueGrade table and passes the data to the 'index.html' template
@@ -84,41 +86,46 @@ def grade():
                 title=title,
             )
         )
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @estoque_bp.route("/entradas")
 @login_required
 @read_perm
 def entradas() -> Response:
-    """
-    Handles the route for displaying the list of EPI (Personal Protective Equipment) entries.
-    This function retrieves all entries from the RegistroEntradas database and renders the
-    'index.html' template with the retrieved data, along with the page title and format_currency_brl function.
-    Returns:
-        str: Rendered HTML template for the EPI entries page.
-    """
+    try:
+        """
+        Handles the route for displaying the list of EPI (Personal Protective Equipment) entries.
+        This function retrieves all entries from the RegistroEntradas database and renders the
+        'index.html' template with the retrieved data, along with the page title and format_currency_brl function.
+        Returns:
+            str: Rendered HTML template for the EPI entries page.
+        """
 
-    title = "Relação de Entradas EPI"
-    page = "entradas.html"
+        title = "Relação de Entradas EPI"
+        page = "entradas.html"
 
-    database = RegistroEntradas.query.all()
-    return make_response(
-        render_template(
-            "index.html",
-            page=page,
-            title=title,
-            database=database,
-            format_currency_brl=format_currency_brl,
+        database = RegistroEntradas.query.all()
+        return make_response(
+            render_template(
+                "index.html",
+                page=page,
+                title=title,
+                database=database,
+                format_currency_brl=format_currency_brl,
+            )
         )
-    )
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @estoque_bp.route("/lancamento_estoque", methods=["GET", "POST"])
 @login_required
 @create_perm
-def lancamento_produto():
+def lancamento_produto() -> Response:
     """
     Handles the product entry process in the inventory system.
     This function performs the following steps:
@@ -242,5 +249,6 @@ def lancamento_produto():
             render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)

@@ -1,3 +1,5 @@
+import traceback
+
 from flask import Response, abort
 from flask import current_app as app
 from flask import flash, make_response, redirect, render_template, request, url_for
@@ -26,12 +28,17 @@ def fornecedores() -> Response:
         and an empty 'database'.
     """
 
-    title = "Fornecedores"
-    page = "fornecedores.html"
-    database = Fornecedores.query.all()
-    return make_response(
-        render_template("index.html", page=page, database=database, title=title)
-    )
+    try:
+        title = "Fornecedores"
+        page = "fornecedores.html"
+        database = Fornecedores.query.all()
+        return make_response(
+            render_template("index.html", page=page, database=database, title=title)
+        )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @epi.route("/fornecedores/cadastrar", methods=["GET", "POST"])
@@ -92,6 +99,7 @@ def cadastrar_fornecedores() -> Response:
         )
 
     except Exception:
+        app.logger.exception(traceback.format_exc())
         abort(500)
 
 
@@ -112,44 +120,51 @@ def editar_fornecedores(id: int) -> Response:
         list with a success message on successful form submission.
     """
 
-    endpoint = "fornecedores"
-    act = "Cadastro"
+    try:
+        endpoint = "fornecedores"
+        act = "Cadastro"
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    form = FornecedoresForm()
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        form = FornecedoresForm()
 
-    fornecedor = db.session.query(Fornecedores).filter(Fornecedores.id == id).first()
-
-    if request.method == "GET":
-        form = FornecedoresForm(**fornecedor.__dict__)
-
-    if form.validate_on_submit():
-
-        form_data = form.data
-        list_form_data = list(form_data.items())
-
-        for key, value in list_form_data:
-            if key != "csrf_token" or key != "submit" and value:
-                setattr(fornecedor, key, value)
-
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
-
-        flash("Fornecedor editado com sucesso!", "success")
-        return make_response(redirect(url_for("epi.fornecedores")))
-
-    return make_response(
-        render_template(
-            "index.html",
-            page="form_base.html",
-            form=form,
-            endpoint=endpoint,
-            act=act,
-            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        fornecedor = (
+            db.session.query(Fornecedores).filter(Fornecedores.id == id).first()
         )
-    )
+
+        if request.method == "GET":
+            form = FornecedoresForm(**fornecedor.__dict__)
+
+        if form.validate_on_submit():
+
+            form_data = form.data
+            list_form_data = list(form_data.items())
+
+            for key, value in list_form_data:
+                if key != "csrf_token" or key != "submit" and value:
+                    setattr(fornecedor, key, value)
+
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
+
+            flash("Fornecedor editado com sucesso!", "success")
+            return make_response(redirect(url_for("epi.fornecedores")))
+
+        return make_response(
+            render_template(
+                "index.html",
+                page="form_base.html",
+                form=form,
+                endpoint=endpoint,
+                act=act,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
+        )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @epi.post("/fornecedores/deletar/<int:id>")
@@ -164,12 +179,24 @@ def deletar_fornecedores(id: int):
         Response: A rendered template with a success message indicating that the supplier information has been successfully deleted.
     """
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    fornecedor = db.session.query(Fornecedores).filter(Fornecedores.id == id).first()
+    try:
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        fornecedor = (
+            db.session.query(Fornecedores).filter(Fornecedores.id == id).first()
+        )
 
-    db.session.delete(fornecedor)
-    db.session.commit()
+        db.session.delete(fornecedor)
+        db.session.commit()
 
-    template = "includes/show.html"
-    message = "Informação deletada com sucesso!"
+        template = "includes/show.html"
+        message = "Informação deletada com sucesso!"
+        return make_response(render_template(template, message=message))
+
+    except Exception:
+
+        app.logger.exception(traceback.format_exc())
+
+        message = "Erro ao deletar"
+        template = "includes/show.html"
+
     return make_response(render_template(template, message=message))

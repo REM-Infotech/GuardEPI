@@ -1,5 +1,5 @@
 import json
-import traceback
+import traceback  # traceback
 from pathlib import Path
 from typing import Dict, List
 
@@ -65,8 +65,9 @@ def add_itens() -> Response:
         return make_response(
             render_template("forms/roles/add_items.html", item=to_view)
         )
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @config.route("/remove-itens", methods=["GET", "POST"])
@@ -87,8 +88,7 @@ def remove_itens() -> Response:
         return make_response(item_html)
 
     except Exception:
-        obj = traceback.format_exc()
-        app.logger.exception(obj)
+        app.logger.exception(traceback.format_exc())
         abort(500)
 
 
@@ -106,95 +106,106 @@ def roles() -> Response:
             render_template("index.html", title=title, database=database, page=page)
         )
 
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @config.route("/cadastro_regra", methods=["GET", "POST"])
 @login_required
 @create_perm
 def cadastro_regra() -> Response:
-    """
-    Handles the creation of a new group.
-    Renders a form for creating a new group and processes the form submission.
-    If the form is valid and the group does not already exist, a new group is created
-    and added to the database along with its members.
 
-    Returns:
-        - On successful group creation, redirects to the Roles configuration page.
-        - On form validation failure or if the group already exists, re-renders the form with an error message.
-    """
+    try:
+        """
+        Handles the creation of a new group.
+        Renders a form for creating a new group and processes the form submission.
+        If the form is valid and the group does not already exist, a new group is created
+        and added to the database along with its members.
 
-    form = FormRoles()
-    title = "Criar Regra"
-    page = "forms/roles/FormRoles.html"
+        Returns:
+            - On successful group creation, redirects to the Roles configuration page.
+            - On form validation failure or if the group already exists, re-renders the form with an error message.
+        """
 
-    if form.validate_on_submit():
+        form = FormRoles()
+        title = "Criar Regra"
+        page = "forms/roles/FormRoles.html"
 
-        db: SQLAlchemy = app.extensions["sqlalchemy"]
-        rulename = form.name_rule.data
-        query = db.session.query(Roles).filter(Roles.name_role == rulename).first()
+        if form.validate_on_submit():
 
-        routes_add = []
+            db: SQLAlchemy = app.extensions["sqlalchemy"]
+            rulename = form.name_rule.data
+            query = db.session.query(Roles).filter(Roles.name_role == rulename).first()
 
-        if query:
-            flash("Regra já existente!", "error")
-            return render_template("index.html", page=page, form=form, title=title)
+            routes_add = []
 
-        new_ruleset = Roles(
-            name_role=rulename,
-            description=form.desc.data,
+            if query:
+                flash("Regra já existente!", "error")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
+
+            new_ruleset = Roles(
+                name_role=rulename,
+                description=form.desc.data,
+            )
+
+            for group in form.grupos.data:
+
+                grp = (
+                    db.session.query(Groups).filter(Groups.name_group == group).first()
+                )
+                new_ruleset.groups.append(grp)
+
+            hex_name_json = session["json_filename"]
+            path_json = Path(app.config["TEMP_PATH"]).joinpath(hex_name_json).resolve()
+            json_file = path_json.joinpath(hex_name_json).with_suffix(".json").resolve()
+
+            with json_file.open("rb") as f:
+                list_roles: list[Dict[str, str | Dict[str, bool]]] = json.load(f)
+
+            keys_routes = {}
+
+            for key in Routes.__dict__.keys():
+                if key in ["CREATE", "READ", "UPDATE", "DELETE"]:
+                    keys_routes.update({key: False})
+
+            for item in list_roles:
+                to_add = keys_routes
+                list_items = list(item.items())
+                for key, value in list_items:
+                    if key == "ROTA":
+                        to_add.update({"endpoint": value})
+                        continue
+
+                    if key == "REGRAS":
+
+                        rules = list(value.items())
+                        for key_, value_ in rules:
+                            to_add.update({key_: value_})
+
+                end_cfg = Routes(**to_add)
+                end_cfg.roles.append(new_ruleset)
+                routes_add.append(end_cfg)
+
+            db.session.add(new_ruleset)
+            db.session.add_all(routes_add)
+
+            db.session.commit()
+
+            session.pop("json_filename")
+
+            flash("Regra criada com sucesso")
+            return make_response(redirect("/config/roles"))
+
+        return make_response(
+            render_template("index.html", page=page, form=form, title=title)
         )
 
-        for group in form.grupos.data:
-
-            grp = db.session.query(Groups).filter(Groups.name_group == group).first()
-            new_ruleset.groups.append(grp)
-
-        hex_name_json = session["json_filename"]
-        path_json = Path(app.config["TEMP_PATH"]).joinpath(hex_name_json).resolve()
-        json_file = path_json.joinpath(hex_name_json).with_suffix(".json").resolve()
-
-        with json_file.open("rb") as f:
-            list_roles: list[Dict[str, str | Dict[str, bool]]] = json.load(f)
-
-        keys_routes = {}
-
-        for key in Routes.__dict__.keys():
-            if key in ["CREATE", "READ", "UPDATE", "DELETE"]:
-                keys_routes.update({key: False})
-
-        for item in list_roles:
-            to_add = keys_routes
-            list_items = list(item.items())
-            for key, value in list_items:
-                if key == "ROTA":
-                    to_add.update({"endpoint": value})
-                    continue
-
-                if key == "REGRAS":
-
-                    rules = list(value.items())
-                    for key_, value_ in rules:
-                        to_add.update({key_: value_})
-
-            end_cfg = Routes(**to_add)
-            end_cfg.roles.append(new_ruleset)
-            routes_add.append(end_cfg)
-
-        db.session.add(new_ruleset)
-        db.session.add_all(routes_add)
-
-        db.session.commit()
-
-        session.pop("json_filename")
-
-        flash("Regra criada com sucesso")
-        return redirect("/config/roles")
-
-    return make_response(
-        render_template("index.html", page=page, form=form, title=title)
-    )
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @config.get("/deletar_regra/<int:id>")

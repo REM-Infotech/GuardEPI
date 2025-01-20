@@ -1,3 +1,4 @@
+import traceback
 from datetime import datetime
 from pathlib import Path
 from typing import Union
@@ -46,8 +47,9 @@ def funcionarios() -> Response:
                 database=database,
             )
         )
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @corp.route("/funcionarios/cadastro", methods=["GET", "POST"])
@@ -67,53 +69,58 @@ def cadastro_funcionarios() -> Response:
         ValueError: If there is an issue with form data conversion or file handling.
     """
 
-    title = "Cadastro de Funcionário"
+    try:
+        title = "Cadastro de Funcionário"
 
-    form = FuncionarioForm()
+        form = FuncionarioForm()
 
-    if form.validate_on_submit():
-        db: SQLAlchemy = app.extensions["sqlalchemy"]
-        to_add = {}
+        if form.validate_on_submit():
+            db: SQLAlchemy = app.extensions["sqlalchemy"]
+            to_add = {}
 
-        form_data: dict[str, form_content] = list(form.data.items())
-        for key, value in form_data:
-            if key == "csrf_token":
-                continue
+            form_data: dict[str, form_content] = list(form.data.items())
+            for key, value in form_data:
+                if key == "csrf_token":
+                    continue
 
-            if key == "submit":
-                continue
+                if key == "submit":
+                    continue
 
-            if key == "valor_unitario":
-                value = float(
-                    value.replace(",", ".").replace("R$", "").replace(" ", "")
-                )
+                if key == "valor_unitario":
+                    value = float(
+                        value.replace(",", ".").replace("R$", "").replace(" ", "")
+                    )
 
-            if isinstance(value, FileStorage):
-                filename = secure_filename(value.filename)
-                path_file = Path(app.config.get("TEMP_PATH")).joinpath(filename)
-                value.save(str(path_file))
-                with path_file.open("rb") as file:
-                    to_add.update({"blob_doc": file.read()})
+                if isinstance(value, FileStorage):
+                    filename = secure_filename(value.filename)
+                    path_file = Path(app.config.get("TEMP_PATH")).joinpath(filename)
+                    value.save(str(path_file))
+                    with path_file.open("rb") as file:
+                        to_add.update({"blob_doc": file.read()})
 
-                to_add.update({"filename": filename})
-                continue
+                    to_add.update({"filename": filename})
+                    continue
 
-            to_add.update({key: value})
+                to_add.update({key: value})
 
-        item = Funcionarios(**to_add)
-        db.session.add(item)
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
+            item = Funcionarios(**to_add)
+            db.session.add(item)
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
-        flash("func cadastrado com sucesso!", "success")
-        return make_response(redirect(url_for("corp.funcionarios")))
+            flash("func cadastrado com sucesso!", "success")
+            return make_response(redirect(url_for("corp.funcionarios")))
 
-    page = "forms/funcionario_form.html"
-    return make_response(
-        render_template("index.html", title=title, page=page, form=form)
-    )
+        page = "forms/funcionario_form.html"
+        return make_response(
+            render_template("index.html", title=title, page=page, form=form)
+        )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @corp.route("/funcionarios/editar/<int:id>", methods=["GET", "POST"])
@@ -131,95 +138,100 @@ def editar_funcionarios(id: int) -> Response:
         Response: A rendered template for the form on GET request, or a redirect to the employee list page on successful form submission.
     """
 
-    title = "Editar Funcionário"
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    func = db.session.query(Funcionarios).filter_by(id=id).first()
+    try:
+        title = "Editar Funcionário"
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        func = db.session.query(Funcionarios).filter_by(id=id).first()
 
-    form_data = {}
+        form_data = {}
 
-    url_image = ""
-    emp_data = func.__dict__
+        url_image = ""
+        emp_data = func.__dict__
 
-    items_emp_data = list(emp_data.items())
+        items_emp_data = list(emp_data.items())
 
-    for key, value in items_emp_data:
+        for key, value in items_emp_data:
 
-        if key == "_sa_instance_state" or key == "id" or key == "filename":
+            if key == "_sa_instance_state" or key == "id" or key == "filename":
 
-            continue
+                continue
 
-        if key == "blob_doc":
+            if key == "blob_doc":
 
-            img_path = (
-                Path(app.config.get("TEMP_PATH"))
-                .joinpath("IMG")
-                .joinpath(emp_data.get("filename"))
+                img_path = (
+                    Path(app.config.get("TEMP_PATH"))
+                    .joinpath("IMG")
+                    .joinpath(emp_data.get("filename"))
+                )
+                with img_path.open("wb") as file:
+                    file.write(value)
+
+                with img_path.open("rb") as file:
+                    form_data.update(
+                        {
+                            "filename": FileStorage(
+                                filename=secure_filename(func.filename),
+                                stream=file.read(),
+                            )
+                        }
+                    )
+
+                    url_image = url_for(
+                        "serve.serve_img", filename=func.filename, _external=True
+                    )
+
+            form_data.update({key: value})
+
+        form = FuncionarioForm(**form_data)
+
+        if form.validate_on_submit():
+
+            to_add = {}
+
+            form_data: dict[str, form_content] = list(form.data.items())
+            for key, value in form_data:
+
+                if value:
+                    if key == "csrf_token":
+                        continue
+
+                    if key == "submit":
+                        continue
+
+                    if isinstance(value, FileStorage):
+                        filename = secure_filename(value.filename)
+                        path_file = Path(app.config.get("TEMP_PATH")).joinpath(filename)
+                        value.save(str(path_file))
+                        with path_file.open("rb") as file:
+                            to_add.update({"blob_doc": file.read()})
+
+                        to_add.update({"filename": filename})
+                        continue
+
+                    setattr(func, key, value)
+
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
+
+            flash("Edições Salvas con sucesso!", "success")
+            return make_response(redirect(url_for("corp.funcionarios")))
+
+        page = "forms/funcionario_form.html"
+        return make_response(
+            render_template(
+                "index.html",
+                title=title,
+                page=page,
+                form=form,
+                url_image=url_image,
             )
-            with img_path.open("wb") as file:
-                file.write(value)
-
-            with img_path.open("rb") as file:
-                form_data.update(
-                    {
-                        "filename": FileStorage(
-                            filename=secure_filename(func.filename),
-                            stream=file.read(),
-                        )
-                    }
-                )
-
-                url_image = url_for(
-                    "serve.serve_img", filename=func.filename, _external=True
-                )
-
-        form_data.update({key: value})
-
-    form = FuncionarioForm(**form_data)
-
-    if form.validate_on_submit():
-
-        to_add = {}
-
-        form_data: dict[str, form_content] = list(form.data.items())
-        for key, value in form_data:
-
-            if value:
-                if key == "csrf_token":
-                    continue
-
-                if key == "submit":
-                    continue
-
-                if isinstance(value, FileStorage):
-                    filename = secure_filename(value.filename)
-                    path_file = Path(app.config.get("TEMP_PATH")).joinpath(filename)
-                    value.save(str(path_file))
-                    with path_file.open("rb") as file:
-                        to_add.update({"blob_doc": file.read()})
-
-                    to_add.update({"filename": filename})
-                    continue
-
-                setattr(func, key, value)
-
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
-
-        flash("Edições Salvas con sucesso!", "success")
-        return make_response(redirect(url_for("corp.funcionarios")))
-
-    page = "forms/funcionario_form.html"
-    return make_response(
-        render_template(
-            "index.html",
-            title=title,
-            page=page,
-            form=form,
-            url_image=url_image,
         )
-    )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @corp.post("/funcionarios/deletar/<int:id>")
@@ -234,12 +246,23 @@ def deletar_funcionarios(id: int) -> Response:
         Response: A rendered template with a success message indicating that the information was successfully deleted.
     """
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    func = db.session.query(Funcionarios).filter_by(id=id).first()
+    try:
 
-    db.session.delete(func)
-    db.session.commit()
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        func = db.session.query(Funcionarios).filter_by(id=id).first()
 
-    template = "includes/show.html"
-    message = "Informação deletada com sucesso!"
+        db.session.delete(func)
+        db.session.commit()
+
+        template = "includes/show.html"
+        message = "Informação deletada com sucesso!"
+        return make_response(render_template(template, message=message))
+
+    except Exception:
+
+        app.logger.exception(traceback.format_exc())
+
+        message = "Erro ao deletar"
+        template = "includes/show.html"
+
     return make_response(render_template(template, message=message))

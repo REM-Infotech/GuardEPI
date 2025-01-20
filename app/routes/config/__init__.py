@@ -5,7 +5,7 @@ from pathlib import Path
 
 from flask import Blueprint, Response
 from flask import current_app as app
-from flask import redirect, request, session, url_for
+from flask import make_response, redirect, request, session, url_for
 
 template_folder = Path(__file__).parent.resolve().joinpath("templates")
 config = Blueprint(
@@ -51,7 +51,7 @@ def redirecting() -> Response:
         Response: A redirect response object to the 'epi.Equipamentos' URL.
     """
 
-    return redirect(url_for("epi.Equipamentos"))
+    return make_response(redirect(url_for("epi.Equipamentos")))
 
 
 import_module(".users", __package__)

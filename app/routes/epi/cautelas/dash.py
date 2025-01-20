@@ -1,10 +1,16 @@
 from pathlib import Path
 from uuid import uuid4
 
-from flask import abort
+from flask import Response, abort
 from flask import current_app as app
-from flask import render_template, request, send_from_directory, session, url_for
-from flask.wrappers import Response
+from flask import (
+    make_response,
+    render_template,
+    request,
+    send_from_directory,
+    session,
+    url_for,
+)
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
@@ -24,12 +30,14 @@ def registro_saidas() -> str:
     database = RegistroSaidas.query.all()
     title = "Registro Saídas"
 
-    return render_template(
-        "index.html",
-        page=page,
-        title=title,
-        database=database,
-        format_currency_brl=format_currency_brl,
+    return make_response(
+        render_template(
+            "index.html",
+            page=page,
+            title=title,
+            database=database,
+            format_currency_brl=format_currency_brl,
+        )
     )
 
 
@@ -49,12 +57,14 @@ def cautelas(to_show: str = None) -> str:
     title = "Liberações de EPI's"
 
     session["itens_lista_cautela"] = []
-    return render_template(
-        "index.html",
-        page=page,
-        title=title,
-        database=database,
-        url=url,
+    return make_response(
+        render_template(
+            "index.html",
+            page=page,
+            title=title,
+            database=database,
+            url=url,
+        )
     )
 
 
@@ -102,4 +112,4 @@ def cautela_pdf(uuid_pasta: str) -> Response:
         else:
             abort(404, description="Arquivo não encontrado")
 
-    return send_from_directory(path_cautela, filename)
+    return make_response(send_from_directory(path_cautela, filename))

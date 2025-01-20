@@ -4,7 +4,7 @@ from pathlib import Path
 from celery import shared_task
 from flask import Blueprint
 from flask import current_app as app
-from flask import redirect, render_template, url_for
+from flask import make_response, redirect, render_template, url_for
 from flask_login import login_required
 from flask_mail import Mail, Message
 from flask_wtf import FlaskForm
@@ -23,7 +23,7 @@ def dash():
 
     form: FlaskForm | TaskNotificacaoForm = TaskNotificacaoForm()
     page = "schedules.html"
-    return render_template("index.html", page=page, form=form)
+    return make_response(render_template("index.html", page=page, form=form))
 
 
 @schedule_bp.post("/new_schedule")
@@ -36,7 +36,7 @@ def new_schedule():
 
     #     days = [int(day) for day in form.days_of_week.data]
 
-    return redirect(url_for("schedules.dash"))
+    return make_response(redirect(url_for("schedules.dash")))
 
 
 @shared_task(bind=True, ignore_result=False)

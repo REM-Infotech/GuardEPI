@@ -1,3 +1,5 @@
+import traceback
+
 from flask import Response, abort
 from flask import current_app as app
 from flask import flash, make_response, redirect, render_template, url_for
@@ -36,8 +38,9 @@ def cargos():
                 database=database,
             )
         )
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @corp.route("/cargos/cadastrar", methods=["GET", "POST"])
@@ -58,44 +61,49 @@ def cadastrar_cargos() -> Response:
         Success: "Cargo cadastrado com sucesso!" - Displayed when a new cargo is successfully registered.
     """
 
-    endpoint = "Cargos"
-    act = "Cadastro"
-    form = CargoForm()
+    try:
+        endpoint = "Cargos"
+        act = "Cadastro"
+        form = CargoForm()
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-    if form.validate_on_submit():
+        if form.validate_on_submit():
 
-        to_add = {}
-        form_data = form.data
-        list_form_data = list(form_data.items())
+            to_add = {}
+            form_data = form.data
+            list_form_data = list(form_data.items())
 
-        for key, value in list_form_data:
-            if key.lower() == "csrf_token" or key.lower() == "submit":
-                continue
+            for key, value in list_form_data:
+                if key.lower() == "csrf_token" or key.lower() == "submit":
+                    continue
 
-            to_add.update({key: value})
+                to_add.update({key: value})
 
-        item = Cargos(**to_add)
-        db.session.add(item)
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
+            item = Cargos(**to_add)
+            db.session.add(item)
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
-        flash("Cargo cadastrado com sucesso!", "success")
-        return make_response(redirect(url_for("corp.cargos")))
+            flash("Cargo cadastrado com sucesso!", "success")
+            return make_response(redirect(url_for("corp.cargos")))
 
-    return make_response(
-        render_template(
-            "index.html",
-            page="form_base.html",
-            form=form,
-            endpoint=endpoint,
-            act=act,
-            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        return make_response(
+            render_template(
+                "index.html",
+                page="form_base.html",
+                form=form,
+                endpoint=endpoint,
+                act=act,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
         )
-    )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @corp.route("/cargos/editar/<int:id>", methods=["GET", "POST"])
@@ -117,41 +125,45 @@ def editar_cargos(id) -> Response:
         "Cargo editado com sucesso!": Displayed after a successful position edit.
     """
 
-    endpoint = "cargos"
-    act = "Cadastro"
+    try:
+        endpoint = "cargos"
+        act = "Cadastro"
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-    cargos = db.session.query(Cargos).filter(Cargos.id == id).first()
-    form = CargoForm(**cargos.__dict__)
+        cargos = db.session.query(Cargos).filter(Cargos.id == id).first()
+        form = CargoForm(**cargos.__dict__)
 
-    if form.validate_on_submit():
+        if form.validate_on_submit():
 
-        form_data = form.data
-        list_form_data = list(form_data.items())
+            form_data = form.data
+            list_form_data = list(form_data.items())
 
-        for key, value in list_form_data:
-            if key != "csrf_token" or key != "submit" and value:
-                setattr(cargos, key, value)
+            for key, value in list_form_data:
+                if key != "csrf_token" or key != "submit" and value:
+                    setattr(cargos, key, value)
 
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
-        flash("Cargo editado com sucesso!", "success")
-        return make_response(redirect(url_for("corp.cargos")))
+            flash("Cargo editado com sucesso!", "success")
+            return make_response(redirect(url_for("corp.cargos")))
 
-    return make_response(
-        render_template(
-            "index.html",
-            page="form_base.html",
-            form=form,
-            endpoint=endpoint,
-            act=act,
-            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        return make_response(
+            render_template(
+                "index.html",
+                page="form_base.html",
+                form=form,
+                endpoint=endpoint,
+                act=act,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
         )
-    )
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @corp.post("/cargos/deletar/<int:id>")
@@ -168,12 +180,22 @@ def deletar_cargos(id: int) -> str:
         sqlalchemy.orm.exc.NoResultFound: If no cargo with the given ID is found.
     """
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    cargos = db.session.query(Cargos).filter(Cargos.id == id).first()
+    try:
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        cargos = db.session.query(Cargos).filter(Cargos.id == id).first()
 
-    db.session.delete(cargos)
-    db.session.commit()
+        db.session.delete(cargos)
+        db.session.commit()
 
-    template = "includes/show.html"
-    message = "Informação deletada com sucesso!"
+        template = "includes/show.html"
+        message = "Informação deletada com sucesso!"
+        return make_response(render_template(template, message=message))
+
+    except Exception:
+
+        app.logger.exception(traceback.format_exc())
+
+        message = "Erro ao deletar"
+        template = "includes/show.html"
+
     return make_response(render_template(template, message=message))

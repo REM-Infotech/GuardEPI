@@ -1,10 +1,10 @@
 import json
+import traceback
 from pathlib import Path
 
+from flask import Blueprint, Response, abort
+from flask import current_app as app
 from flask import (
-    Blueprint,
-    Response,
-    abort,
     flash,
     make_response,
     redirect,
@@ -32,10 +32,15 @@ def index() -> Response:
         werkzeug.wrappers.Response: A redirect response to the appropriate URL.
     """
 
-    if not current_user.is_authenticated:
-        return make_response(redirect(url_for("dash.dashboard")))
+    try:
+        if not current_user.is_authenticated:
+            return make_response(redirect(url_for("dash.dashboard")))
 
-    return make_response(redirect(url_for("auth.login")))
+        return make_response(redirect(url_for("auth.login")))
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @auth.route("/login", methods=["GET", "POST"])
@@ -80,8 +85,10 @@ def login() -> Response:
             flash("Usuário/Senha Incorretos!", "error")
 
         return make_response(render_template("login.html", form=form))
-    except Exception as e:
-        abort(500, description=str(e))
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @auth.route("/logout", methods=["GET"])
@@ -96,7 +103,12 @@ def logout() -> Response:
         Response: A redirect response object to the login page.
     """
 
-    logout_user()
-    flash("Sessão encerrada", "info")
-    location = url_for("auth.login")
-    return make_response(redirect(location))
+    try:
+        logout_user()
+        flash("Sessão encerrada", "info")
+        location = url_for("auth.login")
+        return make_response(redirect(location))
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)

@@ -1,3 +1,5 @@
+import traceback
+
 from flask import Response, abort
 from flask import current_app as app
 from flask import flash, make_response, redirect, render_template, request, url_for
@@ -45,44 +47,49 @@ def cadastrar_modelos() -> Response:
                   appropriate context if the form is not submitted or is invalid.
     """
 
-    endpoint = "modelos"
-    act = "Cadastro"
-    form = FormModelos()
+    try:
+        endpoint = "modelos"
+        act = "Cadastro"
+        form = FormModelos()
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-    if form.validate_on_submit():
+        if form.validate_on_submit():
 
-        to_add = {}
-        form_data = form.data
-        list_form_data = list(form_data.items())
+            to_add = {}
+            form_data = form.data
+            list_form_data = list(form_data.items())
 
-        for key, value in list_form_data:
-            if key.lower() == "csrf_token" or key.lower() == "submit":
-                continue
+            for key, value in list_form_data:
+                if key.lower() == "csrf_token" or key.lower() == "submit":
+                    continue
 
-            to_add.update({key: value})
+                to_add.update({key: value})
 
-        item = ModelosEPI(**to_add)
-        db.session.add(item)
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
+            item = ModelosEPI(**to_add)
+            db.session.add(item)
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
-        flash("modelos cadastrada com sucesso!", "success")
-        return make_response(redirect(url_for("epi.modelos")))
+            flash("modelos cadastrada com sucesso!", "success")
+            return make_response(redirect(url_for("epi.modelos")))
 
-    return make_response(
-        render_template(
-            "index.html",
-            page="form_base.html",
-            form=form,
-            endpoint=endpoint,
-            act=act,
-            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        return make_response(
+            render_template(
+                "index.html",
+                page="form_base.html",
+                form=form,
+                endpoint=endpoint,
+                act=act,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
         )
-    )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @epi.route("/modelos/editar/<int:id>", methods=["GET", "POST"])
@@ -103,44 +110,49 @@ def editar_modelos(id: int) -> Response:
                   Redirects to the 'modeloss' endpoint with a success message for valid POST requests.
     """
 
-    endpoint = "modelos"
-    act = "Cadastro"
+    try:
+        endpoint = "modelos"
+        act = "Cadastro"
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    form = FormModelos()
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        form = FormModelos()
 
-    classe = db.session.query(ModelosEPI).filter(ModelosEPI.id == id).first()
+        classe = db.session.query(ModelosEPI).filter(ModelosEPI.id == id).first()
 
-    if request.method == "GET":
-        form = FormModelos(**classe.__dict__)
+        if request.method == "GET":
+            form = FormModelos(**classe.__dict__)
 
-    if form.validate_on_submit():
+        if form.validate_on_submit():
 
-        form_data = form.data
-        list_form_data = list(form_data.items())
+            form_data = form.data
+            list_form_data = list(form_data.items())
 
-        for key, value in list_form_data:
-            if key != "csrf_token" or key != "submit" and value:
-                setattr(classe, key, value)
+            for key, value in list_form_data:
+                if key != "csrf_token" or key != "submit" and value:
+                    setattr(classe, key, value)
 
-        try:
-            db.session.commit()
-        except errors.UniqueViolation:
-            abort(500, description="Item já cadastrado!")
+            try:
+                db.session.commit()
+            except errors.UniqueViolation:
+                abort(500, description="Item já cadastrado!")
 
-        flash("modelos editada com sucesso!", "success")
-        return make_response(redirect(url_for("epi.modelos")))
+            flash("modelos editada com sucesso!", "success")
+            return make_response(redirect(url_for("epi.modelos")))
 
-    return make_response(
-        render_template(
-            "index.html",
-            page="form_base.html",
-            form=form,
-            endpoint=endpoint,
-            act=act,
-            title=" ".join([act.capitalize(), endpoint.capitalize()]),
+        return make_response(
+            render_template(
+                "index.html",
+                page="form_base.html",
+                form=form,
+                endpoint=endpoint,
+                act=act,
+                title=" ".join([act.capitalize(), endpoint.capitalize()]),
+            )
         )
-    )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @epi.post("/modeloss/deletar/<int:id>")
@@ -155,12 +167,22 @@ def deletar_modelos(id: int) -> Response:
         Response: A rendered HTML template with a success message.
     """
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    classe = db.session.query(ModelosEPI).filter(ModelosEPI.id == id).first()
+    try:
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        classe = db.session.query(ModelosEPI).filter(ModelosEPI.id == id).first()
 
-    db.session.delete(classe)
-    db.session.commit()
+        db.session.delete(classe)
+        db.session.commit()
 
-    template = "includes/show.html"
-    message = "Informação deletada com sucesso!"
+        template = "includes/show.html"
+        message = "Informação deletada com sucesso!"
+        return make_response(render_template(template, message=message))
+
+    except Exception:
+
+        app.logger.exception(traceback.format_exc())
+
+        message = "Erro ao deletar"
+        template = "includes/show.html"
+
     return make_response(render_template(template, message=message))

@@ -1,4 +1,4 @@
-import traceback
+import traceback  # traceback
 
 from flask import Response, abort
 from flask import current_app as app
@@ -27,104 +27,121 @@ def groups() -> Response:
             render_template("index.html", title=title, database=database, page=page)
         )
 
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @config.route("/cadastro_grupo", methods=["GET", "POST"])
 @login_required
 @create_perm
 def cadastro_grupo() -> Response:
-    """
-    Handles the creation of a new group.
-    Renders a form for creating a new group and processes the form submission.
-    If the form is valid and the group does not already exist, a new group is created
-    and added to the database along with its members.
-    Returns:
-        - On successful group creation, redirects to the groups configuration page.
-        - On form validation failure or if the group already exists, re-renders the form with an error message.
-    """
 
-    form = GroupForm()
-    title = "Criar Grupo"
-    page = "forms/GroupForm.html"
+    try:
+        """
+        Handles the creation of a new group.
+        Renders a form for creating a new group and processes the form submission.
+        If the form is valid and the group does not already exist, a new group is created
+        and added to the database along with its members.
+        Returns:
+            - On successful group creation, redirects to the groups configuration page.
+            - On form validation failure or if the group already exists, re-renders the form with an error message.
+        """
 
-    if form.validate_on_submit():
+        form = GroupForm()
+        title = "Criar Grupo"
+        page = "forms/GroupForm.html"
 
-        db: SQLAlchemy = app.extensions["sqlalchemy"]
+        if form.validate_on_submit():
 
-        query = (
-            db.session.query(Groups).filter(Groups.name_group == form.nome.data).first()
+            db: SQLAlchemy = app.extensions["sqlalchemy"]
+
+            query = (
+                db.session.query(Groups)
+                .filter(Groups.name_group == form.nome.data)
+                .first()
+            )
+
+            if query:
+                flash("Grupo já existente!", "error")
+                return make_response(
+                    render_template("index.html", page=page, form=form, title=title)
+                )
+
+            new_group = Groups(
+                name_group=form.nome.data,
+                description=form.desc.data,
+            )
+
+            for member in form.membros.data:
+
+                usr = db.session.query(Users).filter(Users.login == member).first()
+                new_group.members.append(usr)
+
+            db.session.add(new_group)
+            db.session.commit()
+
+            flash("Grupo Criado com sucesso!")
+            return make_response(redirect("/config/groups"))
+
+        return make_response(
+            render_template("index.html", page=page, form=form, title=title)
         )
 
-        if query:
-            flash("Grupo já existente!", "error")
-            return render_template("index.html", page=page, form=form, title=title)
-
-        new_group = Groups(
-            name_group=form.nome.data,
-            description=form.desc.data,
-        )
-
-        for member in form.membros.data:
-
-            usr = db.session.query(Users).filter(Users.login == member).first()
-            new_group.members.append(usr)
-
-        db.session.add(new_group)
-        db.session.commit()
-
-        flash("Grupo Criado com sucesso!")
-        return make_response(redirect("/config/groups"))
-
-    return make_response(
-        render_template("index.html", page=page, form=form, title=title)
-    )
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @config.route("/editar_grupo/<int:id>", methods=["GET", "POST"])
 @login_required
 def editar_grupo(id: int) -> Response:
-    """
-    Handles the creation of a new group.
-    Renders a form for creating a new group and processes the form submission.
-    If the form is valid and the group does not already exist, a new group is created
-    and added to the database along with its members.
-    Returns:
-        - On successful group creation, redirects to the groups configuration page.
-        - On form validation failure or if the group already exists, re-renders the form with an error message.
-    """
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
+    try:
+        """
+        Handles the creation of a new group.
+        Renders a form for creating a new group and processes the form submission.
+        If the form is valid and the group does not already exist, a new group is created
+        and added to the database along with its members.
+        Returns:
+            - On successful group creation, redirects to the groups configuration page.
+            - On form validation failure or if the group already exists, re-renders the form with an error message.
+        """
 
-    query = db.session.query(Groups).filter(Groups.id == id).first()
-    choices = []
-    for member in query.members:
-        choices.extend([member.login])
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-    form = GroupForm(membros=choices, desc=query.description, nome=query.name_group)
-    title = "Criar Grupo"
-    page = "forms/GroupForm.html"
+        query = db.session.query(Groups).filter(Groups.id == id).first()
+        choices = []
+        for member in query.members:
+            choices.extend([member.login])
 
-    if form.validate_on_submit():
+        form = GroupForm(membros=choices, desc=query.description, nome=query.name_group)
+        title = "Criar Grupo"
+        page = "forms/GroupForm.html"
 
-        query.members.clear()
-        query.name_group = form.nome.data
-        query.description = form.desc.data
+        if form.validate_on_submit():
 
-        for member in form.membros.data:
+            query.members.clear()
+            query.name_group = form.nome.data
+            query.description = form.desc.data
 
-            usr = db.session.query(Users).filter(Users.login == member).first()
-            query.members.append(usr)
+            for member in form.membros.data:
 
-        db.session.commit()
+                usr = db.session.query(Users).filter(Users.login == member).first()
+                query.members.append(usr)
 
-        flash("Grupo editado com sucesso!")
-        return make_response(redirect("/config/groups"))
+            db.session.commit()
 
-    return make_response(
-        render_template("index.html", page=page, form=form, title=title)
-    )
+            flash("Grupo editado com sucesso!")
+            return make_response(redirect("/config/groups"))
+
+        return make_response(
+            render_template("index.html", page=page, form=form, title=title)
+        )
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @config.get("/deletar_grupo/<int:id>")

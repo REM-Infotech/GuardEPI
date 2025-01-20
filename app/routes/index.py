@@ -1,4 +1,5 @@
 import os
+import traceback
 from datetime import datetime
 from pathlib import Path
 
@@ -50,8 +51,9 @@ def termos_uso() -> Response:
         response.headers["Content-Type"] = "application/pdf"
         return response
 
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @index.route("/politica_privacidade", methods=["GET"])
@@ -78,8 +80,9 @@ def politica_privacidade() -> Response:
         response.headers["Content-Type"] = "application/pdf"
         return response
 
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @index.route("/gerar_relatorio")
@@ -161,8 +164,9 @@ def gerar_relatorio() -> Response:
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @index.route("/import_lotes/<tipo>", methods=["GET", "POST"])
@@ -229,13 +233,14 @@ def import_lotes(tipo: str = None) -> Response:
             )
         )
 
-    except Exception as e:
-        abort(400, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
 
 
 @index.route("/gen_model/<model>", methods=["GET"])
 @login_required
-def gen_model(model: str):
+def gen_model(model: str) -> Response:
 
     try:
         database_model = get_models(model.lower())
@@ -276,5 +281,6 @@ def gen_model(model: str):
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
-    except Exception as e:
-        abort(500, description=str(e))
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)

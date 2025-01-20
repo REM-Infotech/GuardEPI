@@ -1,8 +1,9 @@
+import traceback
 from pathlib import Path
 
-from flask import Blueprint, Response
+from flask import Blueprint, Response, abort
 from flask import current_app as app
-from flask import send_from_directory
+from flask import make_response, send_from_directory
 
 serve = Blueprint("serve", __name__)
 
@@ -18,5 +19,11 @@ def serve_img(filename: str) -> Response:
     Returns:
         Response: A Flask response object that sends the requested image file from the directory specified in the app configuration.
     """
-    path_img = Path(app.config["IMAGE_TEMP_PATH"])
-    return send_from_directory(path_img, filename)
+
+    try:
+        path_img = Path(app.config["IMAGE_TEMP_PATH"])
+        return make_response(send_from_directory(path_img, filename))
+
+    except Exception:
+        app.logger.exception(traceback.format_exc())
+        abort(500)
