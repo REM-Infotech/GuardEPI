@@ -3,7 +3,7 @@ from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
-from flask import Blueprint, abort
+from flask import Blueprint, Response, abort
 from flask import current_app as app
 from flask import (
     flash,
@@ -19,7 +19,6 @@ from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import LargeBinary
 from werkzeug.utils import secure_filename
-from werkzeug.wrappers.response import Response
 
 from app.forms import ImporteLotesForm
 from app.misc import get_models
@@ -44,13 +43,12 @@ def termos_uso() -> Response:
     """
     try:
         filename = "Termos de Uso.pdf"
-        url = send_from_directory(app.config["PDF_PATH"], filename)
         # Crie a resposta usando make_response
-        response = make_response(url)
+        response = make_response(send_from_directory(app.config["PDF_PATH"], filename))
 
         # Defina o tipo MIME como application/pdf
         response.headers["Content-Type"] = "application/pdf"
-        return url
+        return response
 
     except Exception as e:
         abort(500, description=str(e))
@@ -72,13 +70,13 @@ def politica_privacidade() -> Response:
     """
     try:
         filename = "Política de Privacidade.pdf"
-        url = send_from_directory(app.config["PDF_PATH"], filename)
+
         # Crie a resposta usando make_response
-        response = make_response(url)
+        response = make_response(send_from_directory(app.config["PDF_PATH"], filename))
 
         # Defina o tipo MIME como application/pdf
         response.headers["Content-Type"] = "application/pdf"
-        return url
+        return response
 
     except Exception as e:
         abort(500, description=str(e))
@@ -86,9 +84,18 @@ def politica_privacidade() -> Response:
 
 @index.route("/gerar_relatorio")
 @login_required
-def gerar_relatorio() -> Response | Response:
+def gerar_relatorio() -> Response:
 
     try:
+
+        referrer = (
+            request.referrer.replace("http://", "").replace("https://", "").split("/")
+        )
+        referrer.remove(request.host)
+        if "?" in referrer[-1]:
+            chk_login = referrer[-1].split("?")[0]
+            if chk_login == "login":
+                return make_response(redirect(url_for("dash.dashboard")))
 
         modelo = {
             "categorias": "categorias",
@@ -106,37 +113,29 @@ def gerar_relatorio() -> Response | Response:
             "groups": "groups",
         }
 
-        db: SQLAlchemy = app.extensions["sqlalchemy"]
-
-        referrer = (
-            request.referrer.replace("http://", "").replace("https://", "").split("/")
+        dbase = modelo.get(
+            "_".join(referrer) if "estoque" in referrer else referrer[-1]
         )
-
-        referrer.remove(request.host)
-
-        if "?" in referrer[-1]:
-            chk_login = referrer[-1].split("?")[0]
-            if chk_login == "login":
-                return redirect(url_for("dash.dashboard"))
-
-        if "estoque" in referrer:
-            dbase = "_".join(referrer)
-
-        elif "estoque" not in referrer:
-            dbase = referrer[-1]
-
-        now = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")  # Change colon to hyphen
-        filename = f"Relatório {" ".join([i.capitalize() for i in dbase.split("_")])} - {now}.xlsx"
-
-        base_path = Path(app.config["CSV_TEMP_PATH"])
-        file_path = base_path.joinpath(filename).resolve()
-        if not str(file_path).startswith(str(base_path)):
-            raise Exception("Invalid file path")
-
-        dbase = modelo.get(dbase)
 
         if not dbase:
             raise ValueError("Not Found!")
+
+        filename = secure_filename(
+            "".join(
+                (
+                    f"Relatório {" ".join([i.capitalize() for i in dbase.split("_")])}",
+                    " - ",
+                    f"{datetime.now().strftime("%d-%m-%Y_%H-%M-%S")}.xlsx",
+                )
+            )
+        )
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+
+        file_path = Path(
+            os.path.normpath(
+                Path(app.config["CSV_TEMP_PATH"]).joinpath(filename).resolve()
+            )
+        ).resolve()
 
         model = get_models(dbase.lower())
         query = db.session.query(model).all()
@@ -166,7 +165,7 @@ def gerar_relatorio() -> Response | Response:
 
 @index.route("/import_lotes/<tipo>", methods=["GET", "POST"])
 @login_required
-def import_lotes(tipo: str = None) -> Response | str:
+def import_lotes(tipo: str = None) -> Response:
     try:
 
         action = request.path
@@ -220,10 +219,12 @@ def import_lotes(tipo: str = None) -> Response | str:
             db.session.commit()
 
             flash("Informação cadastrada com sucesso!", "success")
-            return redirect(url_for(tipo))
+            return make_response(redirect(url_for(tipo)))
 
-        return render_template(
-            "forms/importform.html", form=form, action=action, model=tipo
+        return make_response(
+            render_template(
+                "forms/importform.html", form=form, action=action, model=tipo
+            )
         )
 
     except Exception as e:
@@ -232,7 +233,7 @@ def import_lotes(tipo: str = None) -> Response | str:
 
 @index.route("/gen_model/<model>", methods=["GET"])
 @login_required
-def gen_model(model: str) -> Response:
+def gen_model(model: str):
 
     try:
         database_model = get_models(model.lower())

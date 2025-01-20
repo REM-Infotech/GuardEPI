@@ -1,10 +1,10 @@
-<div class="container px-4">
+<div class="container-fluid px-4">
   <script src="{{ url_for('static', filename = 'js/Formatadores/CNPJ.js') }}"></script>
   <div class="card mt-4 mb-4">
     <div class="card-header">
       <h2 class="m-2 p-1">{{ title }}</h2>
       <hr>
-      <a type="button" class="btn btn-success me-2 btn-icon-split" href="{{ url_for("corp.cadastro_empresas") }}">
+      <a type="button" class="btn btn-success me-2 btn-icon-split" href="{{ url_for('corp.cadastro_empresas') }}">
         <span class="icon text-white-50">
           <i class="fa-solid fa-plus"></i>
         </span>

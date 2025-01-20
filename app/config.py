@@ -5,6 +5,8 @@ from pathlib import Path
 from celery.schedules import crontab
 from dotenv import dotenv_values
 
+current_dir = Path(__file__).cwd().resolve()
+
 
 class Config(object):
 
@@ -43,19 +45,19 @@ class Config(object):
     SESSION_COOKIE_SECURE = True
     PERMANENT_SESSION_LIFETIME = timedelta(days=31).max.seconds
 
-    TEMP_PATH = Path(__file__).cwd().joinpath("temp")
+    TEMP_PATH = current_dir.joinpath("temp").resolve()
     TEMP_PATH.mkdir(exist_ok=True)
 
-    PDF_PATH = str(Path(__file__).cwd().joinpath("PDF"))
-    DOCS_PATH = str(Path(__file__).cwd().joinpath("Docs"))
-    TEMP_PATH = str(Path(__file__).cwd().joinpath("Temp"))
-    IMAGE_TEMP_PATH = Path(TEMP_PATH).resolve().joinpath("IMG")
-    CSV_TEMP_PATH = Path(TEMP_PATH).resolve().joinpath("csv")
-    PDF_TEMP_PATH = Path(TEMP_PATH).resolve().joinpath("pdf")
+    PDF_PATH = current_dir.joinpath("PDF")
+    DOCS_PATH = current_dir.joinpath("Docs")
+    TEMP_PATH = current_dir.joinpath("Temp")
+    IMAGE_TEMP_PATH = Path(TEMP_PATH).joinpath("IMG")
+    CSV_TEMP_PATH = Path(TEMP_PATH).joinpath("csv")
+    PDF_TEMP_PATH = Path(TEMP_PATH).joinpath("pdf")
 
-    IMAGE_TEMP_PATH.mkdir(exist_ok=True)
-    CSV_TEMP_PATH.mkdir(exist_ok=True)
-    PDF_TEMP_PATH.mkdir(exist_ok=True)
+    IMAGE_TEMP_PATH.mkdir(exist_ok=True, parents=True)
+    CSV_TEMP_PATH.mkdir(exist_ok=True, parents=True)
+    PDF_TEMP_PATH.mkdir(exist_ok=True, parents=True)
 
     CELERY = {}
 
@@ -176,6 +178,7 @@ class DevelopmentConfig(Config):
         redis_uri = env.get("REDIS_URI", "redis://localhost:6379")
 
         # Flask-mail config
+        TEMPLATES_AUTO_RELOAD = True
         MAIL_SERVER = env["MAIL_SERVER"]
         MAIL_PORT = int(env["MAIL_PORT"])
         MAIL_USE_TLS = env["MAIL_USE_TLS"] in ["True", "true", "TRUE"]
