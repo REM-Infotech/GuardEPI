@@ -4,27 +4,22 @@ import pytz
 
 from app import db
 
-epis_cautela = db.Table(
-    "epis_cautela",
-    db.Column(
-        "produto_epi_id", db.Integer, db.ForeignKey("produto_epi.id"), primary_key=True
-    ),
-    db.Column(
-        "registros_epi_id",
-        db.Integer,
-        db.ForeignKey("registros_epi.id"),
-        primary_key=True,
-    ),
-)
+
+class epis_cautela(db.Model):
+
+    __tablename__ = "epis_cautela"
+    id = db.Column(db.Integer, primary_key=True)
+    produto_epi_id: int = db.Column(db.Integer, db.ForeignKey("produto_epi.id"))
+    registros_epi_id: int = db.Column(db.Integer, db.ForeignKey("registros_epi.id"))
+    cod_ref: str = db.Column(db.String(length=64), nullable=False)
 
 
 class RegistrosEPI(db.Model):
 
     __tablename__ = "registros_epi"
     id = db.Column(db.Integer, primary_key=True)
-    nome_epis = db.relationship(
-        "ProdutoEPI", secondary="epis_cautela", backref="registros_epi"
-    )
+    # cod_saida =
+    nome_epis = db.relationship("epis_cautela", backref="nome_epi_registros")
     valor_total: float = db.Column(db.Float, nullable=False)
     funcionario: str = db.Column(db.String(length=64), nullable=False)
     data_solicitacao: datetime = db.Column(
