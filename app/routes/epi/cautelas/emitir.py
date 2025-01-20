@@ -165,14 +165,15 @@ def emitir_cautela() -> Response | str:
         form = Cautela()
         page = "forms/cautela/cautela_form.html"
 
+        title = "Emissão de Cautela"
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+
         if request.method == "POST":
 
             form_data2 = request.form
             form = Cautela(
                 choices_grade=[(form_data2["tipo_grade"], form_data2["tipo_grade"])]
             )
-        title = "Emissão de Cautela"
-        db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
 
