@@ -19,4 +19,4 @@ if __name__ == "__main__":
         return secrets.randbelow(65535 - 1024) + 1024
 
     port = int(dotenv_values(".env").get("PORT", get_random_port()))
-    server(listen(("localhost", port)), flask_app, log=flask_app.logger)
+    server(listen(("0.0.0.0", port)), flask_app, log=flask_app.logger)
