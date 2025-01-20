@@ -41,7 +41,7 @@
             <td>{{ desc }}</td>
             <td>
               <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-icon-split btn-sm m-1"
-                hx-post="{{ url_for('config.deletar_regra', id = item.id) }}" hx-trigger="click" hx-target="#results">
+                hx-get="{{ url_for('config.deletar_regra', id = item.id) }}" hx-trigger="click" hx-target="#results">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-trash"></i>
                 </span>

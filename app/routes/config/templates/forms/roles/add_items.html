@@ -1,3 +1,4 @@
+{% if item %}
 {% for i in item %}
 <tr>
   <td>{{ i.get("ID") }}</td>
@@ -5,3 +6,4 @@
   <td>{{ i.get("REGRAS") }}</td>
 </tr>
 {% endfor %}
+{% endif %}

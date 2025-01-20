@@ -48,8 +48,8 @@
                 <span class="text">Editar</span>
               </a>
 
-              <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-icon-split btn-sm m-1" hx-post=""
-                hx-trigger="click" hx-target="#results">
+              <button type="button" id="DeleteEstoqueButton" class="btn btn-danger btn-icon-split btn-sm m-1"
+                hx-get="{{ url_for('config.deletar_grupo', id = item.id) }}" hx-trigger="click" hx-target="#results">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-trash"></i>
                 </span>

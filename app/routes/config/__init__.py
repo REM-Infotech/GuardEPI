@@ -28,20 +28,19 @@ def before_request_roles() -> None:
         - Writes an empty JSON array to the created JSON file.
     """
 
-    if not request.path.startswith("/config/roles"):
-        if not session.get("json_filename", None):
+    if request.endpoint == "config.cadastro_regra":
 
-            hex_name_json = secrets.token_hex(16)
-            session["json_filename"] = hex_name_json
+        hex_name_json = secrets.token_hex(16)
+        session["json_filename"] = hex_name_json
 
-            path_json = Path(app.config["TEMP_PATH"]).joinpath(hex_name_json).resolve()
+        path_json = Path(app.config["TEMP_PATH"]).joinpath(hex_name_json).resolve()
 
-            path_json.mkdir(exist_ok=True)
+        path_json.mkdir(exist_ok=True)
 
-            json_file = path_json.joinpath(hex_name_json).with_suffix(".json").resolve()
+        json_file = path_json.joinpath(hex_name_json).with_suffix(".json").resolve()
 
-            with open(json_file, "w") as f:
-                f.write(json.dumps([]))
+        with open(json_file, "w") as f:
+            f.write(json.dumps([]))
 
 
 @config.get("/")

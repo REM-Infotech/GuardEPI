@@ -1,14 +1,15 @@
-from flask import abort
+import traceback
+
+from flask import Response, abort
 from flask import current_app as app
 from flask import flash, make_response, redirect, render_template
-from flask.wrappers import Response
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
 from app.decorators import create_perm, read_perm
 
 from ...forms import GroupForm
-from ...models import Groups, Users
+from ...models import Groups, Roles, Users
 from . import config
 
 
@@ -33,7 +34,7 @@ def groups() -> Response:
 @config.route("/cadastro_grupo", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastro_grupo() -> str | Response:
+def cadastro_grupo() -> Response:
     """
     Handles the creation of a new group.
     Renders a form for creating a new group and processes the form submission.
@@ -74,14 +75,16 @@ def cadastro_grupo() -> str | Response:
         db.session.commit()
 
         flash("Grupo Criado com sucesso!")
-        return redirect("/config/groups")
+        return make_response(redirect("/config/groups"))
 
-    return render_template("index.html", page=page, form=form, title=title)
+    return make_response(
+        render_template("index.html", page=page, form=form, title=title)
+    )
 
 
 @config.route("/editar_grupo/<int:id>", methods=["GET", "POST"])
 @login_required
-def editar_grupo(id: int) -> Response | str:
+def editar_grupo(id: int) -> Response:
     """
     Handles the creation of a new group.
     Renders a form for creating a new group and processes the form submission.
@@ -117,6 +120,55 @@ def editar_grupo(id: int) -> Response | str:
         db.session.commit()
 
         flash("Grupo editado com sucesso!")
-        return redirect("/config/groups")
+        return make_response(redirect("/config/groups"))
 
-    return render_template("index.html", page=page, form=form, title=title)
+    return make_response(
+        render_template("index.html", page=page, form=form, title=title)
+    )
+
+
+@config.get("/deletar_grupo/<int:id>")
+@login_required
+def deletar_grupo(id: int) -> Response:
+
+    try:
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
+
+        from_users = (
+            db.session.query(Users)
+            .select_from(Groups)
+            .join(Groups.members)
+            .filter(Groups.id == id)
+            .all()
+        )
+
+        from_roles = (
+            db.session.query(Roles)
+            .select_from(Groups)
+            .join(Groups.role)
+            .filter(Groups.id == id)
+            .all()
+        )
+
+        group = db.session.query(Groups).filter(Groups.id == id).first()
+
+        for role in from_roles:
+            role.groups.remove(group)
+
+        for user in from_users:
+            user.group.remove(group)
+
+        db.session.delete(group)
+        db.session.commit()
+
+        message = "Grupo deletado com sucesso!"
+        template = "includes/show.html"
+
+    except Exception:
+
+        app.logger.exception(traceback.format_exc())
+
+        message = "Erro ao deletar grupo"
+        template = "includes/show.html"
+
+    return make_response(render_template(template, message=message))

@@ -1,4 +1,5 @@
 import json
+import traceback
 from pathlib import Path
 
 from flask import Response, abort
@@ -62,11 +63,12 @@ def remove_itens() -> str:
     hex_name_json = session["json_filename"]
     path_json = Path(app.config["TEMP_PATH"]).joinpath(hex_name_json).resolve()
     json_file = path_json.joinpath(hex_name_json).with_suffix(".json").resolve()
+    list_roles = None
 
     with json_file.open("w") as f:
         f.write(json.dumps([]))
 
-    item_html = render_template("form/roles/add_items.html")
+    item_html = render_template("forms/roles/add_items.html", item=list_roles)
     return item_html
 
 
@@ -185,16 +187,49 @@ def cadastro_regra() -> Response:
     )
 
 
-@config.post("/deletar_regra/<int:id>")
+@config.get("/deletar_regra/<int:id>")
+@login_required
 def deletar_regra(id: int) -> Response:
 
-    db: SQLAlchemy = app.extensions["sqlalchemy"]
-    query = db.session.query(Roles).filter(Roles.id == id).first()
+    try:
+        db: SQLAlchemy = app.extensions["sqlalchemy"]
 
-    message = f'Regra "{query.name_role}" deletada com sucesso!'
+        from_groups = (
+            db.session.query(Groups)
+            .select_from(Roles)
+            .join(Roles.groups)
+            .filter(Roles.id == id)
+            .all()
+        )
 
-    db.session.delete(query)
-    db.session.commit()
+        from_routes = (
+            db.session.query(Routes)
+            .select_from(Roles)
+            .join(Roles.route)
+            .filter(Roles.id == id)
+            .all()
+        )
 
-    template = "includes/show.html"
+        role = db.session.query(Roles).filter(Roles.id == id).first()
+
+        for route in from_routes:
+
+            db.session.delete(route)
+
+        for group in from_groups:
+            group.role.remove(role)
+
+        db.session.delete(role)
+        db.session.commit()
+
+        message = "Regra deletada com sucesso!"
+        template = "includes/show.html"
+
+    except Exception:
+
+        app.logger.exception(traceback.format_exc())
+
+        message = "Erro ao deletar regra"
+        template = "includes/show.html"
+
     return make_response(render_template(template, message=message))

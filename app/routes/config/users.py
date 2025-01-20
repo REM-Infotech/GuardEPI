@@ -137,7 +137,7 @@ def changemail_usr() -> Response | str:
         abort(500, description=str(e))
 
 
-@config.route("/delete_user/<id:int>", methods=["GET"])
+@config.route("/delete_user/<id>", methods=["GET"])
 @login_required
 @delete_perm
 def delete_user(id: int) -> str:
@@ -171,6 +171,7 @@ def delete_user(id: int) -> str:
         message = ""
         query = db.session.query(Users).filter(Users.id == id).first()
         usuario = query.login
+
         # if session.get("tipo-usuario") == "super_admin":
 
         # elif session.get("tipo-usuario") == "admin":
