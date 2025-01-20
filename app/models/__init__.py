@@ -6,7 +6,6 @@ from dotenv import dotenv_values
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from app.misc import generate_pid
 
 from .EPI import (
     ClassesEPI,
@@ -57,16 +56,17 @@ def init_database(app: Flask, db: SQLAlchemy) -> str:
 
         values = dotenv_values()
 
-        if values.get("clear_db", "False") in ("True", "true"):
-            db.drop_all()
+        # if values.get("clear_db", "False") in ("True", "true"):
+        #     db.drop_all()
 
         db.create_all()
 
         loginsys = values.get("loginsys")
         nomeusr = values.get("nomeusr")
         emailusr = values.get("emailusr")
+        passusr = values.get("passusr")
 
-        root_pw = generate_pid(10)
+        # root_pw = generate_pid(10)
         usr = db.session.query(Users).filter_by(login=loginsys).first()
 
         if usr is None:
@@ -87,7 +87,7 @@ def init_database(app: Flask, db: SQLAlchemy) -> str:
                 filename=filename,
             )
 
-            usr.senhacrip = root_pw
+            usr.senhacrip = passusr
             to_add.append(usr)
 
         group = (
@@ -132,4 +132,4 @@ def init_database(app: Flask, db: SQLAlchemy) -> str:
         except Exception as e:
             raise e
 
-    return f" * Root Pw: {root_pw}"
+    return "Ready"
