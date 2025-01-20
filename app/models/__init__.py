@@ -2,7 +2,10 @@ import json
 from os import path
 from pathlib import Path
 
-from dotenv import dotenv_values
+import os
+from dotenv_vault import load_dotenv
+
+load_dotenv()
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -54,7 +57,7 @@ def init_database(app: Flask, db: SQLAlchemy) -> str:
 
         to_add = []
 
-        values = dotenv_values()
+        values = os.environ
 
         # if values.get("clear_db", "False") in ("True", "true"):
         #     db.drop_all()

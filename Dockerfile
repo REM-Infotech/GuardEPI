@@ -9,6 +9,9 @@ RUN apt-get update && apt-get install -y locales && \
 ENV LANG=pt_BR.UTF-8
 ENV LC_ALL=pt_BR.UTF-8
 
+ARG DOTENV_KEY
+ENV DOTENV_KEY=${DOTENV_KEY}
+
 # Instalar Poetry
 RUN pip install --no-cache-dir poetry
 

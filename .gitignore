@@ -22,7 +22,8 @@ parts/
 sdist/
 var/
 wheels/
-
+.env.previous
+devbox.json
 bandit_results.html
 # Celery beat files
 *.bak
@@ -172,3 +173,8 @@ cython_debug/
 
 rm_cache.py
 *.log.*
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault

@@ -3,7 +3,10 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from celery.schedules import crontab
-from dotenv import dotenv_values
+import os
+from dotenv_vault import load_dotenv
+
+load_dotenv()
 
 current_dir = Path(__file__).cwd().resolve()
 
@@ -118,7 +121,7 @@ class Config(object):
 class ProductionConfig(Config):
 
     try:
-        env = dotenv_values(".env")
+        env = os.environ
 
         redis_uri = env.get("REDIS_URI", "redis://localhost:6379")
 
@@ -173,7 +176,7 @@ class DevelopmentConfig(Config):
 
     # CSP = DEFAULT_CSP_POLICY
     try:
-        env = dotenv_values(".env")
+        env = os.environ
 
         redis_uri = env.get("REDIS_URI", "redis://localhost:6379")
 
@@ -232,7 +235,7 @@ class TestingConfig(Config):
 
     CSP = DEFAULT_CSP_POLICY
     try:
-        env = dotenv_values(".env")
+        env = os.environ
 
         # Flask-mail config
         MAIL_SERVER = env["MAIL_SERVER"]

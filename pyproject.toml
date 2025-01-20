@@ -8,11 +8,12 @@ readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]
+
+python-dotenv-vault = "0.6.4"
 python = "^3.12"
 flask = "^3.0.3"
 flask-mysqldb = "^2.0.0"
 flask-mail = "^0.10.0"
-python-dotenv = "^1.0.1"
 flask-wtf = "^1.2.2"
 flask-login = "^0.6.3"
 flask-sqlalchemy = "^3.1.1"
@@ -36,7 +37,7 @@ redis = "^5.2.0"
 djlint = "^1.36.3"
 pytest-cov = "^6.0.0"
 pytest = "^8.3.4"
-cryptography = "^44.0.0"
+cryptography = "41.0.4"
 pymysql = "^1.1.1"
 
 

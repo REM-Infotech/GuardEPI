@@ -5,12 +5,16 @@ from typing import Any
 from celery import Celery
 
 # from celery.schedules import crontab
-from dotenv import dotenv_values
+import os
+from dotenv_vault import load_dotenv
+
+load_dotenv()
 from flask import Flask
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
+
 
 from app.logs.setup import initialize_logging
 
@@ -73,7 +77,7 @@ def create_app() -> Flask:
     static_folder = Path(__file__).parent.resolve().joinpath("static").resolve()
     app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
 
-    env_ambient = dotenv_values(".env")["AMBIENT_CONFIG"]
+    env_ambient = os.getenv("AMBIENT_CONFIG")
     ambient = objects_config[env_ambient]
 
     app.config.from_object(ambient)

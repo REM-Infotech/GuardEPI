@@ -52,7 +52,10 @@ def send_email(self, todo: str) -> None:
 
 def message_formatter(todo: str) -> Message:
 
-    from dotenv import dotenv_values
+    import os
+    from dotenv_vault import load_dotenv
+
+    load_dotenv()
 
     from app import db
     from app.models import Users
@@ -64,7 +67,7 @@ def message_formatter(todo: str) -> Message:
         copy_content.append(user.email)
 
     with app.app_context():
-        values = dotenv_values()
+        values = os.environ
         sendermail = values["MAIL_DEFAULT_SENDER"]
 
         funcionarios = ["funcionario1", "funcionario2"]

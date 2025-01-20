@@ -5,7 +5,9 @@ from pathlib import Path
 from uuid import uuid4
 
 from celery.schedules import crontab
-from dotenv import dotenv_values
+from dotenv_vault import load_dotenv
+
+load_dotenv()
 from pytz import timezone
 
 
@@ -23,7 +25,7 @@ class Configurator:
 
         class ConfigObject:
 
-            values = dotenv_values()
+            values = os.environ
 
             login_db = values.get("LOGIN")
             passwd_db = values.get("PASSWORD")

@@ -9,17 +9,12 @@ jobs:
 
     env:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/guardepi:latest
+      environment: ${{ secrets.DOTENV_KEY }}
+
     steps:
       # Git checkout
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Set environment variables
-        env:
-          environment: ${{ secrets.ENVIRONMENT_CFG }}
-
-        run: |
-          echo $environment >> .env
 
       # Login to GCP
       - id: "auth"
@@ -37,7 +32,7 @@ jobs:
 
       # build image
       - name: Build Docker image
-        run: docker build -t $IMAGE_NAME .
+        run: docker build --build-arg DOTENV_KEY=${{ secrets.ENVIRONMENT_CFG }} -t $IMAGE_NAME .
 
       # push image to registry
       - name: Push Docker image
