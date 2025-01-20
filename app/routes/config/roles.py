@@ -1,6 +1,7 @@
 import json
 import traceback
 from pathlib import Path
+from typing import Dict, List
 
 from flask import Response, abort
 from flask import current_app as app
@@ -27,17 +28,19 @@ def add_itens() -> str:
         rota = form.rota
         regras = form.permissoes
 
-        item_role = {
+        item_role: Dict[str, str | Dict[str, bool]] = {
             "ROTA": rota.data,
-            "REGRAS": " - ".join(regra for regra in regras.data),
+            "REGRAS": {},
         }
+
+        item_role.get("REGRAS").update({regra: True for regra in regras.data})
 
         hex_name_json = session["json_filename"]
         path_json = Path(app.config["TEMP_PATH"]).joinpath(hex_name_json).resolve()
         json_file = path_json.joinpath(hex_name_json).with_suffix(".json").resolve()
 
         with json_file.open("rb") as f:
-            list_roles: list[dict[str, str | int]] = json.load(f)
+            list_roles: list[Dict[str, str | Dict[str, bool]]] = json.load(f)
 
         item_role.update({"ID": len(list_roles)})
 
@@ -47,10 +50,22 @@ def add_itens() -> str:
         with json_file.open("w") as f:
             f.write(json_obj)
 
-        item_html = render_template("forms/roles/add_items.html", item=list_roles)
+        to_view: List[Dict[str, str]] = []
+
+        for item in list_roles:
+            keys = item_role.get("REGRAS").keys()
+            dict_to_view = {
+                "ID": item.get("ID"),
+                "ROTA": item.get("ROTA"),
+                "REGRAS": " - ".join(keys),
+            }
+
+            to_view.append(dict_to_view)
+
+        item_html = render_template("forms/roles/add_items.html", item=to_view)
 
         # Retorna o HTML do item
-        return item_html
+        return make_response(item_html)
     except Exception as e:
         abort(500, description=str(e))
 
@@ -60,16 +75,21 @@ def add_itens() -> str:
 @read_perm
 def remove_itens() -> str:
 
-    hex_name_json = session["json_filename"]
-    path_json = Path(app.config["TEMP_PATH"]).joinpath(hex_name_json).resolve()
-    json_file = path_json.joinpath(hex_name_json).with_suffix(".json").resolve()
-    list_roles = None
+    try:
+        hex_name_json = session["json_filename"]
+        path_json = Path(app.config["TEMP_PATH"]).joinpath(hex_name_json).resolve()
+        json_file = path_json.joinpath(hex_name_json).with_suffix(".json").resolve()
+        list_roles = None
 
-    with json_file.open("w") as f:
-        f.write(json.dumps([]))
+        with json_file.open("w") as f:
+            f.write(json.dumps([]))
 
-    item_html = render_template("forms/roles/add_items.html", item=list_roles)
-    return item_html
+        item_html = render_template("forms/roles/add_items.html", item=list_roles)
+        return make_response(item_html)
+
+    except Exception:
+        obj = traceback.format_exc()
+        app.logger.exception(obj)
 
 
 @config.route("/roles", methods=["GET"])
@@ -106,7 +126,7 @@ def cadastro_regra() -> Response:
     """
 
     form = FormRoles()
-    title = "Criar Grupo"
+    title = "Criar Regra"
     page = "forms/roles/FormRoles.html"
 
     if form.validate_on_submit():
@@ -136,21 +156,13 @@ def cadastro_regra() -> Response:
         json_file = path_json.joinpath(hex_name_json).with_suffix(".json").resolve()
 
         with json_file.open("rb") as f:
-            list_roles: list[dict[str, str | int]] = json.load(f)
+            list_roles: list[Dict[str, str | Dict[str, bool]]] = json.load(f)
 
         keys_routes = {}
-        keys_routes.update(Routes.__dict__)
 
-        lst_rm = list(keys_routes.keys())
-        for key in lst_rm:
-            if key.startswith("_"):
-                keys_routes.pop(key)
-
-        keys_routes.pop("id")
-        keys_routes.pop("roles")
-
-        list_r = ["CREATE", "READ", "UPDATE", "DELETE"]
-        [keys_routes.pop(x) for x in list_roles]
+        for key in Routes.__dict__.keys():
+            if key in ["CREATE", "READ", "UPDATE", "DELETE"]:
+                keys_routes.update({key: False})
 
         for item in list_roles:
             to_add = keys_routes
@@ -162,11 +174,9 @@ def cadastro_regra() -> Response:
 
                 if key == "REGRAS":
 
-                    for r in list_r:
-
-                        to_add.update(
-                            {rule: (rule == r) for rule in value.split(" - ")}
-                        )
+                    rules = list(value.items())
+                    for key_, value_ in rules:
+                        to_add.update({key_: value_})
 
             end_cfg = Routes(**to_add)
             end_cfg.roles.append(new_ruleset)

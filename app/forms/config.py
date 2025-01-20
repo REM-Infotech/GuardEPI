@@ -75,7 +75,7 @@ class GroupForm(FlaskForm):
 
 
 class FormRoles(FlaskForm):
-    name_rule = StringField(label="Nome do Grupo", validators=[DataRequired()])
+    name_rule = StringField(label="Nome da Regra", validators=[DataRequired()])
     grupos = SelectMultipleField("Selecione os Grupos", choices=[])
     rota = SelectField("Selecione a Página", choices=endpoints)
     permissoes = SelectMultipleField("Selecione as Permissões", choices=perms)

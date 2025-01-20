@@ -6,4 +6,8 @@
   <td>{{ i.get("REGRAS") }}</td>
 </tr>
 {% endfor %}
+{% else %}
+<tr>
+  <td colspan="3"> Sem Itens </td>
+</tr>
 {% endif %}
