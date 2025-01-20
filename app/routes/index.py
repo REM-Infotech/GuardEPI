@@ -114,7 +114,9 @@ def gerar_relatorio() -> Response:
         }
 
         dbase = modelo.get(
-            "_".join(referrer) if "estoque" in referrer else referrer[-1]
+            "_".join(referrer).lower()
+            if "estoque" in referrer
+            else referrer[-1].lower()
         )
 
         if not dbase:

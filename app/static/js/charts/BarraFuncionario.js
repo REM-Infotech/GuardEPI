@@ -11,7 +11,7 @@ $(document).ready(function () {
       labels: ["carregando..."],
       datasets: [
         {
-          label: "Revenue",
+          label: "Saída (Em R$)",
           backgroundColor: "rgba(2,117,216,1)",
           borderColor: "rgba(2,117,216,1)",
           data: [0.1],

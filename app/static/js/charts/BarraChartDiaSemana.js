@@ -8,10 +8,10 @@ $(document).ready(function () {
   var myLineChart = new Chart(ctx, {
     type: "bar",
     data: {
-      labels: ["carregando..."],
+      labels: ["Carregando..."],
       datasets: [
         {
-          label: "Revenue",
+          label: "Saída (Em R$)",
           backgroundColor: "rgba(2,117,216,1)",
           borderColor: "rgba(2,117,216,1)",
           data: [0.1],

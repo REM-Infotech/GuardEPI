@@ -47,14 +47,14 @@
             {% endif %}
             <td>
               <a type="button" class="btn btn-secondary btn-icon-split btn-sm m-1"
-                href="{{ url_for('epi.editar_equipamento', id=item.id) }}">
+                href="{{ url_for('epi.editar_categoria', id=item.id) }}">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-pen"></i>
                 </span>
                 <span class="text">Editar</span>
               </a>
               <button type="button" id="DeleteEpiButton" class="btn btn-danger btn-icon-split btn-sm m-1"
-                hx-post="{{ url_for('epi.deletar_equipamento',id=item.id) }}" hx-trigger="click" hx-target="#results">
+                hx-post="{{ url_for('epi.deletar_categoria',id=item.id) }}" hx-trigger="click" hx-target="#results">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-trash"></i>
                 </span>
