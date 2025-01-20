@@ -5,22 +5,23 @@ import pytz
 from app import db
 
 
-class epis_cautela(db.Model):
+class EPIsCautela(db.Model):
 
     __tablename__ = "epis_cautela"
     id = db.Column(db.Integer, primary_key=True)
     epis_saidas_id: int = db.Column(db.Integer, db.ForeignKey("registro_saidas.id"))
-    epis_saidas = db.relationship("RegistroSaidas", backref="epis_cautela_")
+    epis_saidas = db.relationship("RegistroSaidas", backref="EPIsCautela_")
 
     registros_epi_id: int = db.Column(db.Integer, db.ForeignKey("registros_epi.id"))
-    nome_epis = db.relationship("RegistrosEPI", backref="epis_cautela_")
+    nome_epis = db.relationship("RegistrosEPI", backref="EPIsCautela_")
+    cod_ref: str = db.Column(db.String(length=64), nullable=False)
 
 
 class RegistrosEPI(db.Model):
 
     __tablename__ = "registros_epi"
     id = db.Column(db.Integer, primary_key=True)
-    cod_ref: str = db.Column(db.String(length=64), nullable=False)
+
     valor_total: float = db.Column(db.Float, nullable=False)
     funcionario: str = db.Column(db.String(length=64), nullable=False)
     data_solicitacao: datetime = db.Column(

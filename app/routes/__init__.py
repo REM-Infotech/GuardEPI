@@ -1,4 +1,5 @@
 from typing import Any, Literal
+
 from deep_translator import GoogleTranslator
 from flask import Flask, redirect, render_template, url_for
 from werkzeug import Response

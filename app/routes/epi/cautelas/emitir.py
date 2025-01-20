@@ -1,11 +1,11 @@
 import json
 import os
 import shutil
-from typing import List
 import uuid
 from datetime import datetime
 from pathlib import Path
 from time import sleep
+from typing import List
 
 from flask import abort
 from flask import current_app as app
@@ -24,36 +24,34 @@ from ....misc import (
 )
 from ....models import (
     Empresa,
+    EPIsCautela,
     EstoqueEPI,
     EstoqueGrade,
     Funcionarios,
     ProdutoEPI,
     RegistroSaidas,
     RegistrosEPI,
-    epis_cautela,
 )
-
 from .. import estoque_bp
 
 
 @estoque_bp.before_request
 def setgroups() -> None:
 
-    if request.endpoint == "estoque.emitir_cautela":
-        if not session.get("uuid_Cautelas", None):
+    if request.endpoint == "estoque.emitir_cautela" and request.method == "GET":
 
-            session["uuid_Cautelas"] = str(uuid.uuid4())
-            pathj = os.path.join(
-                app.config["TEMP_PATH"], f"{session["uuid_Cautelas"]}.json"
-            )
+        session["uuid_Cautelas"] = str(uuid.uuid4())
+        pathj = os.path.join(
+            app.config["TEMP_PATH"], f"{session["uuid_Cautelas"]}.json"
+        )
 
-            if os.path.exists(pathj):
-                os.remove(pathj)
+        if os.path.exists(pathj):
+            os.remove(pathj)
 
-            json_obj = json.dumps([])
+        json_obj = json.dumps([])
 
-            with open(pathj, "w") as f:
-                f.write(json_obj)
+        with open(pathj, "w") as f:
+            f.write(json_obj)
 
 
 @estoque_bp.route("/add_itens", methods=["GET", "POST"])
@@ -274,10 +272,10 @@ def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
             valor_total=valor_calc,
         )
 
-        secondary: List[epis_cautela] = []
+        secondary: List[EPIsCautela] = []
         for epi in para_registro:
 
-            registro_secondary = epis_cautela()
+            registro_secondary = EPIsCautela(cod_ref=str(uuid.uuid4()))
             registro_secondary.epis_saidas = epi
             registro_secondary.nome_epis = registrar
             secondary.append(registro_secondary)

@@ -1,10 +1,9 @@
 import secrets
-from datetime import timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 
-from dotenv import dotenv_values
 from celery.schedules import crontab
-from datetime import datetime
+from dotenv import dotenv_values
 
 
 class Config(object):

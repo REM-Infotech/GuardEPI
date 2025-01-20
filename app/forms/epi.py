@@ -148,6 +148,9 @@ class FormProduto(FlaskForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        if not kwargs.get("cod_ca"):
+            self.cod_ca.data = 9999
+
         self.fornecedor.choices.extend(set_choicesFornecedor())
         self.marca.choices.extend(set_choicesMarca())
         self.modelo.choices.extend(set_choicesModelo())
@@ -203,10 +206,10 @@ class Cautela(FlaskForm):
     def __init__(self, choices_grade: list[tuple[str, str]] = None, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.nome_epi.choices.append(("Selecione", "Selecione"))
+        self.nome_epi.choices.append(("", "Selecione"))
         self.nome_epi.choices.extend(set_EpiCautelaChoices())
 
-        self.funcionario.choices.append(("Selecione", "Selecione"))
+        self.funcionario.choices.append(("", "Selecione"))
         self.funcionario.choices.extend(set_ChoicesFuncionario())
 
         if choices_grade:

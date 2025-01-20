@@ -1,10 +1,11 @@
-from importlib import import_module
 import json
-from pathlib import Path
 import secrets
+from importlib import import_module
+from pathlib import Path
 
-from flask import Blueprint, redirect, url_for, Response, request, session
+from flask import Blueprint, Response
 from flask import current_app as app
+from flask import redirect, request, session, url_for
 
 template_folder = Path(__file__).parent.resolve().joinpath("templates")
 config = Blueprint(

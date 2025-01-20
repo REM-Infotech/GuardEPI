@@ -61,8 +61,8 @@ class Fornecedores(db.Model):
     """
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    fornecedor = db.Column(db.String(length=64), nullable=False, unique=True)
-    descricao = db.Column(db.String(length=512))
+    fornecedor: str = db.Column(db.String(length=64), nullable=False, unique=True)
+    descricao: str = db.Column(db.String(length=512))
 
 
 class Marcas(db.Model):
@@ -75,8 +75,8 @@ class Marcas(db.Model):
     """
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    marca = db.Column(db.String(length=64), nullable=False, unique=True)
-    descricao = db.Column(db.String(length=512))
+    marca: str = db.Column(db.String(length=64), nullable=False, unique=True)
+    descricao: str = db.Column(db.String(length=512))
 
 
 class ModelosEPI(db.Model):
@@ -89,8 +89,8 @@ class ModelosEPI(db.Model):
     """
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    modelo = db.Column(db.String(length=64), nullable=False, unique=True)
-    descricao = db.Column(db.String(length=512))
+    modelo: str = db.Column(db.String(length=64), nullable=False, unique=True)
+    descricao: str = db.Column(db.String(length=512))
 
 
 class ClassesEPI(db.Model):
@@ -103,8 +103,8 @@ class ClassesEPI(db.Model):
     """
 
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    classe = db.Column(db.String(length=64), nullable=False, unique=True)
-    descricao = db.Column(db.String(length=512))
+    classe: str = db.Column(db.String(length=64), nullable=False, unique=True)
+    descricao: str = db.Column(db.String(length=512))
 
 
 class GradeEPI(db.Model):
@@ -117,5 +117,5 @@ class GradeEPI(db.Model):
     """
 
     id = db.Column(db.Integer, primary_key=True)
-    grade = db.Column(db.String(length=32), nullable=False, unique=True)
-    descricao = db.Column(db.String(length=512))
+    grade: str = db.Column(db.String(length=32), nullable=False, unique=True)
+    descricao: str = db.Column(db.String(length=512))

@@ -1,16 +1,16 @@
 import json
 from pathlib import Path
+
 from flask import Response, abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, session, make_response
+from flask import flash, make_response, redirect, render_template, session
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
 from app.decorators import create_perm, read_perm
 
-
 from ...forms import FormRoles
-from ...models import Roles, Groups, Routes
+from ...models import Groups, Roles, Routes
 from . import config
 
 

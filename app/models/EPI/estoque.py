@@ -39,6 +39,8 @@ class RegistroEntradas(db.Model):
 
 
 class RegistroSaidas(db.Model):
+
+    __tablename__ = "registro_saidas"
     id: int = db.Column(db.Integer, primary_key=True, unique=True)
     nome_epi: str = db.Column(db.String(length=64), nullable=False)
     qtd_saida: int = db.Column(db.Integer, nullable=False)

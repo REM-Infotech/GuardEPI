@@ -81,9 +81,9 @@
                     <td>Sem dados</td>
                     {% endif %}
                     <td>
-                      {% if item.login != session['login'] %}
+                      {% if item.login != session['username'] %}
                       <button type="button" id="delete_user" class="btn btn-danger btn-icon-split btn-sm"
-                        hx-get="{{ url_for('config.delete_user', usuario = item.login) }}" hx-target="#info_result"
+                        hx-get="{{ url_for('config.delete_user', id = item.id) }}" hx-target="#info_result"
                         hx-trigger="click">
                         <span class="icon text-white-50">
                           <i class="fa-solid fa-trash"></i>

@@ -10,6 +10,7 @@ from app.misc import generate_pid
 
 from .EPI import (
     ClassesEPI,
+    EPIsCautela,
     EstoqueEPI,
     EstoqueGrade,
     Fornecedores,
@@ -20,7 +21,6 @@ from .EPI import (
     RegistroEntradas,
     RegistroSaidas,
     RegistrosEPI,
-    epis_cautela,
 )
 from .Funcionários import Cargos, Departamento, Empresa, Funcionarios
 from .users import Groups, Roles, Routes, Users
@@ -43,7 +43,7 @@ __all__ = (
     RegistroEntradas,
     RegistroSaidas,
     RegistrosEPI,
-    epis_cautela,
+    EPIsCautela,
 )
 
 endpoints = ["/epi", "/corp", "/config", "/estoque"]

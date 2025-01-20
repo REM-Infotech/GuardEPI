@@ -4,19 +4,18 @@ from flask import abort
 from flask import current_app as app
 from flask import (
     flash,
+    make_response,
     redirect,
     render_template,
     request,
     session,
     url_for,
-    make_response,
 )
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.wrappers.response import Response
 
 from ...decorators import create_perm, delete_perm, read_perm, update_perm
-
 from ...forms import AdmChangeEmail, AdmChangePassWord, FormUser
 from ...models import Users
 from . import config
@@ -138,21 +137,40 @@ def changemail_usr() -> Response | str:
         abort(500, description=str(e))
 
 
-@config.route("/delete_user/<usuario>", methods=["GET"])
+@config.route("/delete_user/<id:int>", methods=["GET"])
 @login_required
 @delete_perm
-def delete_user(usuario: str) -> str:
+def delete_user(id: int) -> str:
+    """
+    Deletes a user from the database based on the provided user ID.
+
+    This function performs the following steps:
+    1. Retrieves the SQLAlchemy database extension from the app.
+    2. Checks if the current user is the same as the user to be deleted.
+    3. If the current user is not the same as the user to be deleted, deletes the user from the database.
+    4. Commits the transaction to the database.
+    5. Returns a success message if the user is deleted, or an error message if the user cannot be deleted.
+
+    Args:
+        id (int): The ID of the user to be deleted.
+    Returns:
+        str: A message indicating the result of the deletion operation.
+    Raises:
+        HTTPException: If an error occurs during the deletion process, a 500 HTTP error is raised with the error description.
+    """
+
     try:
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         set_delete = True
 
-        atual_admin = session.get("username")
+        atual_admin: str = session.get("username")
         # license_key = session.get("license_token", "")
 
         message = ""
-        query = db.session.query(Users).filter(Users.login == usuario).first()
+        query = db.session.query(Users).filter(Users.id == id).first()
+        usuario = query.login
         # if session.get("tipo-usuario") == "super_admin":
 
         # elif session.get("tipo-usuario") == "admin":

@@ -1,6 +1,6 @@
 from flask import abort
 from flask import current_app as app
-from flask import flash, redirect, render_template, make_response
+from flask import flash, make_response, redirect, render_template
 from flask.wrappers import Response
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
