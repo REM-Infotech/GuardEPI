@@ -12,7 +12,7 @@ jobs:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/guardepi:latest
       DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
       CLOUDFLARED_TOKEN: ${{ secrets.CLOUDFLARED_TOKEN }}
-
+      APP_NAME: ${{ secrets.APP_NAME }}
     steps:
       # Git checkout
       - name: Checkout
@@ -42,4 +42,4 @@ jobs:
 
       # deploy image
       - name: Deploy Docker image
-        run: gcloud run deploy guardepi_app --image $IMAGE_NAME --region southamerica-east1 --cpu=2 --memory 1024Mi --port 5002 --min-instances 0 --max-instances 1 --platform managed --allow-unauthenticated
+        run: gcloud run deploy $APP_NAME --image $IMAGE_NAME --region southamerica-east1 --cpu=2 --memory 1024Mi --port 5002 --min-instances 0 --max-instances 1 --platform managed --allow-unauthenticated
