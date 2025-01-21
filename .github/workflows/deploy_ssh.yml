@@ -11,6 +11,7 @@ jobs:
   deploy_PRD:
     name: Setup Gcloud Account
     runs-on: ubuntu-24.04
+    environment: DEPLOY_PROEXPRESS
 
     env:
       # GCP Config

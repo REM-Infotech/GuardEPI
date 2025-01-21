@@ -7,11 +7,11 @@ jobs:
   deploy_PRD:
     name: Setup Gcloud Account
     runs-on: ubuntu-latest
+    environment: DEPLOY_PROEXPRESS
 
     env:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/guardepi:latest
       DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
-      CLOUDFLARED_TOKEN: ${{ secrets.CLOUDFLARED_TOKEN }}
       APP_NAME: ${{ secrets.APP_NAME }}
     steps:
       # Git checkout
@@ -34,7 +34,7 @@ jobs:
 
       # build image
       - name: Build Docker image
-        run: docker buildx build --build-arg DOTENV_KEY=$DOTENV_KEY --build-arg CLOUDFLARED_TOKEN=$CLOUDFLARED_TOKEN -t $IMAGE_NAME .
+        run: docker buildx build --build-arg DOTENV_KEY=$DOTENV_KEY -t $IMAGE_NAME .
 
       # push image to registry
       - name: Push Docker image
