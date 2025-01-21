@@ -32,7 +32,7 @@ jobs:
 
       # build image
       - name: Build Docker image
-        run: docker buildx build --build-arg  DOTENV_KEY=${{ secrets.ENVIRONMENT_CFG }} -t $IMAGE_NAME .
+        run: docker buildx build --build-arg  DOTENV_KEY=${{ secrets.DOTENV_KEY }} -t $IMAGE_NAME .
 
       # push image to registry
       - name: Push Docker image
