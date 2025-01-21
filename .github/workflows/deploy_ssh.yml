@@ -37,8 +37,8 @@ jobs:
 
       - name: CloudFlare Proxy Config
         run: |
-          mkdir -p ~/.ssh && chmod 775 ~/.ssh
-          touch ~/.ssh/config && chmod 775 ~/.ssh/config
+          mkdir -p ~/.ssh
+          touch ~/.ssh/config
           printf "\
           Host $CLOUDFLARED_HOST\n\
           ProxyCommand cloudflared access ssh --hostname %%h\n\
