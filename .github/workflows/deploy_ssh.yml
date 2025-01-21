@@ -1,0 +1,96 @@
+name: Deploy GuardEPI to Production
+# on:
+#   release:
+#     types: [published]
+on:
+  push:
+    branches:
+      - Dev
+
+jobs:
+  deploy_PRD:
+    name: Setup Gcloud Account
+    runs-on: ubuntu-24.04
+
+    env:
+      # GCP Config
+      GIT_REPOSITORY_NAME: ${{ github.repository }}
+      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/guardepi:latest
+
+      # Docker Config
+      APP_NAME: ${{ secrets.APP_NAME }}
+      DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
+      CLOUDFLARED_TOKEN: ${{ secrets.CLOUDFLARED_TOKEN }}
+
+      # Cloudflare Proxy Config
+      CLOUDFLARED_SERVICE: ${{ secrets.CLOUDFLARED_SERVICE }}
+      CLOUDFLARED_HOST: ${{ secrets.CLOUDFLARED_HOST }}
+      PROXY_COMAND: ${{ secrets.PROXY_COMMAND }}
+
+      # SSH Config
+      REMOTE_USER: ${{ secrets.REMOTE_USER }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    steps:
+      # Git checkout
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: CloudFlare Proxy Config
+        run: |
+          printf "\
+          Host $CLOUDFLARED_HOST\n\
+          $PROXY_COMAND\n\
+          " >> .ssh/config
+
+      - name: Install Cloudflared
+        run: |
+          sudo mkdir -p --mode=0755 /usr/share/keyrings
+          curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+
+          echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared noble main' | sudo tee /etc/apt/sources.list.d/cloudflared.list
+
+          sudo apt-get update && sudo apt-get install cloudflared
+
+      - name: Run Cloudflared Service
+        run: |
+          cloudflared service install $CLOUDFLARED_SERVICE
+
+      - name: Deploy to Staging server
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: $SSH_PRIVATE_KEY
+          ARGS: "-rlgoDzvc -i"
+          REMOTE_HOST: $CLOUDFLARED_HOST
+          REMOTE_USER: $REMOTE_USER
+          TARGET: /$GIT_REPOSITORY_NAME
+          EXCLUDE: "/.vscode, /.github, /README.md, /LICENSE"
+          SCRIPT_AFTER: |
+            ls -la
+          # SCRIPT_BEFORE: |
+
+          #   docker kill $APP_NAME || true
+          #   docker rm $APP_NAME || true
+          #   docker rmi $IMAGE_NAME || true
+
+          # SCRIPT_AFTER: |
+
+          #   docker buildx build --build-arg DOTENV_KEY=$DOTENV_KEY --build-arg CLOUDFLARED_TOKEN=$CLOUDFLARED_TOKEN -t $IMAGE_NAME .
+          #   docker docker run --name $APP_NAME -d --restart always
+
+      # # Login to GCP
+      # - id: "auth"
+      #   uses: "google-github-actions/auth@v2"
+      #   with:
+      #     credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
+
+      # - uses: google-github-actions/setup-gcloud@v2
+      #   with:
+      #     project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      # - name: Configure Docker
+      #   run: gcloud auth configure-docker --quiet
+
+      # # push image to registry
+      # - name: Push Docker image
+      #   run: docker push $IMAGE_NAME
