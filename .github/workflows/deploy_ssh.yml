@@ -20,12 +20,10 @@ jobs:
       # Docker Config
       APP_NAME: ${{ secrets.APP_NAME }}
       DOTENV_KEY: ${{ secrets.DOTENV_KEY }}
-      CLOUDFLARED_TOKEN: ${{ secrets.CLOUDFLARED_TOKEN }}
 
       # Cloudflare Proxy Config
       CLOUDFLARED_SERVICE: ${{ secrets.CLOUDFLARED_SERVICE }}
       CLOUDFLARED_HOST: ${{ secrets.CLOUDFLARED_HOST }}
-      PROXY_COMAND: ${{ secrets.PROXY_COMMAND }}
 
       # SSH Config
       REMOTE_USER: ${{ secrets.REMOTE_USER }}
@@ -67,32 +65,36 @@ jobs:
           REMOTE_USER: $REMOTE_USER
           TARGET: /$GIT_REPOSITORY_NAME
           EXCLUDE: "/.vscode, /.github, /README.md, /LICENSE"
+
+          SCRIPT_BEFORE: |
+
+            mkdir -p /$GIT_REPOSITORY_NAME && chmod 775 /$GIT_REPOSITORY_NAME
+
+            docker kill $APP_NAME || true
+            docker rm $APP_NAME || true
+            docker rmi $IMAGE_NAME || true
+
           SCRIPT_AFTER: |
-            ls -la
-          # SCRIPT_BEFORE: |
 
-          #   docker kill $APP_NAME || true
-          #   docker rm $APP_NAME || true
-          #   docker rmi $IMAGE_NAME || true
+            cd /$GIT_REPOSITORY_NAME && docker buildx build --build-arg DOTENV_KEY=$DOTENV_KEY -t $IMAGE_NAME .
+            chmod -R 775 /$GIT_REPOSITORY_NAME/*
+            docker docker run --name $APP_NAME -d --restart always
 
-          # SCRIPT_AFTER: |
+      # Login to GCP
+      - id: "auth"
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
 
-          #   docker buildx build --build-arg DOTENV_KEY=$DOTENV_KEY --build-arg CLOUDFLARED_TOKEN=$CLOUDFLARED_TOKEN -t $IMAGE_NAME .
-          #   docker docker run --name $APP_NAME -d --restart always
+      - uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      # # Login to GCP
-      # - id: "auth"
-      #   uses: "google-github-actions/auth@v2"
-      #   with:
-      #     credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
+      - name: Configure Docker to GCS
+        run: gcloud auth configure-docker --quiet
 
-      # - uses: google-github-actions/setup-gcloud@v2
-      #   with:
-      #     project_id: ${{ secrets.GCP_PROJECT_ID }}
+      - name: Build Docker image for GCS
+        run: docker buildx build --build-arg DOTENV_KEY=$DOTENV_KEY --build-arg CLOUDFLARED_TOKEN=$CLOUDFLARED_TOKEN -t $IMAGE_NAME .
 
-      # - name: Configure Docker
-      #   run: gcloud auth configure-docker --quiet
-
-      # # push image to registry
-      # - name: Push Docker image
-      #   run: docker push $IMAGE_NAME
+      - name: Push Docker image GCS
+        run: docker push $IMAGE_NAME

@@ -14,12 +14,12 @@ ENV LC_ALL=pt_BR.UTF-8
 ARG DOTENV_KEY
 ENV DOTENV_KEY=${DOTENV_KEY}
 
-ARG CLOUDFLARED_TOKEN
-ENV CLOUDFLARED_TOKEN=${CLOUDFLARED_TOKEN}
+# ARG CLOUDFLARED_TOKEN
+# ENV CLOUDFLARED_TOKEN=${CLOUDFLARED_TOKEN}
 
-RUN curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && \
-    dpkg -i cloudflared.deb && \
-    rm cloudflared.deb
+# RUN curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && \
+#     dpkg -i cloudflared.deb && \
+#     rm cloudflared.deb
 
 # Instalar Poetry
 RUN pip install --no-cache-dir poetry
