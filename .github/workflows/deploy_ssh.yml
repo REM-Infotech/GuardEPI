@@ -95,7 +95,7 @@ jobs:
         run: gcloud auth configure-docker --quiet
 
       - name: Build Docker image for GCS
-        run: docker buildx build --build-arg DOTENV_KEY=$DOTENV_KEY --build-arg CLOUDFLARED_TOKEN=$CLOUDFLARED_TOKEN -t $IMAGE_NAME .
+        run: docker buildx build --build-arg DOTENV_KEY=$DOTENV_KEY -t $IMAGE_NAME .
 
       - name: Push Docker image GCS
         run: docker push $IMAGE_NAME
