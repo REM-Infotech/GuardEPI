@@ -78,7 +78,6 @@ jobs:
           SCRIPT_AFTER: |
 
             cd /$GIT_REPOSITORY_NAME && docker buildx build --build-arg DOTENV_KEY=$DOTENV_KEY -t $IMAGE_NAME .
-            chmod -R 775 /$GIT_REPOSITORY_NAME/*
             docker docker run --name $APP_NAME -d --restart always
 
       # Login to GCP
