@@ -1,11 +1,11 @@
 name: Deploy GuardEPI to Production
-# on:
-#   release:
-#     types: [published]
 on:
-  push:
-    branches:
-      - Dev
+  release:
+    types: [published]
+# on:
+#   push:
+#     branches:
+#       - Dev
 
 jobs:
   deploy_PRD:
@@ -68,15 +68,11 @@ jobs:
           EXCLUDE: "/.vscode, /.github, /README.md, /LICENSE"
 
           SCRIPT_BEFORE: |
-
-            mkdir -p /$GIT_REPOSITORY_NAME && chmod 775 /$GIT_REPOSITORY_NAME
-
             docker kill $APP_NAME || true
             docker rm $APP_NAME || true
             docker rmi $IMAGE_NAME || true
 
           SCRIPT_AFTER: |
-
             cd /$GIT_REPOSITORY_NAME && docker buildx build --build-arg DOTENV_KEY=$DOTENV_KEY -t $IMAGE_NAME .
             docker docker run --name $APP_NAME -d --restart always
 
