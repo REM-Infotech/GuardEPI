@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy_PRD:
-    name: Setup Gcloud Account
+    name: Deploy to GCS
     runs-on: ubuntu-latest
     environment: DEPLOY_PROEXPRESS
 
@@ -42,4 +42,4 @@ jobs:
 
       # deploy image
       - name: Deploy Docker image
-        run: gcloud run deploy $APP_NAME --image $IMAGE_NAME --region southamerica-east1 --cpu=2 --memory 1024Mi --port 5002 --min-instances 0 --max-instances 1 --platform managed --allow-unauthenticated
+        run: gcloud run deploy guardepi --image $IMAGE_NAME --region southamerica-east1 --cpu=2 --memory 1024Mi --port 5002 --min-instances 0 --max-instances 1 --platform managed --allow-unauthenticated
