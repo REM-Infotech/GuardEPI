@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy_PRD:
-    name: Setup Gcloud Account
+    name: Deploy using SSH
     runs-on: ubuntu-24.04
     environment: DEPLOY_PROEXPRESS
 
