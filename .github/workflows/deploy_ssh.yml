@@ -38,10 +38,11 @@ jobs:
 
       - name: CloudFlare Proxy Config
         run: |
+          touch ~/.ssh/config
           printf "\
           Host $CLOUDFLARED_HOST\n\
           $PROXY_COMAND\n\
-          " >> .ssh/config
+          " >> ~/.ssh/config
 
       - name: Install Cloudflared
         run: |
