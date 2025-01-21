@@ -58,6 +58,7 @@ class Config(object):
     CSV_TEMP_PATH = Path(TEMP_PATH).joinpath("csv")
     PDF_TEMP_PATH = Path(TEMP_PATH).joinpath("pdf")
 
+    DOCS_PATH.mkdir(exist_ok=True, parents=True)
     IMAGE_TEMP_PATH.mkdir(exist_ok=True, parents=True)
     CSV_TEMP_PATH.mkdir(exist_ok=True, parents=True)
     PDF_TEMP_PATH.mkdir(exist_ok=True, parents=True)
