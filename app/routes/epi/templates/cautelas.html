@@ -32,7 +32,7 @@
           {% for item in database %}
           <tr>
             <td>{{ item.id }}</td>
-            {% set nome_epis = item.nome_epis_ | map(attribute='nome_epi') | join(' - ') %}
+            {% set nome_epis = item.nome_epis_ | map(attribute='epis_saidas') | map(attribute='nome_epi') | join(' - ') %}
             {% if not nome_epis %}
             {% if "," in item.nome_epis %}
             {% set nome_epis = item.nome_epis.split(",") | join(' - ') | replace('"', '') %}
