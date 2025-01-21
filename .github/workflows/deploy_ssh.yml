@@ -38,7 +38,6 @@ jobs:
 
       - name: CloudFlare Proxy Config
         run: |
-
           mkdir -p ~/.ssh && chmod 775 ~/.ssh
           touch ~/.ssh/config && chmod 775 ~/.ssh/config
           printf "\
@@ -57,7 +56,7 @@ jobs:
 
       - name: Run Cloudflared Service
         run: |
-          cloudflared service install $CLOUDFLARED_SERVICE
+          sudo cloudflared service install $CLOUDFLARED_SERVICE
 
       - name: Deploy to Staging server
         uses: easingthemes/ssh-deploy@main
