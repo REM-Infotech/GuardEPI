@@ -52,6 +52,8 @@ def register_routes(app: Flask) -> None:
         # desc = tradutor.translate(error.description)
 
         name: str = "Erro interno"
+        desc: str = "Erro do sistema"
+
         if error.code == 500 and "já cadastrado" not in getattr(
             error, "desc", "Erro do sistema"
         ):
