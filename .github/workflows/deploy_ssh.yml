@@ -42,7 +42,7 @@ jobs:
           touch ~/.ssh/config && chmod 775 ~/.ssh/config
           printf "\
           Host $CLOUDFLARED_HOST\n\
-          $PROXY_COMAND\n\
+          ProxyCommand cloudflared access ssh --hostname %%h\n\
           " >> ~/.ssh/config
 
       - name: Install Cloudflared
