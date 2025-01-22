@@ -2,14 +2,10 @@ name: Deploy GuardEPI to Production
 on:
   release:
     types: [published]
-# on:
-#   push:
-#     branches:
-#       - Dev
 
 jobs:
   deploy_PRD:
-    name: Setup Gcloud Account
+    name: Deploy using SSH
     runs-on: ubuntu-24.04
     environment: DEPLOY_PROEXPRESS
 
@@ -67,14 +63,14 @@ jobs:
           TARGET: /$GIT_REPOSITORY_NAME
           EXCLUDE: "/.vscode, /.github, /README.md, /LICENSE"
 
-          SCRIPT_BEFORE: |
-            if [ "$(docker ps -q -f name=$APP_NAME)" ]; then docker kill $APP_NAME; fi
-            if [ "$(docker ps -aq -f name=$APP_NAME)" ]; then docker rm $APP_NAME; fi
-            if [ "$(docker images -q $IMAGE_NAME)" ]; then docker rmi $IMAGE_NAME; fi
+          # SCRIPT_BEFORE: |
+          #   if [ "$(docker ps -q -f name=$APP_NAME)" ]; then docker kill $APP_NAME; fi
+          #   if [ "$(docker ps -aq -f name=$APP_NAME)" ]; then docker rm $APP_NAME; fi
+          #   if [ "$(docker images -q $IMAGE_NAME)" ]; then docker rmi $IMAGE_NAME; fi
 
-          SCRIPT_AFTER: |
-            cd /$GIT_REPOSITORY_NAME && docker buildx build --build-arg DOTENV_KEY=$DOTENV_KEY -t $IMAGE_NAME .
-            docker docker run --name $APP_NAME -d --restart always
+          # SCRIPT_AFTER: |
+          #   cd /$GIT_REPOSITORY_NAME && docker buildx build --build-arg DOTENV_KEY=$DOTENV_KEY -t $IMAGE_NAME .
+          #   docker docker run --name $APP_NAME -d --restart always
 
       # Login to GCP
       - id: "auth"
