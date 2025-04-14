@@ -8,16 +8,15 @@ from celery import Celery
 import os
 from dotenv_vault import load_dotenv
 
-load_dotenv()
 from flask import Flask
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 
-
 from app.logs.setup import initialize_logging
 
+load_dotenv()
 app = None
 db = None
 login_manager = None

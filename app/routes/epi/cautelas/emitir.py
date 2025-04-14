@@ -36,12 +36,10 @@ from .. import estoque_bp
 
 @estoque_bp.before_request
 def setgroups() -> None:
-
     if request.endpoint == "estoque.emitir_cautela" and request.method == "GET":
-
         session["uuid_Cautelas"] = str(uuid.uuid4())
         pathj = os.path.join(
-            app.config["TEMP_PATH"], f"{session["uuid_Cautelas"]}.json"
+            app.config["TEMP_PATH"], f"{session['uuid_Cautelas']}.json"
         )
 
         if os.path.exists(pathj):
@@ -57,9 +55,7 @@ def setgroups() -> None:
 @login_required
 @create_perm
 def add_itens() -> Response:
-
     try:
-
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         form = Cautela()
@@ -100,7 +96,7 @@ def add_itens() -> Response:
             )
 
         pathj = os.path.join(
-            app.config["TEMP_PATH"], f"{session["uuid_Cautelas"]}.json"
+            app.config["TEMP_PATH"], f"{session['uuid_Cautelas']}.json"
         )
 
         with open(pathj, "rb") as f:
@@ -126,8 +122,7 @@ def add_itens() -> Response:
 @login_required
 @create_perm
 def remove_itens() -> Response:
-
-    pathj = os.path.join(app.config["TEMP_PATH"], f"{session["uuid_Cautelas"]}.json")
+    pathj = os.path.join(app.config["TEMP_PATH"], f"{session['uuid_Cautelas']}.json")
     json_obj = json.dumps([])
 
     with open(pathj, "w") as f:
@@ -141,7 +136,6 @@ def remove_itens() -> Response:
 @login_required
 @create_perm
 def get_grade() -> Response:
-
     try:
         form = Cautela()
         lista = []
@@ -160,9 +154,7 @@ def get_grade() -> Response:
 @login_required
 @create_perm
 def emitir_cautela() -> Response:
-
     try:
-
         form = Cautela()
         page = "forms/cautela/cautela_form.html"
 
@@ -170,16 +162,14 @@ def emitir_cautela() -> Response:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if request.method == "POST":
-
             form_data2 = request.form
             form = Cautela(
                 choices_grade=[(form_data2["tipo_grade"], form_data2["tipo_grade"])]
             )
 
         if form.validate_on_submit():
-
             logo_empresa_path, funcionario = employee_info(form, db)
-            nomefilename = f'Cautela - {funcionario.nome_funcionario} - {datetime.now().strftime("%d-%m-%Y %H-%M-%S")}.pdf'
+            nomefilename = f"Cautela - {funcionario.nome_funcionario} - {datetime.now().strftime('%d-%m-%Y %H-%M-%S')}.pdf"
 
             return emit_doc(
                 db,
@@ -194,32 +184,28 @@ def emitir_cautela() -> Response:
         )
 
     except Exception as e:
-
         code = getattr(e, "code", 500)
         description = getattr(e, "description", "Internal Error")
         abort(code, description=description)
 
 
 def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
-
     try:
         epis_lista = []
         para_registro = []
         list_epis_solict = []
 
         path_json = Path(app.config["TEMP_PATH"]).joinpath(
-            f"{session["uuid_Cautelas"]}.json"
+            f"{session['uuid_Cautelas']}.json"
         )
 
         with path_json.open("rb") as f:
             list_epis: list = json.load(f)
 
         if len(list_epis) == 0:
-
             raise ValueError("Adicione ao menos 1a EPI!")
 
         for item_epi in list_epis:
-
             nome_epi = item_epi.get("NOME_EPI")
             grade_epi = item_epi.get("GRADE")
             qtd_entrega = item_epi.get("QTD")
@@ -248,7 +234,6 @@ def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
 
             if estoque_grade:
                 if all([estoque_grade.qtd_estoque > 0, data_estoque.qtd_estoque > 0]):
-
                     list_epis_solict.append(
                         [str(nome_epi), qtd_entrega, grade_epi, equip.ca]
                     )
@@ -261,8 +246,8 @@ def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
                         )
                     )
 
-                    estoque_grade.qtd_estoque = estoque_grade.qtd_estoque - 1
-                    data_estoque.qtd_estoque = data_estoque.qtd_estoque - 1
+                    estoque_grade.qtd_estoque -= 1
+                    data_estoque.qtd_estoque -= 1
                     valor_calc = equip.valor_unitario * int(qtd_entrega)
 
         funcionario = form.funcionario.data
@@ -276,7 +261,6 @@ def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
 
         secondary: List[EPIsCautela] = []
         for epi in para_registro:
-
             registro_secondary = EPIsCautela(cod_ref=str(uuid.uuid4()))
             registro_secondary.epis_saidas = epi
             registro_secondary.nome_epis = registrar
@@ -294,7 +278,6 @@ def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
 
 
 def employee_info(form: Cautela, db: SQLAlchemy) -> tuple[Path, Funcionarios | None]:
-
     funcionario_data = (
         db.session.query(Funcionarios)
         .filter(Funcionarios.nome_funcionario == form.funcionario.data)
@@ -321,7 +304,6 @@ def emit_doc(
     list_epis_solict: list,
     nomefilename: str,
 ) -> Response:
-
     count_ = db.session.query(RegistrosEPI).all()
     year = datetime.now().year
     cod_lancamento = "".join((str(len(count_)).zfill(6), "-", str(year)))
@@ -340,7 +322,6 @@ def emit_doc(
     ]
 
     for obj in list_epis_solict:
-
         item_data.append(obj)
 
     num = str(uuid.uuid4())
@@ -349,7 +330,6 @@ def emit_doc(
     temp_watermark_pdf = os.path.join(app.config["DOCS_PATH"], f"{num} marca_dagua.pdf")
 
     try:
-
         path_cautela = os.path.join(app.config["DOCS_PATH"], nomefilename)
 
         ctrl_sheet = os.path.join(
@@ -379,7 +359,7 @@ def emit_doc(
             db.session.commit()
 
         pathj = os.path.join(
-            app.config["TEMP_PATH"], f"{session["uuid_Cautelas"]}.json"
+            app.config["TEMP_PATH"], f"{session['uuid_Cautelas']}.json"
         )
         json_obj = json.dumps([])
 
