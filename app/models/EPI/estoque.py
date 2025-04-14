@@ -8,7 +8,7 @@ from app import db
 
 
 class EstoqueEPI(db.Model):
-    id = db.Column(db.Integer, primary_key=True, unique=True)
+    id: int = db.Column(db.Integer, primary_key=True, unique=True)
     nome_epi: str = db.Column(db.String(length=64), nullable=False)
     tipo_qtd: str = db.Column(db.String(length=64), nullable=False)
     qtd_estoque: int = db.Column(db.Integer, nullable=False)
@@ -39,7 +39,6 @@ class RegistroEntradas(db.Model):
 
 
 class RegistroSaidas(db.Model):
-
     __tablename__ = "registro_saidas"
     id: int = db.Column(db.Integer, primary_key=True, unique=True)
     nome_epi: str = db.Column(db.String(length=64), nullable=False)

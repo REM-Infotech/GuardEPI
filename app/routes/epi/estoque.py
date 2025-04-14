@@ -36,7 +36,6 @@ def produto_epi() -> Response:
     """
 
     try:
-
         title = "Estoque Geral (Por Produto)"
         page = "estoque.html"
 
@@ -72,7 +71,6 @@ def grade() -> Response:
     """
 
     try:
-
         title = "Estoque Geral (Por Grades)"
         page = "estoque_grade.html"
 
@@ -149,10 +147,8 @@ def lancamento_produto() -> Response:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         form = InsertEstoqueForm()
         if form.validate_on_submit():
-
             if not form.nota_fiscal.data:
                 if form.justificativa.data == "...":
-
                     flash("Inserir nota fiscal ou informar justificativa de estorno!")
                     return make_response(redirect(url_for("estoque.produto_epi")))
 
@@ -236,7 +232,6 @@ def lancamento_produto() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template("index.html", page=page, form=form, title=title)
