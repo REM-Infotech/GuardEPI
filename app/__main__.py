@@ -4,13 +4,13 @@ from clear import clear
 import os
 from dotenv_vault import load_dotenv
 
-load_dotenv()
 from eventlet import listen
 from eventlet.wsgi import server
 
 from app import create_app
 
 clear()
+load_dotenv()
 flask_app = create_app()
 celery_app = flask_app.extensions["celery"]
 

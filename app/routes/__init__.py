@@ -1,5 +1,6 @@
 from pathlib import Path  # noqa: F401
 from typing import Type, TypeVar  # noqa: F401
+import unicodedata  # noqa: F401
 from flask import (
     Flask,
     Response,
@@ -17,7 +18,7 @@ from werkzeug.exceptions import HTTPException
 
 from app.models.EPI.equipamento import ProdutoEPI  # noqa: F401
 from app.models.EPI.estoque import EstoqueEPI, EstoqueGrade
-
+from werkzeug.utils import secure_filename  # noqa: F401
 from .auth import auth
 from .config import config
 from .corporativo import corp
@@ -90,9 +91,11 @@ def register_routes(app: Flask) -> None:
 
     # @app.route("/importar_planilha_route", methods=["POST"])
     # def importar_planilha_route() -> None:
-    #     request_json = request.json
+    #     # request_json = request.json
     #     db: SQLAlchemy = app.extensions["sqlalchemy"]
-    #     path_xlsx = Path(request_json.get("file")).resolve()
+    #     path_xlsx = Path(
+    #         "/root/Github/GuardEPI/Cópia de RELATORIO_DE_DIVERGÊNCIADE_ITENS_DO_ESTOQUE.xlsx"
+    #     ).resolve()
 
     #     dataframe = pandas.read_excel(path_xlsx).fillna("")
 
@@ -122,19 +125,58 @@ def register_routes(app: Flask) -> None:
     #     all_produtos = db.session.query(ProdutoEPI).all()
 
     #     def func_filt_it(x: Type[type_db]) -> bool:
-    #         in_db = x.nome_epi.lower().strip().replace(" ", "")
+    #         print(f"x.nome_epi: {x.nome_epi} ID: {x.id}")
+    #         in_db = format_string(x.nome_epi)
+    #         print(f"x.nome_epi: {in_db} ID: {x.id}\n")
     #         return in_db == stripe_k
 
     #     def func_filt_grd(x: Type[type_db]) -> bool:
-    #         in_db = str(x.grade.lower().strip().replace(" ", ""))
+    #         in_db = format_string(x.grade)
     #         return in_db == stripe_grd
 
-    #     for key, value in tqdm(novo_dicionario.items()):
-    #         stripe_k = key.strip().lower().replace(" ", "")
+    #     def format_string(string_: str) -> str:
+    #         """Return a secure, normalized filename based on the input string.
 
-    #         produto_check = list(filter(lambda x: func_filt_it(x), all_produtos))
+    #         Args:
+    #             string_ (str): The original filename.
+
+    #         Returns:
+    #             str: A secure version of the filename.
+
+    #         """
+
+    #         string_ = (
+    #             string_.replace(".", "")
+    #             .replace("-", "")
+    #             .replace("_", "")
+    #             .replace(" ", "")
+    #             .strip()
+    #             .lower()
+    #         )
+    #         normalized = "".join(
+    #             [
+    #                 c
+    #                 for c in unicodedata.normalize("NFKD", string_)
+    #                 if not unicodedata.combining(c)
+    #             ]
+    #         )
+    #         return normalized
+
+    #     for key, value in tqdm(novo_dicionario.items()):
+    #         stripe_k = format_string(key)
+
+    #         produto_check = list(filter(func_filt_it, all_produtos))
     #         if len(produto_check) == 0:
-    #             continue
+    #             produto_check2 = (
+    #                 db.session.query(ProdutoEPI)
+    #                 .filter(ProdutoEPI.nome_epi == key)
+    #                 .all()
+    #             )
+
+    #             if len(produto_check2) == 0:
+    #                 continue
+
+    #             produto_check = produto_check2
 
     #         grades = (
     #             db.session.query(EstoqueGrade)
@@ -151,11 +193,11 @@ def register_routes(app: Flask) -> None:
     #             if k == "TOTAL":
     #                 continue
 
-    #             stripe_grd = k.strip().lower().replace(" ", "")
+    #             stripe_grd = format_string(k.strip().lower().replace(" ", ""))
 
     #             id_item_estoque_grade = list(
     #                 filter(
-    #                     lambda x: func_filt_grd(x),
+    #                     func_filt_grd,
     #                     grades,
     #                 )
     #             )
@@ -171,10 +213,10 @@ def register_routes(app: Flask) -> None:
     #                 continue
 
     #             novo_item = EstoqueGrade(
-    #                 nome_epi=key,
+    #                 nome_epi=produto_check[0].nome_epi,
     #                 tipo_qtd="Unidade",
     #                 qtd_estoque=v,
-    #                 grade=k.upper(),
+    #                 grade=k.upper() if k != "Não Especificado" else k,
     #             )
     #             db.session.add(novo_item)
     #             db.session.commit()
@@ -185,11 +227,12 @@ def register_routes(app: Flask) -> None:
     #             continue
 
     #         novo_item_estoque = EstoqueEPI(
-    #             nome_epi=key,
+    #             nome_epi=produto_check[0].nome_epi,
     #             tipo_qtd="Unidade",
     #             qtd_estoque=value.get("TOTAL"),
     #         )
     #         db.session.add(novo_item_estoque)
     #         db.session.commit()
+    #         stripe_k = ""
 
     #     return make_response(jsonify({"status": "ok"}), 200)
