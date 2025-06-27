@@ -1,28 +1,34 @@
+# from celery.schedules import crontab
+import os
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
 from celery import Celery
-
-# from celery.schedules import crontab
-import os
 from dotenv_vault import load_dotenv
-
 from flask import Flask
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_migrate import Migrate, init, migrate, upgrade
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 
 from app.logs.setup import initialize_logging
 
 load_dotenv()
-app = None
+
+path_parent = Path(__file__).parent.resolve()
+
+template_folder = path_parent.joinpath("templates")
+static_folder = path_parent.joinpath("static")
+
+app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
+
 db = None
 login_manager = None
 mail = None
 celery_app = None
-
+migrate_ = Migrate()
 objects_config = {
     "development": "app.config.DevelopmentConfig",
     "production": "app.config.ProductionConfig",
@@ -70,12 +76,6 @@ def celery_init(app: Flask) -> Celery:
 
 
 def create_app() -> Flask:
-    global app
-
-    template_folder = Path(__file__).parent.resolve().joinpath("templates").resolve()
-    static_folder = Path(__file__).parent.resolve().joinpath("static").resolve()
-    app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
-
     env_ambient = os.getenv("AMBIENT_CONFIG")
     ambient = objects_config[env_ambient]
 
@@ -92,6 +92,13 @@ def create_app() -> Flask:
     celery_app.set_default()
     app.extensions["celery"] = celery_app
     app.extensions["mail"] = mail
+
+    if os.environ.get("MIGRATE").lower() == "true":
+        if not Path(__file__).cwd().joinpath("migrations").exists():
+            init(directory="migrations")
+
+        migrate(directory="migrations", message="Initial migration")
+        upgrade(directory="migrations")
 
     return app
 
