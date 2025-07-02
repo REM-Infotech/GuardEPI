@@ -24,15 +24,15 @@ class RegistroAdmissao(TypedDict):  # noqa: D101
 
 class FuncionarioDocsNamespace(Namespace):  # noqa: D101
     async def on_my_docs(self) -> list[dict[str, str]]:  # noqa: D102
-        path_parent = Path(__file__).cwd().joinpath("dusdoc_api", "examples", "example.json")
+        path_parent = Path(__file__).cwd().joinpath("app", "examples", "example.json")
         async with aiofiles.open(str(path_parent), "r", encoding="utf-8") as f:
             readfile = await f.read()
             data = json.loads(readfile)
             return data
 
     async def on_solicitados(self) -> list[dict[str, str]]:
-        from dusdoc_api.models.admissional import RegistryAdmissao
-        from dusdoc_api.models.users.funcionarios import Funcionarios
+        from app.models.admissional import RegistryAdmissao
+        from app.models.Funcionários import Funcionarios
 
         data = request.socket_data
         db: SQLAlchemy = current_app.extensions["sqlalchemy"]
@@ -53,7 +53,8 @@ class FuncionarioDocsNamespace(Namespace):  # noqa: D101
                 extension_file="pdf",
             )
             for item in user
-            if not item.form_registry or (len(item.form_registry) > 0 and not item.form_registry[-1].submited)
+            if not item.form_registry
+            or (len(item.form_registry) > 0 and not item.form_registry[-1].submited)
         ]
 
         return dataReturn

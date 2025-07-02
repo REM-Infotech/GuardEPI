@@ -7,8 +7,8 @@ from quart.datastructures import FileStorage
 from quart.views import MethodView
 from werkzeug.datastructures import CombinedMultiDict, MultiDict  # noqa: F401
 
-from dusdoc_api.models.admissional import FileModel, FormAdmissional, RegistryAdmissao
-from dusdoc_api.models.users.funcionarios import Funcionarios
+from app.models.admissional import FileModel, FormAdmissional, RegistryAdmissao
+from app.models.Funcionários import Funcionarios
 
 
 class AdmissionalFormView(MethodView):  # noqa: D101

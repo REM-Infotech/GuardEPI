@@ -4,8 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from quart import Blueprint, Response, jsonify, make_response, request  # noqa: D100
 from quart_jwt_extended import create_access_token
 
-from dusdoc_api.app import app
-from dusdoc_api.models.users.funcionarios import Funcionarios as Users
+from app import app
+from app.models.Funcionários import Funcionarios as Users
 
 auth = Blueprint(__name__.replace(".", "_"), __name__, url_prefix="/auth_funcionario")
 
@@ -25,16 +25,20 @@ async def login() -> Response:
 
     if user and user.check_password(data.get("password")):
         return await make_response(
-            jsonify({
-                "message": "Login efetuado com sucesso!",
-                "token": create_access_token(identity=user),
-            }),
+            jsonify(
+                {
+                    "message": "Login efetuado com sucesso!",
+                    "token": create_access_token(identity=user),
+                }
+            ),
             200,
         )
 
     return await make_response(
-        jsonify({
-            "message": "Usuário/Senha Incorretos!",
-        }),
+        jsonify(
+            {
+                "message": "Usuário/Senha Incorretos!",
+            }
+        ),
         401,
     )
