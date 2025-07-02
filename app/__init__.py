@@ -76,25 +76,24 @@ def celery_init(app: Quart) -> Celery:
     return celery_app
 
 
-def create_app() -> Quart:
+async def create_app() -> Quart:
     env_ambient = os.getenv("AMBIENT_CONFIG")
     ambient = objects_config[env_ambient]
 
     app.config.from_object(ambient)
 
-    init_extensions(app)
+    await init_extensions(app)
     app.logger = initialize_logging()
     from app.routes import register_routes
 
-    register_routes(app)
+    await register_routes(app)
 
-    global celery_app
     celery_app = celery_init(app)
     celery_app.set_default()
     app.extensions["celery"] = celery_app
     app.extensions["mail"] = mail
     migrate_.init_app(app)
-    with app.app_context():
+    async with app.app_context():
         if os.environ.get("MIGRATE") and os.environ.get("MIGRATE").lower() == "true":
             migrate_.init_app(app, db, directory="migrations")
             if not Path(__file__).cwd().joinpath("migrations").exists():
@@ -106,7 +105,7 @@ def create_app() -> Quart:
     return app
 
 
-def init_extensions(app: Quart) -> None:
+async def init_extensions(app: Quart) -> None:
     mail.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
@@ -129,7 +128,7 @@ def init_extensions(app: Quart) -> None:
     login_manager.login_message = "Faça login para acessar essa página."
     login_manager.login_message_category = "info"
 
-    with app.app_context():
+    async with app.app_context():
         from .models import init_database
 
-        init_database(app, db)
+        await init_database(app, db)

@@ -60,8 +60,8 @@ endpoints = ["/epi", "/corp", "/config", "/estoque"]
 load_dotenv()
 
 
-def init_database(app: Quart, db: SQLAlchemy) -> str:
-    with app.app_context():
+async def init_database(app: Quart, db: SQLAlchemy) -> str:
+    async with app.app_context():
         to_add = []
 
         values = os.environ

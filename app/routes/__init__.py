@@ -32,7 +32,7 @@ from .serving import serve
 type_db = TypeVar("model_db", bound=EstoqueEPI | EstoqueGrade)
 
 
-def register_routes(app: Quart) -> None:
+async def register_routes(app: Quart) -> None:
     """
     Register routes and error handlers for the Quart application.
     This function registers blueprints and error handlers, and defines routes for terms of use and privacy policy PDFs.
@@ -61,7 +61,7 @@ def register_routes(app: Quart) -> None:
         app.register_blueprint(blueprint)
 
     @app.errorhandler(HTTPException)
-    def handle_http_exception(error) -> Response:
+    async def handle_http_exception(error) -> Response:
         """
         Handles HTTP exceptions by translating the error name to Portuguese and rendering an error template.
         Args:
