@@ -7,6 +7,13 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+from app.models.admissional import (
+    FileModel,
+    FormAdmissional,
+    RegistryAdmissao,
+    RegistryContrato,
+)
+
 from .EPI import (
     ClassesEPI,
     EPIsCautela,
@@ -43,6 +50,10 @@ __all__ = (
     RegistroSaidas,
     RegistrosEPI,
     EPIsCautela,
+    RegistryAdmissao,
+    RegistryContrato,
+    FormAdmissional,
+    FileModel,
 )
 
 endpoints = ["/epi", "/corp", "/config", "/estoque"]
