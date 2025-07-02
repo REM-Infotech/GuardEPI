@@ -4,8 +4,6 @@ from os import path
 from pathlib import Path
 
 from dotenv import load_dotenv
-
-load_dotenv()
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -48,6 +46,7 @@ __all__ = (
 )
 
 endpoints = ["/epi", "/corp", "/config", "/estoque"]
+load_dotenv()
 
 
 def init_database(app: Flask, db: SQLAlchemy) -> str:

@@ -29,7 +29,7 @@ bandit_results.html
 *.bak
 *.dat
 *.dir
-
+migrations/
 share/python-wheels/
 *.egg-info/
 .installed.cfg

@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_login import LoginManager
 from flask_mail import Mail
-from flask_migrate import Migrate, init, migrate, upgrade
+from flask_migrate import Migrate, init, upgrade
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 
@@ -92,13 +92,14 @@ def create_app() -> Flask:
     celery_app.set_default()
     app.extensions["celery"] = celery_app
     app.extensions["mail"] = mail
+    migrate_.init_app(app)
+    with app.app_context():
+        if os.environ.get("MIGRATE") and os.environ.get("MIGRATE").lower() == "true":
+            migrate_.init_app(app, db, directory="migrations")
+            if not Path(__file__).cwd().joinpath("migrations").exists():
+                init()
 
-    if os.environ.get("MIGRATE") and os.environ.get("MIGRATE").lower() == "true":
-        if not Path(__file__).cwd().joinpath("migrations").exists():
-            init(directory="migrations")
-
-        migrate(directory="migrations", message="Initial migration")
-        upgrade(directory="migrations")
+            upgrade(directory="migrations")
 
     return app
 
@@ -127,14 +128,6 @@ def init_extensions(app: Flask) -> None:
     login_manager.login_message_category = "info"
 
     with app.app_context():
-        from .models import Users, init_database
+        from .models import init_database
 
-        if not Path("is_init.txt").exists():
-            passw = init_database(app, db)
-            with open("is_init.txt", "w") as f:
-                f.write(passw)
-
-        elif not db.engine.dialect.has_table(db.engine.connect(), Users.__tablename__):
-            passw = init_database(app, db)
-            with open("is_init.txt", "w") as f:
-                f.write(passw)
+        init_database(app, db)
