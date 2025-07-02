@@ -21,7 +21,7 @@ def redirecting() -> Response:
     """
 
     try:
-        return make_response(redirect(url_for("epi.Equipamentos")))
+        return await make_response(redirect(url_for("epi.Equipamentos")))
 
     except Exception:
         app.logger.exception(traceback.format_exc())

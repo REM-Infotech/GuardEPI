@@ -47,7 +47,9 @@ async def termos_uso() -> Response:
     try:
         filename = "Termos de Uso.pdf"
         # Crie a resposta usando make_response
-        response = make_response(send_from_directory(app.config["PDF_PATH"], filename))
+        response = await make_response(
+            send_from_directory(app.config["PDF_PATH"], filename)
+        )
 
         # Defina o tipo MIME como application/pdf
         response.headers["Content-Type"] = "application/pdf"
@@ -76,7 +78,9 @@ async def politica_privacidade() -> Response:
         filename = "Política de Privacidade.pdf"
 
         # Crie a resposta usando make_response
-        response = make_response(send_from_directory(app.config["PDF_PATH"], filename))
+        response = await make_response(
+            send_from_directory(app.config["PDF_PATH"], filename)
+        )
 
         # Defina o tipo MIME como application/pdf
         response.headers["Content-Type"] = "application/pdf"
@@ -98,7 +102,7 @@ async def gerar_relatorio() -> Response:
         if "?" in referrer[-1]:
             chk_login = referrer[-1].split("?")[0]
             if chk_login == "login":
-                return make_response(redirect(url_for("dash.dashboard")))
+                return await make_response(redirect(url_for("dash.dashboard")))
 
         modelo = {
             "categorias": "categorias",
@@ -160,7 +164,7 @@ async def gerar_relatorio() -> Response:
 
         df.to_excel(file_path, index=False)
 
-        response = make_response(send_file(file_path, as_attachment=True))
+        response = await make_response(send_file(file_path, as_attachment=True))
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
@@ -224,9 +228,9 @@ async def import_lotes(tipo: str = None) -> Response:
             db.session.commit()
 
             flash("Informação cadastrada com sucesso!", "success")
-            return make_response(redirect(url_for(tipo)))
+            return await make_response(redirect(url_for(tipo)))
 
-        return make_response(
+        return await make_response(
             render_template(
                 "forms/importform.html", form=form, action=action, model=tipo
             )
@@ -275,7 +279,7 @@ async def gen_model(model: str) -> Response:
         with pd.ExcelWriter(file_path, engine="auto") as writer:
             df.to_excel(writer, index=False, sheet_name="Sheet1")
 
-        response = make_response(send_file(f"{file_path}", as_attachment=True))
+        response = await make_response(send_file(f"{file_path}", as_attachment=True))
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 

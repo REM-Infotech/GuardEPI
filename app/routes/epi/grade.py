@@ -45,7 +45,7 @@ def Grade() -> Response:
         page = "grade.html"
 
         database = GradeEPI.query.all()
-        return make_response(
+        return await make_response(
             render_template(
                 "index.html",
                 page=page,
@@ -101,14 +101,14 @@ def cadastrar_grade() -> Response:
                 db.session.commit()
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
             flash("Grade cadastrada com sucesso!", "success")
-            return make_response(redirect(url_for("epi.Grade")))
+            return await make_response(redirect(url_for("epi.Grade")))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 
@@ -162,14 +162,14 @@ def editar_grade(id) -> Response:
                 db.session.commit()
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
             flash("Grade editada com sucesso!", "success")
-            return make_response(redirect(url_for("epi.Grade")))
+            return await make_response(redirect(url_for("epi.Grade")))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 
@@ -199,7 +199,7 @@ def deletar_grade(id: int) -> Response:
 
         template = "includes/show.html"
         message = "Informação deletada com sucesso!"
-        return make_response(render_template(template, message=message))
+        return await make_response(render_template(template, message=message))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -207,4 +207,4 @@ def deletar_grade(id: int) -> Response:
         message = "Erro ao deletar"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(render_template(template, message=message))

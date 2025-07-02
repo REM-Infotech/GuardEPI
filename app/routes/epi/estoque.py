@@ -48,7 +48,7 @@ def produto_epi() -> Response:
 
         database = EstoqueEPI.query.all()
 
-        return make_response(
+        return await make_response(
             render_template(
                 "index.html",
                 page=page,
@@ -83,7 +83,7 @@ def grade() -> Response:
 
         database = EstoqueGrade.query.all()
 
-        return make_response(
+        return await make_response(
             render_template(
                 "index.html",
                 page=page,
@@ -113,7 +113,7 @@ def entradas() -> Response:
         page = "entradas.html"
 
         database = RegistroEntradas.query.all()
-        return make_response(
+        return await make_response(
             render_template(
                 "index.html",
                 page=page,
@@ -157,7 +157,7 @@ def lancamento_produto() -> Response:
             if not form.nota_fiscal.data:
                 if form.justificativa.data == "...":
                     flash("Inserir nota fiscal ou informar justificativa de estorno!")
-                    return make_response(redirect(url_for("estoque.produto_epi")))
+                    return await make_response(redirect(url_for("estoque.produto_epi")))
 
             query_Estoque = EstoqueEPI.query
             query_EstoqueGrade = EstoqueGrade.query
@@ -240,18 +240,18 @@ def lancamento_produto() -> Response:
                 db.session.commit()
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
             flash("Informações salvas com sucesso!", "success")
-            return make_response(redirect(url_for("estoque.produto_epi")))
+            return await make_response(redirect(url_for("estoque.produto_epi")))
 
         if form.errors:
             flash("Campos Obrigatórios não preenchidos!")
-            return make_response(redirect(url_for("estoque.produto_epi")))
+            return await make_response(redirect(url_for("estoque.produto_epi")))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 

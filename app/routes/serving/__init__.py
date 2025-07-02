@@ -21,7 +21,7 @@ def serve_img(filename: str) -> Response:
 
     try:
         path_img = Path(app.config["IMAGE_TEMP_PATH"])
-        return make_response(send_from_directory(path_img, filename))
+        return await make_response(send_from_directory(path_img, filename))
 
     except Exception:
         app.logger.exception(traceback.format_exc())

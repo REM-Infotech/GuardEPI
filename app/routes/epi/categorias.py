@@ -25,7 +25,7 @@ from . import epi
 @epi.route("/categorias", methods=["GET"])
 @login_required
 @read_perm
-def categorias() -> Response:
+async def categorias() -> Response:
     try:
         """
         Renders the 'categorias' page with data from the ClassesEPI database.
@@ -39,7 +39,7 @@ def categorias() -> Response:
         page = "categorias.html"
         database = ClassesEPI.query.all()
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, database=database, title=title)
         )
 
@@ -51,7 +51,7 @@ def categorias() -> Response:
 @epi.route("/categorias/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_categoria() -> Response:
+async def cadastrar_categoria() -> Response:
     try:
         """
         Handles the creation of a new category.
@@ -91,14 +91,16 @@ def cadastrar_categoria() -> Response:
                 db.session.commit()
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
             flash("Categoria cadastrada com sucesso!", "success")
-            return make_response(make_response(redirect(url_for("epi.categorias"))))
+            return await make_response(
+                make_response(redirect(url_for("epi.categorias")))
+            )
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
     except Exception:
@@ -109,7 +111,7 @@ def cadastrar_categoria() -> Response:
 @epi.route("/categorias/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_categoria(id) -> Response:
+async def editar_categoria(id) -> Response:
     try:
         """
         Edit an existing category based on the provided ID.
@@ -149,14 +151,14 @@ def editar_categoria(id) -> Response:
                 db.session.commit()
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
             flash("Categoria editada com sucesso!", "success")
-            return make_response(redirect(url_for("epi.categorias")))
+            return await make_response(redirect(url_for("epi.categorias")))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 
@@ -168,7 +170,7 @@ def editar_categoria(id) -> Response:
 @epi.post("/categorias/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_categoria(id: int) -> Response:
+async def deletar_categoria(id: int) -> Response:
     try:
         """
         Deletes a category from the database based on the provided ID.
@@ -188,7 +190,7 @@ def deletar_categoria(id: int) -> Response:
 
         template = "includes/show.html"
         message = "Informação deletada com sucesso!"
-        return make_response(render_template(template, message=message))
+        return await make_response(render_template(template, message=message))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -196,4 +198,4 @@ def deletar_categoria(id: int) -> Response:
         message = "Erro ao deletar regra"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(render_template(template, message=message))

@@ -30,7 +30,7 @@ def registro_saidas() -> str:
     database = RegistroSaidas.query.all()
     title = "Registro Saídas"
 
-    return make_response(
+    return await make_response(
         render_template(
             "index.html",
             page=page,
@@ -55,7 +55,7 @@ def cautelas(to_show: str = None) -> str:
     title = "Liberações de EPI's"
 
     session["itens_lista_cautela"] = []
-    return make_response(
+    return await make_response(
         render_template(
             "index.html",
             page=page,
@@ -108,4 +108,4 @@ def cautela_pdf(uuid_pasta: str) -> Response:
         else:
             abort(404, description="Arquivo não encontrado")
 
-    return make_response(send_from_directory(path_cautela, filename))
+    return await make_response(send_from_directory(path_cautela, filename))

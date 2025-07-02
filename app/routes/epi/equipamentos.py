@@ -33,7 +33,7 @@ form_content = Union[str, FileStorage, int, float, datetime]
 @epi.route("/equipamentos")
 @login_required
 @read_perm
-def Equipamentos() -> Response:
+async def Equipamentos() -> Response:
     """
     Renders the 'equipamentos' page with the necessary context.
     This function retrieves all entries from the ProdutoEPI database, constructs
@@ -46,7 +46,7 @@ def Equipamentos() -> Response:
     title = "Equipamentos"
     database = ProdutoEPI.query.all()
     url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
-    return make_response(
+    return await make_response(
         render_template(
             "index.html",
             page=page,
@@ -61,7 +61,7 @@ def Equipamentos() -> Response:
 @epi.route("/equipamentos/cadastro", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastro_equipamento() -> Response:
+async def cadastro_equipamento() -> Response:
     try:
         """
         Handles the registration of new EPI (Personal Protective Equipment).
@@ -114,14 +114,14 @@ def cadastro_equipamento() -> Response:
 
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
             flash("EPI cadastrado com sucesso!", "success")
-            return make_response(redirect(url_for("epi.Equipamentos")))
+            return await make_response(redirect(url_for("epi.Equipamentos")))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 
@@ -133,7 +133,7 @@ def cadastro_equipamento() -> Response:
 @epi.route("/equipamentos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_equipamento(id: int) -> Response:
+async def editar_equipamento(id: int) -> Response:
     try:
         """
         Edit an existing EPI (Equipamento de Proteção Individual) record in the database.
@@ -227,7 +227,7 @@ def editar_equipamento(id: int) -> Response:
 
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template(
                         "index.html",
                         title=title,
@@ -238,12 +238,12 @@ def editar_equipamento(id: int) -> Response:
                 )
 
             flash("Edições Salvas con sucesso!", "success")
-            return make_response(redirect(url_for("epi.Equipamentos")))
+            return await make_response(redirect(url_for("epi.Equipamentos")))
 
         if form.errors:
             pass
 
-        return make_response(
+        return await make_response(
             render_template(
                 "index.html",
                 title=title,
@@ -261,7 +261,7 @@ def editar_equipamento(id: int) -> Response:
 @epi.post("/equipamentos/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_equipamento(id: int) -> Response:
+async def deletar_equipamento(id: int) -> Response:
     try:
         """
         Deletes an equipment record from the database based on the provided ID.
@@ -279,7 +279,7 @@ def deletar_equipamento(id: int) -> Response:
 
         template = "includes/show.html"
         message = "Informação deletada com sucesso!"
-        return make_response(render_template(template, message=message))
+        return await make_response(render_template(template, message=message))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -287,4 +287,4 @@ def deletar_equipamento(id: int) -> Response:
         message = "Erro ao deletar"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(render_template(template, message=message))

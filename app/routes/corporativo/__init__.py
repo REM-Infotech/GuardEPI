@@ -15,7 +15,7 @@ corp = Blueprint(
 @corp.get("/")
 def redirecting() -> Response:
     try:
-        return make_response(redirect(url_for("corp.Empresas")))
+        return await make_response(redirect(url_for("corp.Empresas")))
 
     except Exception:
         app.logger.exception(traceback.format_exc())

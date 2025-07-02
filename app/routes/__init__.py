@@ -84,6 +84,9 @@ async def register_routes(app: Quart) -> None:
         if error.code == 405:
             return await make_response(redirect(url_for("dash.dashboard")))
 
+        elif error.code == 401:
+            return await make_response(redirect("/login"))
+
         return await make_response(
             await render_template(
                 "handler/index.html", name=name, desc=desc, code=error.code

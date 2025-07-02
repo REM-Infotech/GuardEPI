@@ -38,7 +38,7 @@ def cargos():
         page = "cargos.html"
         database = Cargos.query.all()
 
-        return make_response(
+        return await make_response(
             render_template(
                 "index.html",
                 page=page,
@@ -95,14 +95,14 @@ def cadastrar_cargos() -> Response:
                 db.session.commit()
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
             flash("Cargo cadastrado com sucesso!", "success")
-            return make_response(redirect(url_for("corp.cargos")))
+            return await make_response(redirect(url_for("corp.cargos")))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 
@@ -154,14 +154,14 @@ def editar_cargos(id) -> Response:
                 db.session.commit()
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
             flash("Cargo editado com sucesso!", "success")
-            return make_response(redirect(url_for("corp.cargos")))
+            return await make_response(redirect(url_for("corp.cargos")))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
     except Exception:
@@ -192,7 +192,7 @@ def deletar_cargos(id: int) -> str:
 
         template = "includes/show.html"
         message = "Informação deletada com sucesso!"
-        return make_response(render_template(template, message=message))
+        return await make_response(render_template(template, message=message))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -200,4 +200,4 @@ def deletar_cargos(id: int) -> str:
         message = "Erro ao deletar"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(render_template(template, message=message))

@@ -35,7 +35,8 @@ async def index() -> Response:
     """
 
     try:
-        if not current_user:
+        is_auth = await current_user.is_authenticated
+        if not is_auth:
             return await make_response(redirect(url_for("auth.login")))
         return await make_response(redirect(url_for("dash.dashboard")))
 
@@ -76,14 +77,14 @@ async def login() -> Response:
                 session["nome_usuario"] = user.nome_usuario
                 session.pop("next")
                 login_user(user, remember=form.keep_login.data)
-                flash("Login Efetuado com sucesso!", "success")
+                await flash("Login Efetuado com sucesso!", "success")
 
                 if "?" in location:
                     location = location.split("?")[0]
 
                 return await make_response(redirect(location))
 
-            flash("Usuário/Senha Incorretos!", "error")
+            await flash("Usuário/Senha Incorretos!", "error")
 
         return await make_response(await render_template("login.html", form=form))
 
@@ -106,9 +107,9 @@ async def logout() -> Response:
 
     try:
         logout_user()
-        flash("Sessão encerrada", "info")
+        await flash("Sessão encerrada", "info")
         location = url_for("auth.login")
-        return make_response(redirect(location))
+        return await make_response(redirect(location))
 
     except Exception:
         app.logger.exception(traceback.format_exc())

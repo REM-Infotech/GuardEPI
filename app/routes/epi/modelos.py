@@ -35,7 +35,7 @@ def modelos() -> Response:
     title = "Modelos"
     page = "modelos.html"
     database = ModelosEPI.query.all()
-    return make_response(
+    return await make_response(
         render_template("index.html", page=page, database=database, title=title)
     )
 
@@ -82,14 +82,14 @@ def cadastrar_modelos() -> Response:
                 db.session.commit()
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
             flash("modelos cadastrada com sucesso!", "success")
-            return make_response(redirect(url_for("epi.modelos")))
+            return await make_response(redirect(url_for("epi.modelos")))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 
@@ -143,14 +143,14 @@ def editar_modelos(id: int) -> Response:
                 db.session.commit()
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
             flash("modelos editada com sucesso!", "success")
-            return make_response(redirect(url_for("epi.modelos")))
+            return await make_response(redirect(url_for("epi.modelos")))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 
@@ -180,7 +180,7 @@ def deletar_modelos(id: int) -> Response:
 
         template = "includes/show.html"
         message = "Informação deletada com sucesso!"
-        return make_response(render_template(template, message=message))
+        return await make_response(render_template(template, message=message))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -188,4 +188,4 @@ def deletar_modelos(id: int) -> Response:
         message = "Erro ao deletar"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(render_template(template, message=message))

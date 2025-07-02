@@ -21,7 +21,7 @@ schedule_bp = Blueprint(
 def dash() -> Response:
     form: FlaskForm | TaskNotificacaoForm = TaskNotificacaoForm()
     page = "schedules.html"
-    return make_response(render_template("index.html", page=page, form=form))
+    return await make_response(render_template("index.html", page=page, form=form))
 
 
 @schedule_bp.post("/new_schedule")
@@ -33,7 +33,7 @@ def new_schedule() -> Response:
 
     #     days = [int(day) for day in form.days_of_week.data]
 
-    return make_response(redirect(url_for("schedules.dash")))
+    return await make_response(redirect(url_for("schedules.dash")))
 
 
 @shared_task(bind=True, ignore_result=False)

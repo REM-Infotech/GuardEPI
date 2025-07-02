@@ -91,12 +91,12 @@ def add_itens() -> Response:
 
         if estoque_grade is not None:
             if all([estoque_grade.qtd_estoque == 0, data_estoque.qtd_estoque == 0]):
-                return make_response(
+                return await make_response(
                     render_template("forms/cautela/not_estoque.html", epi_name=nome_epi)
                 )
 
         elif estoque_grade is None:
-            return make_response(
+            return await make_response(
                 render_template(
                     "forms/cautela/not_estoque.html",
                     message="EPI não registrada no estoque!",
@@ -121,7 +121,7 @@ def add_itens() -> Response:
         item_html = render_template("forms/cautela/add_items.html", item=list_epis)
 
         # Retorna o HTML do item
-        return make_response(item_html)
+        return await make_response(item_html)
     except Exception as e:
         abort(500, description=str(e))
 
@@ -137,7 +137,7 @@ def remove_itens() -> Response:
         f.write(json_obj)
 
     item_html = render_template("forms/cautela/add_items.html")
-    return make_response(item_html)
+    return await make_response(item_html)
 
 
 @estoque_bp.post("/get_grade")
@@ -153,7 +153,7 @@ def get_grade() -> Response:
         form.tipo_grade.choices.extend(lista)
 
         page = "forms/cautela/get_grade.html"
-        return make_response(render_template(page, form=form))
+        return await make_response(render_template(page, form=form))
     except Exception as e:
         abort(500, description=str(e))
 
@@ -187,7 +187,7 @@ def emitir_cautela() -> Response:
                 nomefilename,
             )
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 
@@ -384,7 +384,7 @@ def emit_doc(
         str_foldertoshow = str(path_toshow.joinpath(nomefilename))
         shutil.copy(path_cautela, str_foldertoshow)
 
-        return make_response(
+        return await make_response(
             redirect(url_for("estoque.cautelas", to_show=folder_to_show))
         )
 

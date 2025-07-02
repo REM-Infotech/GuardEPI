@@ -46,7 +46,7 @@ def Empresas() -> Response:
         database = Empresa.query.all()
 
         page = "empresas.html"
-        return make_response(
+        return await make_response(
             render_template(
                 "index.html",
                 page=page,
@@ -121,14 +121,14 @@ def cadastro_empresas() -> Response:
                 db.session.commit()
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
             flash("emp cadastrado com sucesso!", "success")
-            return make_response(redirect(url_for("corp.Empresas")))
+            return await make_response(redirect(url_for("corp.Empresas")))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 
@@ -229,14 +229,14 @@ def editar_empresas(id: int) -> Response:
                 db.session.commit()
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
             flash("Edições Salvas con sucesso!", "success")
-            return make_response(redirect(url_for("corp.Empresas")))
+            return await make_response(redirect(url_for("corp.Empresas")))
 
-        return make_response(
+        return await make_response(
             render_template(
                 "index.html",
                 title=title,
@@ -274,7 +274,7 @@ def deletar_empresas(id: int) -> Response:
 
         template = "includes/show.html"
         message = "Informação deletada com sucesso!"
-        return make_response(render_template(template, message=message))
+        return await make_response(render_template(template, message=message))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -282,4 +282,4 @@ def deletar_empresas(id: int) -> Response:
         message = "Erro ao deletar"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(render_template(template, message=message))

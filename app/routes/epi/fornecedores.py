@@ -40,7 +40,7 @@ def fornecedores() -> Response:
         title = "Fornecedores"
         page = "fornecedores.html"
         database = Fornecedores.query.all()
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, database=database, title=title)
         )
 
@@ -92,14 +92,14 @@ def cadastrar_fornecedores() -> Response:
                 db.session.commit()
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
             flash("Fornecedor cadastrado com sucesso!", "success")
-            return make_response(redirect(url_for("epi.fornecedores")))
+            return await make_response(redirect(url_for("epi.fornecedores")))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 
@@ -154,14 +154,14 @@ def editar_fornecedores(id: int) -> Response:
                 db.session.commit()
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
             flash("Fornecedor editado com sucesso!", "success")
-            return make_response(redirect(url_for("epi.fornecedores")))
+            return await make_response(redirect(url_for("epi.fornecedores")))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 
@@ -193,7 +193,7 @@ def deletar_fornecedores(id: int):
 
         template = "includes/show.html"
         message = "Informação deletada com sucesso!"
-        return make_response(render_template(template, message=message))
+        return await make_response(render_template(template, message=message))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -201,4 +201,4 @@ def deletar_fornecedores(id: int):
         message = "Erro ao deletar"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(render_template(template, message=message))
