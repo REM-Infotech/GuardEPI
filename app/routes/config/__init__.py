@@ -57,7 +57,7 @@ def redirecting() -> Response:
         Response: A redirect response object to the 'epi.Equipamentos' URL.
     """
 
-    return make_response(redirect(url_for("epi.Equipamentos")))
+    return await make_response(redirect(url_for("epi.Equipamentos")))
 
 
 import_module(".users", __package__)

@@ -67,7 +67,7 @@ def add_itens() -> Response:
 
             to_view.append(dict_to_view)
         # Retorna o HTML do item
-        return make_response(
+        return await make_response(
             render_template("forms/roles/add_items.html", item=to_view)
         )
     except Exception:
@@ -89,7 +89,7 @@ def remove_itens() -> Response:
             f.write(json.dumps([]))
 
         item_html = render_template("forms/roles/add_items.html", item=list_roles)
-        return make_response(item_html)
+        return await make_response(item_html)
 
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -105,7 +105,7 @@ def roles() -> Response:
         page = "roles.html"
         database = Roles.query.all()
 
-        return make_response(
+        return await make_response(
             render_template("index.html", title=title, database=database, page=page)
         )
 
@@ -143,7 +143,7 @@ def cadastro_regra() -> Response:
 
             if query:
                 flash("Regra já existente!", "error")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
@@ -196,9 +196,9 @@ def cadastro_regra() -> Response:
             session.pop("json_filename")
 
             flash("Regra criada com sucesso")
-            return make_response(redirect("/config/roles"))
+            return await make_response(redirect("/config/roles"))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 
@@ -249,4 +249,4 @@ def deletar_regra(id: int) -> Response:
         message = "Erro ao deletar regra"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(render_template(template, message=message))

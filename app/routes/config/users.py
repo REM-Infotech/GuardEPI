@@ -31,7 +31,7 @@ def users() -> Response:
 
         database = Users.query.order_by(Users.login_time.desc()).all()
 
-        return make_response(
+        return await make_response(
             render_template("index.html", title=title, database=database, page=page)
         )
 
@@ -53,7 +53,7 @@ def cadastro_usuario() -> Response:
 
             if db.session.query(Users).filter(Users.login == form.login.data).first():
                 flash("Já existe um usuário com este login!")
-                return make_response(redirect(url_for("config.users")))
+                return await make_response(redirect(url_for("config.users")))
 
             usuario = Users(
                 login=form.login.data,
@@ -68,18 +68,18 @@ def cadastro_usuario() -> Response:
             db.session.commit()
 
             flash("Usuário criado com sucesso!", "success")
-            return make_response(redirect(url_for("config.users")))
+            return await make_response(redirect(url_for("config.users")))
 
         if form.errors:
             flash(form.errors)
 
-        return make_response(render_template(html, form=form))
+        return await make_response(render_template(html, form=form))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
         abort(500)
 
-    return make_response(render_template(html))
+    return await make_response(render_template(html))
 
 
 @config.route("/changepw_usr", methods=["GET", "POST"])
@@ -94,7 +94,7 @@ def changepw_usr() -> Response:
             db: SQLAlchemy = app.extensions["sqlalchemy"]
             if form.new_password.data != form.repeat_password.data:
                 flash("Senhas não coincidem")
-                return make_response(redirect(url_for("config.users")))
+                return await make_response(redirect(url_for("config.users")))
 
             login_usr = form.data.get("user_to_change", session.get("login"))
             password = Users.query.filter_by(login=login_usr).first()
@@ -102,15 +102,15 @@ def changepw_usr() -> Response:
             db.session.commit()
 
             flash("Senha alterada com sucesso!", "success")
-            return make_response(redirect(url_for("config.users")))
+            return await make_response(redirect(url_for("config.users")))
 
-        return make_response(render_template(html, form=form))
+        return await make_response(render_template(html, form=form))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
         abort(500)
 
-    return make_response(render_template(html))
+    return await make_response(render_template(html))
 
 
 @config.route("/changemail_usr", methods=["GET", "POST"])
@@ -127,21 +127,21 @@ def changemail_usr() -> Response:
             mail = Users.query.filter_by(login=login_usr).first()
             if form.new_email.data != form.repeat_email.data:
                 flash("E-mails não coincidem")
-                return make_response(redirect(url_for("config.users")))
+                return await make_response(redirect(url_for("config.users")))
 
             mail.email = form.new_email.data
             db.session.commit()
 
             flash("E-mail alterado com sucesso!", "success")
-            return make_response(redirect(url_for("config.users")))
+            return await make_response(redirect(url_for("config.users")))
 
-        return make_response(render_template(html, form=form))
+        return await make_response(render_template(html, form=form))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
         abort(500)
 
-    return make_response(render_template(html, form=form))
+    return await make_response(render_template(html, form=form))
 
 
 @config.route("/delete_user/<id>", methods=["GET"])
@@ -194,7 +194,7 @@ def delete_user(id: int) -> Response:
             db.session.commit()
 
         template = "includes/show.html"
-        return make_response(render_template(template, message=message))
+        return await make_response(render_template(template, message=message))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -202,4 +202,4 @@ def delete_user(id: int) -> Response:
         message = "Erro ao deletar"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(render_template(template, message=message))

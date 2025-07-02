@@ -21,7 +21,7 @@ def groups() -> Response:
         database = Groups.query.all()
         page = "groups.html"
 
-        return make_response(
+        return await make_response(
             render_template("index.html", title=title, database=database, page=page)
         )
 
@@ -60,7 +60,7 @@ def cadastro_grupo() -> Response:
 
             if query:
                 flash("Grupo já existente!", "error")
-                return make_response(
+                return await make_response(
                     render_template("index.html", page=page, form=form, title=title)
                 )
 
@@ -77,9 +77,9 @@ def cadastro_grupo() -> Response:
             db.session.commit()
 
             flash("Grupo Criado com sucesso!")
-            return make_response(redirect("/config/groups"))
+            return await make_response(redirect("/config/groups"))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 
@@ -126,9 +126,9 @@ def editar_grupo(id: int) -> Response:
             db.session.commit()
 
             flash("Grupo editado com sucesso!")
-            return make_response(redirect("/config/groups"))
+            return await make_response(redirect("/config/groups"))
 
-        return make_response(
+        return await make_response(
             render_template("index.html", page=page, form=form, title=title)
         )
 
@@ -179,4 +179,4 @@ def deletar_grupo(id: int) -> Response:
         message = "Erro ao deletar grupo"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(render_template(template, message=message))
