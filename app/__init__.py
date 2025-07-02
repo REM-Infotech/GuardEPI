@@ -93,7 +93,7 @@ def create_app() -> Flask:
     app.extensions["celery"] = celery_app
     app.extensions["mail"] = mail
 
-    if os.environ.get("MIGRATE").lower() == "true":
+    if os.environ.get("MIGRATE") and os.environ.get("MIGRATE").lower() == "true":
         if not Path(__file__).cwd().joinpath("migrations").exists():
             init(directory="migrations")
 

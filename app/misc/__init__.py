@@ -31,7 +31,7 @@ def format_currency_brl(value: int | float | str) -> str:
 
 
 # Função para formatar a data e obter o nome do mês em português
-def format_date_brl(date):
+def format_date_brl(date) -> str:
     return format_date(date, format="MMMM", locale="pt_BR").capitalize()
 
 
@@ -56,7 +56,6 @@ def hash_str() -> str:
 
 
 def get_models(tipo: str) -> Model:
-
     from ..models import (
         Cargos,
         ClassesEPI,
