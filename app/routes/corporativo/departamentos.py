@@ -1,11 +1,18 @@
 import traceback
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    url_for,
+)
+from quart import current_app as app
 
 from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import FormDepartamentos
@@ -25,7 +32,7 @@ def Departamentos() -> Response:
     during the process, it aborts the request with a 500 status code and
     includes the exception message in the response.
     Returns:
-        Response: A Flask response object that renders the 'index.html' template
+        Response: A Quart response object that renders the 'index.html' template
         with the departments data.
     Raises:
         HTTPException: If an exception occurs, a 500 HTTP status code is returned
@@ -33,7 +40,6 @@ def Departamentos() -> Response:
     """
 
     try:
-
         page = "departamentos.html"
         database = Departamento.query.all()
 
@@ -76,7 +82,6 @@ def cadastrar_departamentos() -> Response:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
-
             to_add = {}
             form_data = form.data
             list_form_data = list(form_data.items())
@@ -92,7 +97,6 @@ def cadastrar_departamentos() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template("index.html", page=page, form=form, title=title)
@@ -141,7 +145,6 @@ def editar_departamentos(id) -> Response:
         form = FormDepartamentos(**Departamentos.__dict__)
 
         if form.validate_on_submit():
-
             form_data = form.data
             list_form_data = list(form_data.items())
 
@@ -152,7 +155,6 @@ def editar_departamentos(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template("index.html", page=page, form=form, title=title)
@@ -196,7 +198,6 @@ def deletar_departamentos(id: int) -> Response:
         return make_response(render_template(template, message=message))
 
     except Exception:
-
         app.logger.exception(traceback.format_exc())
 
         message = "Erro ao deletar"

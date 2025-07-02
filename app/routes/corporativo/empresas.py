@@ -3,12 +3,19 @@ from datetime import datetime
 from pathlib import Path
 from typing import Union
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    url_for,
+)
+from quart import current_app as app
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
@@ -36,7 +43,6 @@ def Empresas() -> Response:
     """
 
     try:
-
         database = Empresa.query.all()
 
         page = "empresas.html"
@@ -114,7 +120,6 @@ def cadastro_empresas() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template("index.html", page=page, form=form, title=title)
@@ -149,7 +154,6 @@ def editar_empresas(id: int) -> Response:
     """
 
     try:
-
         endpoint = "Empresas"
         act = "Editar"
 
@@ -167,13 +171,10 @@ def editar_empresas(id: int) -> Response:
         items_emp_data = list(emp_data.items())
 
         for key, value in items_emp_data:
-
             if key == "_sa_instance_state" or key == "id" or key == "filename":
-
                 continue
 
             if key == "blob_doc":
-
                 img_path = (
                     Path(app.config.get("TEMP_PATH"))
                     .joinpath("IMG")
@@ -201,12 +202,10 @@ def editar_empresas(id: int) -> Response:
         form = EmpresaForm(**form_data)
 
         if form.validate_on_submit():
-
             to_add = {}
 
             form_data: dict[str, form_content] = list(form.data.items())
             for key, value in form_data:
-
                 if value:
                     if key == "csrf_token":
                         continue
@@ -229,7 +228,6 @@ def editar_empresas(id: int) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template("index.html", page=page, form=form, title=title)
@@ -279,7 +277,6 @@ def deletar_empresas(id: int) -> Response:
         return make_response(render_template(template, message=message))
 
     except Exception:
-
         app.logger.exception(traceback.format_exc())
 
         message = "Erro ao deletar"

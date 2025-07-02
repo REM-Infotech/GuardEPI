@@ -2,8 +2,8 @@ from datetime import datetime
 
 import bcrypt
 import pytz
-from flask import request
 from flask_login import UserMixin
+from quart import request
 from sqlalchemy import Column, DateTime, Integer, LargeBinary, String
 
 from app import db, login_manager

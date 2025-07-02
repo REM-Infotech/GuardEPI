@@ -1,11 +1,19 @@
 import traceback
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
+from quart import current_app as app
 
 from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import FormCategorias
@@ -18,7 +26,6 @@ from . import epi
 @login_required
 @read_perm
 def categorias() -> Response:
-
     try:
         """
         Renders the 'categorias' page with data from the ClassesEPI database.
@@ -45,7 +52,6 @@ def categorias() -> Response:
 @login_required
 @create_perm
 def cadastrar_categoria() -> Response:
-
     try:
         """
         Handles the creation of a new category.
@@ -69,7 +75,6 @@ def cadastrar_categoria() -> Response:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
-
             to_add = {}
             form_data = form.data
             list_form_data = list(form_data.items())
@@ -85,7 +90,6 @@ def cadastrar_categoria() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template("index.html", page=page, form=form, title=title)
@@ -106,7 +110,6 @@ def cadastrar_categoria() -> Response:
 @login_required
 @update_perm
 def editar_categoria(id) -> Response:
-
     try:
         """
         Edit an existing category based on the provided ID.
@@ -135,7 +138,6 @@ def editar_categoria(id) -> Response:
             form = FormCategorias(**classe.__dict__)
 
         if form.validate_on_submit():
-
             form_data = form.data
             list_form_data = list(form_data.items())
 
@@ -146,7 +148,6 @@ def editar_categoria(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template("index.html", page=page, form=form, title=title)
@@ -168,7 +169,6 @@ def editar_categoria(id) -> Response:
 @login_required
 @delete_perm
 def deletar_categoria(id: int) -> Response:
-
     try:
         """
         Deletes a category from the database based on the provided ID.
@@ -191,7 +191,6 @@ def deletar_categoria(id: int) -> Response:
         return make_response(render_template(template, message=message))
 
     except Exception:
-
         app.logger.exception(traceback.format_exc())
 
         message = "Erro ao deletar regra"

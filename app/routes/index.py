@@ -4,9 +4,12 @@ from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
-from flask import Blueprint, Response, abort
-from flask import current_app as app
-from flask import (
+from flask_login import login_required
+from flask_sqlalchemy import SQLAlchemy
+from quart import (
+    Blueprint,
+    Response,
+    abort,
     flash,
     make_response,
     redirect,
@@ -16,8 +19,7 @@ from flask import (
     send_from_directory,
     url_for,
 )
-from flask_login import login_required
-from flask_sqlalchemy import SQLAlchemy
+from quart import current_app as app
 from sqlalchemy import LargeBinary
 from werkzeug.utils import secure_filename
 
@@ -88,9 +90,7 @@ def politica_privacidade() -> Response:
 @index.route("/gerar_relatorio")
 @login_required
 def gerar_relatorio() -> Response:
-
     try:
-
         referrer = (
             request.referrer.replace("http://", "").replace("https://", "").split("/")
         )
@@ -128,9 +128,9 @@ def gerar_relatorio() -> Response:
         filename = secure_filename(
             "".join(
                 (
-                    f"Relatório {" ".join([i.capitalize() for i in dbase.split("_")])}",
+                    f"Relatório {' '.join([i.capitalize() for i in dbase.split('_')])}",
                     " - ",
-                    f"{datetime.now().strftime("%d-%m-%Y_%H-%M-%S")}.xlsx",
+                    f"{datetime.now().strftime('%d-%m-%Y_%H-%M-%S')}.xlsx",
                 )
             )
         )
@@ -173,7 +173,6 @@ def gerar_relatorio() -> Response:
 @login_required
 def import_lotes(tipo: str = None) -> Response:
     try:
-
         action = request.path
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]
@@ -241,7 +240,6 @@ def import_lotes(tipo: str = None) -> Response:
 @index.route("/gen_model/<model>", methods=["GET"])
 @login_required
 def gen_model(model: str) -> Response:
-
     try:
         database_model = get_models(model.lower())
 

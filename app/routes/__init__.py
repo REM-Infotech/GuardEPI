@@ -1,8 +1,11 @@
+import unicodedata  # noqa: F401
 from pathlib import Path  # noqa: F401
 from typing import Type, TypeVar  # noqa: F401
-import unicodedata  # noqa: F401
-from flask import (
-    Flask,
+
+import pandas  # noqa: F401
+from flask_sqlalchemy import SQLAlchemy  # noqa: F401
+from quart import (
+    Quart,
     Response,
     jsonify,  # noqa: F401
     make_response,
@@ -11,14 +14,13 @@ from flask import (
     request,  # noqa: F401
     url_for,
 )
-from flask_sqlalchemy import SQLAlchemy  # noqa: F401
-import pandas  # noqa: F401
 from tqdm import tqdm  # noqa: F401
 from werkzeug.exceptions import HTTPException
+from werkzeug.utils import secure_filename  # noqa: F401
 
 from app.models.EPI.equipamento import ProdutoEPI  # noqa: F401
 from app.models.EPI.estoque import EstoqueEPI, EstoqueGrade
-from werkzeug.utils import secure_filename  # noqa: F401
+
 from .auth import auth
 from .config import config
 from .corporativo import corp
@@ -30,13 +32,13 @@ from .serving import serve
 type_db = TypeVar("model_db", bound=EstoqueEPI | EstoqueGrade)
 
 
-def register_routes(app: Flask) -> None:
+def register_routes(app: Quart) -> None:
     """
-    Register routes and error handlers for the Flask application.
+    Register routes and error handlers for the Quart application.
     This function registers blueprints and error handlers, and defines routes for terms of use and privacy policy PDFs.
 
     Args:
-        app (Flask): The Flask application instance.
+        app (Quart): The Quart application instance.
 
     Blueprints:
 
@@ -65,7 +67,7 @@ def register_routes(app: Flask) -> None:
         Args:
             error (HTTPException): The HTTP exception that was raised.
         Returns:
-            Response: A Flask response object with the rendered error template and the appropriate HTTP status code.
+            Response: A Quart response object with the rendered error template and the appropriate HTTP status code.
         """
         # tradutor = GoogleTranslator(source="en", target="pt")
         # name = tradutor.translate(error.name)

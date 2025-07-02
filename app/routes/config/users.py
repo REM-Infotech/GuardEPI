@@ -1,9 +1,11 @@
 import json
 import traceback
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import (
+from flask_login import login_required
+from flask_sqlalchemy import SQLAlchemy
+from quart import (
+    Response,
+    abort,
     flash,
     make_response,
     redirect,
@@ -11,8 +13,7 @@ from flask import (
     session,
     url_for,
 )
-from flask_login import login_required
-from flask_sqlalchemy import SQLAlchemy
+from quart import current_app as app
 
 from ...decorators import create_perm, delete_perm, read_perm, update_perm
 from ...forms import AdmChangeEmail, AdmChangePassWord, FormUser
@@ -25,7 +26,6 @@ from . import config
 @read_perm
 def users() -> Response:
     try:
-
         title = "Usuários"
         page = "users.html"
 
@@ -44,14 +44,11 @@ def users() -> Response:
 @login_required
 @create_perm
 def cadastro_usuario() -> Response:
-
     form = FormUser()
     html = "forms/FormUser.html"
 
     try:
-
         if form.validate_on_submit():
-
             db: SQLAlchemy = app.extensions["sqlalchemy"]
 
             if db.session.query(Users).filter(Users.login == form.login.data).first():
@@ -89,13 +86,11 @@ def cadastro_usuario() -> Response:
 @login_required
 @update_perm
 def changepw_usr() -> Response:
-
     html = "forms/ChangePasswordForm.html"
     try:
         form = AdmChangePassWord()
 
         if form.validate_on_submit():
-
             db: SQLAlchemy = app.extensions["sqlalchemy"]
             if form.new_password.data != form.repeat_password.data:
                 flash("Senhas não coincidem")
@@ -122,13 +117,11 @@ def changepw_usr() -> Response:
 @login_required
 @update_perm
 def changemail_usr() -> Response:
-
     html = "forms/ChangeMailForm.html"
     try:
         form = AdmChangeEmail()
 
         if form.validate_on_submit():
-
             db: SQLAlchemy = app.extensions["sqlalchemy"]
             login_usr = form.data.get("user_to_change", session.get("login"))
             mail = Users.query.filter_by(login=login_usr).first()
@@ -174,7 +167,6 @@ def delete_user(id: int) -> Response:
     """
 
     try:
-
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         set_delete = True
@@ -205,7 +197,6 @@ def delete_user(id: int) -> Response:
         return make_response(render_template(template, message=message))
 
     except Exception:
-
         app.logger.exception(traceback.format_exc())
 
         message = "Erro ao deletar"

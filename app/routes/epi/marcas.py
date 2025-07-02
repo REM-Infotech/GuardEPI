@@ -1,11 +1,19 @@
 import traceback
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
+from quart import current_app as app
 
 from app.forms import FormMarcas
 from app.models import Marcas
@@ -64,7 +72,6 @@ def cadastrar_marca() -> Response:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
-
             to_add = {}
             form_data = form.data
             list_form_data = list(form_data.items())
@@ -80,7 +87,6 @@ def cadastrar_marca() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template("index.html", page=page, form=form, title=title)
@@ -118,7 +124,6 @@ def editar_marca(id) -> Response:
     """
 
     try:
-
         endpoint = "marca"
         act = "Cadastro"
 
@@ -134,7 +139,6 @@ def editar_marca(id) -> Response:
             form = FormMarcas(**classe.__dict__)
 
         if form.validate_on_submit():
-
             form_data = form.data
             list_form_data = list(form_data.items())
 
@@ -145,7 +149,6 @@ def editar_marca(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template("index.html", page=page, form=form, title=title)
@@ -187,7 +190,6 @@ def deletar_marca(id: int) -> Response:
         return make_response(render_template(template, message=message))
 
     except Exception:
-
         app.logger.exception(traceback.format_exc())
 
         message = "Erro ao deletar"

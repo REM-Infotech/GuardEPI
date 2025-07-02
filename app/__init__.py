@@ -7,12 +7,12 @@ from typing import Any
 import quart_flask_patch  # noqa: F401
 from celery import Celery
 from dotenv import load_dotenv
-from flask import Flask
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate, init, migrate, upgrade
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
+from quart import Quart
 
 from app.logs.setup import initialize_logging
 
@@ -23,7 +23,7 @@ path_parent = Path(__file__).parent.resolve()
 template_folder = path_parent.joinpath("templates")
 static_folder = path_parent.joinpath("static")
 
-app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
+app = Quart(__name__, template_folder=template_folder, static_folder=static_folder)
 
 mail = Mail()
 db = SQLAlchemy()
@@ -38,14 +38,14 @@ objects_config = {
 }
 
 
-def celery_init(app: Flask) -> Celery:
+def celery_init(app: Quart) -> Celery:
     """
-    Initialize a Celery instance with the given Flask application.
+    Initialize a Celery instance with the given Quart application.
     This function sets up a Celery instance, configures it to use threads as the worker pool,
-    imports configurations from the Flask app, and defines a custom task class that ensures
-    tasks are executed within the Flask application context.
+    imports configurations from the Quart app, and defines a custom task class that ensures
+    tasks are executed within the Quart application context.
     Args:
-        app (Flask): The Flask application instance.
+        app (Quart): The Quart application instance.
     Returns:
         Celery: The configured Celery instance.
     """
@@ -76,7 +76,7 @@ def celery_init(app: Flask) -> Celery:
     return celery_app
 
 
-def create_app() -> Flask:
+def create_app() -> Quart:
     env_ambient = os.getenv("AMBIENT_CONFIG")
     ambient = objects_config[env_ambient]
 
@@ -106,7 +106,7 @@ def create_app() -> Flask:
     return app
 
 
-def init_extensions(app: Flask) -> None:
+def init_extensions(app: Quart) -> None:
     mail.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)

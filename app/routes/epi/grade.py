@@ -1,11 +1,19 @@
 import traceback
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, request, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
+from quart import current_app as app
 
 from app.forms import FormGrade
 from app.models import GradeEPI
@@ -25,7 +33,7 @@ def Grade() -> Response:
     the process, it aborts the request with a 500 status code and includes the
     exception message in the response.
     Returns:
-        Response: A Flask response object that renders the 'index.html' template
+        Response: A Quart response object that renders the 'index.html' template
         with the grades data.
     Raises:
         HTTPException: If an error occurs during the database query or template
@@ -77,7 +85,6 @@ def cadastrar_grade() -> Response:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
-
             to_add = {}
             form_data = form.data
             list_form_data = list(form_data.items())
@@ -93,7 +100,6 @@ def cadastrar_grade() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template("index.html", page=page, form=form, title=title)
@@ -145,7 +151,6 @@ def editar_grade(id) -> Response:
             form = FormGrade(**grade.__dict__)
 
         if form.validate_on_submit():
-
             form_data = form.data
             list_form_data = list(form_data.items())
 
@@ -156,7 +161,6 @@ def editar_grade(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template("index.html", page=page, form=form, title=title)
@@ -198,7 +202,6 @@ def deletar_grade(id: int) -> Response:
         return make_response(render_template(template, message=message))
 
     except Exception:
-
         app.logger.exception(traceback.format_exc())
 
         message = "Erro ao deletar"

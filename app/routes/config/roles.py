@@ -3,11 +3,18 @@ import traceback  # traceback
 from pathlib import Path
 from typing import Dict, List
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, session
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    session,
+)
+from quart import current_app as app
 
 from app.decorators import create_perm, read_perm
 
@@ -20,9 +27,7 @@ from . import config
 @login_required
 @read_perm
 def add_itens() -> Response:
-
     try:
-
         form = FormRoles()
 
         rota = form.rota
@@ -74,7 +79,6 @@ def add_itens() -> Response:
 @login_required
 @read_perm
 def remove_itens() -> Response:
-
     try:
         hex_name_json = session["json_filename"]
         path_json = Path(app.config["TEMP_PATH"]).joinpath(hex_name_json).resolve()
@@ -97,7 +101,6 @@ def remove_itens() -> Response:
 @read_perm
 def roles() -> Response:
     try:
-
         title = "Regras"
         page = "roles.html"
         database = Roles.query.all()
@@ -115,7 +118,6 @@ def roles() -> Response:
 @login_required
 @create_perm
 def cadastro_regra() -> Response:
-
     try:
         """
         Handles the creation of a new group.
@@ -133,7 +135,6 @@ def cadastro_regra() -> Response:
         page = "forms/roles/FormRoles.html"
 
         if form.validate_on_submit():
-
             db: SQLAlchemy = app.extensions["sqlalchemy"]
             rulename = form.name_rule.data
             query = db.session.query(Roles).filter(Roles.name_role == rulename).first()
@@ -152,7 +153,6 @@ def cadastro_regra() -> Response:
             )
 
             for group in form.grupos.data:
-
                 grp = (
                     db.session.query(Groups).filter(Groups.name_group == group).first()
                 )
@@ -180,7 +180,6 @@ def cadastro_regra() -> Response:
                         continue
 
                     if key == "REGRAS":
-
                         rules = list(value.items())
                         for key_, value_ in rules:
                             to_add.update({key_: value_})
@@ -211,7 +210,6 @@ def cadastro_regra() -> Response:
 @config.get("/deletar_regra/<int:id>")
 @login_required
 def deletar_regra(id: int) -> Response:
-
     try:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
@@ -234,7 +232,6 @@ def deletar_regra(id: int) -> Response:
         role = db.session.query(Roles).filter(Roles.id == id).first()
 
         for route in from_routes:
-
             db.session.delete(route)
 
         for group in from_groups:
@@ -247,7 +244,6 @@ def deletar_regra(id: int) -> Response:
         template = "includes/show.html"
 
     except Exception:
-
         app.logger.exception(traceback.format_exc())
 
         message = "Erro ao deletar regra"

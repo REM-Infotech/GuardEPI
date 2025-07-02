@@ -1,11 +1,18 @@
 import traceback
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    url_for,
+)
+from quart import current_app as app
 
 from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import CargoForm
@@ -72,7 +79,6 @@ def cadastrar_cargos() -> Response:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
-
             to_add = {}
             form_data = form.data
             list_form_data = list(form_data.items())
@@ -137,7 +143,6 @@ def editar_cargos(id) -> Response:
         form = CargoForm(**cargos.__dict__)
 
         if form.validate_on_submit():
-
             form_data = form.data
             list_form_data = list(form_data.items())
 
@@ -148,7 +153,6 @@ def editar_cargos(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template("index.html", page=page, form=form, title=title)
@@ -191,7 +195,6 @@ def deletar_cargos(id: int) -> str:
         return make_response(render_template(template, message=message))
 
     except Exception:
-
         app.logger.exception(traceback.format_exc())
 
         message = "Erro ao deletar"

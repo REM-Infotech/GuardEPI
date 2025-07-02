@@ -3,12 +3,19 @@ from datetime import datetime
 from pathlib import Path
 from typing import Union
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    url_for,
+)
+from quart import current_app as app
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
@@ -55,7 +62,6 @@ def Equipamentos() -> Response:
 @login_required
 @create_perm
 def cadastro_equipamento() -> Response:
-
     try:
         """
         Handles the registration of new EPI (Personal Protective Equipment).
@@ -107,7 +113,6 @@ def cadastro_equipamento() -> Response:
                 db.session.commit()
 
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template("index.html", page=page, form=form, title=title)
@@ -129,7 +134,6 @@ def cadastro_equipamento() -> Response:
 @login_required
 @update_perm
 def editar_equipamento(id: int) -> Response:
-
     try:
         """
         Edit an existing EPI (Equipamento de Proteção Individual) record in the database.
@@ -155,15 +159,11 @@ def editar_equipamento(id: int) -> Response:
         items_epi_data = list(epi_data.items())
 
         for key, value in items_epi_data:
-
             if key == "_sa_instance_state" or key == "id" or key == "filename":
-
                 continue
 
             if key == "blob_doc":
-
                 if epi_data.get("filename"):
-
                     img_path = (
                         Path(app.config.get("TEMP_PATH"))
                         .joinpath("IMG")
@@ -194,12 +194,10 @@ def editar_equipamento(id: int) -> Response:
         form = FormProduto(**form_data)
 
         if form.validate_on_submit():
-
             to_add = {}
 
             form_data: dict[str, form_content] = list(form.data.items())
             for key, value in form_data:
-
                 if value:
                     if key == "csrf_token":
                         continue
@@ -228,7 +226,6 @@ def editar_equipamento(id: int) -> Response:
                 db.session.commit()
 
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template(
@@ -265,7 +262,6 @@ def editar_equipamento(id: int) -> Response:
 @login_required
 @delete_perm
 def deletar_equipamento(id: int) -> Response:
-
     try:
         """
         Deletes an equipment record from the database based on the provided ID.
@@ -286,7 +282,6 @@ def deletar_equipamento(id: int) -> Response:
         return make_response(render_template(template, message=message))
 
     except Exception:
-
         app.logger.exception(traceback.format_exc())
 
         message = "Erro ao deletar"

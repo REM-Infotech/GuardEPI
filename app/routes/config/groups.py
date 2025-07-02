@@ -1,10 +1,9 @@
 import traceback  # traceback
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from quart import Response, abort, flash, make_response, redirect, render_template
+from quart import current_app as app
 
 from app.decorators import create_perm, read_perm
 
@@ -18,7 +17,6 @@ from . import config
 @read_perm
 def groups() -> Response:
     try:
-
         title = "Grupos"
         database = Groups.query.all()
         page = "groups.html"
@@ -36,7 +34,6 @@ def groups() -> Response:
 @login_required
 @create_perm
 def cadastro_grupo() -> Response:
-
     try:
         """
         Handles the creation of a new group.
@@ -53,7 +50,6 @@ def cadastro_grupo() -> Response:
         page = "forms/GroupForm.html"
 
         if form.validate_on_submit():
-
             db: SQLAlchemy = app.extensions["sqlalchemy"]
 
             query = (
@@ -74,7 +70,6 @@ def cadastro_grupo() -> Response:
             )
 
             for member in form.membros.data:
-
                 usr = db.session.query(Users).filter(Users.login == member).first()
                 new_group.members.append(usr)
 
@@ -96,7 +91,6 @@ def cadastro_grupo() -> Response:
 @config.route("/editar_grupo/<int:id>", methods=["GET", "POST"])
 @login_required
 def editar_grupo(id: int) -> Response:
-
     try:
         """
         Handles the creation of a new group.
@@ -121,13 +115,11 @@ def editar_grupo(id: int) -> Response:
         form = GroupForm(membros=choices, desc=query.description, nome=query.name_group)
 
         if form.validate_on_submit():
-
             query.members.clear()
             query.name_group = form.nome.data
             query.description = form.desc.data
 
             for member in form.membros.data:
-
                 usr = db.session.query(Users).filter(Users.login == member).first()
                 query.members.append(usr)
 
@@ -148,7 +140,6 @@ def editar_grupo(id: int) -> Response:
 @config.get("/deletar_grupo/<int:id>")
 @login_required
 def deletar_grupo(id: int) -> Response:
-
     try:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
@@ -183,7 +174,6 @@ def deletar_grupo(id: int) -> Response:
         template = "includes/show.html"
 
     except Exception:
-
         app.logger.exception(traceback.format_exc())
 
         message = "Erro ao deletar grupo"

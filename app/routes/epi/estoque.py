@@ -1,12 +1,19 @@
 import traceback
 from pathlib import Path
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    url_for,
+)
+from quart import current_app as app
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
@@ -65,7 +72,7 @@ def grade() -> Response:
     with 'estoque_grade.html' as the page to be rendered. If an exception occurs during the process, it aborts the
     request with a 500 status code and includes the exception message in the response.
     Returns:
-        Response: A Flask response object that renders the 'index.html' template with the specified page and database data.
+        Response: A Quart response object that renders the 'index.html' template with the specified page and database data.
     Raises:
         HTTPException: If an error occurs during the database query or rendering process, a 500 HTTPException is raised.
     """

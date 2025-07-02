@@ -1,9 +1,11 @@
 from pathlib import Path
 from uuid import uuid4
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import (
+from flask_login import login_required
+from flask_sqlalchemy import SQLAlchemy
+from quart import (
+    Response,
+    abort,
     make_response,
     render_template,
     request,
@@ -11,8 +13,7 @@ from flask import (
     session,
     url_for,
 )
-from flask_login import login_required
-from flask_sqlalchemy import SQLAlchemy
+from quart import current_app as app
 
 from app.decorators import read_perm
 from app.misc import format_currency_brl
@@ -25,7 +26,6 @@ from .. import estoque_bp
 @login_required
 @read_perm
 def registro_saidas() -> str:
-
     page = "registro_saidas.html"
     database = RegistroSaidas.query.all()
     title = "Registro Saídas"
@@ -45,11 +45,9 @@ def registro_saidas() -> str:
 @login_required
 @read_perm
 def cautelas(to_show: str = None) -> str:
-
     url = None
     to_show = request.args.get("to_show", to_show)
     if to_show:
-
         url = url_for("estoque.cautela_pdf", uuid_pasta=to_show)
 
     page = "cautelas.html"
@@ -78,7 +76,7 @@ def cautela_pdf(uuid_pasta: str) -> Response:
     Args:
         filename (str): The name of the image file to be served.
     Returns:
-        Response: A Flask response object that sends the requested image file from the directory specified in the app configuration.
+        Response: A Quart response object that sends the requested image file from the directory specified in the app configuration.
     """
 
     path_cautela = ""
@@ -90,7 +88,6 @@ def cautela_pdf(uuid_pasta: str) -> Response:
         filename = next(path_cautela.glob("*.pdf")).name
 
     elif not path_cautela.exists():
-
         try:
             uuid_pasta = int(uuid_pasta)
 
@@ -98,7 +95,6 @@ def cautela_pdf(uuid_pasta: str) -> Response:
             uuid_pasta = uuid_pasta
 
         if isinstance(uuid_pasta, int):
-
             db: SQLAlchemy = app.extensions["sqlalchemy"]
             query_file = db.session.query(RegistrosEPI).filter_by(id=uuid_pasta).first()
 

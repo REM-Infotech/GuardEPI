@@ -1,7 +1,7 @@
 from collections import Counter
 
-from flask import current_app as app
 from flask_sqlalchemy import SQLAlchemy
+from quart import current_app as app
 
 from app.models import (
     ClassesEPI,
@@ -17,7 +17,6 @@ from app.models import (
 
 def set_EpiCautelaChoices() -> list[tuple[str, str]]:
     with app.app_context():
-
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         database = (
@@ -45,7 +44,6 @@ def set_EpiCautelaChoices() -> list[tuple[str, str]]:
 
 def set_ChoicesFuncionario() -> list[tuple[str, str]]:
     with app.app_context():
-
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         return [
             (epi.nome_funcionario, epi.nome_funcionario)

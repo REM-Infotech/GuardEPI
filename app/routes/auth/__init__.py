@@ -2,9 +2,11 @@ import json
 import traceback
 from pathlib import Path
 
-from flask import Blueprint, Response, abort
-from flask import current_app as app
-from flask import (
+from flask_login import current_user, login_user, logout_user
+from quart import (
+    Blueprint,
+    Response,
+    abort,
     flash,
     make_response,
     redirect,
@@ -13,7 +15,7 @@ from flask import (
     session,
     url_for,
 )
-from flask_login import current_user, login_user, logout_user
+from quart import current_app as app
 
 from app.forms import LoginForm
 from app.models.users import Users

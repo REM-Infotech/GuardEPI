@@ -3,12 +3,19 @@ from datetime import datetime
 from pathlib import Path
 from typing import Union
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    url_for,
+)
+from quart import current_app as app
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
@@ -31,13 +38,12 @@ def funcionarios() -> Response:
     'index.html' template along with the page name 'funcionarios.html'. If an exception occurs during the process,
     it aborts the request with a 500 status code and includes the exception message in the response.
     Returns:
-        Response: A Flask response object that renders the 'index.html' template with the fetched data.
+        Response: A Quart response object that renders the 'index.html' template with the fetched data.
     Raises:
         HTTPException: If an exception occurs, it aborts the request with a 500 status code and the exception message.
     """
 
     try:
-
         page = "funcionarios.html"
         database = Funcionarios.query.all()
         return make_response(
@@ -70,7 +76,6 @@ def cadastro_funcionarios() -> Response:
     """
 
     try:
-
         title = "Cadastro de Funcionário"
         page = "forms/funcionario_form.html"
 
@@ -110,7 +115,6 @@ def cadastro_funcionarios() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template("index.html", page=page, form=form, title=title)
@@ -158,13 +162,10 @@ def editar_funcionarios(id: int) -> Response:
         items_emp_data = list(emp_data.items())
 
         for key, value in items_emp_data:
-
             if key == "_sa_instance_state" or key == "id" or key == "filename":
-
                 continue
 
             if key == "blob_doc":
-
                 img_path = (
                     Path(app.config.get("TEMP_PATH"))
                     .joinpath("IMG")
@@ -192,12 +193,10 @@ def editar_funcionarios(id: int) -> Response:
         form = FuncionarioForm(**form_data)
 
         if form.validate_on_submit():
-
             to_add = {}
 
             form_data: dict[str, form_content] = list(form.data.items())
             for key, value in form_data:
-
                 if value:
                     if key == "csrf_token":
                         continue
@@ -220,7 +219,6 @@ def editar_funcionarios(id: int) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
                 flash("Item com informações duplicadas!")
                 return make_response(
                     render_template(
@@ -263,7 +261,6 @@ def deletar_funcionarios(id: int) -> Response:
     """
 
     try:
-
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         func = db.session.query(Funcionarios).filter_by(id=id).first()
 
@@ -275,7 +272,6 @@ def deletar_funcionarios(id: int) -> Response:
         return make_response(render_template(template, message=message))
 
     except Exception:
-
         app.logger.exception(traceback.format_exc())
 
         message = "Erro ao deletar"

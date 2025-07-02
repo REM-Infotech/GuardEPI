@@ -4,10 +4,9 @@ from pathlib import Path
 
 import pandas as pd
 import pytz
-from flask import Blueprint, Response, abort
-from flask import current_app as app
-from flask import jsonify, make_response, render_template
 from flask_login import login_required
+from quart import Blueprint, Response, abort, jsonify, make_response, render_template
+from quart import current_app as app
 from sqlalchemy import extract
 
 from ...misc import format_currency_brl
@@ -26,7 +25,7 @@ def dashboard() -> Response:
     total entries, total exits, and their respective values. It then renders the
     'index.html' template with the retrieved data.
     Returns:
-        Response: A Flask response object containing the rendered template.
+        Response: A Quart response object containing the rendered template.
     Raises:
         HTTPException: If an error occurs during data retrieval or template rendering,
                        a 500 HTTP error is raised with the error description.
@@ -101,7 +100,7 @@ def saidasEquipamento() -> Response:
     processes the data to calculate the total values and average, and returns the data
     formatted for charting.
     Returns:
-        Response: A Flask JSON response containing the chart data with the following structure:
+        Response: A Quart JSON response containing the chart data with the following structure:
             {
                 "labels": [list of equipment names],
                 "values": [list of total values for each equipment],

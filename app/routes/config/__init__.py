@@ -3,9 +3,16 @@ import secrets
 from importlib import import_module
 from pathlib import Path
 
-from flask import Blueprint, Response
-from flask import current_app as app
-from flask import make_response, redirect, request, session, url_for
+from quart import (
+    Blueprint,
+    Response,
+    make_response,
+    redirect,
+    request,
+    session,
+    url_for,
+)
+from quart import current_app as app
 
 template_folder = Path(__file__).parent.resolve().joinpath("templates")
 config = Blueprint(
@@ -29,7 +36,6 @@ def before_request_roles() -> None:
     """
 
     if request.endpoint == "config.cadastro_regra" and request.method == "GET":
-
         hex_name_json = secrets.token_hex(16)
         session["json_filename"] = hex_name_json
 

@@ -1,10 +1,17 @@
 from functools import wraps
 from typing import Any
 
-from flask import abort
-from flask import current_app as app
-from flask import make_response, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
+from quart import (
+    abort,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
+from quart import current_app as app
 
 from ..models import Groups, Roles, Routes, Users
 
@@ -108,7 +115,6 @@ def delete_perm(func):
         user = session.get("username")
         if user:
             if check_permit(user, "DELETE") is False:
-
                 template = "includes/show.html"
                 message = "Você não tem permissões para isto"
                 return make_response(render_template(template, message=message))
@@ -122,7 +128,6 @@ def delete_perm(func):
 
 
 def check_permit(user: str, PERM: str) -> bool:
-
     db: SQLAlchemy = app.extensions["sqlalchemy"]
 
     endpoint = f"/{request.blueprint}"
