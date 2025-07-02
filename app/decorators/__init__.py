@@ -18,7 +18,7 @@ from ..models import Groups, Roles, Routes, Users
 
 def create_perm(func):
     @wraps(func)
-    def decorated_function(*args, **kwargs) -> Any:
+    async def decorated_function(*args, **kwargs) -> Any:
         """
         Função decorada que verifica se o usuário tem permissão para criar.
         Args:
@@ -38,7 +38,7 @@ def create_perm(func):
                 abort(403)
 
         elif not user:
-            return make_response(redirect(url_for("auth.login")))
+            return await make_response(redirect(url_for("auth.login")))
 
         return func(*args, **kwargs)
 
@@ -47,7 +47,7 @@ def create_perm(func):
 
 def read_perm(func):
     @wraps(func)
-    def decorated_function(*args, **kwargs) -> Any:
+    async def decorated_function(*args, **kwargs) -> Any:
         """
         Função decorada que verifica se o usuário tem permissão para acessar a função decorada.
         Args:
@@ -65,7 +65,7 @@ def read_perm(func):
                 abort(403)
 
         elif not user:
-            return make_response(redirect(url_for("auth.login")))
+            return await make_response(redirect(url_for("auth.login")))
 
         return func(*args, **kwargs)
 
@@ -74,7 +74,7 @@ def read_perm(func):
 
 def update_perm(func):
     @wraps(func)
-    def decorated_function(*args, **kwargs) -> Any:
+    async def decorated_function(*args, **kwargs) -> Any:
         """
         Função decorada que verifica se o usuário está autenticado e possui permissão para atualizar.
         Args:
@@ -91,7 +91,7 @@ def update_perm(func):
                 abort(403)
 
         elif not user:
-            return make_response(redirect(url_for("auth.login")))
+            return await make_response(redirect(url_for("auth.login")))
 
         return func(*args, **kwargs)
 
@@ -100,7 +100,7 @@ def update_perm(func):
 
 def delete_perm(func):
     @wraps(func)
-    def decorated_function(*args, **kwargs):
+    async def decorated_function(*args, **kwargs):
         """
         Função decorada para verificar permissões de usuário antes de executar a função principal.
         Args:
@@ -117,10 +117,12 @@ def delete_perm(func):
             if check_permit(user, "DELETE") is False:
                 template = "includes/show.html"
                 message = "Você não tem permissões para isto"
-                return make_response(render_template(template, message=message))
+                return await make_response(
+                    await render_template(template, message=message)
+                )
 
         elif not user:
-            return make_response(redirect(url_for("auth.login")))
+            return await make_response(redirect(url_for("auth.login")))
 
         return func(*args, **kwargs)
 
