@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_login import LoginManager
 from flask_mail import Mail
-from flask_migrate import Migrate, init, upgrade
+from flask_migrate import Migrate, init, migrate, upgrade
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 
@@ -99,6 +99,7 @@ def create_app() -> Flask:
             if not Path(__file__).cwd().joinpath("migrations").exists():
                 init()
 
+            migrate(directory="migrations", message="Initial migration")
             upgrade(directory="migrations")
 
     return app
