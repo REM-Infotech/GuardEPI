@@ -4,6 +4,7 @@ from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
+import quart_flask_patch  # noqa: F401
 from celery import Celery
 from dotenv import load_dotenv
 from flask import Flask
