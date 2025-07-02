@@ -1,9 +1,8 @@
+import os
 import secrets
 
 from clear import clear
-import os
-from dotenv_vault import load_dotenv
-
+from dotenv import load_dotenv
 from eventlet import listen
 from eventlet.wsgi import server
 

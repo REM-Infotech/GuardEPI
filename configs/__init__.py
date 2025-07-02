@@ -5,26 +5,22 @@ from pathlib import Path
 from uuid import uuid4
 
 from celery.schedules import crontab
-from dotenv_vault import load_dotenv
+from dotenv import load_dotenv
 
 load_dotenv()
 from pytz import timezone
 
 
 class Configurator:
-
     env_file = ".env"
 
     def __init__(self):
-
         debug_flag = Path(".debug").exists()
         if debug_flag:
             self.env_file = ".testing"
 
     def get_configurator(self):
-
         class ConfigObject:
-
             values = os.environ
 
             login_db = values.get("LOGIN")

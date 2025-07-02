@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from celery import Celery
-from dotenv_vault import load_dotenv
+from dotenv import load_dotenv
 from flask import Flask
 from flask_login import LoginManager
 from flask_mail import Mail
@@ -24,11 +24,12 @@ static_folder = path_parent.joinpath("static")
 
 app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
 
-db = None
-login_manager = None
-mail = None
+mail = Mail()
+db = SQLAlchemy()
 celery_app = None
 migrate_ = Migrate()
+login_manager = LoginManager()
+celery_app = Celery(app.import_name)
 objects_config = {
     "development": "app.config.DevelopmentConfig",
     "production": "app.config.ProductionConfig",
@@ -49,7 +50,6 @@ def celery_init(app: Flask) -> Celery:
     """
 
     """ Instancia do Celery"""
-    celery_app = Celery(app.import_name)
 
     """ Worker Pool usa Threads """
     celery_app.conf.worker_pool = "threads"
@@ -104,11 +104,7 @@ def create_app() -> Flask:
 
 
 def init_extensions(app: Flask) -> None:
-    global db, login_manager, mail
-    mail = Mail(app)
-    db = SQLAlchemy()
-    login_manager = LoginManager()
-
+    mail.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
     csp = app.config["CSP"]

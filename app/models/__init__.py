@@ -1,14 +1,13 @@
 import json
+import os
 from os import path
 from pathlib import Path
 
-import os
-from dotenv_vault import load_dotenv
+from dotenv import load_dotenv
 
 load_dotenv()
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-
 
 from .EPI import (
     ClassesEPI,
@@ -52,9 +51,7 @@ endpoints = ["/epi", "/corp", "/config", "/estoque"]
 
 
 def init_database(app: Flask, db: SQLAlchemy) -> str:
-
     with app.app_context():
-
         to_add = []
 
         values = os.environ

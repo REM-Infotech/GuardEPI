@@ -1,10 +1,10 @@
+import os
 import secrets
 from datetime import datetime, timedelta
 from pathlib import Path
 
 from celery.schedules import crontab
-import os
-from dotenv_vault import load_dotenv
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -12,7 +12,6 @@ current_dir = Path(__file__).cwd().resolve()
 
 
 class Config(object):
-
     DEBUG: bool = False
     TESTING: bool = False
     SECRET_KEY: str = secrets.token_hex()
@@ -120,7 +119,6 @@ class Config(object):
 
 
 class ProductionConfig(Config):
-
     try:
         env = os.environ
 
@@ -172,7 +170,6 @@ class ProductionConfig(Config):
 
 
 class DevelopmentConfig(Config):
-
     # from flask_talisman import DEFAULT_CSP_POLICY
 
     # CSP = DEFAULT_CSP_POLICY
@@ -207,7 +204,6 @@ class DevelopmentConfig(Config):
         }
 
         if env.get("SETUP_DB"):
-
             # SQLALCHEMY CONFIG
             SQLALCHEMY_DATABASE_URI = "".join(
                 [
@@ -231,7 +227,6 @@ class DevelopmentConfig(Config):
 
 
 class TestingConfig(Config):
-
     from flask_talisman import DEFAULT_CSP_POLICY
 
     CSP = DEFAULT_CSP_POLICY
