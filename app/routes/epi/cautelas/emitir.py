@@ -7,9 +7,17 @@ from pathlib import Path
 from time import sleep
 from typing import List
 
-from flask import Response, abort
+from flask import (
+    Response,
+    abort,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask import current_app as app
-from flask import make_response, redirect, render_template, request, session, url_for
 from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 
@@ -257,6 +265,10 @@ def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
             data_solicitacao=datetime.now(),
             filename=nomefilename,
             valor_total=valor_calc,
+        )
+
+        registrar.nome_epis = (
+            json.dumps(para_registro).replace("[", "").replace("]", "")
         )
 
         secondary: List[EPIsCautela] = []
