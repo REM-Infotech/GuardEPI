@@ -28,21 +28,21 @@ class FormAdmissional(db.Model):  # noqa: D101
     __tablename__ = "form_admissional"
     id = Column(Integer, primary_key=True)
     submited = Column(Boolean, nullable=False, default=False)
-    nome = Column(String)
-    cpf = Column(String)
-    email = Column(String)
-    data_nascimento = Column(String)
-    telefone = Column(String)
-    endereco = Column(String)
-    complemento = Column(String)
-    cidade = Column(String)
-    cep = Column(String)
-    estado = Column(String)
-    genero = Column(String)
-    corRaca = Column(String)  # noqa: N815
-    grauEscolaridade = Column(String)  # noqa: N815
-    estadoCivil = Column(String)  # noqa: N815
-    numero_residencia = Column(String)
+    nome = Column(String(length=128))
+    cpf = Column(String(length=128))
+    email = Column(String(length=128))
+    data_nascimento = Column(String(length=128))
+    telefone = Column(String(length=128))
+    endereco = Column(String(length=128))
+    complemento = Column(String(length=128))
+    cidade = Column(String(length=128))
+    cep = Column(String(length=128))
+    estado = Column(String(length=128))
+    genero = Column(String(length=128))
+    corRaca = Column(String(length=128))  # noqa: N815
+    grauEscolaridade = Column(String(length=128))  # noqa: N815
+    estadoCivil = Column(String(length=128))  # noqa: N815
+    numero_residencia = Column(String(length=128))
 
     form_registry_id = Column(Integer, ForeignKey("registry_admissao.id"))
     form_registry = db.relationship("RegistryAdmissao", backref="form_registry")
@@ -74,10 +74,10 @@ class RegistryContrato(db.Model):  # noqa: D101
 class FileModel(db.Model):  # noqa: D101
     __tablename__ = "file"
     id = Column(Integer, primary_key=True)
-    filename = Column(String)
-    secondary_filename = Column(String)
-    filetype = Column(String)
+    filename = Column(String(length=128))
+    secondary_filename = Column(String(length=128))
+    filetype = Column(String(length=128))
     size = Column(Integer)
-    mimetype = Column(String)
+    mimetype = Column(String(length=128))
     mimetype_params = Column(JSON)
-    blob = Column(LargeBinary)
+    blob = Column(LargeBinary(length=(2**32) - 1))
