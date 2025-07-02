@@ -25,7 +25,7 @@ from . import epi
 @epi.route("/marcas", methods=["GET"])
 @login_required
 @read_perm
-def marcas() -> Response:
+async def marcas() -> Response:
     """
     Fetches all records from the Marcas table and renders the 'index.html' template with the 'marcas.html' page and the retrieved database records.
     Returns:
@@ -47,7 +47,7 @@ def marcas() -> Response:
 @epi.route("/marca/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_marca() -> Response:
+async def cadastrar_marca() -> Response:
     """
     Handles the registration of a new brand (marca).
     This function processes the form submission for registering a new brand.
@@ -107,7 +107,7 @@ def cadastrar_marca() -> Response:
 @epi.route("/marca/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_marca(id) -> Response:
+async def editar_marca(id) -> Response:
     """
     Edit a brand (marca) based on the given ID.
     This function handles the editing of a brand by retrieving the brand's
@@ -169,7 +169,7 @@ def editar_marca(id) -> Response:
 @epi.post("/marcas/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_marca(id: int) -> Response:
+async def deletar_marca(id: int) -> Response:
     """
     Deletes a brand entry from the database based on the provided ID.
     Args:

@@ -13,7 +13,7 @@ corp = Blueprint(
 
 
 @corp.get("/")
-def redirecting() -> Response:
+async def redirecting() -> Response:
     try:
         return await make_response(redirect(url_for("corp.Empresas")))
 

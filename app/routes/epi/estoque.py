@@ -28,7 +28,7 @@ from . import estoque_bp
 @estoque_bp.get("/produto")
 @login_required
 @read_perm
-def produto_epi() -> Response:
+async def produto_epi() -> Response:
     """
     Handles the retrieval and rendering of the stock (Estoque) page.
     This function queries the database for all entries in the EstoqueEPI table,
@@ -65,7 +65,7 @@ def produto_epi() -> Response:
 @estoque_bp.route("/grade", methods=["GET"])
 @login_required
 @read_perm
-def grade() -> Response:
+async def grade() -> Response:
     """
     Fetches all records from the EstoqueGrade database table and renders the 'estoque_grade.html' page.
     This function queries all entries from the EstoqueGrade table and passes the data to the 'index.html' template
@@ -99,7 +99,7 @@ def grade() -> Response:
 @estoque_bp.route("/entradas")
 @login_required
 @read_perm
-def entradas() -> Response:
+async def entradas() -> Response:
     try:
         """
         Handles the route for displaying the list of EPI (Personal Protective Equipment) entries.
@@ -130,7 +130,7 @@ def entradas() -> Response:
 @estoque_bp.route("/lancamento_estoque", methods=["GET", "POST"])
 @login_required
 @create_perm
-def lancamento_produto() -> Response:
+async def lancamento_produto() -> Response:
     """
     Handles the product entry process in the inventory system.
     This function performs the following steps:

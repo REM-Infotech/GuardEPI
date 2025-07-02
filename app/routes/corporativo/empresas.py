@@ -31,7 +31,7 @@ form_content = Union[str, FileStorage, int, float, datetime]
 @corp.route("/Empresas", methods=["GET"])
 @login_required
 @read_perm
-def Empresas() -> Response:
+async def Empresas() -> Response:
     """
     Handles the route for displaying the 'Empresas' page.
     This function creates an instance of the EmpresaForm form and retrieves all records from the Empresa database.
@@ -62,7 +62,7 @@ def Empresas() -> Response:
 @corp.route("/Empresas/cadastro", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastro_empresas() -> Response:
+async def cadastro_empresas() -> Response:
     """
     Handles the registration of companies.
     This function processes the form data submitted for company registration,
@@ -140,7 +140,7 @@ def cadastro_empresas() -> Response:
 @corp.route("/Empresas/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_empresas(id: int) -> Response:
+async def editar_empresas(id: int) -> Response:
     """
     Edit an existing company record in the database.
     This function handles both GET and POST requests to edit a company's details.
@@ -254,7 +254,7 @@ def editar_empresas(id: int) -> Response:
 @corp.post("/Empresas/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_empresas(id: int) -> Response:
+async def deletar_empresas(id: int) -> Response:
     """
     Deletes a company record from the database based on the provided ID.
     Args:

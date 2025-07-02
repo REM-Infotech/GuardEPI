@@ -25,7 +25,7 @@ from . import epi
 @epi.route("/Grade")
 @login_required
 @read_perm
-def Grade() -> Response:
+async def Grade() -> Response:
     """
     Handles the request to display the grades page.
     This function queries the GradeEPI database for all entries and renders the
@@ -61,7 +61,7 @@ def Grade() -> Response:
 @epi.route("/Grade/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_grade() -> Response:
+async def cadastrar_grade() -> Response:
     """
     Handles the creation and registration of a new GradeEPI entry.
     This function processes a form submission for creating a new GradeEPI.
@@ -120,7 +120,7 @@ def cadastrar_grade() -> Response:
 @epi.route("/Grade/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_grade(id) -> Response:
+async def editar_grade(id) -> Response:
     """
     Edit a GradeEPI entry in the database.
     This function handles the editing of a GradeEPI entry identified by the given id.
@@ -181,7 +181,7 @@ def editar_grade(id) -> Response:
 @epi.post("/grades/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_grade(id: int) -> Response:
+async def deletar_grade(id: int) -> Response:
     """
     Deletes a GradeEPI record from the database based on the provided ID.
     Args:

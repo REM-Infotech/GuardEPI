@@ -31,7 +31,7 @@ form_content = Union[str, FileStorage, int, float, datetime]
 @corp.get("/funcionarios")
 @login_required
 @read_perm
-def funcionarios() -> Response:
+async def funcionarios() -> Response:
     """
     Fetches all records from the Funcionarios table and renders the 'index.html' template with the data.
     This function queries all records from the Funcionarios table in the database and passes the data to the
@@ -61,7 +61,7 @@ def funcionarios() -> Response:
 @corp.route("/funcionarios/cadastro", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastro_funcionarios() -> Response:
+async def cadastro_funcionarios() -> Response:
     """
     Handles the registration of employees.
     This function processes the form data submitted for employee registration,
@@ -135,7 +135,7 @@ def cadastro_funcionarios() -> Response:
 @corp.route("/funcionarios/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_funcionarios(id: int) -> Response:
+async def editar_funcionarios(id: int) -> Response:
     """
     Edit an employee's information based on the given ID.
     This function handles both GET and POST requests. On a GET request, it retrieves the employee's data from the database,
@@ -251,7 +251,7 @@ def editar_funcionarios(id: int) -> Response:
 @corp.post("/funcionarios/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_funcionarios(id: int) -> Response:
+async def deletar_funcionarios(id: int) -> Response:
     """
     Deletes an employee record from the database based on the provided ID.
     Args:

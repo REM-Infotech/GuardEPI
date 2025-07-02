@@ -25,7 +25,7 @@ from .. import estoque_bp
 @estoque_bp.route("/registro_saidas", methods=["GET"])
 @login_required
 @read_perm
-def registro_saidas() -> str:
+async def registro_saidas() -> str:
     page = "registro_saidas.html"
     database = RegistroSaidas.query.all()
     title = "Registro Saídas"
@@ -44,7 +44,7 @@ def registro_saidas() -> str:
 @estoque_bp.route("/cautelas", methods=["GET"])
 @login_required
 @read_perm
-def cautelas(to_show: str = None) -> str:
+async def cautelas(to_show: str = None) -> str:
     url = None
     to_show = request.args.get("to_show", to_show)
     if to_show:
@@ -68,7 +68,7 @@ def cautelas(to_show: str = None) -> str:
 
 @estoque_bp.get("/cautela_pdf/<uuid_pasta>")
 @read_perm
-def cautela_pdf(uuid_pasta: str) -> Response:
+async def cautela_pdf(uuid_pasta: str) -> Response:
     """
     Route to serve an image file.
     This route handles GET requests to serve an image file from a specified directory.

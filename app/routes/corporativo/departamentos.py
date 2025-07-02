@@ -24,7 +24,7 @@ from . import corp
 @corp.route("/Departamentos")
 @login_required
 @read_perm
-def Departamentos() -> Response:
+async def Departamentos() -> Response:
     """
     Handles the route for displaying the departments page.
     This function queries all departments from the database and renders the
@@ -58,7 +58,7 @@ def Departamentos() -> Response:
 @corp.route("/Departamentos/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_departamentos() -> Response:
+async def cadastrar_departamentos() -> Response:
     """
     Handles the creation and registration of new departments.
     This function processes a form submission for creating new departments.
@@ -117,7 +117,7 @@ def cadastrar_departamentos() -> Response:
 @corp.route("/Departamentos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_departamentos(id) -> Response:
+async def editar_departamentos(id) -> Response:
     """
     Edit a department by its ID.
     This function handles the editing of a department's details. It retrieves the department
@@ -175,7 +175,7 @@ def editar_departamentos(id) -> Response:
 @corp.post("/Departamentoss/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_departamentos(id: int) -> Response:
+async def deletar_departamentos(id: int) -> Response:
     """
     Deletes a department from the database based on the provided ID.
     Args:

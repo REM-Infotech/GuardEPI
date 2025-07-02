@@ -24,7 +24,7 @@ from . import corp
 @corp.route("/cargos")
 @login_required
 @read_perm
-def cargos():
+async def cargos():
     """
     Route to display the cargos page.
     This route is protected by login and will render the cargos page with data
@@ -53,7 +53,7 @@ def cargos():
 @corp.route("/cargos/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_cargos() -> Response:
+async def cadastrar_cargos() -> Response:
     """
     Handles the creation and registration of new 'Cargos' (positions) in the system.
     This function processes a form submission for creating a new 'Cargo'. It validates the form,
@@ -114,7 +114,7 @@ def cadastrar_cargos() -> Response:
 @corp.route("/cargos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_cargos(id) -> Response:
+async def editar_cargos(id) -> Response:
     """
     Edits an existing position in the database.
     Args:
@@ -172,7 +172,7 @@ def editar_cargos(id) -> Response:
 @corp.post("/cargos/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_cargos(id: int) -> str:
+async def deletar_cargos(id: int) -> str:
     """
     Deletes a cargo record from the database based on the provided ID.
     Args:

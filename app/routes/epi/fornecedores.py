@@ -25,7 +25,7 @@ from . import epi
 @epi.route("/fornecedores", methods=["GET"])
 @login_required
 @read_perm
-def fornecedores() -> Response:
+async def fornecedores() -> Response:
     """
     Renders the 'fornecedores' page with an empty database.
     This function sets the 'page' variable to "fornecedores.html" and initializes
@@ -52,7 +52,7 @@ def fornecedores() -> Response:
 @epi.route("/fornecedores/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_fornecedores() -> Response:
+async def cadastrar_fornecedores() -> Response:
     try:
         """
         Handles the registration of suppliers.
@@ -111,7 +111,7 @@ def cadastrar_fornecedores() -> Response:
 @epi.route("/fornecedores/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_fornecedores(id: int) -> Response:
+async def editar_fornecedores(id: int) -> Response:
     """
     Edit a supplier's information in the database.
     This function handles the editing of supplier information based on the provided supplier ID.
@@ -173,7 +173,7 @@ def editar_fornecedores(id: int) -> Response:
 @epi.post("/fornecedores/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_fornecedores(id: int):
+async def deletar_fornecedores(id: int):
     """
     Deletes a supplier from the database based on the provided ID.
     Args:

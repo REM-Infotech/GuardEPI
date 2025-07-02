@@ -25,7 +25,7 @@ from . import epi
 @epi.route("/modelos", methods=["GET"])
 @login_required
 @read_perm
-def modelos() -> Response:
+async def modelos() -> Response:
     """
     Fetches all records from the ModelosEPI database and renders the 'index.html' template with the 'modelos.html' page and the database records.
     Returns:
@@ -43,7 +43,7 @@ def modelos() -> Response:
 @epi.route("/modelos/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_modelos() -> Response:
+async def cadastrar_modelos() -> Response:
     """
     Handles the registration of new "modelos" (models) in the application.
     This function processes the form submission for registering new models.
@@ -101,7 +101,7 @@ def cadastrar_modelos() -> Response:
 @epi.route("/modelos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_modelos(id: int) -> Response:
+async def editar_modelos(id: int) -> Response:
     """
     Edit an existing 'ModelosEPI' entry in the database.
     This function handles the editing of a 'ModelosEPI' entry identified by the given ID.
@@ -162,7 +162,7 @@ def editar_modelos(id: int) -> Response:
 @epi.post("/modeloss/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_modelos(id: int) -> Response:
+async def deletar_modelos(id: int) -> Response:
     """
     Deletes a ModelosEPI record from the database based on the provided ID.
     Args:
