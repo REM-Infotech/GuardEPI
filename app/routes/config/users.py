@@ -24,7 +24,7 @@ from . import config
 @config.get("/users")
 @login_required
 @read_perm
-def users() -> Response:
+async def users() -> Response:
     try:
         title = "Usuários"
         page = "users.html"
@@ -43,7 +43,7 @@ def users() -> Response:
 @config.route("/cadastro_usuario", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastro_usuario() -> Response:
+async def cadastro_usuario() -> Response:
     form = FormUser()
     html = "forms/FormUser.html"
 
@@ -85,7 +85,7 @@ def cadastro_usuario() -> Response:
 @config.route("/changepw_usr", methods=["GET", "POST"])
 @login_required
 @update_perm
-def changepw_usr() -> Response:
+async def changepw_usr() -> Response:
     html = "forms/ChangePasswordForm.html"
     try:
         form = AdmChangePassWord()
@@ -116,7 +116,7 @@ def changepw_usr() -> Response:
 @config.route("/changemail_usr", methods=["GET", "POST"])
 @login_required
 @update_perm
-def changemail_usr() -> Response:
+async def changemail_usr() -> Response:
     html = "forms/ChangeMailForm.html"
     try:
         form = AdmChangeEmail()
@@ -147,7 +147,7 @@ def changemail_usr() -> Response:
 @config.route("/delete_user/<id>", methods=["GET"])
 @login_required
 @delete_perm
-def delete_user(id: int) -> Response:
+async def delete_user(id: int) -> Response:
     """
     Deletes a user from the database based on the provided user ID.
 

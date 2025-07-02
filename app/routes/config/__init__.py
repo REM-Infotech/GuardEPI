@@ -50,7 +50,7 @@ def before_request_roles() -> None:
 
 
 @config.get("/")
-def redirecting() -> Response:
+async def redirecting() -> Response:
     """
     Redirects to the 'Equipamentos' endpoint within the 'epi' blueprint.
     Returns:

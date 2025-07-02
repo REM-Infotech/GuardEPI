@@ -15,7 +15,7 @@ from . import config
 @config.route("/groups", methods=["GET"])
 @login_required
 @read_perm
-def groups() -> Response:
+async def groups() -> Response:
     try:
         title = "Grupos"
         database = Groups.query.all()
@@ -33,7 +33,7 @@ def groups() -> Response:
 @config.route("/cadastro_grupo", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastro_grupo() -> Response:
+async def cadastro_grupo() -> Response:
     try:
         """
         Handles the creation of a new group.
@@ -90,7 +90,7 @@ def cadastro_grupo() -> Response:
 
 @config.route("/editar_grupo/<int:id>", methods=["GET", "POST"])
 @login_required
-def editar_grupo(id: int) -> Response:
+async def editar_grupo(id: int) -> Response:
     try:
         """
         Handles the creation of a new group.
@@ -139,7 +139,7 @@ def editar_grupo(id: int) -> Response:
 
 @config.get("/deletar_grupo/<int:id>")
 @login_required
-def deletar_grupo(id: int) -> Response:
+async def deletar_grupo(id: int) -> Response:
     try:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 

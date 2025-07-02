@@ -26,7 +26,7 @@ from . import config
 @config.route("/add_itens", methods=["GET", "POST"])
 @login_required
 @read_perm
-def add_itens() -> Response:
+async def add_itens() -> Response:
     try:
         form = FormRoles()
 
@@ -78,7 +78,7 @@ def add_itens() -> Response:
 @config.route("/remove-itens", methods=["GET", "POST"])
 @login_required
 @read_perm
-def remove_itens() -> Response:
+async def remove_itens() -> Response:
     try:
         hex_name_json = session["json_filename"]
         path_json = Path(app.config["TEMP_PATH"]).joinpath(hex_name_json).resolve()
@@ -99,7 +99,7 @@ def remove_itens() -> Response:
 @config.route("/roles", methods=["GET"])
 @login_required
 @read_perm
-def roles() -> Response:
+async def roles() -> Response:
     try:
         title = "Regras"
         page = "roles.html"
@@ -117,7 +117,7 @@ def roles() -> Response:
 @config.route("/cadastro_regra", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastro_regra() -> Response:
+async def cadastro_regra() -> Response:
     try:
         """
         Handles the creation of a new group.
@@ -209,7 +209,7 @@ def cadastro_regra() -> Response:
 
 @config.get("/deletar_regra/<int:id>")
 @login_required
-def deletar_regra(id: int) -> Response:
+async def deletar_regra(id: int) -> Response:
     try:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
