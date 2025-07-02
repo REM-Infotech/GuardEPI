@@ -2,11 +2,10 @@ from datetime import datetime
 
 import bcrypt
 import pytz
-from quart import Request, request
 from quart_auth import AuthUser as UserMixin
 from sqlalchemy import Column, DateTime, Integer, LargeBinary, String
 
-from app import db, login_manager
+from app import db
 from app.misc import generate_pid
 
 salt = bcrypt.gensalt()
@@ -45,24 +44,24 @@ route_roles = db.Table(
 )
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    link = request.referrer
-    if link is None:
-        link = request.url
+# @login_manager.user_loader
+# def load_user(user_id):
+#     link = request.referrer
+#     if link is None:
+#         link = request.url
 
-    return Users.query.get(int(user_id))
+#     return Users.query.get(int(user_id))
 
 
-@login_manager.request_loader
-async def request_loader(request: Request):
-    user_id = 0
-    return Users.query.get(int(user_id))
+# @login_manager.request_loader
+# async def request_loader(request: Request):
+#     user_id = 0
+#     return Users.query.get(int(user_id))
 
 
 class Users(db.Model, UserMixin):
     __tablename__ = "users"
-    id: int = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     login = Column(String(length=30), nullable=False, unique=True)
     nome_usuario = Column(String(length=64), nullable=False, unique=True)
     grupos = Column(String(length=1024), nullable=False)
@@ -86,6 +85,10 @@ class Users(db.Model, UserMixin):
         return bcrypt.checkpw(
             senha_texto_claro.encode("utf-8"), self.password.encode("utf-8")
         )
+
+    @property
+    def auth_id(self) -> int:
+        return self.id
 
 
 class Groups(db.Model):
