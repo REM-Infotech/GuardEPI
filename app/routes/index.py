@@ -279,7 +279,9 @@ async def gen_model(model: str) -> Response:
         with pd.ExcelWriter(file_path, engine="auto") as writer:
             df.to_excel(writer, index=False, sheet_name="Sheet1")
 
-        response = await make_response(send_file(f"{file_path}", as_attachment=True))
+        response = await make_response(
+            await send_file(f"{file_path}", as_attachment=True)
+        )
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
