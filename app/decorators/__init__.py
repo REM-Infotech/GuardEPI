@@ -67,7 +67,7 @@ def read_perm(func):
         elif not user:
             return await make_response(redirect(url_for("auth.login")))
 
-        return func(*args, **kwargs)
+        return await func(*args, **kwargs)
 
     return decorated_function
 
