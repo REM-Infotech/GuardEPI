@@ -1,7 +1,6 @@
 import traceback
 from pathlib import Path
 
-from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 from quart import (
@@ -14,6 +13,7 @@ from quart import (
     url_for,
 )
 from quart import current_app as app
+from quart_auth import login_required
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 

@@ -3,7 +3,6 @@ import traceback  # traceback
 from pathlib import Path
 from typing import Dict, List
 
-from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from quart import (
     Response,
@@ -15,6 +14,7 @@ from quart import (
     session,
 )
 from quart import current_app as app
+from quart_auth import login_required
 
 from app.decorators import create_perm, read_perm
 

@@ -7,12 +7,12 @@ from typing import Any
 import quart_flask_patch  # noqa: F401
 from celery import Celery
 from dotenv import load_dotenv
-from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate, init, migrate, upgrade
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 from quart import Quart
+from quart_auth import QuartAuth as LoginManager
 
 from app.logs.setup import initialize_logging
 

@@ -2,8 +2,8 @@ from datetime import datetime
 
 import bcrypt
 import pytz
-from flask_login import UserMixin
-from quart import request
+from quart import Request, request
+from quart_auth import AuthUser as UserMixin
 from sqlalchemy import Column, DateTime, Integer, LargeBinary, String
 
 from app import db, login_manager
@@ -51,6 +51,12 @@ def load_user(user_id):
     if link is None:
         link = request.url
 
+    return Users.query.get(int(user_id))
+
+
+@login_manager.request_loader
+async def request_loader(request: Request):
+    user_id = 0
     return Users.query.get(int(user_id))
 
 

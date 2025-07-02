@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pandas as pd
 import pytz
-from flask_login import login_required
 from quart import Blueprint, Response, abort, jsonify, make_response, render_template
 from quart import current_app as app
+from quart_auth import login_required
 from sqlalchemy import extract
 
 from ...misc import format_currency_brl

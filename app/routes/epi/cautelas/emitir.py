@@ -7,7 +7,6 @@ from pathlib import Path
 from time import sleep
 from typing import List
 
-from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from quart import (
     Response,
@@ -20,6 +19,7 @@ from quart import (
     url_for,
 )
 from quart import current_app as app
+from quart_auth import login_required
 
 from ....decorators import create_perm
 from ....forms import Cautela

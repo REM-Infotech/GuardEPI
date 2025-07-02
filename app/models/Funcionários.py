@@ -1,6 +1,7 @@
 # noqa: D100, D104
 
 import bcrypt
+from quart_auth import AuthUser as UserMixin
 from sqlalchemy import Column, DateTime, Integer, LargeBinary, String
 
 from app import db
@@ -8,7 +9,7 @@ from app import db
 salt = bcrypt.gensalt()
 
 
-class Funcionarios(db.Model):  # noqa: D101
+class Funcionarios(db.Model, UserMixin):  # noqa: D101
     __tablename__ = "funcionarios"
     id = Column(Integer, primary_key=True)
     # Dados de login

@@ -1,6 +1,5 @@
 import traceback
 
-from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 from quart import (
@@ -13,6 +12,7 @@ from quart import (
     url_for,
 )
 from quart import current_app as app
+from quart_auth import login_required
 
 from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import FormDepartamentos

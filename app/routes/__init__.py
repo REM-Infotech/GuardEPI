@@ -82,10 +82,10 @@ async def register_routes(app: Quart) -> None:
             desc: str = "Erro do sistema"
 
         if error.code == 405:
-            return make_response(redirect(url_for("dash.dashboard")))
+            return await make_response(redirect(url_for("dash.dashboard")))
 
-        return make_response(
-            render_template(
+        return await make_response(
+            await render_template(
                 "handler/index.html", name=name, desc=desc, code=error.code
             ),
             error.code,

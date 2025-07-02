@@ -2,11 +2,11 @@ from os import path
 from pathlib import Path
 
 from celery import shared_task
-from flask_login import login_required
 from flask_mail import Mail, Message
 from flask_wtf import FlaskForm
 from quart import Blueprint, Response, make_response, redirect, render_template, url_for
 from quart import current_app as app
+from quart_auth import login_required
 
 from ...forms.schedule_task import TaskNotificacaoForm
 
