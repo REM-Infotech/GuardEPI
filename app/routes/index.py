@@ -231,7 +231,7 @@ async def import_lotes(tipo: str = None) -> Response:
             return await make_response(redirect(url_for(tipo)))
 
         return await make_response(
-            render_template(
+            await render_template(
                 "forms/importform.html", form=form, action=action, model=tipo
             )
         )

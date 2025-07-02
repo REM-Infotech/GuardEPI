@@ -41,7 +41,9 @@ async def fornecedores() -> Response:
         page = "fornecedores.html"
         database = Fornecedores.query.all()
         return await make_response(
-            render_template("index.html", page=page, database=database, title=title)
+            await render_template(
+                "index.html", page=page, database=database, title=title
+            )
         )
 
     except Exception:
@@ -93,14 +95,16 @@ async def cadastrar_fornecedores() -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("Fornecedor cadastrado com sucesso!", "success")
             return await make_response(redirect(url_for("epi.fornecedores")))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:
@@ -155,14 +159,16 @@ async def editar_fornecedores(id: int) -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("Fornecedor editado com sucesso!", "success")
             return await make_response(redirect(url_for("epi.fornecedores")))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:

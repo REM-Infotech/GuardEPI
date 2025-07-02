@@ -47,7 +47,7 @@ async def funcionarios() -> Response:
         page = "funcionarios.html"
         database = Funcionarios.query.all()
         return await make_response(
-            render_template(
+            await render_template(
                 "index.html",
                 page=page,
                 database=database,
@@ -117,14 +117,16 @@ async def cadastro_funcionarios() -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("func cadastrado com sucesso!", "success")
             return await make_response(redirect(url_for("corp.funcionarios")))
 
         return await make_response(
-            render_template("index.html", title=title, page=page, form=form)
+            await render_template("index.html", title=title, page=page, form=form)
         )
 
     except Exception:
@@ -221,7 +223,7 @@ async def editar_funcionarios(id: int) -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template(
+                    await render_template(
                         "index.html",
                         title=title,
                         page=page,
@@ -234,7 +236,7 @@ async def editar_funcionarios(id: int) -> Response:
             return await make_response(redirect(url_for("corp.funcionarios")))
 
         return await make_response(
-            render_template(
+            await render_template(
                 "index.html",
                 title=title,
                 page=page,

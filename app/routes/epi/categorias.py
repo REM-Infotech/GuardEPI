@@ -40,7 +40,9 @@ async def categorias() -> Response:
         database = ClassesEPI.query.all()
 
         return await make_response(
-            render_template("index.html", page=page, database=database, title=title)
+            await render_template(
+                "index.html", page=page, database=database, title=title
+            )
         )
 
     except Exception:
@@ -92,7 +94,9 @@ async def cadastrar_categoria() -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("Categoria cadastrada com sucesso!", "success")
@@ -101,7 +105,7 @@ async def cadastrar_categoria() -> Response:
             )
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -152,14 +156,16 @@ async def editar_categoria(id) -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("Categoria editada com sucesso!", "success")
             return await make_response(redirect(url_for("epi.categorias")))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:

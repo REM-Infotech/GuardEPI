@@ -36,7 +36,7 @@ async def modelos() -> Response:
     page = "modelos.html"
     database = ModelosEPI.query.all()
     return await make_response(
-        render_template("index.html", page=page, database=database, title=title)
+        await render_template("index.html", page=page, database=database, title=title)
     )
 
 
@@ -83,14 +83,16 @@ async def cadastrar_modelos() -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("modelos cadastrada com sucesso!", "success")
             return await make_response(redirect(url_for("epi.modelos")))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:
@@ -144,14 +146,16 @@ async def editar_modelos(id: int) -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("modelos editada com sucesso!", "success")
             return await make_response(redirect(url_for("epi.modelos")))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:

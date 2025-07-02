@@ -22,7 +22,9 @@ async def groups() -> Response:
         page = "groups.html"
 
         return await make_response(
-            render_template("index.html", title=title, database=database, page=page)
+            await render_template(
+                "index.html", title=title, database=database, page=page
+            )
         )
 
     except Exception:
@@ -61,7 +63,9 @@ async def cadastro_grupo() -> Response:
             if query:
                 flash("Grupo já existente!", "error")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             new_group = Groups(
@@ -80,7 +84,7 @@ async def cadastro_grupo() -> Response:
             return await make_response(redirect("/config/groups"))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:
@@ -129,7 +133,7 @@ async def editar_grupo(id: int) -> Response:
             return await make_response(redirect("/config/groups"))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:

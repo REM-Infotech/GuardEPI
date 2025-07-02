@@ -8,7 +8,7 @@ from quart import (
     flash,
     make_response,
     redirect,
-    render_template,
+    await render_template,
     session,
     url_for,
 )
@@ -32,7 +32,7 @@ async def users() -> Response:
         database = Users.query.order_by(Users.login_time.desc()).all()
 
         return await make_response(
-            render_template("index.html", title=title, database=database, page=page)
+            await render_template("index.html", title=title, database=database, page=page)
         )
 
     except Exception:

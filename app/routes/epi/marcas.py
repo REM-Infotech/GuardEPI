@@ -37,7 +37,9 @@ async def marcas() -> Response:
         page = "marcas.html"
         database = Marcas.query.all()
         return await make_response(
-            render_template("index.html", page=page, database=database, title=title)
+            await render_template(
+                "index.html", page=page, database=database, title=title
+            )
         )
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -89,14 +91,16 @@ async def cadastrar_marca() -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("Marca cadastrada com sucesso!", "success")
             return await make_response(redirect(url_for("epi.marcas")))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:
@@ -151,14 +155,16 @@ async def editar_marca(id) -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("Marca editada com sucesso!", "success")
             return await make_response(redirect(url_for("epi.marcas")))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:

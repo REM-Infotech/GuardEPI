@@ -31,7 +31,7 @@ async def registro_saidas() -> str:
     title = "Registro Saídas"
 
     return await make_response(
-        render_template(
+        await render_template(
             "index.html",
             page=page,
             title=title,
@@ -56,7 +56,7 @@ async def cautelas(to_show: str = None) -> str:
 
     session["itens_lista_cautela"] = []
     return await make_response(
-        render_template(
+        await render_template(
             "index.html",
             page=page,
             title=title,

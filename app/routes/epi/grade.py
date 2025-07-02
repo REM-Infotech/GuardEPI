@@ -46,7 +46,7 @@ async def Grade() -> Response:
 
         database = GradeEPI.query.all()
         return await make_response(
-            render_template(
+            await render_template(
                 "index.html",
                 page=page,
                 title=title,
@@ -102,14 +102,16 @@ async def cadastrar_grade() -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("Grade cadastrada com sucesso!", "success")
             return await make_response(redirect(url_for("epi.Grade")))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:
@@ -163,14 +165,16 @@ async def editar_grade(id) -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("Grade editada com sucesso!", "success")
             return await make_response(redirect(url_for("epi.Grade")))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:

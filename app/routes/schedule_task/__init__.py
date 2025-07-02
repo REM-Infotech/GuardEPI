@@ -69,6 +69,8 @@ def message_formatter(todo: str) -> Message:
 
         sender_ = f"Notificação GuardEPI <{sendermail}>"
         assunto = "Notificação de troca de EPI"
-        mensagem = render_template("assets/body_email.html", Funcionarios=funcionarios)
+        mensagem = await render_template(
+            "assets/body_email.html", Funcionarios=funcionarios
+        )
 
         return Message(assunto, sender=sender_, recipients=copy_content, html=mensagem)

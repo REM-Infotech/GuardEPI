@@ -92,12 +92,14 @@ async def add_itens() -> Response:
         if estoque_grade is not None:
             if all([estoque_grade.qtd_estoque == 0, data_estoque.qtd_estoque == 0]):
                 return await make_response(
-                    render_template("forms/cautela/not_estoque.html", epi_name=nome_epi)
+                    await render_template(
+                        "forms/cautela/not_estoque.html", epi_name=nome_epi
+                    )
                 )
 
         elif estoque_grade is None:
             return await make_response(
-                render_template(
+                await render_template(
                     "forms/cautela/not_estoque.html",
                     message="EPI não registrada no estoque!",
                 )
@@ -118,7 +120,9 @@ async def add_itens() -> Response:
         with open(pathj, "w") as f:
             f.write(json_obj)
 
-        item_html = render_template("forms/cautela/add_items.html", item=list_epis)
+        item_html = await render_template(
+            "forms/cautela/add_items.html", item=list_epis
+        )
 
         # Retorna o HTML do item
         return await make_response(item_html)
@@ -136,7 +140,7 @@ async def remove_itens() -> Response:
     with open(pathj, "w") as f:
         f.write(json_obj)
 
-    item_html = render_template("forms/cautela/add_items.html")
+    item_html = await render_template("forms/cautela/add_items.html")
     return await make_response(item_html)
 
 
@@ -188,7 +192,7 @@ async def emitir_cautela() -> Response:
             )
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception as e:

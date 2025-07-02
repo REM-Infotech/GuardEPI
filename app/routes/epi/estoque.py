@@ -49,7 +49,7 @@ async def produto_epi() -> Response:
         database = EstoqueEPI.query.all()
 
         return await make_response(
-            render_template(
+            await render_template(
                 "index.html",
                 page=page,
                 title=title,
@@ -84,7 +84,7 @@ async def grade() -> Response:
         database = EstoqueGrade.query.all()
 
         return await make_response(
-            render_template(
+            await render_template(
                 "index.html",
                 page=page,
                 database=database,
@@ -114,7 +114,7 @@ async def entradas() -> Response:
 
         database = RegistroEntradas.query.all()
         return await make_response(
-            render_template(
+            await render_template(
                 "index.html",
                 page=page,
                 title=title,
@@ -241,7 +241,9 @@ async def lancamento_produto() -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("Informações salvas com sucesso!", "success")
@@ -252,7 +254,7 @@ async def lancamento_produto() -> Response:
             return await make_response(redirect(url_for("estoque.produto_epi")))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:

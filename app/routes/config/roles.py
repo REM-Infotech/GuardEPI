@@ -68,7 +68,7 @@ async def add_itens() -> Response:
             to_view.append(dict_to_view)
         # Retorna o HTML do item
         return await make_response(
-            render_template("forms/roles/add_items.html", item=to_view)
+            await render_template("forms/roles/add_items.html", item=to_view)
         )
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -88,7 +88,7 @@ async def remove_itens() -> Response:
         with json_file.open("w") as f:
             f.write(json.dumps([]))
 
-        item_html = render_template("forms/roles/add_items.html", item=list_roles)
+        item_html = await render_template("forms/roles/add_items.html", item=list_roles)
         return await make_response(item_html)
 
     except Exception:
@@ -106,7 +106,9 @@ async def roles() -> Response:
         database = Roles.query.all()
 
         return await make_response(
-            render_template("index.html", title=title, database=database, page=page)
+            await render_template(
+                "index.html", title=title, database=database, page=page
+            )
         )
 
     except Exception:
@@ -144,7 +146,9 @@ async def cadastro_regra() -> Response:
             if query:
                 flash("Regra já existente!", "error")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             new_ruleset = Roles(
@@ -199,7 +203,7 @@ async def cadastro_regra() -> Response:
             return await make_response(redirect("/config/roles"))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:
@@ -249,4 +253,4 @@ async def deletar_regra(id: int) -> Response:
         message = "Erro ao deletar regra"
         template = "includes/show.html"
 
-    return await make_response(render_template(template, message=message))
+    return await make_response(await render_template(template, message=message))

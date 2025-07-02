@@ -47,7 +47,7 @@ async def Empresas() -> Response:
 
         page = "empresas.html"
         return await make_response(
-            render_template(
+            await render_template(
                 "index.html",
                 page=page,
                 database=database,
@@ -122,14 +122,16 @@ async def cadastro_empresas() -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("emp cadastrado com sucesso!", "success")
             return await make_response(redirect(url_for("corp.Empresas")))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:
@@ -230,14 +232,16 @@ async def editar_empresas(id: int) -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("Edições Salvas con sucesso!", "success")
             return await make_response(redirect(url_for("corp.Empresas")))
 
         return await make_response(
-            render_template(
+            await render_template(
                 "index.html",
                 title=title,
                 page=page,

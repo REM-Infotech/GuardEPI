@@ -47,7 +47,7 @@ async def Equipamentos() -> Response:
     database = ProdutoEPI.query.all()
     url = "https://cdn-icons-png.flaticon.com/512/11547/11547438.png"
     return await make_response(
-        render_template(
+        await render_template(
             "index.html",
             page=page,
             title=title,
@@ -115,14 +115,16 @@ async def cadastro_equipamento() -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             flash("EPI cadastrado com sucesso!", "success")
             return await make_response(redirect(url_for("epi.Equipamentos")))
 
         return await make_response(
-            render_template("index.html", page=page, form=form, title=title)
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception:
@@ -228,7 +230,7 @@ async def editar_equipamento(id: int) -> Response:
             except errors.UniqueViolation:
                 flash("Item com informações duplicadas!")
                 return await make_response(
-                    render_template(
+                    await render_template(
                         "index.html",
                         title=title,
                         page=page,
@@ -244,7 +246,7 @@ async def editar_equipamento(id: int) -> Response:
             pass
 
         return await make_response(
-            render_template(
+            await render_template(
                 "index.html",
                 title=title,
                 page=page,
