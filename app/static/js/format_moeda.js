@@ -1,3 +1,4 @@
+// oxlint-disable-next-line no-unused-vars
 function formatarComoMoeda(elemento) {
   let valor = elemento.value.replace(/\D/g, ""); // Remove tudo que não é dígito
   valor = (parseInt(valor) / 100).toFixed(2); // Divide por 100 e fixa duas casas decimais

@@ -1,3 +1,4 @@
+// oxlint-disable-next-line no-unused-vars
 function showLoadCautela() {
   $("#EmissãoCautela").modal("hide");
 
@@ -5,6 +6,7 @@ function showLoadCautela() {
     $("#modalLoading").modal("show");
   }, 500);
 }
+// oxlint-disable-next-line no-unused-vars
 function showLoad() {
   let modalFade = document.querySelectorAll(
     'div[class="modal fade show"][style="display: block;"]'
@@ -21,6 +23,7 @@ function showLoad() {
   }, 500);
 }
 
+// oxlint-disable-next-line no-unused-vars
 function showhideLoad() {
   let modalFade = document.querySelectorAll(
     'div[class="modal fade show"][style="display: block;"]'
