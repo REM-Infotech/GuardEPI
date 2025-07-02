@@ -94,14 +94,14 @@ async def cadastrar_cargos() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("Cargo cadastrado com sucesso!", "success")
+            await flash("Cargo cadastrado com sucesso!", "success")
             return await make_response(redirect(url_for("corp.cargos")))
 
         return await make_response(
@@ -155,14 +155,14 @@ async def editar_cargos(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("Cargo editado com sucesso!", "success")
+            await flash("Cargo editado com sucesso!", "success")
             return await make_response(redirect(url_for("corp.cargos")))
 
         return await make_response(

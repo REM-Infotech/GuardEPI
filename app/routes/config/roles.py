@@ -144,7 +144,7 @@ async def cadastro_regra() -> Response:
             routes_add = []
 
             if query:
-                flash("Regra já existente!", "error")
+                await flash("Regra já existente!", "error")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
@@ -199,7 +199,7 @@ async def cadastro_regra() -> Response:
 
             session.pop("json_filename")
 
-            flash("Regra criada com sucesso")
+            await flash("Regra criada com sucesso")
             return await make_response(redirect("/config/roles"))
 
         return await make_response(

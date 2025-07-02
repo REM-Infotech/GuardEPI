@@ -8,7 +8,7 @@ from quart import (
     flash,
     make_response,
     redirect,
-    await render_template,
+    render_template,
     session,
     url_for,
 )
@@ -32,7 +32,9 @@ async def users() -> Response:
         database = Users.query.order_by(Users.login_time.desc()).all()
 
         return await make_response(
-            await render_template("index.html", title=title, database=database, page=page)
+            await render_template(
+                "index.html", title=title, database=database, page=page
+            )
         )
 
     except Exception:
@@ -52,7 +54,7 @@ async def cadastro_usuario() -> Response:
             db: SQLAlchemy = app.extensions["sqlalchemy"]
 
             if db.session.query(Users).filter(Users.login == form.login.data).first():
-                flash("Já existe um usuário com este login!")
+                await flash("Já existe um usuário com este login!")
                 return await make_response(redirect(url_for("config.users")))
 
             usuario = Users(
@@ -67,11 +69,11 @@ async def cadastro_usuario() -> Response:
             db.session.add(usuario)
             db.session.commit()
 
-            flash("Usuário criado com sucesso!", "success")
+            await flash("Usuário criado com sucesso!", "success")
             return await make_response(redirect(url_for("config.users")))
 
         if form.errors:
-            flash(form.errors)
+            await flash(form.errors)
 
         return await make_response(render_template(html, form=form))
 
@@ -93,7 +95,7 @@ async def changepw_usr() -> Response:
         if form.validate_on_submit():
             db: SQLAlchemy = app.extensions["sqlalchemy"]
             if form.new_password.data != form.repeat_password.data:
-                flash("Senhas não coincidem")
+                await flash("Senhas não coincidem")
                 return await make_response(redirect(url_for("config.users")))
 
             login_usr = form.data.get("user_to_change", session.get("login"))
@@ -101,7 +103,7 @@ async def changepw_usr() -> Response:
             password.senhacrip = form.new_password.data
             db.session.commit()
 
-            flash("Senha alterada com sucesso!", "success")
+            await flash("Senha alterada com sucesso!", "success")
             return await make_response(redirect(url_for("config.users")))
 
         return await make_response(render_template(html, form=form))
@@ -126,13 +128,13 @@ async def changemail_usr() -> Response:
             login_usr = form.data.get("user_to_change", session.get("login"))
             mail = Users.query.filter_by(login=login_usr).first()
             if form.new_email.data != form.repeat_email.data:
-                flash("E-mails não coincidem")
+                await flash("E-mails não coincidem")
                 return await make_response(redirect(url_for("config.users")))
 
             mail.email = form.new_email.data
             db.session.commit()
 
-            flash("E-mail alterado com sucesso!", "success")
+            await flash("E-mail alterado com sucesso!", "success")
             return await make_response(redirect(url_for("config.users")))
 
         return await make_response(render_template(html, form=form))

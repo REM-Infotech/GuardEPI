@@ -93,14 +93,14 @@ async def cadastrar_fornecedores() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("Fornecedor cadastrado com sucesso!", "success")
+            await flash("Fornecedor cadastrado com sucesso!", "success")
             return await make_response(redirect(url_for("epi.fornecedores")))
 
         return await make_response(
@@ -157,14 +157,14 @@ async def editar_fornecedores(id: int) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("Fornecedor editado com sucesso!", "success")
+            await flash("Fornecedor editado com sucesso!", "success")
             return await make_response(redirect(url_for("epi.fornecedores")))
 
         return await make_response(

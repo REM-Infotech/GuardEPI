@@ -89,14 +89,14 @@ async def cadastrar_marca() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("Marca cadastrada com sucesso!", "success")
+            await flash("Marca cadastrada com sucesso!", "success")
             return await make_response(redirect(url_for("epi.marcas")))
 
         return await make_response(
@@ -153,14 +153,14 @@ async def editar_marca(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("Marca editada com sucesso!", "success")
+            await flash("Marca editada com sucesso!", "success")
             return await make_response(redirect(url_for("epi.marcas")))
 
         return await make_response(

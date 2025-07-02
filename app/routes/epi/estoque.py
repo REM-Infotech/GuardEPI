@@ -156,7 +156,9 @@ async def lancamento_produto() -> Response:
         if form.validate_on_submit():
             if not form.nota_fiscal.data:
                 if form.justificativa.data == "...":
-                    flash("Inserir nota fiscal ou informar justificativa de estorno!")
+                    await flash(
+                        "Inserir nota fiscal ou informar justificativa de estorno!"
+                    )
                     return await make_response(redirect(url_for("estoque.produto_epi")))
 
             query_Estoque = EstoqueEPI.query
@@ -239,18 +241,18 @@ async def lancamento_produto() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("Informações salvas com sucesso!", "success")
+            await flash("Informações salvas com sucesso!", "success")
             return await make_response(redirect(url_for("estoque.produto_epi")))
 
         if form.errors:
-            flash("Campos Obrigatórios não preenchidos!")
+            await flash("Campos Obrigatórios não preenchidos!")
             return await make_response(redirect(url_for("estoque.produto_epi")))
 
         return await make_response(

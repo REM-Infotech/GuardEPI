@@ -61,7 +61,7 @@ async def cadastro_grupo() -> Response:
             )
 
             if query:
-                flash("Grupo já existente!", "error")
+                await flash("Grupo já existente!", "error")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
@@ -80,7 +80,7 @@ async def cadastro_grupo() -> Response:
             db.session.add(new_group)
             db.session.commit()
 
-            flash("Grupo Criado com sucesso!")
+            await flash("Grupo Criado com sucesso!")
             return await make_response(redirect("/config/groups"))
 
         return await make_response(
@@ -129,7 +129,7 @@ async def editar_grupo(id: int) -> Response:
 
             db.session.commit()
 
-            flash("Grupo editado com sucesso!")
+            await flash("Grupo editado com sucesso!")
             return await make_response(redirect("/config/groups"))
 
         return await make_response(

@@ -100,14 +100,14 @@ async def cadastrar_grade() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("Grade cadastrada com sucesso!", "success")
+            await flash("Grade cadastrada com sucesso!", "success")
             return await make_response(redirect(url_for("epi.Grade")))
 
         return await make_response(
@@ -163,14 +163,14 @@ async def editar_grade(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("Grade editada com sucesso!", "success")
+            await flash("Grade editada com sucesso!", "success")
             return await make_response(redirect(url_for("epi.Grade")))
 
         return await make_response(

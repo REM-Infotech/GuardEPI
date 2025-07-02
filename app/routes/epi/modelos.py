@@ -81,14 +81,14 @@ async def cadastrar_modelos() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("modelos cadastrada com sucesso!", "success")
+            await flash("modelos cadastrada com sucesso!", "success")
             return await make_response(redirect(url_for("epi.modelos")))
 
         return await make_response(
@@ -144,14 +144,14 @@ async def editar_modelos(id: int) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("modelos editada com sucesso!", "success")
+            await flash("modelos editada com sucesso!", "success")
             return await make_response(redirect(url_for("epi.modelos")))
 
         return await make_response(

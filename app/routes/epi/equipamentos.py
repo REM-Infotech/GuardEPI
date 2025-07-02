@@ -113,14 +113,14 @@ async def cadastro_equipamento() -> Response:
                 db.session.commit()
 
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("EPI cadastrado com sucesso!", "success")
+            await flash("EPI cadastrado com sucesso!", "success")
             return await make_response(redirect(url_for("epi.Equipamentos")))
 
         return await make_response(
@@ -228,7 +228,7 @@ async def editar_equipamento(id: int) -> Response:
                 db.session.commit()
 
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html",
@@ -239,7 +239,7 @@ async def editar_equipamento(id: int) -> Response:
                     )
                 )
 
-            flash("Edições Salvas con sucesso!", "success")
+            await flash("Edições Salvas con sucesso!", "success")
             return await make_response(redirect(url_for("epi.Equipamentos")))
 
         if form.errors:

@@ -120,14 +120,14 @@ async def cadastro_empresas() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("emp cadastrado com sucesso!", "success")
+            await flash("emp cadastrado com sucesso!", "success")
             return await make_response(redirect(url_for("corp.Empresas")))
 
         return await make_response(
@@ -230,14 +230,14 @@ async def editar_empresas(id: int) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("Edições Salvas con sucesso!", "success")
+            await flash("Edições Salvas con sucesso!", "success")
             return await make_response(redirect(url_for("corp.Empresas")))
 
         return await make_response(

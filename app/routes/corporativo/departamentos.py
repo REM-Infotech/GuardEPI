@@ -97,14 +97,14 @@ async def cadastrar_departamentos() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("Departamentos cadastrada com sucesso!", "success")
+            await flash("Departamentos cadastrada com sucesso!", "success")
             return await make_response(redirect(url_for("corp.Departamentos")))
 
         return await make_response(
@@ -157,14 +157,14 @@ async def editar_departamentos(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("Departamentos editada com sucesso!", "success")
+            await flash("Departamentos editada com sucesso!", "success")
             return await make_response(redirect(url_for("corp.Departamentos")))
 
         return await make_response(

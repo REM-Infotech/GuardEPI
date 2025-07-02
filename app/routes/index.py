@@ -227,7 +227,7 @@ async def import_lotes(tipo: str = None) -> Response:
             db.session.add_all(data)
             db.session.commit()
 
-            flash("Informação cadastrada com sucesso!", "success")
+            await flash("Informação cadastrada com sucesso!", "success")
             return await make_response(redirect(url_for(tipo)))
 
         return await make_response(

@@ -115,14 +115,14 @@ async def cadastro_funcionarios() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("func cadastrado com sucesso!", "success")
+            await flash("func cadastrado com sucesso!", "success")
             return await make_response(redirect(url_for("corp.funcionarios")))
 
         return await make_response(
@@ -221,7 +221,7 @@ async def editar_funcionarios(id: int) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html",
@@ -232,7 +232,7 @@ async def editar_funcionarios(id: int) -> Response:
                     )
                 )
 
-            flash("Edições Salvas con sucesso!", "success")
+            await flash("Edições Salvas con sucesso!", "success")
             return await make_response(redirect(url_for("corp.funcionarios")))
 
         return await make_response(

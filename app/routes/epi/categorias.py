@@ -92,14 +92,14 @@ async def cadastrar_categoria() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("Categoria cadastrada com sucesso!", "success")
+            await flash("Categoria cadastrada com sucesso!", "success")
             return await make_response(
                 make_response(redirect(url_for("epi.categorias")))
             )
@@ -154,14 +154,14 @@ async def editar_categoria(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
+                await flash("Item com informações duplicadas!")
                 return await make_response(
                     await render_template(
                         "index.html", page=page, form=form, title=title
                     )
                 )
 
-            flash("Categoria editada com sucesso!", "success")
+            await flash("Categoria editada com sucesso!", "success")
             return await make_response(redirect(url_for("epi.categorias")))
 
         return await make_response(
