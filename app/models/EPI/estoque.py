@@ -2,56 +2,52 @@ from datetime import datetime
 from typing import Type
 
 import pytz
-from sqlalchemy import LargeBinary
+from sqlalchemy import Column, DateTime, Float, Integer, LargeBinary, String
 
 from app import db
 
 
 class EstoqueEPI(db.Model):
-    id: int = db.Column(db.Integer, primary_key=True, unique=True)
-    nome_epi: str = db.Column(db.String(length=64), nullable=False)
-    tipo_qtd: str = db.Column(db.String(length=64), nullable=False)
-    qtd_estoque: int = db.Column(db.Integer, nullable=False)
+    id = Column(Integer, primary_key=True, unique=True)
+    nome_epi = Column(String(length=64), nullable=False)
+    tipo_qtd = Column(String(length=64), nullable=False)
+    qtd_estoque = Column(Integer, nullable=False)
 
 
 class EstoqueGrade(db.Model):
-    id: int = db.Column(db.Integer, primary_key=True, unique=True)
-    nome_epi: str = db.Column(db.String(length=64), nullable=False)
-    grade: str = db.Column(db.String(length=64), nullable=False)
-    tipo_qtd: str = db.Column(db.String(length=64), nullable=False)
-    qtd_estoque: int = db.Column(db.Integer, nullable=False)
+    id = Column(Integer, primary_key=True, unique=True)
+    nome_epi = Column(String(length=64), nullable=False)
+    grade = Column(String(length=64), nullable=False)
+    tipo_qtd = Column(String(length=64), nullable=False)
+    qtd_estoque = Column(Integer, nullable=False)
 
 
 class RegistroEntradas(db.Model):
-    id = db.Column(db.Integer, primary_key=True, unique=True)
-    nome_epi: str = db.Column(db.String(length=64), nullable=False)
-    grade: str = db.Column(db.String(length=64), nullable=False)
-    tipo_qtd: str = db.Column(db.String(length=64), nullable=False)
-    qtd_entrada: int = db.Column(db.Integer, nullable=False)
-    data_entrada: datetime = db.Column(
-        db.DateTime, default=datetime.now(pytz.timezone("Etc/GMT+4"))
-    )
-    valor_total: float = db.Column(db.Float, nullable=False)
-    justificativa: str = db.Column(db.String(length=512))
+    id = Column(Integer, primary_key=True, unique=True)
+    nome_epi = Column(String(length=64), nullable=False)
+    grade = Column(String(length=64), nullable=False)
+    tipo_qtd = Column(String(length=64), nullable=False)
+    qtd_entrada = Column(Integer, nullable=False)
+    data_entrada = Column(DateTime, default=datetime.now(pytz.timezone("Etc/GMT+4")))
+    valor_total = Column(Float, nullable=False)
+    justificativa = Column(String(length=512))
 
-    filename: str = db.Column(db.String(length=128))
-    blob_doc: LargeBinary = db.Column(db.LargeBinary(length=(2**32) - 1))
+    filename = Column(String(length=128))
+    blob_doc = Column(LargeBinary(length=(2**32) - 1))
 
 
 class RegistroSaidas(db.Model):
     __tablename__ = "registro_saidas"
-    id: int = db.Column(db.Integer, primary_key=True, unique=True)
-    nome_epi: str = db.Column(db.String(length=64), nullable=False)
-    qtd_saida: int = db.Column(db.Integer, nullable=False)
-    data_saida: datetime = db.Column(
-        db.DateTime, default=datetime.now(pytz.timezone("Etc/GMT+4"))
-    )
-    valor_total: float = db.Column(db.Float, nullable=False)
+    id = Column(Integer, primary_key=True, unique=True)
+    nome_epi = Column(String(length=64), nullable=False)
+    qtd_saida = Column(Integer, nullable=False)
+    data_saida = Column(DateTime, default=datetime.now(pytz.timezone("Etc/GMT+4")))
+    valor_total = Column(Float, nullable=False)
 
     def __init__(
         self,
-        nome_epi: str = None,
-        qtd_saida: int = 1,
+        nome_epi=None,
+        qtd_saida=1,
         data_saida: Type[datetime] = datetime.now(),
         valor_total: float = 0.00,
     ) -> None:

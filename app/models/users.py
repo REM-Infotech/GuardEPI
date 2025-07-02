@@ -4,6 +4,7 @@ import bcrypt
 import pytz
 from flask import request
 from flask_login import UserMixin
+from sqlalchemy import Column, DateTime, Integer, LargeBinary, String
 
 from app import db, login_manager
 from app.misc import generate_pid
@@ -12,10 +13,10 @@ salt = bcrypt.gensalt()
 
 members = db.Table(
     "members",
-    db.Column("users_id", db.Integer, db.ForeignKey("users.id"), primary_key=True),
-    db.Column(
+    Column("users_id", Integer, db.ForeignKey("users.id"), primary_key=True),
+    Column(
         "groups_id",
-        db.Integer,
+        Integer,
         db.ForeignKey("groups.id"),
         primary_key=True,
     ),
@@ -23,10 +24,10 @@ members = db.Table(
 
 group_roles = db.Table(
     "group_roles",
-    db.Column("roles_id", db.Integer, db.ForeignKey("roles.id"), primary_key=True),
-    db.Column(
+    Column("roles_id", Integer, db.ForeignKey("roles.id"), primary_key=True),
+    Column(
         "groups_id",
-        db.Integer,
+        Integer,
         db.ForeignKey("groups.id"),
         primary_key=True,
     ),
@@ -34,10 +35,10 @@ group_roles = db.Table(
 
 route_roles = db.Table(
     "route_roles",
-    db.Column("roles_id", db.Integer, db.ForeignKey("roles.id"), primary_key=True),
-    db.Column(
+    Column("roles_id", Integer, db.ForeignKey("roles.id"), primary_key=True),
+    Column(
         "routes_id",
-        db.Integer,
+        Integer,
         db.ForeignKey("routes.id"),
         primary_key=True,
     ),
@@ -54,23 +55,18 @@ def load_user(user_id):
 
 
 class Users(db.Model, UserMixin):
-
     __tablename__ = "users"
-    id: int = db.Column(db.Integer, primary_key=True)
-    login: str = db.Column(db.String(length=30), nullable=False, unique=True)
-    nome_usuario: str = db.Column(db.String(length=64), nullable=False, unique=True)
-    grupos: str = db.Column(db.String(length=1024), nullable=False)
-    email: str = db.Column(db.String(length=50), nullable=False, unique=True)
-    password: str = db.Column(db.String(length=60), nullable=False)
-    login_time: datetime = db.Column(
-        db.DateTime, default=datetime.now(pytz.timezone("Etc/GMT+4"))
-    )
-    verification_code: str = db.Column(db.String(length=45), unique=True)
-    login_id: str = db.Column(
-        db.String(length=7), nullable=False, default=generate_pid()
-    )
-    filename: str = db.Column(db.String(length=128))
-    blob_doc: str = db.Column(db.LargeBinary(length=(2**32) - 1))
+    id: int = Column(Integer, primary_key=True)
+    login = Column(String(length=30), nullable=False, unique=True)
+    nome_usuario = Column(String(length=64), nullable=False, unique=True)
+    grupos = Column(String(length=1024), nullable=False)
+    email = Column(String(length=50), nullable=False, unique=True)
+    password = Column(String(length=60), nullable=False)
+    login_time = Column(DateTime, default=datetime.now(pytz.timezone("Etc/GMT+4")))
+    verification_code = Column(String(length=45), unique=True)
+    login_id = Column(String(length=7), nullable=False, default=generate_pid())
+    filename = Column(String(length=128))
+    blob_doc = Column(LargeBinary(length=(2**32) - 1))
 
     @property
     def senhacrip(self):
@@ -87,31 +83,28 @@ class Users(db.Model, UserMixin):
 
 
 class Groups(db.Model):
-
     __tablename__ = "groups"
-    id: int = db.Column(db.Integer, primary_key=True)
-    name_group: str = db.Column(db.String(length=30), nullable=False, unique=True)
+    id: int = Column(Integer, primary_key=True)
+    name_group = Column(String(length=30), nullable=False, unique=True)
     members = db.relationship("Users", secondary="members", backref="group")
-    description: str = db.Column(db.String(length=128))
+    description = Column(String(length=128))
 
 
 class Routes(db.Model):
-
     __tablename__ = "routes"
-    id: int = db.Column(db.Integer, primary_key=True)
-    endpoint: str = db.Column(db.String(length=32), nullable=False)
+    id: int = Column(Integer, primary_key=True)
+    endpoint = Column(String(length=32), nullable=False)
     roles = db.relationship("Roles", secondary="route_roles", backref="route")
 
-    CREATE: bool = db.Column(db.Boolean, default=False)
-    READ: bool = db.Column(db.Boolean, default=False)
-    UPDATE: bool = db.Column(db.Boolean, default=False)
-    DELETE: bool = db.Column(db.Boolean, default=False)
+    CREATE: bool = Column(db.Boolean, default=False)
+    READ: bool = Column(db.Boolean, default=False)
+    UPDATE: bool = Column(db.Boolean, default=False)
+    DELETE: bool = Column(db.Boolean, default=False)
 
 
 class Roles(db.Model):
-
     __tablename__ = "roles"
-    id: int = db.Column(db.Integer, primary_key=True)
-    name_role: str = db.Column(db.String(length=30), nullable=False, unique=True)
+    id: int = Column(Integer, primary_key=True)
+    name_role = Column(String(length=30), nullable=False, unique=True)
     groups = db.relationship("Groups", secondary="group_roles", backref="role")
-    description: str = db.Column(db.String(length=128))
+    description = Column(String(length=128))

@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import pytz
+from sqlalchemy import Column, Float, Integer, LargeBinary, String
 
 from app import db
 
@@ -27,28 +28,26 @@ class ProdutoEPI(db.Model):
     Methods:
         __init__(*args: tuple, **kwargs: dict) -> None:
             Initializes a new instance of the ProdutoEPI class.
-        __getattr__(self, attr: str):
+        __getattr__(self, attr):
             Retrieves the attribute specified by 'attr'. Raises an AttributeError if the attribute is not found.
     """
 
     __tablename__ = "produto_epi"
-    id: int = db.Column(db.Integer, primary_key=True, unique=True)
-    ca: str = db.Column(db.String(length=64), nullable=False)
-    cod_ca: int = db.Column(db.Integer)
-    nome_epi: str = db.Column(db.String(length=64), nullable=False, unique=True)
-    tipo_epi: str = db.Column(db.String(length=64), nullable=False)
-    valor_unitario: float = db.Column(db.Float, nullable=False)
-    qtd_entregar: int = db.Column(db.Integer, nullable=False)
-    periodicidade_item: int = db.Column(db.Integer, nullable=False, default=10)
-    fornecedor: str = db.Column(db.String(length=64))
-    marca: str = db.Column(db.String(length=64))
-    modelo: str = db.Column(db.String(length=64))
-    filename: str = db.Column(db.String(length=128))
-    blob_doc: bytes = db.Column(db.LargeBinary(length=(2**32) - 1))
-    vencimento: datetime = db.Column(
-        db.DateTime, default=datetime.now(pytz.timezone("Etc/GMT+4"))
-    )
-    descricao: str = db.Column(db.Text, default="Sem Descrição")
+    id = Column(Integer, primary_key=True, unique=True)
+    ca = Column(String(length=64), nullable=False)
+    cod_ca = Column(Integer)
+    nome_epi = Column(String(length=64), nullable=False, unique=True)
+    tipo_epi = Column(String(length=64), nullable=False)
+    valor_unitario = Column(Float, nullable=False)
+    qtd_entregar = Column(Integer, nullable=False)
+    periodicidade_item = Column(Integer, nullable=False, default=10)
+    fornecedor = Column(String(length=64))
+    marca = Column(String(length=64))
+    modelo = Column(String(length=64))
+    filename = Column(String(length=128))
+    blob_doc = Column(LargeBinary(length=(2**32) - 1))
+    vencimento = Column(db.DateTime, default=datetime.now(pytz.timezone("Etc/GMT+4")))
+    descricao = Column(db.Text, default="Sem Descrição")
 
 
 class Fornecedores(db.Model):
@@ -60,9 +59,9 @@ class Fornecedores(db.Model):
         descricao (str): Description of the supplier.
     """
 
-    id = db.Column(db.Integer, primary_key=True, unique=True)
-    fornecedor: str = db.Column(db.String(length=64), nullable=False, unique=True)
-    descricao: str = db.Column(db.String(length=512))
+    id = Column(Integer, primary_key=True, unique=True)
+    fornecedor = Column(String(length=64), nullable=False, unique=True)
+    descricao = Column(String(length=512))
 
 
 class Marcas(db.Model):
@@ -74,9 +73,9 @@ class Marcas(db.Model):
         descricao (str): Description of the brand, optional.
     """
 
-    id = db.Column(db.Integer, primary_key=True, unique=True)
-    marca: str = db.Column(db.String(length=64), nullable=False, unique=True)
-    descricao: str = db.Column(db.String(length=512))
+    id = Column(Integer, primary_key=True, unique=True)
+    marca = Column(String(length=64), nullable=False, unique=True)
+    descricao = Column(String(length=512))
 
 
 class ModelosEPI(db.Model):
@@ -88,9 +87,9 @@ class ModelosEPI(db.Model):
         descricao (str): A description of the EPI model.
     """
 
-    id = db.Column(db.Integer, primary_key=True, unique=True)
-    modelo: str = db.Column(db.String(length=64), nullable=False, unique=True)
-    descricao: str = db.Column(db.String(length=512))
+    id = Column(Integer, primary_key=True, unique=True)
+    modelo = Column(String(length=64), nullable=False, unique=True)
+    descricao = Column(String(length=512))
 
 
 class ClassesEPI(db.Model):
@@ -102,9 +101,9 @@ class ClassesEPI(db.Model):
         descricao (str): A description of the PPE class.
     """
 
-    id = db.Column(db.Integer, primary_key=True, unique=True)
-    classe: str = db.Column(db.String(length=64), nullable=False, unique=True)
-    descricao: str = db.Column(db.String(length=512))
+    id = Column(Integer, primary_key=True, unique=True)
+    classe = Column(String(length=64), nullable=False, unique=True)
+    descricao = Column(String(length=512))
 
 
 class GradeEPI(db.Model):
@@ -116,6 +115,6 @@ class GradeEPI(db.Model):
         descricao (str): A description of the EPI grade.
     """
 
-    id = db.Column(db.Integer, primary_key=True)
-    grade: str = db.Column(db.String(length=32), nullable=False, unique=True)
-    descricao: str = db.Column(db.String(length=512))
+    id = Column(Integer, primary_key=True)
+    grade = Column(String(length=32), nullable=False, unique=True)
+    descricao = Column(String(length=512))
