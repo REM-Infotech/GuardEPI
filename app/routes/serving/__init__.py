@@ -8,7 +8,7 @@ serve = Blueprint("serve", __name__)
 
 
 @serve.get("/serve_img/<filename>")
-def serve_img(filename: str) -> Response:
+async def serve_img(filename: str) -> Response:
     """
     Route to serve an image file.
     This route handles GET requests to serve an image file from a specified directory.
