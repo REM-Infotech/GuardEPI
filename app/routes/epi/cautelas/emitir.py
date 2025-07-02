@@ -43,7 +43,7 @@ from .. import estoque_bp
 
 
 @estoque_bp.before_request
-def setgroups() -> None:
+async def setgroups() -> None:
     if request.endpoint == "estoque.emitir_cautela" and request.method == "GET":
         session["uuid_Cautelas"] = str(uuid.uuid4())
         pathj = os.path.join(
@@ -62,7 +62,7 @@ def setgroups() -> None:
 @estoque_bp.route("/add_itens", methods=["GET", "POST"])
 @login_required
 @create_perm
-def add_itens() -> Response:
+async def add_itens() -> Response:
     try:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
@@ -129,7 +129,7 @@ def add_itens() -> Response:
 @estoque_bp.route("/remove-itens", methods=["GET", "POST"])
 @login_required
 @create_perm
-def remove_itens() -> Response:
+async def remove_itens() -> Response:
     pathj = os.path.join(app.config["TEMP_PATH"], f"{session['uuid_Cautelas']}.json")
     json_obj = json.dumps([])
 
@@ -143,7 +143,7 @@ def remove_itens() -> Response:
 @estoque_bp.post("/get_grade")
 @login_required
 @create_perm
-def get_grade() -> Response:
+async def get_grade() -> Response:
     try:
         form = Cautela()
         lista = []
@@ -161,7 +161,7 @@ def get_grade() -> Response:
 @estoque_bp.route("/emitir_cautela", methods=["GET", "POST"])
 @login_required
 @create_perm
-def emitir_cautela() -> Response:
+async def emitir_cautela() -> Response:
     try:
         form = Cautela()
         page = "forms/cautela/cautela_form.html"
@@ -197,7 +197,7 @@ def emitir_cautela() -> Response:
         abort(code, description=description)
 
 
-def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
+async def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
     try:
         epis_lista = []
         para_registro = []
@@ -289,7 +289,9 @@ def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
         raise e
 
 
-def employee_info(form: Cautela, db: SQLAlchemy) -> tuple[Path, Funcionarios | None]:
+async def employee_info(
+    form: Cautela, db: SQLAlchemy
+) -> tuple[Path, Funcionarios | None]:
     funcionario_data = (
         db.session.query(Funcionarios)
         .filter(Funcionarios.nome_funcionario == form.funcionario.data)
@@ -309,7 +311,7 @@ def employee_info(form: Cautela, db: SQLAlchemy) -> tuple[Path, Funcionarios | N
     return original_path, funcionario_data
 
 
-def emit_doc(
+async def emit_doc(
     db: SQLAlchemy,
     data_funcionario: Funcionarios,
     logo_empresa_path: Path,
