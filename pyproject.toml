@@ -37,7 +37,8 @@ dependencies = [
     "pytest (>=8.4.1,<9.0.0)",
     "pymysql (>=1.1.1,<2.0.0)",
     "flask-migrate (>=4.1.0,<5.0.0)",
-    "python-dotenv (>=1.1.1,<2.0.0)"
+    "python-dotenv (>=1.1.1,<2.0.0)",
+    "quart-socketio @ git+https://github.com/Robotz213/Quart-SocketIO.git"
 ]
 
 
