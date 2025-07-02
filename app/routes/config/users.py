@@ -15,7 +15,8 @@ from quart import (
 from quart import current_app as app
 from quart_auth import login_required
 
-from ...decorators import create_perm, delete_perm, read_perm, update_perm
+from app.decorators import create_perm, delete_perm, read_perm, update_perm
+
 from ...forms import AdmChangeEmail, AdmChangePassWord, FormUser
 from ...models import Users
 from . import config
