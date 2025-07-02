@@ -1,3 +1,4 @@
+// oxlint-disable no-unused-vars
 window.addEventListener("DOMContentLoaded", (event) => {
   const datatablesSimple = document.getElementById("EntradasTable");
   if (datatablesSimple) {

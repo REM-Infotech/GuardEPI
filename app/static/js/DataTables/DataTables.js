@@ -1,3 +1,4 @@
+// oxlint-disable-next-line no-unused-vars
 window.addEventListener("DOMContentLoaded", (event) => {
   var datatablesSimple = document.querySelector(
     "#layoutSidenav_content > main > div > div.mt-4.card.mb-4 > div.card-body.table-responsive > table"

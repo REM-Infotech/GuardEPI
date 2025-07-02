@@ -1,3 +1,4 @@
+// oxlint-disable-next-line no-unused-vars
 window.addEventListener("DOMContentLoaded", (event) => {
   const datatablesSimple = document.getElementById("DashboardTable");
   if (datatablesSimple) {
