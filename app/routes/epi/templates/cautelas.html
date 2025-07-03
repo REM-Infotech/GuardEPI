@@ -9,7 +9,7 @@
         </span>
         <span class="text">Emitir Cautela</span>
       </a>
-      <a href="{{ url_for('index.gerar_relatorio') }}" class="btn btn-primary me-2 btn-icon-split">
+      <a href="{{ url_for('index.gen_relatorio') }}" class="btn btn-primary me-2 btn-icon-split">
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-csv"></i>
         </span>
@@ -32,7 +32,8 @@
           {% for item in database %}
           <tr>
             <td>{{ item.id }}</td>
-            {% set nome_epis = item.nome_epis_ | map(attribute='epis_saidas') | map(attribute='nome_epi') | join(' - ') %}
+            {% set nome_epis = item.nome_epis_ | map(attribute='epis_saidas') | map(attribute='nome_epi') | join(' - ')
+            %}
             {% if not nome_epis %}
             {% if "," in item.nome_epis %}
             {% set nome_epis = item.nome_epis.split(",") | join(' - ') | replace('"', '') %}
@@ -85,6 +86,6 @@
   </div>
   {% include 'includes/modal_pdf.html' %}
   {% if url %}
-  {% include 'includes/show_modal_pdf.html'   %}
+  {% include 'includes/show_modal_pdf.html' %}
   {% endif %}
 </div>

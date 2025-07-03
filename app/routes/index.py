@@ -18,11 +18,11 @@ from quart import (
     send_from_directory,
     url_for,
 )
-from quart import current_app as app
 from quart_auth import login_required
 from sqlalchemy import LargeBinary
 from werkzeug.utils import secure_filename
 
+from app import app
 from app.forms import ImporteLotesForm
 from app.misc import get_models
 
@@ -48,7 +48,7 @@ async def termos_uso() -> Response:
         filename = "Termos de Uso.pdf"
         # Crie a resposta usando make_response
         response = await make_response(
-            send_from_directory(app.config["PDF_PATH"], filename)
+            await send_from_directory(app.config["PDF_PATH"], filename)
         )
 
         # Defina o tipo MIME como application/pdf
@@ -91,9 +91,9 @@ async def politica_privacidade() -> Response:
         abort(500)
 
 
-@index.route("/gerar_relatorio")
+@index.route("/gen_relatorio")
 @login_required
-async def gerar_relatorio() -> Response:
+async def gen_relatorio() -> Response:
     try:
         referrer = (
             request.referrer.replace("http://", "").replace("https://", "").split("/")
@@ -164,7 +164,7 @@ async def gerar_relatorio() -> Response:
 
         df.to_excel(file_path, index=False)
 
-        response = await make_response(send_file(file_path, as_attachment=True))
+        response = await make_response(await send_file(file_path, as_attachment=True))
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 

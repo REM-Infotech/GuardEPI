@@ -55,10 +55,11 @@ async def register_routes(app: Quart) -> None:
         - /politica_privacidade (GET): Serves the "Política de Privacidade.pdf" file from the configured PDF path.
     """
 
-    blueprints = [auth, dash, corp, epi, serve, ind, estoque_bp, config]
+    async with app.app_context():
+        blueprints = [auth, dash, corp, epi, serve, ind, estoque_bp, config]
 
-    for blueprint in blueprints:
-        app.register_blueprint(blueprint)
+        for blueprint in blueprints:
+            app.register_blueprint(blueprint)
 
     @app.errorhandler(HTTPException)
     async def handle_http_exception(error) -> Response:

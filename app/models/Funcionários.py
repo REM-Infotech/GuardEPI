@@ -24,7 +24,7 @@ class Funcionarios(db.Model, UserMixin):  # noqa: D101
     blob_doc = Column(LargeBinary(length=(2**32) - 1))
     status_admissao = Column(String(length=64), default="PENDENTE")
     # Dados de cadastro
-    codigo = Column(String(length=6), unique=True)
+    codigo = Column(String(length=6))
     deficiencia = Column(String(length=64))
     cargo = Column(String(length=64))
     departamento = Column(String(length=64))
