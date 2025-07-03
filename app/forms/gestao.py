@@ -12,7 +12,6 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, Length
 
-from app import app
 from app.models import Cargos, Departamento, Empresa
 
 permited_file = FileAllowed(
@@ -21,23 +20,17 @@ permited_file = FileAllowed(
 
 
 def setChoices_Empresa() -> list[tuple[str, str]]:
-    with app.app_context():
-        return [
-            (query.nome_empresa, query.nome_empresa) for query in Empresa.query.all()
-        ]
+    return [(query.nome_empresa, query.nome_empresa) for query in Empresa.query.all()]
 
 
 def setChoices_Departamento() -> list[tuple[str, str]]:
-    with app.app_context():
-        return [
-            (query.departamento, query.departamento)
-            for query in Departamento.query.all()
-        ]
+    return [
+        (query.departamento, query.departamento) for query in Departamento.query.all()
+    ]
 
 
 def setChoices_Cargo() -> list[tuple[str, str]]:
-    with app.app_context():
-        return [(query.cargo, query.cargo) for query in Cargos.query.all()]
+    return [(query.cargo, query.cargo) for query in Cargos.query.all()]
 
 
 class FuncionarioForm(FlaskForm):

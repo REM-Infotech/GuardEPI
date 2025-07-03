@@ -129,8 +129,8 @@ async def cadastro_funcionarios() -> Response:
             await render_template("index.html", title=title, page=page, form=form)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.error("\n".join(traceback.format_exception(e)))
         abort(500)
 
 
