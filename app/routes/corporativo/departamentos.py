@@ -1,4 +1,5 @@
 import traceback
+from uuid import uuid4
 
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
@@ -42,12 +43,15 @@ async def Departamentos() -> Response:
     try:
         page = "departamentos.html"
         database = Departamento.query.all()
-
+        url_relatorio = url_for(
+            "index.gen_relatorio", model=uuid4().hex, _external=True
+        )
         return await make_response(
             await render_template(
                 "index.html",
                 page=page,
                 database=database,
+                url_relatorio=url_relatorio,
             )
         )
     except Exception as e:

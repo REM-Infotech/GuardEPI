@@ -164,7 +164,13 @@ async def gen_relatorio(model: str = None) -> Response:
 
         df.to_excel(file_path, index=False)
 
-        response = await make_response(await send_file(file_path, as_attachment=True))
+        response = await make_response(
+            await send_file(
+                file_path,
+                as_attachment=True,
+                cache_timeout=1,
+            )
+        )
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
