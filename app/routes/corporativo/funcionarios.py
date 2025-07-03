@@ -22,6 +22,7 @@ from werkzeug.utils import secure_filename
 from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import FuncionarioForm
 from app.models import Funcionarios
+from app.routes.corporativo.setups import setup_form_funcionario
 
 from . import corp
 
@@ -155,69 +156,28 @@ async def editar_funcionarios(id: int) -> Response:
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         funcionario = db.session.query(Funcionarios).filter_by(id=id).first()
+        url_image = ""
 
         form_data = {}
-
-        url_image = ""
-        emp_data = {
-            k: v
-            for k, v in list(funcionario.__dict__.items())
-            if not k.startswith("_") or k != "id"
-        }
-
-        items_emp_data = list(
-            {k: v for k, v in list(emp_data.items()) if k != "filename"}.items()
-        )
-
-        for key, value in items_emp_data:
-            if key == "blob_doc" and value:
-                img_path = (
-                    Path(app.config.get("TEMP_PATH"))
-                    .joinpath("IMG")
-                    .joinpath(emp_data.get("filename"))
-                )
-                with img_path.open("wb") as file:
-                    file.write(value)
-                    form_data.update(
-                        {
-                            "filename": FileStorage(
-                                filename=secure_filename(funcionario.filename),
-                                stream=value,
-                            )
-                        }
-                    )
-
-                    url_image = url_for(
-                        "serve.serve_img", filename=funcionario.filename, _external=True
-                    )
-
-            form_data.update({key: value})
-
+        form_data, url_image = await setup_form_funcionario(funcionario)
         form = FuncionarioForm(**form_data)
-
         if form.validate_on_submit():
-            to_add = {}
-
-            form_data: dict[str, form_content] = list(form.data.items())
+            form_data: dict[str, form_content] = list(
+                filter(
+                    lambda x: x[1] and x[0] != "csrf_token" or x[0] != "submit",
+                    list(form.data.items()),
+                )
+            )
             for key, value in form_data:
-                if value:
-                    if key == "csrf_token":
-                        continue
+                if isinstance(value, FileStorage):
+                    filename = secure_filename(value.filename)
+                    path_file = Path(app.config.get("TEMP_PATH")).joinpath(filename)
+                    value.save(str(path_file))
+                    setattr(funcionario, "filename", filename)
+                    setattr(funcionario, "blob_doc", value.stream.read())
+                    continue
 
-                    if key == "submit":
-                        continue
-
-                    if isinstance(value, FileStorage):
-                        filename = secure_filename(value.filename)
-                        path_file = Path(app.config.get("TEMP_PATH")).joinpath(filename)
-                        value.save(str(path_file))
-                        with path_file.open("rb") as file:
-                            to_add.update({"blob_doc": file.read()})
-
-                        to_add.update({"filename": filename})
-                        continue
-
-                    setattr(funcionario, key, value)
+                setattr(funcionario, key, value)
 
             try:
                 db.session.commit()
@@ -232,7 +192,17 @@ async def editar_funcionarios(id: int) -> Response:
                         url_image=url_image,
                     )
                 )
-
+            except Exception as e:
+                app.logger.error("\n".join(traceback.format_exception(e)))
+                return await make_response(
+                    await render_template(
+                        "index.html",
+                        title=title,
+                        page=page,
+                        form=form,
+                        url_image=url_image,
+                    )
+                )
             await flash("Edições Salvas con sucesso!", "success")
             return await make_response(redirect(url_for("corp.funcionarios")))
 
