@@ -181,7 +181,7 @@ async def emitir_cautela() -> Response:
 
         if form.validate_on_submit():
             logo_empresa_path, funcionario = employee_info(form, db)
-            nomefilename = f"Cautela - {funcionario.nome_funcionario} - {datetime.now().strftime('%d-%m-%Y %H-%M-%S')}.pdf"
+            nomefilename = f"Cautela - {funcionario.nome} - {datetime.now().strftime('%d-%m-%Y %H-%M-%S')}.pdf"
 
             return emit_doc(
                 db,
@@ -298,7 +298,7 @@ async def employee_info(
 ) -> tuple[Path, Funcionarios | None]:
     funcionario_data = (
         db.session.query(Funcionarios)
-        .filter(Funcionarios.nome_funcionario == form.funcionario.data)
+        .filter(Funcionarios.nome == form.funcionario.data)
         .first()
     )
 
@@ -317,7 +317,7 @@ async def employee_info(
 
 async def emit_doc(
     db: SQLAlchemy,
-    data_funcionario: Funcionarios,
+    data: Funcionarios,
     logo_empresa_path: Path,
     list_epis_solict: list,
     nomefilename: str,
@@ -328,7 +328,7 @@ async def emit_doc(
 
     employee_data = {
         "company": str(data_funcionario.empresa),
-        "name": str(data_funcionario.nome_funcionario),
+        "name": str(data_funcionario.nome),
         "cargo": str(data_funcionario.cargo),
         "departamento": str(data_funcionario.departamento),
         "registration": str(data_funcionario.codigo).zfill(6),

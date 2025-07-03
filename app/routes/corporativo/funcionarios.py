@@ -122,7 +122,7 @@ async def cadastro_funcionarios() -> Response:
                     )
                 )
 
-            await flash("func cadastrado com sucesso!", "success")
+            await flash("Funcionário cadastrado com sucesso!", "success")
             return await make_response(redirect(url_for("corp.funcionarios")))
 
         return await make_response(
@@ -154,20 +154,23 @@ async def editar_funcionarios(id: int) -> Response:
         page = "forms/funcionario_form.html"
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]
-        func = db.session.query(Funcionarios).filter_by(id=id).first()
+        funcionario = db.session.query(Funcionarios).filter_by(id=id).first()
 
         form_data = {}
 
         url_image = ""
-        emp_data = func.__dict__
+        emp_data = {
+            k: v
+            for k, v in list(funcionario.__dict__.items())
+            if not k.startswith("_") or k != "id"
+        }
 
-        items_emp_data = list(emp_data.items())
+        items_emp_data = list(
+            {k: v for k, v in list(emp_data.items()) if k != "filename"}.items()
+        )
 
         for key, value in items_emp_data:
-            if key == "_sa_instance_state" or key == "id" or key == "filename":
-                continue
-
-            if key == "blob_doc":
+            if key == "blob_doc" and value:
                 img_path = (
                     Path(app.config.get("TEMP_PATH"))
                     .joinpath("IMG")
@@ -175,19 +178,17 @@ async def editar_funcionarios(id: int) -> Response:
                 )
                 with img_path.open("wb") as file:
                     file.write(value)
-
-                with img_path.open("rb") as file:
                     form_data.update(
                         {
                             "filename": FileStorage(
-                                filename=secure_filename(func.filename),
-                                stream=file.read(),
+                                filename=secure_filename(funcionario.filename),
+                                stream=value,
                             )
                         }
                     )
 
                     url_image = url_for(
-                        "serve.serve_img", filename=func.filename, _external=True
+                        "serve.serve_img", filename=funcionario.filename, _external=True
                     )
 
             form_data.update({key: value})
@@ -216,7 +217,7 @@ async def editar_funcionarios(id: int) -> Response:
                         to_add.update({"filename": filename})
                         continue
 
-                    setattr(func, key, value)
+                    setattr(funcionario, key, value)
 
             try:
                 db.session.commit()

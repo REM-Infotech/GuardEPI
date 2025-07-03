@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy  # noqa: F401
 from quart import (
     Quart,
     Response,
+    flash,
     jsonify,  # noqa: F401
     make_response,
     redirect,
@@ -87,6 +88,7 @@ async def register_routes(app: Quart) -> None:
             return await make_response(redirect(url_for("dash.dashboard")))
 
         elif error.code == 401:
+            await flash("Necessário realizar login!")
             return await make_response(redirect("/login"))
 
         return await make_response(
