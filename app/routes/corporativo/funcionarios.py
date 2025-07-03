@@ -53,8 +53,8 @@ async def funcionarios() -> Response:
                 database=database,
             )
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -245,8 +245,8 @@ async def editar_funcionarios(id: int) -> Response:
             )
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -273,8 +273,8 @@ async def deletar_funcionarios(id: int) -> Response:
         message = "Informação deletada com sucesso!"
         return await make_response(await render_template(template, message=message))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
 
         message = "Erro ao deletar"
         template = "includes/show.html"

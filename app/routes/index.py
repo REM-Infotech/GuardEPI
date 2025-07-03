@@ -55,8 +55,8 @@ async def termos_uso() -> Response:
         response.headers["Content-Type"] = "application/pdf"
         return response
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -86,8 +86,8 @@ async def politica_privacidade() -> Response:
         response.headers["Content-Type"] = "application/pdf"
         return response
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -168,8 +168,8 @@ async def gerar_relatorio() -> Response:
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -236,8 +236,8 @@ async def import_lotes(tipo: str = None) -> Response:
             )
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -285,6 +285,6 @@ async def gen_model(model: str) -> Response:
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)

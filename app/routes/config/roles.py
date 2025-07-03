@@ -70,8 +70,8 @@ async def add_itens() -> Response:
         return await make_response(
             await render_template("forms/roles/add_items.html", item=to_view)
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -91,8 +91,8 @@ async def remove_itens() -> Response:
         item_html = await render_template("forms/roles/add_items.html", item=list_roles)
         return await make_response(item_html)
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -111,8 +111,8 @@ async def roles() -> Response:
             )
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -206,8 +206,8 @@ async def cadastro_regra() -> Response:
             await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -247,8 +247,8 @@ async def deletar_regra(id: int) -> Response:
         message = "Regra deletada com sucesso!"
         template = "includes/show.html"
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
 
         message = "Erro ao deletar regra"
         template = "includes/show.html"

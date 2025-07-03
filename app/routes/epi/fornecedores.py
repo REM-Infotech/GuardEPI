@@ -46,8 +46,8 @@ async def fornecedores() -> Response:
             )
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -107,8 +107,8 @@ async def cadastrar_fornecedores() -> Response:
             await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -171,8 +171,8 @@ async def editar_fornecedores(id: int) -> Response:
             await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -201,8 +201,8 @@ async def deletar_fornecedores(id: int):
         message = "Informação deletada com sucesso!"
         return await make_response(await render_template(template, message=message))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
 
         message = "Erro ao deletar"
         template = "includes/show.html"

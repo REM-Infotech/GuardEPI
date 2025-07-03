@@ -57,8 +57,8 @@ async def produto_epi() -> Response:
                 format_currency_brl=format_currency_brl,
             )
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -91,8 +91,8 @@ async def grade() -> Response:
                 title=title,
             )
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -122,8 +122,8 @@ async def entradas() -> Response:
                 format_currency_brl=format_currency_brl,
             )
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -259,6 +259,6 @@ async def lancamento_produto() -> Response:
             await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)

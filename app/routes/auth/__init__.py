@@ -40,8 +40,8 @@ async def index() -> Response:
             return await make_response(redirect(url_for("auth.login")))
         return await make_response(redirect(url_for("dash.dashboard")))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -88,8 +88,8 @@ async def login() -> Response:
 
         return await make_response(await render_template("login.html", form=form))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -111,6 +111,6 @@ async def logout() -> Response:
         location = url_for("auth.login")
         return await make_response(redirect(location))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)

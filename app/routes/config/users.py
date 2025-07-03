@@ -38,8 +38,8 @@ async def users() -> Response:
             )
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -78,8 +78,8 @@ async def cadastro_usuario() -> Response:
 
         return await make_response(await render_template(html, form=form))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
     return await make_response(await render_template(html))
@@ -109,8 +109,8 @@ async def changepw_usr() -> Response:
 
         return await make_response(await render_template(html, form=form))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
     return await make_response(await render_template(html))
@@ -140,8 +140,8 @@ async def changemail_usr() -> Response:
 
         return await make_response(await render_template(html, form=form))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
     return await make_response(await render_template(html, form=form))
@@ -199,8 +199,8 @@ async def delete_user(id: int) -> Response:
         template = "includes/show.html"
         return await make_response(await render_template(template, message=message))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
 
         message = "Erro ao deletar"
         template = "includes/show.html"

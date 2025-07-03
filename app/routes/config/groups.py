@@ -27,8 +27,8 @@ async def groups() -> Response:
             )
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -87,8 +87,8 @@ async def cadastro_grupo() -> Response:
             await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -136,8 +136,8 @@ async def editar_grupo(id: int) -> Response:
             await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -177,8 +177,8 @@ async def deletar_grupo(id: int) -> Response:
         message = "Grupo deletado com sucesso!"
         template = "includes/show.html"
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
 
         message = "Erro ao deletar grupo"
         template = "includes/show.html"

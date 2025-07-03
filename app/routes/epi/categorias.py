@@ -45,8 +45,8 @@ async def categorias() -> Response:
             )
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -107,8 +107,8 @@ async def cadastrar_categoria() -> Response:
         return await make_response(
             await render_template("index.html", page=page, form=form, title=title)
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -168,8 +168,8 @@ async def editar_categoria(id) -> Response:
             await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -198,8 +198,8 @@ async def deletar_categoria(id: int) -> Response:
         message = "Informação deletada com sucesso!"
         return await make_response(await render_template(template, message=message))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
 
         message = "Erro ao deletar regra"
         template = "includes/show.html"

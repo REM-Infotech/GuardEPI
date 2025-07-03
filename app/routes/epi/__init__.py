@@ -23,8 +23,8 @@ async def redirecting() -> Response:
     try:
         return await make_response(redirect(url_for("epi.Equipamentos")))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 

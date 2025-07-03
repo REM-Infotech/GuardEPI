@@ -86,8 +86,8 @@ async def dashboard() -> Response:
             )
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -144,8 +144,8 @@ async def saidasEquipamento() -> Response:
             }
         return await make_response(jsonify(chart_data))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
@@ -200,8 +200,8 @@ async def saidasFuncionario() -> Response:
 
         return await make_response(jsonify(chart_data))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
