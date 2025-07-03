@@ -183,4 +183,4 @@ async def deletar_grupo(id: int) -> Response:
         message = "Erro ao deletar grupo"
         template = "includes/show.html"
 
-    return await make_response(render_template(template, message=message))
+    return await make_response(await render_template(template, message=message))

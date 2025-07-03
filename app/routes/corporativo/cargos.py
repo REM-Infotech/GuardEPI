@@ -196,7 +196,7 @@ async def deletar_cargos(id: int) -> str:
 
         template = "includes/show.html"
         message = "Informação deletada com sucesso!"
-        return await make_response(render_template(template, message=message))
+        return await make_response(await render_template(template, message=message))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -204,4 +204,4 @@ async def deletar_cargos(id: int) -> str:
         message = "Erro ao deletar"
         template = "includes/show.html"
 
-    return await make_response(render_template(template, message=message))
+    return await make_response(await render_template(template, message=message))

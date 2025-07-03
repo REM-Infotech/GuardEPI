@@ -157,7 +157,7 @@ async def get_grade() -> Response:
         form.tipo_grade.choices.extend(lista)
 
         page = "forms/cautela/get_grade.html"
-        return await make_response(render_template(page, form=form))
+        return await make_response(await render_template(page, form=form))
     except Exception as e:
         abort(500, description=str(e))
 

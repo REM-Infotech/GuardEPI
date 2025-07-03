@@ -21,7 +21,9 @@ schedule_bp = Blueprint(
 def dash() -> Response:
     form: FlaskForm | TaskNotificacaoForm = TaskNotificacaoForm()
     page = "schedules.html"
-    return await make_response(render_template("index.html", page=page, form=form))
+    return await make_response(
+        await render_template("index.html", page=page, form=form)
+    )
 
 
 @schedule_bp.post("/new_schedule")

@@ -76,13 +76,13 @@ async def cadastro_usuario() -> Response:
         if form.errors:
             await flash(form.errors)
 
-        return await make_response(render_template(html, form=form))
+        return await make_response(await render_template(html, form=form))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
         abort(500)
 
-    return await make_response(render_template(html))
+    return await make_response(await render_template(html))
 
 
 @config.route("/changepw_usr", methods=["GET", "POST"])
@@ -107,13 +107,13 @@ async def changepw_usr() -> Response:
             await flash("Senha alterada com sucesso!", "success")
             return await make_response(redirect(url_for("config.users")))
 
-        return await make_response(render_template(html, form=form))
+        return await make_response(await render_template(html, form=form))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
         abort(500)
 
-    return await make_response(render_template(html))
+    return await make_response(await render_template(html))
 
 
 @config.route("/changemail_usr", methods=["GET", "POST"])
@@ -138,13 +138,13 @@ async def changemail_usr() -> Response:
             await flash("E-mail alterado com sucesso!", "success")
             return await make_response(redirect(url_for("config.users")))
 
-        return await make_response(render_template(html, form=form))
+        return await make_response(await render_template(html, form=form))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
         abort(500)
 
-    return await make_response(render_template(html, form=form))
+    return await make_response(await render_template(html, form=form))
 
 
 @config.route("/delete_user/<id>", methods=["GET"])
@@ -197,7 +197,7 @@ async def delete_user(id: int) -> Response:
             db.session.commit()
 
         template = "includes/show.html"
-        return await make_response(render_template(template, message=message))
+        return await make_response(await render_template(template, message=message))
 
     except Exception:
         app.logger.exception(traceback.format_exc())
@@ -205,4 +205,4 @@ async def delete_user(id: int) -> Response:
         message = "Erro ao deletar"
         template = "includes/show.html"
 
-    return await make_response(render_template(template, message=message))
+    return await make_response(await render_template(template, message=message))
