@@ -2,6 +2,7 @@ import os
 import traceback
 from datetime import datetime
 from pathlib import Path
+from uuid import uuid4
 
 import pandas as pd
 from flask_sqlalchemy import SQLAlchemy
@@ -10,6 +11,7 @@ from quart import (
     Response,
     abort,
     flash,
+    jsonify,
     make_response,
     redirect,
     render_template,
@@ -294,3 +296,29 @@ async def gen_model(model: str) -> Response:
     except Exception as e:
         app.logger.exception(traceback.format_exception(e))
         abort(500)
+
+
+@index.route("/migrate/<message>")
+def migrate_alembic(message: str = "Initial migration") -> Response:
+    from flask_migrate import migrate
+
+    migrate(directory="migrations", message=message, branch_label=uuid4().hex)
+    return jsonify(ok="ok")
+
+
+@index.route("/upgrade")
+def update_alembic() -> Response:
+    from flask_migrate import upgrade  # noqa: F401
+
+    upgrade(directory="migrations")
+
+    return jsonify(ok="ok")
+
+
+@index.route("/downgrade")
+def downgrade_alembic() -> Response:
+    from flask_migrate import downgrade
+
+    downgrade(directory="migrations")
+
+    return jsonify(ok="ok")

@@ -42,7 +42,7 @@
             <td>{{ item.id }}</td>
             <td>{{ item.nome_empresa }}</td>
             <td>{{ item.cnpj_empresa }}</td>
-            <td>
+            <td class="d-flex">
               <a type="button" class="btn btn-secondary btn-icon-split btn-sm m-1"
                 href="{{ url_for('corp.editar_empresas', id=item.id) }}">
                 <span class="icon text-white-50">

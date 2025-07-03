@@ -1,5 +1,7 @@
 # noqa: D100, D104
 
+from uuid import uuid4
+
 import bcrypt
 from quart_auth import AuthUser as UserMixin
 from sqlalchemy import Column, DateTime, Integer, LargeBinary, String
@@ -12,9 +14,15 @@ salt = bcrypt.gensalt()
 class Funcionarios(db.Model, UserMixin):  # noqa: D101
     __tablename__ = "funcionarios"
     id = Column(Integer, primary_key=True)
-    # Dados de login
-    nome = Column(String(length=64))
-    email = Column(String(length=64))
+
+    nome_funcionario = Column(String(length=64), name="nome")
+
+    email_funcionario = Column(String(length=64), name="email")
+
+    cpf_funcionario = Column(
+        String(length=14), name="cpf", unique=True, default=uuid4().hex
+    )
+
     password = Column(String(length=60))
     data_admissao = Column(DateTime)
     login_time = Column(DateTime)
@@ -29,7 +37,6 @@ class Funcionarios(db.Model, UserMixin):  # noqa: D101
     cargo = Column(String(length=64))
     departamento = Column(String(length=64))
     empresa = Column(String(length=64))
-    cpf = Column(String(length=14), unique=True)
 
     @property
     def senhacrip(self) -> any:

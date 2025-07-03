@@ -1,14 +1,16 @@
 # from celery.schedules import crontab
+import asyncio
 import os
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
 import quart_flask_patch  # noqa: F401
+from alembic.config import Config
 from celery import Celery
 from dotenv import load_dotenv
 from flask_mail import Mail
-from flask_migrate import Migrate, init, migrate, upgrade
+from flask_migrate import Migrate, init
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 from quart import Quart
@@ -36,6 +38,12 @@ objects_config = {
     "production": "app.config.ProductionConfig",
     "testing": "app.config.TestingConfig",
 }
+
+
+@migrate_.configure
+def configure_alembic(config: Config) -> Config:
+    # modify config object
+    return config
 
 
 def celery_init(app: Quart) -> Celery:
@@ -95,12 +103,11 @@ async def create_app() -> Quart:
     migrate_.init_app(app)
     async with app.app_context():
         if os.environ.get("MIGRATE") and os.environ.get("MIGRATE").lower() == "true":
-            migrate_.init_app(app, db, directory="migrations")
+            migrate_.init_app(app, db, directory="migrations", compare_type=True)
             if not Path(__file__).cwd().joinpath("migrations").exists():
                 init()
 
-            migrate(directory="migrations", message="Initial migration")
-            upgrade(directory="migrations")
+            migrate_.configure_callbacks
 
     return app
 
@@ -132,3 +139,6 @@ async def init_extensions(app: Quart) -> None:
         from .models import init_database
 
         await init_database(app, db)
+
+
+asyncio.run(create_app())
