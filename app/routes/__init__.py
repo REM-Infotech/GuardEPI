@@ -1,6 +1,7 @@
 import unicodedata  # noqa: F401
 from pathlib import Path  # noqa: F401
-from typing import Type, TypeVar  # noqa: F401
+from typing import TypeVar
+from uuid import uuid4  # noqa: F401
 
 import pandas  # noqa: F401
 from flask_sqlalchemy import SQLAlchemy  # noqa: F401
@@ -94,6 +95,14 @@ async def register_routes(app: Quart) -> None:
             ),
             error.code,
         )
+
+    @app.context_processor
+    async def url_relatorio() -> str:
+        url_relatorio = url_for(
+            "index.gen_relatorio", model=uuid4().hex, _external=True
+        )
+
+        return dict(url_relatorio=url_relatorio)
 
     # @app.route("/importar_planilha_route", methods=["POST"])
     # def importar_planilha_route() -> None:

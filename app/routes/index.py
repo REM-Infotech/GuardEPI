@@ -91,9 +91,9 @@ async def politica_privacidade() -> Response:
         abort(500)
 
 
-@index.route("/gen_relatorio")
+@index.route("/gen_relatorio/<model>")
 @login_required
-async def gen_relatorio() -> Response:
+async def gen_relatorio(model: str = None) -> Response:
     try:
         referrer = (
             request.referrer.replace("http://", "").replace("https://", "").split("/")
