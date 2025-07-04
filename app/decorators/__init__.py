@@ -1,5 +1,5 @@
 from functools import wraps
-from typing import Any
+from typing import Any, Callable, Coroutine
 
 from flask_sqlalchemy import SQLAlchemy
 from quart import (
@@ -16,7 +16,7 @@ from quart import current_app as app
 from ..models import Groups, Roles, Routes, Users
 
 
-def create_perm(func):
+def create_perm(func: Callable) -> Callable[..., Coroutine[Any, Any, Any]]:
     @wraps(func)
     async def decorated_function(*args, **kwargs) -> Any:
         """
