@@ -1,5 +1,4 @@
 # from celery.schedules import crontab
-import asyncio
 import os
 from datetime import timedelta
 from pathlib import Path
@@ -139,6 +138,3 @@ async def init_extensions(app: Quart) -> None:
         from .models import init_database
 
         await init_database(app, db)
-
-
-asyncio.run(create_app())
