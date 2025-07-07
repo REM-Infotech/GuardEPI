@@ -45,7 +45,7 @@ def create_perm(func: Callable) -> Callable[..., Coroutine[Any, Any, Any]]:
     return decorated_function
 
 
-def read_perm(func):
+def read_perm(func: Callable[..., Any]):
     @wraps(func)
     async def decorated_function(*args, **kwargs) -> Any:
         """
