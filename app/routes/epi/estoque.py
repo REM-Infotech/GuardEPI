@@ -1,12 +1,19 @@
 import traceback
 from pathlib import Path
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, url_for
-from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    url_for,
+)
+from quart import current_app as app
+from quart_auth import login_required
 from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
@@ -21,7 +28,7 @@ from . import estoque_bp
 @estoque_bp.get("/produto")
 @login_required
 @read_perm
-def produto_epi() -> Response:
+async def produto_epi() -> Response:
     """
     Handles the retrieval and rendering of the stock (Estoque) page.
     This function queries the database for all entries in the EstoqueEPI table,
@@ -41,8 +48,8 @@ def produto_epi() -> Response:
 
         database = EstoqueEPI.query.all()
 
-        return make_response(
-            render_template(
+        return await make_response(
+            await render_template(
                 "index.html",
                 page=page,
                 title=title,
@@ -50,22 +57,22 @@ def produto_epi() -> Response:
                 format_currency_brl=format_currency_brl,
             )
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @estoque_bp.route("/grade", methods=["GET"])
 @login_required
 @read_perm
-def grade() -> Response:
+async def grade() -> Response:
     """
     Fetches all records from the EstoqueGrade database table and renders the 'estoque_grade.html' page.
     This function queries all entries from the EstoqueGrade table and passes the data to the 'index.html' template
     with 'estoque_grade.html' as the page to be rendered. If an exception occurs during the process, it aborts the
     request with a 500 status code and includes the exception message in the response.
     Returns:
-        Response: A Flask response object that renders the 'index.html' template with the specified page and database data.
+        Response: A Quart response object that renders the 'index.html' template with the specified page and database data.
     Raises:
         HTTPException: If an error occurs during the database query or rendering process, a 500 HTTPException is raised.
     """
@@ -76,23 +83,23 @@ def grade() -> Response:
 
         database = EstoqueGrade.query.all()
 
-        return make_response(
-            render_template(
+        return await make_response(
+            await render_template(
                 "index.html",
                 page=page,
                 database=database,
                 title=title,
             )
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @estoque_bp.route("/entradas")
 @login_required
 @read_perm
-def entradas() -> Response:
+async def entradas() -> Response:
     try:
         """
         Handles the route for displaying the list of EPI (Personal Protective Equipment) entries.
@@ -106,8 +113,8 @@ def entradas() -> Response:
         page = "entradas.html"
 
         database = RegistroEntradas.query.all()
-        return make_response(
-            render_template(
+        return await make_response(
+            await render_template(
                 "index.html",
                 page=page,
                 title=title,
@@ -115,15 +122,15 @@ def entradas() -> Response:
                 format_currency_brl=format_currency_brl,
             )
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @estoque_bp.route("/lancamento_estoque", methods=["GET", "POST"])
 @login_required
 @create_perm
-def lancamento_produto() -> Response:
+async def lancamento_produto() -> Response:
     """
     Handles the product entry process in the inventory system.
     This function performs the following steps:
@@ -149,8 +156,10 @@ def lancamento_produto() -> Response:
         if form.validate_on_submit():
             if not form.nota_fiscal.data:
                 if form.justificativa.data == "...":
-                    flash("Inserir nota fiscal ou informar justificativa de estorno!")
-                    return make_response(redirect(url_for("estoque.produto_epi")))
+                    await flash(
+                        "Inserir nota fiscal ou informar justificativa de estorno!"
+                    )
+                    return await make_response(redirect(url_for("estoque.produto_epi")))
 
             query_Estoque = EstoqueEPI.query
             query_EstoqueGrade = EstoqueGrade.query
@@ -232,22 +241,24 @@ def lancamento_produto() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
-                return make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                await flash("Item com informações duplicadas!")
+                return await make_response(
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
-            flash("Informações salvas com sucesso!", "success")
-            return make_response(redirect(url_for("estoque.produto_epi")))
+            await flash("Informações salvas com sucesso!", "success")
+            return await make_response(redirect(url_for("estoque.produto_epi")))
 
         if form.errors:
-            flash("Campos Obrigatórios não preenchidos!")
-            return make_response(redirect(url_for("estoque.produto_epi")))
+            await flash("Campos Obrigatórios não preenchidos!")
+            return await make_response(redirect(url_for("estoque.produto_epi")))
 
-        return make_response(
-            render_template("index.html", page=page, form=form, title=title)
+        return await make_response(
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)

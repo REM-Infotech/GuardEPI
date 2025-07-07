@@ -11,7 +11,7 @@
         </span>
         <span class="text">Criar Tarefa</span>
       </button>
-      <a href="{{ url_for('index.gerar_relatorio') }}" class="btn btn-primary me-2 btn-icon-split">
+      <a href="{{ url_relatorio }}" class="btn btn-primary me-2 btn-icon-split">
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-csv"></i>
         </span>
@@ -35,7 +35,7 @@
           {% for item in database %}
           <tr>
             <td>{{ item.id }}</td>
-            <td>{{ item.nome_funcionario }}</td>
+            <td>{{ item.nome }}</td>
             <td>{{ item.cargo }}</td>
             <td>{{ item.departamento }}</td>
             <td>{{ item.empresa }}</td>

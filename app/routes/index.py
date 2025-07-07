@@ -2,12 +2,16 @@ import os
 import traceback
 from datetime import datetime
 from pathlib import Path
+from uuid import uuid4
 
 import pandas as pd
-from flask import Blueprint, Response, abort
-from flask import current_app as app
-from flask import (
+from flask_sqlalchemy import SQLAlchemy
+from quart import (
+    Blueprint,
+    Response,
+    abort,
     flash,
+    jsonify,
     make_response,
     redirect,
     render_template,
@@ -16,11 +20,11 @@ from flask import (
     send_from_directory,
     url_for,
 )
-from flask_login import login_required
-from flask_sqlalchemy import SQLAlchemy
+from quart_auth import login_required
 from sqlalchemy import LargeBinary
 from werkzeug.utils import secure_filename
 
+from app import app
 from app.forms import ImporteLotesForm
 from app.misc import get_models
 
@@ -28,7 +32,7 @@ index = Blueprint("index", __name__)
 
 
 @index.route("/termos_uso", methods=["GET"])
-def termos_uso() -> Response:
+async def termos_uso() -> Response:
     """
     Rota para servir o arquivo "Termos de Uso.pdf".
 
@@ -45,19 +49,21 @@ def termos_uso() -> Response:
     try:
         filename = "Termos de Uso.pdf"
         # Crie a resposta usando make_response
-        response = make_response(send_from_directory(app.config["PDF_PATH"], filename))
+        response = await make_response(
+            await send_from_directory(app.config["PDF_PATH"], filename)
+        )
 
         # Defina o tipo MIME como application/pdf
         response.headers["Content-Type"] = "application/pdf"
         return response
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @index.route("/politica_privacidade", methods=["GET"])
-def politica_privacidade() -> Response:
+async def politica_privacidade() -> Response:
     """
     Rota para servir o arquivo de Política de Privacidade em formato PDF.
 
@@ -74,23 +80,23 @@ def politica_privacidade() -> Response:
         filename = "Política de Privacidade.pdf"
 
         # Crie a resposta usando make_response
-        response = make_response(send_from_directory(app.config["PDF_PATH"], filename))
+        response = await make_response(
+            send_from_directory(app.config["PDF_PATH"], filename)
+        )
 
         # Defina o tipo MIME como application/pdf
         response.headers["Content-Type"] = "application/pdf"
         return response
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
-@index.route("/gerar_relatorio")
+@index.route("/gen_relatorio/<model>")
 @login_required
-def gerar_relatorio() -> Response:
-
+async def gen_relatorio(model: str = None) -> Response:
     try:
-
         referrer = (
             request.referrer.replace("http://", "").replace("https://", "").split("/")
         )
@@ -98,7 +104,7 @@ def gerar_relatorio() -> Response:
         if "?" in referrer[-1]:
             chk_login = referrer[-1].split("?")[0]
             if chk_login == "login":
-                return make_response(redirect(url_for("dash.dashboard")))
+                return await make_response(redirect(url_for("dash.dashboard")))
 
         modelo = {
             "categorias": "categorias",
@@ -128,9 +134,9 @@ def gerar_relatorio() -> Response:
         filename = secure_filename(
             "".join(
                 (
-                    f"Relatório {" ".join([i.capitalize() for i in dbase.split("_")])}",
+                    f"Relatório {' '.join([i.capitalize() for i in dbase.split('_')])}",
                     " - ",
-                    f"{datetime.now().strftime("%d-%m-%Y_%H-%M-%S")}.xlsx",
+                    f"{datetime.now().strftime('%d-%m-%Y_%H-%M-%S')}.xlsx",
                 )
             )
         )
@@ -160,20 +166,25 @@ def gerar_relatorio() -> Response:
 
         df.to_excel(file_path, index=False)
 
-        response = make_response(send_file(file_path, as_attachment=True))
+        response = await make_response(
+            await send_file(
+                file_path,
+                as_attachment=True,
+                cache_timeout=1,
+            )
+        )
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @index.route("/import_lotes/<tipo>", methods=["GET", "POST"])
 @login_required
-def import_lotes(tipo: str = None) -> Response:
+async def import_lotes(tipo: str = None) -> Response:
     try:
-
         action = request.path
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]
@@ -224,24 +235,23 @@ def import_lotes(tipo: str = None) -> Response:
             db.session.add_all(data)
             db.session.commit()
 
-            flash("Informação cadastrada com sucesso!", "success")
-            return make_response(redirect(url_for(tipo)))
+            await flash("Informação cadastrada com sucesso!", "success")
+            return await make_response(redirect(url_for(tipo)))
 
-        return make_response(
-            render_template(
+        return await make_response(
+            await render_template(
                 "forms/importform.html", form=form, action=action, model=tipo
             )
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @index.route("/gen_model/<model>", methods=["GET"])
 @login_required
-def gen_model(model: str) -> Response:
-
+async def gen_model(model: str) -> Response:
     try:
         database_model = get_models(model.lower())
 
@@ -277,10 +287,38 @@ def gen_model(model: str) -> Response:
         with pd.ExcelWriter(file_path, engine="auto") as writer:
             df.to_excel(writer, index=False, sheet_name="Sheet1")
 
-        response = make_response(send_file(f"{file_path}", as_attachment=True))
+        response = await make_response(
+            await send_file(f"{file_path}", as_attachment=True)
+        )
         response.headers["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
+
+
+@index.route("/migrate/<message>")
+def migrate_alembic(message: str = "Initial migration") -> Response:
+    from flask_migrate import migrate
+
+    migrate(directory="migrations", message=message, branch_label=uuid4().hex)
+    return jsonify(ok="ok")
+
+
+@index.route("/upgrade")
+def update_alembic() -> Response:
+    from flask_migrate import upgrade  # noqa: F401
+
+    upgrade(directory="migrations")
+
+    return jsonify(ok="ok")
+
+
+@index.route("/downgrade")
+def downgrade_alembic() -> Response:
+    from flask_migrate import downgrade
+
+    downgrade(directory="migrations")
+
+    return jsonify(ok="ok")

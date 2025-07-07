@@ -124,7 +124,7 @@ class ProductionConfig(Config):
 
         redis_uri = env.get("REDIS_URI", "redis://localhost:6379")
 
-        # Flask-mail config
+        # Quart-mail config
         MAIL_SERVER = env["MAIL_SERVER"]
         MAIL_PORT = int(env["MAIL_PORT"])
         MAIL_USE_TLS = env["MAIL_USE_TLS"] in ["True", "true", "TRUE"]
@@ -178,7 +178,7 @@ class DevelopmentConfig(Config):
 
         redis_uri = env.get("REDIS_URI", "redis://localhost:6379")
 
-        # Flask-mail config
+        # Quart-mail config
         TEMPLATES_AUTO_RELOAD = True
         MAIL_SERVER = env["MAIL_SERVER"]
         MAIL_PORT = int(env["MAIL_PORT"])
@@ -233,7 +233,7 @@ class TestingConfig(Config):
     try:
         env = os.environ
 
-        # Flask-mail config
+        # Quart-mail config
         MAIL_SERVER = env["MAIL_SERVER"]
         MAIL_PORT = int(env["MAIL_PORT"])
         MAIL_USE_TLS = env["MAIL_USE_TLS"] in ["True", "true", "TRUE"]

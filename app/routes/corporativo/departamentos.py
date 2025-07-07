@@ -1,11 +1,18 @@
 import traceback
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, url_for
-from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    url_for,
+)
+from quart import current_app as app
+from quart_auth import login_required
 
 from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import FormDepartamentos
@@ -17,7 +24,7 @@ from . import corp
 @corp.route("/Departamentos")
 @login_required
 @read_perm
-def Departamentos() -> Response:
+async def Departamentos() -> Response:
     """
     Handles the route for displaying the departments page.
     This function queries all departments from the database and renders the
@@ -25,7 +32,7 @@ def Departamentos() -> Response:
     during the process, it aborts the request with a 500 status code and
     includes the exception message in the response.
     Returns:
-        Response: A Flask response object that renders the 'index.html' template
+        Response: A Quart response object that renders the 'index.html' template
         with the departments data.
     Raises:
         HTTPException: If an exception occurs, a 500 HTTP status code is returned
@@ -33,26 +40,25 @@ def Departamentos() -> Response:
     """
 
     try:
-
         page = "departamentos.html"
         database = Departamento.query.all()
 
-        return make_response(
-            render_template(
+        return await make_response(
+            await render_template(
                 "index.html",
                 page=page,
                 database=database,
             )
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @corp.route("/Departamentos/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_departamentos() -> Response:
+async def cadastrar_departamentos() -> Response:
     """
     Handles the creation and registration of new departments.
     This function processes a form submission for creating new departments.
@@ -76,7 +82,6 @@ def cadastrar_departamentos() -> Response:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
-
             to_add = {}
             form_data = form.data
             list_form_data = list(form_data.items())
@@ -92,28 +97,29 @@ def cadastrar_departamentos() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
-                flash("Item com informações duplicadas!")
-                return make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                await flash("Item com informações duplicadas!")
+                return await make_response(
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
-            flash("Departamentos cadastrada com sucesso!", "success")
-            return make_response(redirect(url_for("corp.Departamentos")))
+            await flash("Departamentos cadastrada com sucesso!", "success")
+            return await make_response(redirect(url_for("corp.Departamentos")))
 
-        return make_response(
-            render_template("index.html", page=page, form=form, title=title)
+        return await make_response(
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @corp.route("/Departamentos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_departamentos(id) -> Response:
+async def editar_departamentos(id) -> Response:
     """
     Edit a department by its ID.
     This function handles the editing of a department's details. It retrieves the department
@@ -141,7 +147,6 @@ def editar_departamentos(id) -> Response:
         form = FormDepartamentos(**Departamentos.__dict__)
 
         if form.validate_on_submit():
-
             form_data = form.data
             list_form_data = list(form_data.items())
 
@@ -152,28 +157,29 @@ def editar_departamentos(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
-                flash("Item com informações duplicadas!")
-                return make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                await flash("Item com informações duplicadas!")
+                return await make_response(
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
-            flash("Departamentos editada com sucesso!", "success")
-            return make_response(redirect(url_for("corp.Departamentos")))
+            await flash("Departamentos editada com sucesso!", "success")
+            return await make_response(redirect(url_for("corp.Departamentos")))
 
-        return make_response(
-            render_template("index.html", page=page, form=form, title=title)
+        return await make_response(
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @corp.post("/Departamentoss/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_departamentos(id: int) -> Response:
+async def deletar_departamentos(id: int) -> Response:
     """
     Deletes a department from the database based on the provided ID.
     Args:
@@ -193,13 +199,12 @@ def deletar_departamentos(id: int) -> Response:
 
         template = "includes/show.html"
         message = "Informação deletada com sucesso!"
-        return make_response(render_template(template, message=message))
+        return await make_response(await render_template(template, message=message))
 
-    except Exception:
-
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
 
         message = "Erro ao deletar"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(await render_template(template, message=message))

@@ -1,11 +1,19 @@
 import traceback
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, request, url_for
-from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
+from quart import current_app as app
+from quart_auth import login_required
 
 from app.forms import FornecedoresForm
 from app.models import Fornecedores
@@ -17,7 +25,7 @@ from . import epi
 @epi.route("/fornecedores", methods=["GET"])
 @login_required
 @read_perm
-def fornecedores() -> Response:
+async def fornecedores() -> Response:
     """
     Renders the 'fornecedores' page with an empty database.
     This function sets the 'page' variable to "fornecedores.html" and initializes
@@ -32,20 +40,21 @@ def fornecedores() -> Response:
         title = "Fornecedores"
         page = "fornecedores.html"
         database = Fornecedores.query.all()
-        return make_response(
-            render_template("index.html", page=page, database=database, title=title)
+        return await make_response(
+            await render_template(
+                "index.html", page=page, database=database, title=title
+            )
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @epi.route("/fornecedores/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_fornecedores() -> Response:
-
+async def cadastrar_fornecedores() -> Response:
     try:
         """
         Handles the registration of suppliers.
@@ -69,7 +78,6 @@ def cadastrar_fornecedores() -> Response:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
-
             to_add = {}
             form_data = form.data
             list_form_data = list(form_data.items())
@@ -85,28 +93,29 @@ def cadastrar_fornecedores() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
-                flash("Item com informações duplicadas!")
-                return make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                await flash("Item com informações duplicadas!")
+                return await make_response(
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
-            flash("Fornecedor cadastrado com sucesso!", "success")
-            return make_response(redirect(url_for("epi.fornecedores")))
+            await flash("Fornecedor cadastrado com sucesso!", "success")
+            return await make_response(redirect(url_for("epi.fornecedores")))
 
-        return make_response(
-            render_template("index.html", page=page, form=form, title=title)
+        return await make_response(
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @epi.route("/fornecedores/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_fornecedores(id: int) -> Response:
+async def editar_fornecedores(id: int) -> Response:
     """
     Edit a supplier's information in the database.
     This function handles the editing of supplier information based on the provided supplier ID.
@@ -138,7 +147,6 @@ def editar_fornecedores(id: int) -> Response:
             form = FornecedoresForm(**fornecedor.__dict__)
 
         if form.validate_on_submit():
-
             form_data = form.data
             list_form_data = list(form_data.items())
 
@@ -149,28 +157,29 @@ def editar_fornecedores(id: int) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
-                flash("Item com informações duplicadas!")
-                return make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                await flash("Item com informações duplicadas!")
+                return await make_response(
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
-            flash("Fornecedor editado com sucesso!", "success")
-            return make_response(redirect(url_for("epi.fornecedores")))
+            await flash("Fornecedor editado com sucesso!", "success")
+            return await make_response(redirect(url_for("epi.fornecedores")))
 
-        return make_response(
-            render_template("index.html", page=page, form=form, title=title)
+        return await make_response(
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @epi.post("/fornecedores/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_fornecedores(id: int):
+async def deletar_fornecedores(id: int):
     """
     Deletes a supplier from the database based on the provided ID.
     Args:
@@ -190,13 +199,12 @@ def deletar_fornecedores(id: int):
 
         template = "includes/show.html"
         message = "Informação deletada com sucesso!"
-        return make_response(render_template(template, message=message))
+        return await make_response(await render_template(template, message=message))
 
-    except Exception:
-
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
 
         message = "Erro ao deletar"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(await render_template(template, message=message))

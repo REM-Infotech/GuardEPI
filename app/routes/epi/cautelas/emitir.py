@@ -7,7 +7,8 @@ from pathlib import Path
 from time import sleep
 from typing import List
 
-from flask import (
+from flask_sqlalchemy import SQLAlchemy
+from quart import (
     Response,
     abort,
     make_response,
@@ -17,9 +18,8 @@ from flask import (
     session,
     url_for,
 )
-from flask import current_app as app
-from flask_login import login_required
-from flask_sqlalchemy import SQLAlchemy
+from quart import current_app as app
+from quart_auth import login_required
 
 from ....decorators import create_perm
 from ....forms import Cautela
@@ -43,7 +43,7 @@ from .. import estoque_bp
 
 
 @estoque_bp.before_request
-def setgroups() -> None:
+async def setgroups() -> None:
     if request.endpoint == "estoque.emitir_cautela" and request.method == "GET":
         session["uuid_Cautelas"] = str(uuid.uuid4())
         pathj = os.path.join(
@@ -62,7 +62,7 @@ def setgroups() -> None:
 @estoque_bp.route("/add_itens", methods=["GET", "POST"])
 @login_required
 @create_perm
-def add_itens() -> Response:
+async def add_itens() -> Response:
     try:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
@@ -91,13 +91,15 @@ def add_itens() -> Response:
 
         if estoque_grade is not None:
             if all([estoque_grade.qtd_estoque == 0, data_estoque.qtd_estoque == 0]):
-                return make_response(
-                    render_template("forms/cautela/not_estoque.html", epi_name=nome_epi)
+                return await make_response(
+                    await render_template(
+                        "forms/cautela/not_estoque.html", epi_name=nome_epi
+                    )
                 )
 
         elif estoque_grade is None:
-            return make_response(
-                render_template(
+            return await make_response(
+                await render_template(
                     "forms/cautela/not_estoque.html",
                     message="EPI não registrada no estoque!",
                 )
@@ -118,10 +120,12 @@ def add_itens() -> Response:
         with open(pathj, "w") as f:
             f.write(json_obj)
 
-        item_html = render_template("forms/cautela/add_items.html", item=list_epis)
+        item_html = await render_template(
+            "forms/cautela/add_items.html", item=list_epis
+        )
 
         # Retorna o HTML do item
-        return make_response(item_html)
+        return await make_response(item_html)
     except Exception as e:
         abort(500, description=str(e))
 
@@ -129,21 +133,21 @@ def add_itens() -> Response:
 @estoque_bp.route("/remove-itens", methods=["GET", "POST"])
 @login_required
 @create_perm
-def remove_itens() -> Response:
+async def remove_itens() -> Response:
     pathj = os.path.join(app.config["TEMP_PATH"], f"{session['uuid_Cautelas']}.json")
     json_obj = json.dumps([])
 
     with open(pathj, "w") as f:
         f.write(json_obj)
 
-    item_html = render_template("forms/cautela/add_items.html")
-    return make_response(item_html)
+    item_html = await render_template("forms/cautela/add_items.html")
+    return await make_response(item_html)
 
 
 @estoque_bp.post("/get_grade")
 @login_required
 @create_perm
-def get_grade() -> Response:
+async def get_grade() -> Response:
     try:
         form = Cautela()
         lista = []
@@ -153,7 +157,7 @@ def get_grade() -> Response:
         form.tipo_grade.choices.extend(lista)
 
         page = "forms/cautela/get_grade.html"
-        return make_response(render_template(page, form=form))
+        return await make_response(await render_template(page, form=form))
     except Exception as e:
         abort(500, description=str(e))
 
@@ -161,7 +165,7 @@ def get_grade() -> Response:
 @estoque_bp.route("/emitir_cautela", methods=["GET", "POST"])
 @login_required
 @create_perm
-def emitir_cautela() -> Response:
+async def emitir_cautela() -> Response:
     try:
         form = Cautela()
         page = "forms/cautela/cautela_form.html"
@@ -177,7 +181,7 @@ def emitir_cautela() -> Response:
 
         if form.validate_on_submit():
             logo_empresa_path, funcionario = employee_info(form, db)
-            nomefilename = f"Cautela - {funcionario.nome_funcionario} - {datetime.now().strftime('%d-%m-%Y %H-%M-%S')}.pdf"
+            nomefilename = f"Cautela - {funcionario.nome} - {datetime.now().strftime('%d-%m-%Y %H-%M-%S')}.pdf"
 
             return emit_doc(
                 db,
@@ -187,8 +191,8 @@ def emitir_cautela() -> Response:
                 nomefilename,
             )
 
-        return make_response(
-            render_template("index.html", page=page, form=form, title=title)
+        return await make_response(
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
     except Exception as e:
@@ -197,7 +201,7 @@ def emitir_cautela() -> Response:
         abort(code, description=description)
 
 
-def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
+async def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
     try:
         epis_lista = []
         para_registro = []
@@ -289,10 +293,12 @@ def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
         raise e
 
 
-def employee_info(form: Cautela, db: SQLAlchemy) -> tuple[Path, Funcionarios | None]:
+async def employee_info(
+    form: Cautela, db: SQLAlchemy
+) -> tuple[Path, Funcionarios | None]:
     funcionario_data = (
         db.session.query(Funcionarios)
-        .filter(Funcionarios.nome_funcionario == form.funcionario.data)
+        .filter(Funcionarios.nome == form.funcionario.data)
         .first()
     )
 
@@ -309,9 +315,9 @@ def employee_info(form: Cautela, db: SQLAlchemy) -> tuple[Path, Funcionarios | N
     return original_path, funcionario_data
 
 
-def emit_doc(
+async def emit_doc(
     db: SQLAlchemy,
-    data_funcionario: Funcionarios,
+    data: Funcionarios,
     logo_empresa_path: Path,
     list_epis_solict: list,
     nomefilename: str,
@@ -322,7 +328,7 @@ def emit_doc(
 
     employee_data = {
         "company": str(data_funcionario.empresa),
-        "name": str(data_funcionario.nome_funcionario),
+        "name": str(data_funcionario.nome),
         "cargo": str(data_funcionario.cargo),
         "departamento": str(data_funcionario.departamento),
         "registration": str(data_funcionario.codigo).zfill(6),
@@ -384,7 +390,7 @@ def emit_doc(
         str_foldertoshow = str(path_toshow.joinpath(nomefilename))
         shutil.copy(path_cautela, str_foldertoshow)
 
-        return make_response(
+        return await make_response(
             redirect(url_for("estoque.cautelas", to_show=folder_to_show))
         )
 

@@ -2,9 +2,10 @@ import json
 import traceback
 from pathlib import Path
 
-from flask import Blueprint, Response, abort
-from flask import current_app as app
-from flask import (
+from quart import (
+    Blueprint,
+    Response,
+    abort,
     flash,
     make_response,
     redirect,
@@ -13,7 +14,8 @@ from flask import (
     session,
     url_for,
 )
-from flask_login import current_user, login_user, logout_user
+from quart import current_app as app
+from quart_auth import current_user, login_user, logout_user
 
 from app.forms import LoginForm
 from app.models.users import Users
@@ -23,7 +25,7 @@ auth = Blueprint("auth", __name__, template_folder=template_folder)
 
 
 @auth.route("/", methods=["GET"])
-def index() -> Response:
+async def index() -> Response:
     """
     Redirects the user based on their authentication status.
     If the current user is not authenticated, they are redirected to the dashboard.
@@ -33,18 +35,18 @@ def index() -> Response:
     """
 
     try:
-        if not current_user.is_authenticated:
-            return make_response(redirect(url_for("dash.dashboard")))
+        is_auth = await current_user.is_authenticated
+        if not is_auth:
+            return await make_response(redirect(url_for("auth.login")))
+        return await make_response(redirect(url_for("dash.dashboard")))
 
-        return make_response(redirect(url_for("auth.login")))
-
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @auth.route("/login", methods=["GET", "POST"])
-def login() -> Response:
+async def login() -> Response:
     """
     Handle user login.
     This route handles the user login process. If the user is already logged in,
@@ -59,7 +61,7 @@ def login() -> Response:
 
     try:
         if session.get("_user_id", None) is not None:
-            return make_response(redirect(url_for("dash.dashboard")))
+            return await make_response(redirect(url_for("dash.dashboard")))
 
         if not session.get("next"):
             session["next"] = request.args.get("next", url_for("dash.dashboard"))
@@ -75,24 +77,24 @@ def login() -> Response:
                 session["nome_usuario"] = user.nome_usuario
                 session.pop("next")
                 login_user(user, remember=form.keep_login.data)
-                flash("Login Efetuado com sucesso!", "success")
+                await flash("Login Efetuado com sucesso!", "success")
 
                 if "?" in location:
                     location = location.split("?")[0]
 
-                return make_response(redirect(location))
+                return await make_response(redirect(location))
 
-            flash("Usuário/Senha Incorretos!", "error")
+            await flash("Usuário/Senha Incorretos!", "error")
 
-        return make_response(render_template("login.html", form=form))
+        return await make_response(await render_template("login.html", form=form))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @auth.route("/logout", methods=["GET"])
-def logout() -> Response:
+async def logout() -> Response:
     """
     Logs out the current user, flashes a logout message, and redirects to the login page.
     This function performs the following actions:
@@ -105,10 +107,10 @@ def logout() -> Response:
 
     try:
         logout_user()
-        flash("Sessão encerrada", "info")
+        await flash("Sessão encerrada", "info")
         location = url_for("auth.login")
-        return make_response(redirect(location))
+        return await make_response(redirect(location))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)

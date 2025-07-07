@@ -2,11 +2,11 @@ from os import path
 from pathlib import Path
 
 from celery import shared_task
-from flask import Blueprint, Response, make_response, redirect, render_template, url_for
-from flask import current_app as app
-from flask_login import login_required
 from flask_mail import Mail, Message
 from flask_wtf import FlaskForm
+from quart import Blueprint, Response, make_response, redirect, render_template, url_for
+from quart import current_app as app
+from quart_auth import login_required
 
 from ...forms.schedule_task import TaskNotificacaoForm
 
@@ -21,7 +21,9 @@ schedule_bp = Blueprint(
 def dash() -> Response:
     form: FlaskForm | TaskNotificacaoForm = TaskNotificacaoForm()
     page = "schedules.html"
-    return make_response(render_template("index.html", page=page, form=form))
+    return await make_response(
+        await render_template("index.html", page=page, form=form)
+    )
 
 
 @schedule_bp.post("/new_schedule")
@@ -33,7 +35,7 @@ def new_schedule() -> Response:
 
     #     days = [int(day) for day in form.days_of_week.data]
 
-    return make_response(redirect(url_for("schedules.dash")))
+    return await make_response(redirect(url_for("schedules.dash")))
 
 
 @shared_task(bind=True, ignore_result=False)
@@ -69,6 +71,8 @@ def message_formatter(todo: str) -> Message:
 
         sender_ = f"Notificação GuardEPI <{sendermail}>"
         assunto = "Notificação de troca de EPI"
-        mensagem = render_template("assets/body_email.html", Funcionarios=funcionarios)
+        mensagem = await render_template(
+            "assets/body_email.html", Funcionarios=funcionarios
+        )
 
         return Message(assunto, sender=sender_, recipients=copy_content, html=mensagem)

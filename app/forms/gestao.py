@@ -12,7 +12,6 @@ from wtforms import (
 )
 from wtforms.validators import DataRequired, Length
 
-from app import app
 from app.models import Cargos, Departamento, Empresa
 
 permited_file = FileAllowed(
@@ -21,23 +20,17 @@ permited_file = FileAllowed(
 
 
 def setChoices_Empresa() -> list[tuple[str, str]]:
-    with app.app_context():
-        return [
-            (query.nome_empresa, query.nome_empresa) for query in Empresa.query.all()
-        ]
+    return [(query.nome_empresa, query.nome_empresa) for query in Empresa.query.all()]
 
 
 def setChoices_Departamento() -> list[tuple[str, str]]:
-    with app.app_context():
-        return [
-            (query.departamento, query.departamento)
-            for query in Departamento.query.all()
-        ]
+    return [
+        (query.departamento, query.departamento) for query in Departamento.query.all()
+    ]
 
 
 def setChoices_Cargo() -> list[tuple[str, str]]:
-    with app.app_context():
-        return [(query.cargo, query.cargo) for query in Cargos.query.all()]
+    return [(query.cargo, query.cargo) for query in Cargos.query.all()]
 
 
 class FuncionarioForm(FlaskForm):
@@ -46,14 +39,14 @@ class FuncionarioForm(FlaskForm):
         validators=[DataRequired(), Length(max=6)],
         default="000001",
     )
-    nome_funcionario = StringField(
+    nome = StringField(
         "Nome do funcionário", validators=[DataRequired("Informe o nome!")]
     )
-    cpf_funcionario = StringField(
+    cpf = StringField(
         "CPF do Funcionário",
         validators=[Length(min=11, max=14), DataRequired("Informe o CPF!")],
     )
-    email_funcionario = EmailField("Email")
+    email = EmailField("Email")
     deficiencia = StringField("Deficiência", default="Não Consta")
     data_admissao = DateField("Data Admissão", default=datetime.now())
     empresa = SelectField(

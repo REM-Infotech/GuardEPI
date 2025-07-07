@@ -1,9 +1,10 @@
 import json
 import traceback
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import (
+from flask_sqlalchemy import SQLAlchemy
+from quart import (
+    Response,
+    abort,
     flash,
     make_response,
     redirect,
@@ -11,10 +12,11 @@ from flask import (
     session,
     url_for,
 )
-from flask_login import login_required
-from flask_sqlalchemy import SQLAlchemy
+from quart import current_app as app
+from quart_auth import login_required
 
-from ...decorators import create_perm, delete_perm, read_perm, update_perm
+from app.decorators import create_perm, delete_perm, read_perm, update_perm
+
 from ...forms import AdmChangeEmail, AdmChangePassWord, FormUser
 from ...models import Users
 from . import config
@@ -23,40 +25,38 @@ from . import config
 @config.get("/users")
 @login_required
 @read_perm
-def users() -> Response:
+async def users() -> Response:
     try:
-
         title = "Usuários"
         page = "users.html"
 
         database = Users.query.order_by(Users.login_time.desc()).all()
 
-        return make_response(
-            render_template("index.html", title=title, database=database, page=page)
+        return await make_response(
+            await render_template(
+                "index.html", title=title, database=database, page=page
+            )
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @config.route("/cadastro_usuario", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastro_usuario() -> Response:
-
+async def cadastro_usuario() -> Response:
     form = FormUser()
     html = "forms/FormUser.html"
 
     try:
-
         if form.validate_on_submit():
-
             db: SQLAlchemy = app.extensions["sqlalchemy"]
 
             if db.session.query(Users).filter(Users.login == form.login.data).first():
-                flash("Já existe um usuário com este login!")
-                return make_response(redirect(url_for("config.users")))
+                await flash("Já existe um usuário com este login!")
+                return await make_response(redirect(url_for("config.users")))
 
             usuario = Users(
                 login=form.login.data,
@@ -70,91 +70,87 @@ def cadastro_usuario() -> Response:
             db.session.add(usuario)
             db.session.commit()
 
-            flash("Usuário criado com sucesso!", "success")
-            return make_response(redirect(url_for("config.users")))
+            await flash("Usuário criado com sucesso!", "success")
+            return await make_response(redirect(url_for("config.users")))
 
         if form.errors:
-            flash(form.errors)
+            await flash(form.errors)
 
-        return make_response(render_template(html, form=form))
+        return await make_response(await render_template(html, form=form))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
-    return make_response(render_template(html))
+    return await make_response(await render_template(html))
 
 
 @config.route("/changepw_usr", methods=["GET", "POST"])
 @login_required
 @update_perm
-def changepw_usr() -> Response:
-
+async def changepw_usr() -> Response:
     html = "forms/ChangePasswordForm.html"
     try:
         form = AdmChangePassWord()
 
         if form.validate_on_submit():
-
             db: SQLAlchemy = app.extensions["sqlalchemy"]
             if form.new_password.data != form.repeat_password.data:
-                flash("Senhas não coincidem")
-                return make_response(redirect(url_for("config.users")))
+                await flash("Senhas não coincidem")
+                return await make_response(redirect(url_for("config.users")))
 
             login_usr = form.data.get("user_to_change", session.get("login"))
             password = Users.query.filter_by(login=login_usr).first()
             password.senhacrip = form.new_password.data
             db.session.commit()
 
-            flash("Senha alterada com sucesso!", "success")
-            return make_response(redirect(url_for("config.users")))
+            await flash("Senha alterada com sucesso!", "success")
+            return await make_response(redirect(url_for("config.users")))
 
-        return make_response(render_template(html, form=form))
+        return await make_response(await render_template(html, form=form))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
-    return make_response(render_template(html))
+    return await make_response(await render_template(html))
 
 
 @config.route("/changemail_usr", methods=["GET", "POST"])
 @login_required
 @update_perm
-def changemail_usr() -> Response:
-
+async def changemail_usr() -> Response:
     html = "forms/ChangeMailForm.html"
     try:
         form = AdmChangeEmail()
 
         if form.validate_on_submit():
-
             db: SQLAlchemy = app.extensions["sqlalchemy"]
             login_usr = form.data.get("user_to_change", session.get("login"))
             mail = Users.query.filter_by(login=login_usr).first()
             if form.new_email.data != form.repeat_email.data:
-                flash("E-mails não coincidem")
-                return make_response(redirect(url_for("config.users")))
+                await flash("E-mails não coincidem")
+                return await make_response(redirect(url_for("config.users")))
 
             mail.email = form.new_email.data
             db.session.commit()
 
-            flash("E-mail alterado com sucesso!", "success")
-            return make_response(redirect(url_for("config.users")))
+            await flash("E-mail alterado com sucesso!", "success")
+            return await make_response(redirect(url_for("config.users")))
 
-        return make_response(render_template(html, form=form))
+        return await make_response(await render_template(html, form=form))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
-    return make_response(render_template(html, form=form))
+    return await make_response(await render_template(html, form=form))
 
 
 @config.route("/delete_user/<id>", methods=["GET"])
 @login_required
 @delete_perm
-def delete_user(id: int) -> Response:
+async def delete_user(id: int) -> Response:
     """
     Deletes a user from the database based on the provided user ID.
 
@@ -174,7 +170,6 @@ def delete_user(id: int) -> Response:
     """
 
     try:
-
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         set_delete = True
@@ -202,13 +197,12 @@ def delete_user(id: int) -> Response:
             db.session.commit()
 
         template = "includes/show.html"
-        return make_response(render_template(template, message=message))
+        return await make_response(await render_template(template, message=message))
 
-    except Exception:
-
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
 
         message = "Erro ao deletar"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(await render_template(template, message=message))

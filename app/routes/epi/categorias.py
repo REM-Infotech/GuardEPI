@@ -1,11 +1,19 @@
 import traceback
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, request, url_for
-from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
+from quart import current_app as app
+from quart_auth import login_required
 
 from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import FormCategorias
@@ -17,8 +25,7 @@ from . import epi
 @epi.route("/categorias", methods=["GET"])
 @login_required
 @read_perm
-def categorias() -> Response:
-
+async def categorias() -> Response:
     try:
         """
         Renders the 'categorias' page with data from the ClassesEPI database.
@@ -32,20 +39,21 @@ def categorias() -> Response:
         page = "categorias.html"
         database = ClassesEPI.query.all()
 
-        return make_response(
-            render_template("index.html", page=page, database=database, title=title)
+        return await make_response(
+            await render_template(
+                "index.html", page=page, database=database, title=title
+            )
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @epi.route("/categorias/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_categoria() -> Response:
-
+async def cadastrar_categoria() -> Response:
     try:
         """
         Handles the creation of a new category.
@@ -69,7 +77,6 @@ def cadastrar_categoria() -> Response:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
-
             to_add = {}
             form_data = form.data
             list_form_data = list(form_data.items())
@@ -85,28 +92,30 @@ def cadastrar_categoria() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
-                flash("Item com informações duplicadas!")
-                return make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                await flash("Item com informações duplicadas!")
+                return await make_response(
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
-            flash("Categoria cadastrada com sucesso!", "success")
-            return make_response(make_response(redirect(url_for("epi.categorias"))))
+            await flash("Categoria cadastrada com sucesso!", "success")
+            return await make_response(
+                make_response(redirect(url_for("epi.categorias")))
+            )
 
-        return make_response(
-            render_template("index.html", page=page, form=form, title=title)
+        return await make_response(
+            await render_template("index.html", page=page, form=form, title=title)
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @epi.route("/categorias/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_categoria(id) -> Response:
-
+async def editar_categoria(id) -> Response:
     try:
         """
         Edit an existing category based on the provided ID.
@@ -135,7 +144,6 @@ def editar_categoria(id) -> Response:
             form = FormCategorias(**classe.__dict__)
 
         if form.validate_on_submit():
-
             form_data = form.data
             list_form_data = list(form_data.items())
 
@@ -146,29 +154,29 @@ def editar_categoria(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
-                flash("Item com informações duplicadas!")
-                return make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                await flash("Item com informações duplicadas!")
+                return await make_response(
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
-            flash("Categoria editada com sucesso!", "success")
-            return make_response(redirect(url_for("epi.categorias")))
+            await flash("Categoria editada com sucesso!", "success")
+            return await make_response(redirect(url_for("epi.categorias")))
 
-        return make_response(
-            render_template("index.html", page=page, form=form, title=title)
+        return await make_response(
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @epi.post("/categorias/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_categoria(id: int) -> Response:
-
+async def deletar_categoria(id: int) -> Response:
     try:
         """
         Deletes a category from the database based on the provided ID.
@@ -188,13 +196,12 @@ def deletar_categoria(id: int) -> Response:
 
         template = "includes/show.html"
         message = "Informação deletada com sucesso!"
-        return make_response(render_template(template, message=message))
+        return await make_response(await render_template(template, message=message))
 
-    except Exception:
-
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
 
         message = "Erro ao deletar regra"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(await render_template(template, message=message))

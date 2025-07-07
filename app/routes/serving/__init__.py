@@ -1,15 +1,14 @@
 import traceback
 from pathlib import Path
 
-from flask import Blueprint, Response, abort
-from flask import current_app as app
-from flask import make_response, send_from_directory
+from quart import Blueprint, Response, abort, make_response, send_from_directory
+from quart import current_app as app
 
 serve = Blueprint("serve", __name__)
 
 
 @serve.get("/serve_img/<filename>")
-def serve_img(filename: str) -> Response:
+async def serve_img(filename: str) -> Response:
     """
     Route to serve an image file.
     This route handles GET requests to serve an image file from a specified directory.
@@ -17,13 +16,13 @@ def serve_img(filename: str) -> Response:
     Args:
         filename (str): The name of the image file to be served.
     Returns:
-        Response: A Flask response object that sends the requested image file from the directory specified in the app configuration.
+        Response: A Quart response object that sends the requested image file from the directory specified in the app configuration.
     """
 
     try:
         path_img = Path(app.config["IMAGE_TEMP_PATH"])
-        return make_response(send_from_directory(path_img, filename))
+        return await make_response(send_from_directory(path_img, filename))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)

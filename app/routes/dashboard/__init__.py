@@ -4,10 +4,9 @@ from pathlib import Path
 
 import pandas as pd
 import pytz
-from flask import Blueprint, Response, abort
-from flask import current_app as app
-from flask import jsonify, make_response, render_template
-from flask_login import login_required
+from quart import Blueprint, Response, abort, jsonify, make_response, render_template
+from quart import current_app as app
+from quart_auth import login_required
 from sqlalchemy import extract
 
 from ...misc import format_currency_brl
@@ -19,14 +18,14 @@ dash = Blueprint("dash", __name__, template_folder=template_folder)
 
 @dash.route("/dashboard", methods=["GET"])
 @login_required
-def dashboard() -> Response:
+async def dashboard() -> Response:
     """
     Renders the dashboard page with various statistics and data for the current month.
     This function retrieves data from the database for the current month, including
     total entries, total exits, and their respective values. It then renders the
     'index.html' template with the retrieved data.
     Returns:
-        Response: A Flask response object containing the rendered template.
+        Response: A Quart response object containing the rendered template.
     Raises:
         HTTPException: If an error occurs during data retrieval or template rendering,
                        a 500 HTTP error is raised with the error description.
@@ -71,8 +70,8 @@ def dashboard() -> Response:
 
         # today = datetime.now().strftime("%d/%m/%Y")
 
-        return make_response(
-            render_template(
+        return await make_response(
+            await render_template(
                 "index.html",
                 page=page,
                 title=title,
@@ -87,21 +86,21 @@ def dashboard() -> Response:
             )
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @dash.route("/saidasEquipamento", methods=["GET"])
 @login_required
-def saidasEquipamento() -> Response:
+async def saidasEquipamento() -> Response:
     """
     Retrieves equipment output data for the current month and returns it in JSON format.
     This function queries the database for equipment output records for the current month,
     processes the data to calculate the total values and average, and returns the data
     formatted for charting.
     Returns:
-        Response: A Flask JSON response containing the chart data with the following structure:
+        Response: A Quart JSON response containing the chart data with the following structure:
             {
                 "labels": [list of equipment names],
                 "values": [list of total values for each equipment],
@@ -143,16 +142,16 @@ def saidasEquipamento() -> Response:
                 "values": df_grouped["Valor"].tolist(),
                 "media": media,
             }
-        return make_response(jsonify(chart_data))
+        return await make_response(jsonify(chart_data))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @dash.route("/saidasFuncionario", methods=["GET"])
 @login_required
-def saidasFuncionario() -> Response:
+async def saidasFuncionario() -> Response:
     """
     Retrieves and processes employee data for the current month to generate chart data.
     This function queries the database for records of employee deliveries (RegistrosEPI)
@@ -199,10 +198,10 @@ def saidasFuncionario() -> Response:
                 "media": media,
             }
 
-        return make_response(jsonify(chart_data))
+        return await make_response(jsonify(chart_data))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 

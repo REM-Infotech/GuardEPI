@@ -2,9 +2,8 @@ import traceback
 from importlib import import_module
 from pathlib import Path
 
-from flask import Blueprint, Response, abort
-from flask import current_app as app
-from flask import make_response, redirect, url_for
+from quart import Blueprint, Response, abort, make_response, redirect, url_for
+from quart import current_app as app
 
 template_folder = Path(__file__).parent.resolve().joinpath("templates")
 epi = Blueprint("epi", __name__, template_folder=template_folder, url_prefix="/epi")
@@ -14,7 +13,7 @@ estoque_bp = Blueprint(
 
 
 @epi.get("/")
-def redirecting() -> Response:
+async def redirecting() -> Response:
     """
     Redirects to the 'Equipamentos' endpoint within the 'epi' blueprint.
     Returns:
@@ -22,10 +21,10 @@ def redirecting() -> Response:
     """
 
     try:
-        return make_response(redirect(url_for("epi.Equipamentos")))
+        return await make_response(redirect(url_for("epi.Equipamentos")))
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 

@@ -1,11 +1,19 @@
 import traceback
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, request, url_for
-from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
+from quart import current_app as app
+from quart_auth import login_required
 
 from app.forms import FormGrade
 from app.models import GradeEPI
@@ -17,7 +25,7 @@ from . import epi
 @epi.route("/Grade")
 @login_required
 @read_perm
-def Grade() -> Response:
+async def Grade() -> Response:
     """
     Handles the request to display the grades page.
     This function queries the GradeEPI database for all entries and renders the
@@ -25,7 +33,7 @@ def Grade() -> Response:
     the process, it aborts the request with a 500 status code and includes the
     exception message in the response.
     Returns:
-        Response: A Flask response object that renders the 'index.html' template
+        Response: A Quart response object that renders the 'index.html' template
         with the grades data.
     Raises:
         HTTPException: If an error occurs during the database query or template
@@ -37,23 +45,23 @@ def Grade() -> Response:
         page = "grade.html"
 
         database = GradeEPI.query.all()
-        return make_response(
-            render_template(
+        return await make_response(
+            await render_template(
                 "index.html",
                 page=page,
                 title=title,
                 database=database,
             )
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @epi.route("/Grade/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_grade() -> Response:
+async def cadastrar_grade() -> Response:
     """
     Handles the creation and registration of a new GradeEPI entry.
     This function processes a form submission for creating a new GradeEPI.
@@ -77,7 +85,6 @@ def cadastrar_grade() -> Response:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
-
             to_add = {}
             form_data = form.data
             list_form_data = list(form_data.items())
@@ -93,28 +100,29 @@ def cadastrar_grade() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
-                flash("Item com informações duplicadas!")
-                return make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                await flash("Item com informações duplicadas!")
+                return await make_response(
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
-            flash("Grade cadastrada com sucesso!", "success")
-            return make_response(redirect(url_for("epi.Grade")))
+            await flash("Grade cadastrada com sucesso!", "success")
+            return await make_response(redirect(url_for("epi.Grade")))
 
-        return make_response(
-            render_template("index.html", page=page, form=form, title=title)
+        return await make_response(
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @epi.route("/Grade/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_grade(id) -> Response:
+async def editar_grade(id) -> Response:
     """
     Edit a GradeEPI entry in the database.
     This function handles the editing of a GradeEPI entry identified by the given id.
@@ -145,7 +153,6 @@ def editar_grade(id) -> Response:
             form = FormGrade(**grade.__dict__)
 
         if form.validate_on_submit():
-
             form_data = form.data
             list_form_data = list(form_data.items())
 
@@ -156,28 +163,29 @@ def editar_grade(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
-                flash("Item com informações duplicadas!")
-                return make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                await flash("Item com informações duplicadas!")
+                return await make_response(
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
-            flash("Grade editada com sucesso!", "success")
-            return make_response(redirect(url_for("epi.Grade")))
+            await flash("Grade editada com sucesso!", "success")
+            return await make_response(redirect(url_for("epi.Grade")))
 
-        return make_response(
-            render_template("index.html", page=page, form=form, title=title)
+        return await make_response(
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @epi.post("/grades/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_grade(id: int) -> Response:
+async def deletar_grade(id: int) -> Response:
     """
     Deletes a GradeEPI record from the database based on the provided ID.
     Args:
@@ -195,13 +203,12 @@ def deletar_grade(id: int) -> Response:
 
         template = "includes/show.html"
         message = "Informação deletada com sucesso!"
-        return make_response(render_template(template, message=message))
+        return await make_response(await render_template(template, message=message))
 
-    except Exception:
-
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
 
         message = "Erro ao deletar"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(await render_template(template, message=message))

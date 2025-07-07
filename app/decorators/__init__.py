@@ -1,17 +1,24 @@
 from functools import wraps
-from typing import Any
+from typing import Any, Callable, Coroutine
 
-from flask import abort
-from flask import current_app as app
-from flask import make_response, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
+from quart import (
+    abort,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
+from quart import current_app as app
 
 from ..models import Groups, Roles, Routes, Users
 
 
-def create_perm(func):
+def create_perm(func: Callable) -> Callable[..., Coroutine[Any, Any, Any]]:
     @wraps(func)
-    def decorated_function(*args, **kwargs) -> Any:
+    async def decorated_function(*args, **kwargs) -> Any:
         """
         Função decorada que verifica se o usuário tem permissão para criar.
         Args:
@@ -31,16 +38,16 @@ def create_perm(func):
                 abort(403)
 
         elif not user:
-            return make_response(redirect(url_for("auth.login")))
+            return await make_response(redirect(url_for("auth.login")))
 
-        return func(*args, **kwargs)
+        return await func(*args, **kwargs)
 
     return decorated_function
 
 
-def read_perm(func):
+def read_perm(func: Callable[..., Any]):
     @wraps(func)
-    def decorated_function(*args, **kwargs) -> Any:
+    async def decorated_function(*args, **kwargs) -> Any:
         """
         Função decorada que verifica se o usuário tem permissão para acessar a função decorada.
         Args:
@@ -58,16 +65,16 @@ def read_perm(func):
                 abort(403)
 
         elif not user:
-            return make_response(redirect(url_for("auth.login")))
+            return await make_response(redirect(url_for("auth.login")))
 
-        return func(*args, **kwargs)
+        return await func(*args, **kwargs)
 
     return decorated_function
 
 
 def update_perm(func):
     @wraps(func)
-    def decorated_function(*args, **kwargs) -> Any:
+    async def decorated_function(*args, **kwargs) -> Any:
         """
         Função decorada que verifica se o usuário está autenticado e possui permissão para atualizar.
         Args:
@@ -84,16 +91,16 @@ def update_perm(func):
                 abort(403)
 
         elif not user:
-            return make_response(redirect(url_for("auth.login")))
+            return await make_response(redirect(url_for("auth.login")))
 
-        return func(*args, **kwargs)
+        return await func(*args, **kwargs)
 
     return decorated_function
 
 
 def delete_perm(func):
     @wraps(func)
-    def decorated_function(*args, **kwargs):
+    async def decorated_function(*args, **kwargs):
         """
         Função decorada para verificar permissões de usuário antes de executar a função principal.
         Args:
@@ -108,21 +115,21 @@ def delete_perm(func):
         user = session.get("username")
         if user:
             if check_permit(user, "DELETE") is False:
-
                 template = "includes/show.html"
                 message = "Você não tem permissões para isto"
-                return make_response(render_template(template, message=message))
+                return await make_response(
+                    await render_template(template, message=message)
+                )
 
         elif not user:
-            return make_response(redirect(url_for("auth.login")))
+            return await make_response(redirect(url_for("auth.login")))
 
-        return func(*args, **kwargs)
+        return await func(*args, **kwargs)
 
     return decorated_function
 
 
 def check_permit(user: str, PERM: str) -> bool:
-
     db: SQLAlchemy = app.extensions["sqlalchemy"]
 
     endpoint = f"/{request.blueprint}"

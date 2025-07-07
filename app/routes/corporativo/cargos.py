@@ -1,11 +1,18 @@
 import traceback
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, url_for
-from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    url_for,
+)
+from quart import current_app as app
+from quart_auth import login_required
 
 from app.decorators import create_perm, delete_perm, read_perm, update_perm
 from app.forms import CargoForm
@@ -17,7 +24,7 @@ from . import corp
 @corp.route("/cargos")
 @login_required
 @read_perm
-def cargos():
+async def cargos():
     """
     Route to display the cargos page.
     This route is protected by login and will render the cargos page with data
@@ -31,22 +38,22 @@ def cargos():
         page = "cargos.html"
         database = Cargos.query.all()
 
-        return make_response(
-            render_template(
+        return await make_response(
+            await render_template(
                 "index.html",
                 page=page,
                 database=database,
             )
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @corp.route("/cargos/cadastrar", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastrar_cargos() -> Response:
+async def cadastrar_cargos() -> Response:
     """
     Handles the creation and registration of new 'Cargos' (positions) in the system.
     This function processes a form submission for creating a new 'Cargo'. It validates the form,
@@ -72,7 +79,6 @@ def cadastrar_cargos() -> Response:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
         if form.validate_on_submit():
-
             to_add = {}
             form_data = form.data
             list_form_data = list(form_data.items())
@@ -88,27 +94,29 @@ def cadastrar_cargos() -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-                flash("Item com informações duplicadas!")
-                return make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                await flash("Item com informações duplicadas!")
+                return await make_response(
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
-            flash("Cargo cadastrado com sucesso!", "success")
-            return make_response(redirect(url_for("corp.cargos")))
+            await flash("Cargo cadastrado com sucesso!", "success")
+            return await make_response(redirect(url_for("corp.cargos")))
 
-        return make_response(
-            render_template("index.html", page=page, form=form, title=title)
+        return await make_response(
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @corp.route("/cargos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 @update_perm
-def editar_cargos(id) -> Response:
+async def editar_cargos(id) -> Response:
     """
     Edits an existing position in the database.
     Args:
@@ -137,7 +145,6 @@ def editar_cargos(id) -> Response:
         form = CargoForm(**cargos.__dict__)
 
         if form.validate_on_submit():
-
             form_data = form.data
             list_form_data = list(form_data.items())
 
@@ -148,27 +155,28 @@ def editar_cargos(id) -> Response:
             try:
                 db.session.commit()
             except errors.UniqueViolation:
-
-                flash("Item com informações duplicadas!")
-                return make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                await flash("Item com informações duplicadas!")
+                return await make_response(
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
-            flash("Cargo editado com sucesso!", "success")
-            return make_response(redirect(url_for("corp.cargos")))
+            await flash("Cargo editado com sucesso!", "success")
+            return await make_response(redirect(url_for("corp.cargos")))
 
-        return make_response(
-            render_template("index.html", page=page, form=form, title=title)
+        return await make_response(
+            await render_template("index.html", page=page, form=form, title=title)
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @corp.post("/cargos/deletar/<int:id>")
 @login_required
 @delete_perm
-def deletar_cargos(id: int) -> str:
+async def deletar_cargos(id: int) -> str:
     """
     Deletes a cargo record from the database based on the provided ID.
     Args:
@@ -188,13 +196,12 @@ def deletar_cargos(id: int) -> str:
 
         template = "includes/show.html"
         message = "Informação deletada com sucesso!"
-        return make_response(render_template(template, message=message))
+        return await make_response(await render_template(template, message=message))
 
-    except Exception:
-
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
 
         message = "Erro ao deletar"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(await render_template(template, message=message))

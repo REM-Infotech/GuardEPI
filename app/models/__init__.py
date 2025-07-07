@@ -4,8 +4,8 @@ from os import path
 from pathlib import Path
 
 from dotenv import load_dotenv
-from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from quart import Quart
 
 from app.models.admissional import (
     FileModel,
@@ -60,8 +60,8 @@ endpoints = ["/epi", "/corp", "/config", "/estoque"]
 load_dotenv()
 
 
-def init_database(app: Flask, db: SQLAlchemy) -> str:
-    with app.app_context():
+async def init_database(app: Quart, db: SQLAlchemy) -> str:
+    async with app.app_context():
         to_add = []
 
         values = os.environ

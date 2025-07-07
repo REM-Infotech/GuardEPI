@@ -9,7 +9,7 @@
 
 ## Estrutura do projeto
 
-- [`APP`](./app/): É a pasta onde fica centralizado rotas, formulários e models do Flask
+- [`APP`](./app/): É a pasta onde fica centralizado rotas, formulários e models do Quart
 
 - [`Arquivo Config.`](./app/default_config.py): Arquivo de configuração do APP
 

@@ -1,9 +1,14 @@
-from pathlib import Path  # noqa: F401
-from typing import Type, TypeVar  # noqa: F401
 import unicodedata  # noqa: F401
-from flask import (
-    Flask,
+from pathlib import Path  # noqa: F401
+from typing import TypeVar
+from uuid import uuid4  # noqa: F401
+
+import pandas  # noqa: F401
+from flask_sqlalchemy import SQLAlchemy  # noqa: F401
+from quart import (
+    Quart,
     Response,
+    flash,
     jsonify,  # noqa: F401
     make_response,
     redirect,
@@ -11,14 +16,13 @@ from flask import (
     request,  # noqa: F401
     url_for,
 )
-from flask_sqlalchemy import SQLAlchemy  # noqa: F401
-import pandas  # noqa: F401
 from tqdm import tqdm  # noqa: F401
 from werkzeug.exceptions import HTTPException
+from werkzeug.utils import secure_filename  # noqa: F401
 
 from app.models.EPI.equipamento import ProdutoEPI  # noqa: F401
 from app.models.EPI.estoque import EstoqueEPI, EstoqueGrade
-from werkzeug.utils import secure_filename  # noqa: F401
+
 from .auth import auth
 from .config import config
 from .corporativo import corp
@@ -30,13 +34,13 @@ from .serving import serve
 type_db = TypeVar("model_db", bound=EstoqueEPI | EstoqueGrade)
 
 
-def register_routes(app: Flask) -> None:
+async def register_routes(app: Quart) -> None:
     """
-    Register routes and error handlers for the Flask application.
+    Register routes and error handlers for the Quart application.
     This function registers blueprints and error handlers, and defines routes for terms of use and privacy policy PDFs.
 
     Args:
-        app (Flask): The Flask application instance.
+        app (Quart): The Quart application instance.
 
     Blueprints:
 
@@ -53,19 +57,20 @@ def register_routes(app: Flask) -> None:
         - /politica_privacidade (GET): Serves the "Política de Privacidade.pdf" file from the configured PDF path.
     """
 
-    blueprints = [auth, dash, corp, epi, serve, ind, estoque_bp, config]
+    async with app.app_context():
+        blueprints = [auth, dash, corp, epi, serve, ind, estoque_bp, config]
 
-    for blueprint in blueprints:
-        app.register_blueprint(blueprint)
+        for blueprint in blueprints:
+            app.register_blueprint(blueprint)
 
     @app.errorhandler(HTTPException)
-    def handle_http_exception(error) -> Response:
+    async def handle_http_exception(error) -> Response:
         """
         Handles HTTP exceptions by translating the error name to Portuguese and rendering an error template.
         Args:
             error (HTTPException): The HTTP exception that was raised.
         Returns:
-            Response: A Flask response object with the rendered error template and the appropriate HTTP status code.
+            Response: A Quart response object with the rendered error template and the appropriate HTTP status code.
         """
         # tradutor = GoogleTranslator(source="en", target="pt")
         # name = tradutor.translate(error.name)
@@ -80,14 +85,26 @@ def register_routes(app: Flask) -> None:
             desc: str = "Erro do sistema"
 
         if error.code == 405:
-            return make_response(redirect(url_for("dash.dashboard")))
+            return await make_response(redirect(url_for("dash.dashboard")))
 
-        return make_response(
-            render_template(
+        elif error.code == 401:
+            await flash("Necessário realizar login!")
+            return await make_response(redirect("/login"))
+
+        return await make_response(
+            await render_template(
                 "handler/index.html", name=name, desc=desc, code=error.code
             ),
             error.code,
         )
+
+    @app.context_processor
+    async def url_relatorio() -> str:
+        url_relatorio = url_for(
+            "index.gen_relatorio", model=uuid4().hex, _external=True
+        )
+
+        return dict(url_relatorio=url_relatorio)
 
     # @app.route("/importar_planilha_route", methods=["POST"])
     # def importar_planilha_route() -> None:

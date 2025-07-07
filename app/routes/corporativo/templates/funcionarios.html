@@ -17,7 +17,7 @@
         </span>
         <span class="text">Import em lotes</span>
       </button>
-      <a href="{{ url_for('index.gerar_relatorio') }}" class="btn btn-primary me-2 btn-icon-split">
+      <a href="{{ url_relatorio }}" class="btn btn-primary me-2 btn-icon-split">
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-csv"></i>
         </span>
@@ -42,7 +42,7 @@
           <tr>
             <td>{{ item.id }}</td>
             <td>
-              <span>{{ item.nome_funcionario }}</span>
+              <span>{{ item.nome }}</span>
             </td>
             <td>
               <span class="text">{{ item.cargo }}</span>
@@ -53,7 +53,7 @@
             <td>
               <span class="text">{{ item.empresa }}</span>
             </td>
-            <td>
+            <td class="d-flex">
               <a type="button" class="btn btn-secondary btn-icon-split btn-sm m-1"
                 href="{{ url_for('corp.editar_funcionarios', id=item.id) }}">
                 <span class="icon text-white-50">

@@ -4,14 +4,16 @@ from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
+import quart_flask_patch  # noqa: F401
+from alembic.config import Config
 from celery import Celery
 from dotenv import load_dotenv
-from flask import Flask
-from flask_login import LoginManager
 from flask_mail import Mail
-from flask_migrate import Migrate, init, migrate, upgrade
+from flask_migrate import Migrate, init
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
+from quart import Quart
+from quart_auth import QuartAuth as LoginManager
 
 from app.logs.setup import initialize_logging
 
@@ -22,7 +24,7 @@ path_parent = Path(__file__).parent.resolve()
 template_folder = path_parent.joinpath("templates")
 static_folder = path_parent.joinpath("static")
 
-app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
+app = Quart(__name__, template_folder=template_folder, static_folder=static_folder)
 
 mail = Mail()
 db = SQLAlchemy()
@@ -37,14 +39,20 @@ objects_config = {
 }
 
 
-def celery_init(app: Flask) -> Celery:
+@migrate_.configure
+def configure_alembic(config: Config) -> Config:
+    # modify config object
+    return config
+
+
+def celery_init(app: Quart) -> Celery:
     """
-    Initialize a Celery instance with the given Flask application.
+    Initialize a Celery instance with the given Quart application.
     This function sets up a Celery instance, configures it to use threads as the worker pool,
-    imports configurations from the Flask app, and defines a custom task class that ensures
-    tasks are executed within the Flask application context.
+    imports configurations from the Quart app, and defines a custom task class that ensures
+    tasks are executed within the Quart application context.
     Args:
-        app (Flask): The Flask application instance.
+        app (Quart): The Quart application instance.
     Returns:
         Celery: The configured Celery instance.
     """
@@ -75,37 +83,35 @@ def celery_init(app: Flask) -> Celery:
     return celery_app
 
 
-def create_app() -> Flask:
+async def create_app() -> Quart:
     env_ambient = os.getenv("AMBIENT_CONFIG")
     ambient = objects_config[env_ambient]
 
     app.config.from_object(ambient)
 
-    init_extensions(app)
+    await init_extensions(app)
     app.logger = initialize_logging()
     from app.routes import register_routes
 
-    register_routes(app)
+    await register_routes(app)
 
-    global celery_app
     celery_app = celery_init(app)
     celery_app.set_default()
     app.extensions["celery"] = celery_app
     app.extensions["mail"] = mail
     migrate_.init_app(app)
-    with app.app_context():
+    async with app.app_context():
         if os.environ.get("MIGRATE") and os.environ.get("MIGRATE").lower() == "true":
-            migrate_.init_app(app, db, directory="migrations")
+            migrate_.init_app(app, db, directory="migrations", compare_type=True)
             if not Path(__file__).cwd().joinpath("migrations").exists():
                 init()
 
-            migrate(directory="migrations", message="Initial migration")
-            upgrade(directory="migrations")
+            migrate_.configure_callbacks
 
     return app
 
 
-def init_extensions(app: Flask) -> None:
+async def init_extensions(app: Quart) -> None:
     mail.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
@@ -128,7 +134,7 @@ def init_extensions(app: Flask) -> None:
     login_manager.login_message = "Faça login para acessar essa página."
     login_manager.login_message_category = "info"
 
-    with app.app_context():
+    async with app.app_context():
         from .models import init_database
 
-        init_database(app, db)
+        await init_database(app, db)

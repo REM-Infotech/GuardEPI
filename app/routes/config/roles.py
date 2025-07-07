@@ -3,11 +3,18 @@ import traceback  # traceback
 from pathlib import Path
 from typing import Dict, List
 
-from flask import Response, abort
-from flask import current_app as app
-from flask import flash, make_response, redirect, render_template, session
-from flask_login import login_required
 from flask_sqlalchemy import SQLAlchemy
+from quart import (
+    Response,
+    abort,
+    flash,
+    make_response,
+    redirect,
+    render_template,
+    session,
+)
+from quart import current_app as app
+from quart_auth import login_required
 
 from app.decorators import create_perm, read_perm
 
@@ -19,10 +26,8 @@ from . import config
 @config.route("/add_itens", methods=["GET", "POST"])
 @login_required
 @read_perm
-def add_itens() -> Response:
-
+async def add_itens() -> Response:
     try:
-
         form = FormRoles()
 
         rota = form.rota
@@ -62,19 +67,18 @@ def add_itens() -> Response:
 
             to_view.append(dict_to_view)
         # Retorna o HTML do item
-        return make_response(
-            render_template("forms/roles/add_items.html", item=to_view)
+        return await make_response(
+            await render_template("forms/roles/add_items.html", item=to_view)
         )
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @config.route("/remove-itens", methods=["GET", "POST"])
 @login_required
 @read_perm
-def remove_itens() -> Response:
-
+async def remove_itens() -> Response:
     try:
         hex_name_json = session["json_filename"]
         path_json = Path(app.config["TEMP_PATH"]).joinpath(hex_name_json).resolve()
@@ -84,38 +88,38 @@ def remove_itens() -> Response:
         with json_file.open("w") as f:
             f.write(json.dumps([]))
 
-        item_html = render_template("forms/roles/add_items.html", item=list_roles)
-        return make_response(item_html)
+        item_html = await render_template("forms/roles/add_items.html", item=list_roles)
+        return await make_response(item_html)
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @config.route("/roles", methods=["GET"])
 @login_required
 @read_perm
-def roles() -> Response:
+async def roles() -> Response:
     try:
-
         title = "Regras"
         page = "roles.html"
         database = Roles.query.all()
 
-        return make_response(
-            render_template("index.html", title=title, database=database, page=page)
+        return await make_response(
+            await render_template(
+                "index.html", title=title, database=database, page=page
+            )
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @config.route("/cadastro_regra", methods=["GET", "POST"])
 @login_required
 @create_perm
-def cadastro_regra() -> Response:
-
+async def cadastro_regra() -> Response:
     try:
         """
         Handles the creation of a new group.
@@ -133,7 +137,6 @@ def cadastro_regra() -> Response:
         page = "forms/roles/FormRoles.html"
 
         if form.validate_on_submit():
-
             db: SQLAlchemy = app.extensions["sqlalchemy"]
             rulename = form.name_rule.data
             query = db.session.query(Roles).filter(Roles.name_role == rulename).first()
@@ -141,9 +144,11 @@ def cadastro_regra() -> Response:
             routes_add = []
 
             if query:
-                flash("Regra já existente!", "error")
-                return make_response(
-                    render_template("index.html", page=page, form=form, title=title)
+                await flash("Regra já existente!", "error")
+                return await make_response(
+                    await render_template(
+                        "index.html", page=page, form=form, title=title
+                    )
                 )
 
             new_ruleset = Roles(
@@ -152,7 +157,6 @@ def cadastro_regra() -> Response:
             )
 
             for group in form.grupos.data:
-
                 grp = (
                     db.session.query(Groups).filter(Groups.name_group == group).first()
                 )
@@ -180,7 +184,6 @@ def cadastro_regra() -> Response:
                         continue
 
                     if key == "REGRAS":
-
                         rules = list(value.items())
                         for key_, value_ in rules:
                             to_add.update({key_: value_})
@@ -196,22 +199,21 @@ def cadastro_regra() -> Response:
 
             session.pop("json_filename")
 
-            flash("Regra criada com sucesso")
-            return make_response(redirect("/config/roles"))
+            await flash("Regra criada com sucesso")
+            return await make_response(redirect("/config/roles"))
 
-        return make_response(
-            render_template("index.html", page=page, form=form, title=title)
+        return await make_response(
+            await render_template("index.html", page=page, form=form, title=title)
         )
 
-    except Exception:
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
         abort(500)
 
 
 @config.get("/deletar_regra/<int:id>")
 @login_required
-def deletar_regra(id: int) -> Response:
-
+async def deletar_regra(id: int) -> Response:
     try:
         db: SQLAlchemy = app.extensions["sqlalchemy"]
 
@@ -234,7 +236,6 @@ def deletar_regra(id: int) -> Response:
         role = db.session.query(Roles).filter(Roles.id == id).first()
 
         for route in from_routes:
-
             db.session.delete(route)
 
         for group in from_groups:
@@ -246,11 +247,10 @@ def deletar_regra(id: int) -> Response:
         message = "Regra deletada com sucesso!"
         template = "includes/show.html"
 
-    except Exception:
-
-        app.logger.exception(traceback.format_exc())
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
 
         message = "Erro ao deletar regra"
         template = "includes/show.html"
 
-    return make_response(render_template(template, message=message))
+    return await make_response(await render_template(template, message=message))
