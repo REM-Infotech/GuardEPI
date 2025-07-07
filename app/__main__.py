@@ -2,6 +2,7 @@ import asyncio
 import secrets
 from contextlib import suppress
 from os import environ
+from pathlib import Path
 
 import uvicorn
 
@@ -17,7 +18,15 @@ async def main() -> None:
     port = int(environ.get("PORT", get_random_port()))
 
     app = await create_app()
-    config = uvicorn.Config(app, host="0.0.0.0", port=port, log_level="info")  # noqa: S104
+    app.debug = True
+    config = uvicorn.Config(
+        app,
+        host="0.0.0.0",  # noqa: S104
+        port=port,
+        log_level="info",
+        reload=True,
+        reload_dirs=[Path(__file__).parent.resolve()],
+    )
     server = uvicorn.Server(config)
     await server.serve()
 

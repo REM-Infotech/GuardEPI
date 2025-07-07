@@ -11,10 +11,12 @@ from celery.app.task import Task
 from dotenv import load_dotenv
 from flask_mail import Mail
 from flask_migrate import Migrate, init
+from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 from quart import Quart
 from quart_auth import QuartAuth as LoginManager
+from redis import Redis
 
 from app.logs.setup import initialize_logging
 
@@ -29,6 +31,16 @@ app = Quart(__name__, template_folder=template_folder, static_folder=static_fold
 
 mail = Mail()
 db = SQLAlchemy()
+
+app.config.update(
+    dict(
+        SESSION_TYPE="redis",
+        SESSION_REDIS=Redis(host="localhost", port=6379),
+    )
+)
+
+
+Session(app)
 celery_app = None
 migrate_ = Migrate()
 login_manager = LoginManager()

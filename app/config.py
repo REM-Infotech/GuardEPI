@@ -1,5 +1,4 @@
 import os
-import secrets
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -14,7 +13,7 @@ current_dir = Path(__file__).cwd().resolve()
 class Config(object):
     DEBUG: bool = False
     TESTING: bool = False
-    SECRET_KEY: str = secrets.token_hex()
+    SECRET_KEY: str = str(1111)
     TEMPLATES_AUTO_RELOAD: bool = False
 
     # FLASK-MAIL CONFIG
