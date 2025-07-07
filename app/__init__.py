@@ -7,6 +7,7 @@ from typing import Any
 import quart_flask_patch  # noqa: F401
 from alembic.config import Config
 from celery import Celery
+from celery.app.task import Task
 from dotenv import load_dotenv
 from flask_mail import Mail
 from flask_migrate import Migrate, init
@@ -67,16 +68,16 @@ def celery_init(app: Quart) -> Celery:
     celery_app.conf.update(broker_connection_retry_on_startup=True)
 
     """ Define TaskBase """
-    TaskBase = celery_app.Task
+    TaskBase: Task = celery_app.Task
 
     """ Class ContextTask """
 
     class ContextTask(TaskBase):
         abstract = True
 
-        def __call__(self, *args, **kwargs) -> Any:
-            with app.app_context():
-                return TaskBase.__call__(self, *args, **kwargs)
+        async def __call__(self, *args, **kwargs) -> Any:
+            async with app.app_context():
+                return await TaskBase.__call__(self, *args, **kwargs)
 
     """ Redefine property Task """
     celery_app.Task = ContextTask
