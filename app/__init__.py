@@ -35,7 +35,7 @@ db = SQLAlchemy()
 app.config.update(
     dict(
         SESSION_TYPE="redis",
-        SESSION_REDIS=Redis(host="localhost", port=6379),
+        SESSION_REDIS=Redis.from_url(os.environ.get("REDIS_URI")),
     )
 )
 
