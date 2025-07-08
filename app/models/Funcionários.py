@@ -15,12 +15,15 @@ class Funcionarios(db.Model, UserMixin):  # noqa: D101
     __tablename__ = "funcionarios"
     id = Column(Integer, primary_key=True)
 
-    nome_funcionario = Column(String(length=64), name="nome")
+    nome_funcionario = Column(String(length=64), name="nome_funcionario")
 
-    email_funcionario = Column(String(length=64), name="email")
+    email_funcionario = Column(String(length=64), name="email_funcionario")
 
     cpf_funcionario = Column(
-        String(length=14), name="cpf", unique=True, default=uuid4().hex
+        String(length=14),
+        name="cpf_funcionario",
+        unique=True,
+        default=uuid4().hex,
     )
 
     password = Column(String(length=60))
