@@ -2,6 +2,7 @@ services:
   guardepi:
     build:
       context: .
+    image: guardepi:1.0
     volumes:
       - .:/guardepi
     ports:
