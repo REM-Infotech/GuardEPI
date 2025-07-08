@@ -1,0 +1,11 @@
+services:
+  guardepi:
+    build:
+      context: .
+    image: guardepi:1.0
+    volumes:
+      - .:/guardepi
+    ports:
+      - 5002:5002
+
+    command: "poetry run python -m app"
