@@ -3,6 +3,8 @@ services:
     build:
       context: .
     image: guardepi:1.0
+    env_file:
+      - .env
     volumes:
       - .:/guardepi
     ports:
