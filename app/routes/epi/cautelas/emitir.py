@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import traceback
 import uuid
 from datetime import datetime
 from pathlib import Path
@@ -11,6 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 from quart import (
     Response,
     abort,
+    current_app,
     make_response,
     redirect,
     render_template,
@@ -196,6 +198,7 @@ async def emitir_cautela() -> Response:
         )
 
     except Exception as e:
+        current_app.logger.error("\n".join(traceback.format_exception(e)))
         code = getattr(e, "code", 500)
         description = getattr(e, "description", "Internal Error")
         abort(code, description=description)

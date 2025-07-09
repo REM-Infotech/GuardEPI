@@ -46,9 +46,9 @@ def set_ChoicesFuncionario() -> list[tuple[str, str]]:
     with app.app_context():
         db: SQLAlchemy = app.extensions["sqlalchemy"]
         return [
-            (epi.nome, epi.nome)
+            (epi.nome_funcionario, epi.nome_funcionario)
             for epi in db.session.query(Funcionarios)
-            .order_by(Funcionarios.nome.asc())
+            .order_by(Funcionarios.nome_funcionario.asc())
             .all()
         ]
 
