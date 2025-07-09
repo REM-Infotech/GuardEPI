@@ -39,17 +39,17 @@ class FuncionarioForm(FlaskForm):
         validators=[DataRequired(), Length(max=6)],
         default="000001",
     )
-    nome = StringField(
+    nome_funcionario = StringField(
         "Nome do funcionário",
         validators=[DataRequired("Informe o nome!")],
         name="nome_funcionario",
     )
-    cpf = StringField(
+    cpf_funcionario = StringField(
         "CPF do Funcionário",
         validators=[Length(min=11, max=14), DataRequired("Informe o CPF!")],
         name="cpf_funcionario",
     )
-    email = EmailField("Email", name="email_funcionario")
+    email_funcionario = EmailField("Email", name="email_funcionario")
     deficiencia = StringField("Deficiência", default="Não Consta")
     data_admissao = DateField("Data Admissão", default=datetime.now())
     empresa = SelectField(
