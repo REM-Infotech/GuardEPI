@@ -301,7 +301,7 @@ async def employee_info(
 ) -> tuple[Path, Funcionarios | None]:
     funcionario_data = (
         db.session.query(Funcionarios)
-        .filter(Funcionarios.nome == form.funcionario.data)
+        .filter(Funcionarios.nome_funcionario == form.funcionario.data)
         .first()
     )
 
