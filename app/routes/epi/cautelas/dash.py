@@ -108,4 +108,4 @@ async def cautela_pdf(uuid_pasta: str) -> Response:
         else:
             abort(404, description="Arquivo não encontrado")
 
-    return await make_response(send_from_directory(path_cautela, filename))
+    return await make_response(await send_from_directory(path_cautela, filename))

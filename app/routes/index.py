@@ -81,7 +81,7 @@ async def politica_privacidade() -> Response:
 
         # Crie a resposta usando make_response
         response = await make_response(
-            send_from_directory(app.config["PDF_PATH"], filename)
+            await send_from_directory(app.config["PDF_PATH"], filename)
         )
 
         # Defina o tipo MIME como application/pdf
