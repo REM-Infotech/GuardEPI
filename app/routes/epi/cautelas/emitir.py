@@ -207,7 +207,7 @@ async def emitir_cautela() -> Response:
 async def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> list:
     try:
         epis_lista = []
-        para_registro = []
+        para_registro: list[RegistroSaidas] = []
         list_epis_solict = []
 
         path_json = Path(app.config["TEMP_PATH"]).joinpath(
@@ -274,9 +274,7 @@ async def subtract_estoque(form: Cautela, db: SQLAlchemy, nomefilename: str) -> 
             valor_total=valor_calc,
         )
 
-        registrar.nome_epis = (
-            json.dumps(para_registro).replace("[", "").replace("]", "")
-        )
+        registrar.nome_epis = ",".join([str(item.nome_epi) for item in para_registro])
 
         secondary: List[EPIsCautela] = []
         for epi in para_registro:
