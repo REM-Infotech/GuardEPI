@@ -2,16 +2,25 @@
   <div class="card mt-4 mb-4">
     <div class="card-header">
       <h2 class="m-2 p-1">{{ title }}</h2>
-      <hr>
-      <a type="button" class="btn btn-success me-2 btn-icon-split" href="{{ url_for('corp.cadastro_funcionarios') }}">
+      <hr />
+      <a
+        type="button"
+        class="btn btn-success me-2 btn-icon-split"
+        href="{{ url_for('corp.cadastro_funcionarios') }}"
+      >
         <span class="icon text-white-50">
           <i class="fa-solid fa-plus"></i>
         </span>
         <span class="text">Cadastrar</span>
       </a>
       {% set type_ = request.url_rule.endpoint.split(".")[-1].lower() %}
-      <button type="button" class="btn btn-secondary me-2 btn-icon-split"
-        hx-get="{{ url_for('index.import_lotes',tipo=type_) }}" hx-trigger="click" hx-target="#results">
+      <button
+        type="button"
+        class="btn btn-secondary me-2 btn-icon-split"
+        hx-get="{{ url_for('index.import_lotes',tipo=type_) }}"
+        hx-trigger="click"
+        hx-target="#results"
+      >
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-import"></i>
         </span>
@@ -37,12 +46,11 @@
           </tr>
         </thead>
         <tbody>
-          {% if database %}
-          {% for item in database %}
+          {% if database %} {% for item in database %}
           <tr>
             <td>{{ item.id }}</td>
             <td>
-              <span>{{ item.nome }}</span>
+              <span>{{ item.nome_funcionario }}</span>
             </td>
             <td>
               <span class="text">{{ item.cargo }}</span>
@@ -54,22 +62,30 @@
               <span class="text">{{ item.empresa }}</span>
             </td>
             <td class="d-flex">
-              <a type="button" class="btn btn-secondary btn-icon-split btn-sm m-1"
-                href="{{ url_for('corp.editar_funcionarios', id=item.id) }}">
+              <a
+                type="button"
+                class="btn btn-secondary btn-icon-split btn-sm m-1"
+                href="{{ url_for('corp.editar_funcionarios', id=item.id) }}"
+              >
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-pen"></i>
                 </span>
               </a>
-              <button type="button" id="DeleteEpiButton" class="btn btn-danger btn-icon-split btn-sm m-1"
-                hx-post="{{ url_for('corp.deletar_funcionarios',id=item.id) }}" hx-trigger="click" hx-target="#results">
+              <button
+                type="button"
+                id="DeleteEpiButton"
+                class="btn btn-danger btn-icon-split btn-sm m-1"
+                hx-post="{{ url_for('corp.deletar_funcionarios',id=item.id) }}"
+                hx-trigger="click"
+                hx-target="#results"
+              >
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-trash"></i>
                 </span>
               </button>
             </td>
           </tr>
-          {% endfor %}
-          {% endif %}
+          {% endfor %} {% endif %}
         </tbody>
         <tfoot>
           <tr>
