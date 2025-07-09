@@ -18,7 +18,7 @@ schedule_bp = Blueprint(
 
 @schedule_bp.get("/dash")
 @login_required
-def dash() -> Response:
+async def dash() -> Response:
     form: FlaskForm | TaskNotificacaoForm = TaskNotificacaoForm()
     page = "schedules.html"
     return await make_response(
@@ -28,7 +28,7 @@ def dash() -> Response:
 
 @schedule_bp.post("/new_schedule")
 @login_required
-def new_schedule() -> Response:
+async def new_schedule() -> Response:
     # form: FlaskForm | TaskNotificacaoForm = TaskNotificacaoForm()
 
     # if form.validate_on_submit():
@@ -39,15 +39,15 @@ def new_schedule() -> Response:
 
 
 @shared_task(bind=True, ignore_result=False)
-def send_email(self, todo: str) -> None:
+async def send_email(self, todo: str) -> None:
     mail = Mail(app)
 
-    with app.app_context():
-        msg = message_formatter(todo)
+    async with app.app_context():
+        msg = await message_formatter(todo)
         mail.send(msg)
 
 
-def message_formatter(todo: str) -> Message:
+async def message_formatter(todo: str) -> Message:
     import os
 
     from dotenv import load_dotenv
@@ -63,7 +63,7 @@ def message_formatter(todo: str) -> Message:
     for user in users:
         copy_content.append(user.email)
 
-    with app.app_context():
+    async with app.app_context():
         values = os.environ
         sendermail = values["MAIL_DEFAULT_SENDER"]
 
