@@ -13,8 +13,8 @@ from quart import (
     url_for,
 )
 from quart import current_app as app
+from quart.datastructures import FileStorage
 from quart_auth import login_required
-from werkzeug.datastructures import FileStorage
 from werkzeug.utils import secure_filename
 
 from app.decorators import create_perm, read_perm
@@ -225,11 +225,10 @@ async def lancamento_produto() -> Response:
                 file_path = Path(app.config["PDF_TEMP_PATH"]).joinpath(
                     secure_filename(file_nf.filename)
                 )
-                file_nf.save(file_path)
-                with open(file_path, "rb") as f:
-                    blob_doc = f.read()
+                file_path.parent.mkdir(exist_ok=True, parents=True)
+                await file_nf.save(file_path)
                 EntradaEPI.filename = secure_filename(file_nf.filename)
-                EntradaEPI.blob_doc = blob_doc
+                EntradaEPI.blob_doc = file_nf.stream.read()
 
             new_valor_unitario = data_insert // form.qtd_estoque.data
             dbase_produto = ProdutoEPI.query.filter_by(
