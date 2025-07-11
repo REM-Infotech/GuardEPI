@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import pytz
+from redis_om import HashModel
 from sqlalchemy import Column, Integer, LargeBinary, String, Text
 
 from app import db
@@ -28,3 +29,13 @@ class RegistrosEPI(db.Model):
     )
     filename = Column(Text, nullable=False)
     blob_doc = Column(LargeBinary(length=(2**32) - 1))
+
+
+class RegistrosEPIRedis(HashModel):
+    id: int
+    nome_epis: str
+    valor_total: float
+    funcionario: str
+    data_solicitacao: datetime
+    filename: str
+    blob_doc: bytes

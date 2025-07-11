@@ -8,7 +8,9 @@ from psycopg2 import errors
 from quart import (
     Response,
     abort,
+    current_app,
     flash,
+    jsonify,
     make_response,
     redirect,
     render_template,
@@ -52,6 +54,43 @@ async def funcionarios() -> Response:
                 "index.html",
                 page=page,
                 database=database,
+            )
+        )
+    except Exception as e:
+        app.logger.exception(traceback.format_exception(e))
+        abort(500)
+
+
+@corp.get("/funcionarios_rest")
+async def funcionarios_rest() -> Response:
+    """
+    Fetches all records from the Funcionarios table and renders the 'index.html' template with the data.
+    This function queries all records from the Funcionarios table in the database and passes the data to the
+    'index.html' template along with the page name 'funcionarios.html'. If an exception occurs during the process,
+    it aborts the request with a 500 status code and includes the exception message in the response.
+    Returns:
+        Response: A Quart response object that renders the 'index.html' template with the fetched data.
+    Raises:
+        HTTPException: If an exception occurs, it aborts the request with a 500 status code and the exception message.
+    """
+
+    try:
+        db: SQLAlchemy = current_app.extensions["sqlalchemy"]
+
+        database = db.session.query(Funcionarios).all()
+
+        return await make_response(
+            jsonify(
+                data=[
+                    dict(
+                        id=item.id,
+                        nome=item.nome_funcionario,
+                        matricula=item.codigo,
+                        cargo=item.cargo,
+                        departamento=item.departamento,
+                    )
+                    for item in database
+                ]
             )
         )
     except Exception as e:

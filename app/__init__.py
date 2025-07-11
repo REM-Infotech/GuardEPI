@@ -1,5 +1,6 @@
 # from celery.schedules import crontab
 import os
+import re
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
@@ -16,6 +17,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 from quart import Quart
 from quart_auth import QuartAuth as LoginManager
+from quart_cors import cors
 from redis import Redis
 
 from app.logs.setup import initialize_logging
@@ -121,7 +123,18 @@ async def create_app() -> Quart:
 
             migrate_.configure_callbacks
 
-    return app
+    return cors(
+        app,
+        allow_origin=[re.compile(r"^https?:\/\/[^\/]+$")],
+        allow_headers=[
+            "Content-Type",
+            "Authorization",
+            "x-xsrf-token",
+            "X-Xsrf-Token",
+        ],
+        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allow_credentials=True,
+    )
 
 
 async def init_extensions(app: Quart) -> None:

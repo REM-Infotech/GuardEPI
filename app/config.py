@@ -149,6 +149,10 @@ class ProductionConfig(Config):
             ]
         )
 
+        SQLALCHEMY_BINDS = {
+            "postgres": SQLALCHEMY_DATABASE_URI,
+        }
+
         CELERY = {
             "broker_url": f"{redis_uri}/0",
             "result_backend": f"{redis_uri}/1",
