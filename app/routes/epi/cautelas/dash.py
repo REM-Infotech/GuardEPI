@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import List
 from uuid import uuid4
 
-import chardet
 from flask_sqlalchemy import SQLAlchemy
 from quart import (
     Response,
@@ -53,10 +52,12 @@ async def get_registro_saidas() -> List[RegistrosEPI]:
 
     database = db.session.query(RegistrosEPI).all()
 
-    def decode_blob(b: bytes) -> bytearray:
-        encoding = chardet.detect(b)
-
-        return b.decode(encoding=encoding["encoding"])
+    def decode_blob(b: bytes) -> str:
+        if b == b"":
+            return b
+        # encoding = chardet.detect(b)
+        decoded = b.decode(encoding="ISO-8859-1")
+        return decoded
 
     registros_epi = [
         RegistrosEPIRedis(
@@ -67,7 +68,7 @@ async def get_registro_saidas() -> List[RegistrosEPI]:
                 "funcionario": item.funcionario,
                 "data_solicitacao": item.data_solicitacao,
                 "filename": item.filename,
-                "blob_doc": item.blob_doc if item.blob_doc else b"",
+                "blob_doc": decode_blob(item.blob_doc if item.blob_doc else b""),
             }
         )
         for item in database

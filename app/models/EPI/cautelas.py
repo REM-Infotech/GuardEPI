@@ -38,4 +38,4 @@ class RegistrosEPIRedis(HashModel):
     funcionario: str
     data_solicitacao: datetime
     filename: str
-    blob_doc: bytes
+    blob_doc: str
