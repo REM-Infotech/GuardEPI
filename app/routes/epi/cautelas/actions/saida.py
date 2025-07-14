@@ -17,22 +17,6 @@ from app.routes.epi.cautelas.interface import ItemsEPIDict
 
 
 class RegistrarSaida:
-    async def dict_equipamentos_emissao(
-        self,
-    ) -> AsyncGenerator[ItemsEPIDict, Any, None]:
-        path_json = Path(app.config["TEMP_PATH"]).joinpath(
-            f"{session['uuid_Cautelas']}.json"
-        )
-
-        async with aiofiles.open(path_json, "r") as f:
-            data_json = json.loads(await f.read())
-
-        if len(data_json) == 0:
-            raise ValueError("Adicione ao menos 1a EPI!")
-
-        for item in data_json:
-            yield ItemsEPIDict(**item)
-
     def __init__(self, form: Cautela, db: SQLAlchemy, nomefilename: str) -> None:
         self.form = form
         self.db = db
@@ -142,3 +126,19 @@ class RegistrarSaida:
         self.db.session.add_all(secondary)
         self.db.session.add_all(lista_para_registro)
         self.db.session.commit()
+
+    async def dict_equipamentos_emissao(
+        self,
+    ) -> AsyncGenerator[ItemsEPIDict, Any, None]:
+        path_json = Path(app.config["TEMP_PATH"]).joinpath(
+            f"{session['uuid_Cautelas']}.json"
+        )
+
+        async with aiofiles.open(path_json, "r") as f:
+            data_json = json.loads(await f.read())
+
+        if len(data_json) == 0:
+            raise ValueError("Adicione ao menos 1a EPI!")
+
+        for item in data_json:
+            yield ItemsEPIDict(**item)
