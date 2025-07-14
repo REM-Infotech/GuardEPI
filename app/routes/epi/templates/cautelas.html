@@ -3,11 +3,7 @@
     <div class="card-header">
       <h2 class="m-2 p-1">{{ title }}</h2>
       <hr />
-      <a
-        type="button"
-        class="btn btn-icon-split btn-success me-2"
-        href="{{ url_for('estoque.emitir_cautela') }}"
-      >
+      <a type="button" class="btn btn-icon-split btn-success me-2" href="{{ url_for('estoque.emitir_cautela') }}">
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-pdf"></i>
         </span>
@@ -54,62 +50,45 @@
             <td>{{ item.data_solicitacao.strftime("%d/%m/%Y") }}</td>
             <td>
               <div class="btn-group" role="group">
-                <button
-                  type="button"
-                  class="btn btn-primary dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                ></button>
+                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                  aria-expanded="false"></button>
                 <ul class="dropdown-menu">
-                  <li class="dropdown-item">
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-icon-split btn-primary open-pdf"
-                      name="{{ item.filename }}"
-                      data-pdf-url="{{ url_for('estoque.cautela_pdf', uuid_pasta=item.id) }}"
-                    >
-                      <span class="icon text-white-50">
-                        <i class="fa-solid fa-file-pdf"></i>
-                      </span>
-                      <span class="text">Ver PDF</span>
-                    </button>
-                  </li>
+
                   <li class="dropdown-item">
                     {% if documentos_assinados %}
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-icon-split btn-success"
+                    <button type="button" class="btn btn-sm btn-icon-split btn-success"
                       name="{{ item.documentos_assinados.filename }}"
-                      data-pdf-url="{{ url_for('estoque.cautela_assinada_pdf', uuid_pasta=item.documentos_assinados.id) }}"
-                    >
+                      data-pdf-url="{{ url_for('estoque.cautela_assinada_pdf', uuid_pasta=item.documentos_assinados.id) }}">
                       <span class="icon text-white-50">
                         <i class="fa-solid fa-file-pdf"></i>
                       </span>
                       <span class="text">Ver PDF Assinado</span>
                     </button>
                     {% elif not documentos_assinados %}
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-icon-split btn-warning"
-                      hx-get="{{ url_for('estoque.envio_cautela_assinada', id_cautela=item.id) }}"
-                      hx-trigger="click"
-                      hx-target="#results"
-                    >
+                  <li class="dropdown-item">
+                    <button type="button" class="btn btn-sm btn-icon-split btn-primary open-pdf"
+                      name="{{ item.filename }}"
+                      data-pdf-url="{{ url_for('estoque.cautela_pdf', uuid_pasta=item.id) }}">
                       <span class="icon text-white-50">
                         <i class="fa-solid fa-file-pdf"></i>
                       </span>
-                      <span class="text">Enviar Doc. Assinada</span>
+                      <span class="text">Ver PDF</span>
                     </button>
-                    {% endif %}
+                  </li>
+                  <button type="button" class="btn btn-sm btn-icon-split btn-warning"
+                    hx-get="{{ url_for('estoque.envio_cautela_assinada', id_cautela=item.id) }}" hx-trigger="click"
+                    hx-target="#results">
+                    <span class="icon text-white-50">
+                      <i class="fa-solid fa-file-pdf"></i>
+                    </span>
+                    <span class="text">Enviar Doc. Assinado</span>
+                  </button>
+                  {% endif %}
                   </li>
                   <li class="dropdown-item">
-                    <button
-                      type="button"
-                      class="btn btn-sm btn-icon-split btn-danger"
-                      hx-get="{{ url_for('estoque.cancelar_cautela', id_cautela=item.id) }}"
-                      hx-trigger="click"
-                      hx-target="#results"
-                    >
+                    <button type="button" class="btn btn-sm btn-icon-split btn-danger"
+                      hx-get="{{ url_for('estoque.cancelar_cautela', id_cautela=item.id) }}" hx-trigger="click"
+                      hx-target="#results">
                       <span class="icon text-white-50">
                         <i class="fa-solid fa-xmark"></i>
                       </span>
