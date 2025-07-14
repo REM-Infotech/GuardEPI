@@ -12,7 +12,6 @@ class EPIsCautela(db.Model):
     id = Column(Integer, primary_key=True)
     epis_saidas_id = Column(Integer, db.ForeignKey("registro_saidas.id"))
     epis_saidas = db.relationship("RegistroSaidas", backref="epis_cautela")
-
     registros_epi_id = Column(Integer, db.ForeignKey("registros_epi.id"))
     nome_epis = db.relationship("RegistrosEPI", backref="nome_epis_")
     cod_ref = Column(String(length=64), nullable=False)

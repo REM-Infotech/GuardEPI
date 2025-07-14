@@ -38,6 +38,10 @@ from app.routes.epi import estoque_bp
 from app.routes.epi.cautelas.actions import employee_info
 from app.routes.epi.cautelas.emissao.substract import subtract_estoque
 
+from . import form_manipulation
+
+__all__ = ["form_manipulation"]
+
 
 @estoque_bp.route("/emitir_cautela", methods=["GET", "POST"])
 @login_required

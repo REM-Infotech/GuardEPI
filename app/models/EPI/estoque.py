@@ -40,6 +40,7 @@ class RegistroSaidas(db.Model):
     __tablename__ = "registro_saidas"
     id = Column(Integer, primary_key=True, unique=True)
     nome_epi = Column(String(length=64), nullable=False)
+    grade_epi = Column(String(length=64))
     qtd_saida = Column(Integer, nullable=False)
     data_saida = Column(DateTime, default=datetime.now(pytz.timezone("Etc/GMT+4")))
     valor_total = Column(Float, nullable=False)

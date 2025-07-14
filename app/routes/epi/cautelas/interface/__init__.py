@@ -1,6 +1,13 @@
 from datetime import datetime
+from typing import TypedDict
 
 from app.models.EPI.cautelas import CautelaAssinada
+
+
+class ItemsEPIDict(TypedDict):
+    NOME_EPI: str
+    GRADE: str
+    QTD: str
 
 
 class RegistrosEPIClass:
