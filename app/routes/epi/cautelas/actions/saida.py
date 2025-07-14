@@ -109,8 +109,7 @@ class RegistrarSaida:
         data_estoque: EstoqueEPI,
     ) -> bool:
         if estoque_grade:
-            if all([estoque_grade.qtd_estoque > 0, data_estoque.qtd_estoque > 0]):
-                return True
+            return all([estoque_grade.qtd_estoque > 0, data_estoque.qtd_estoque > 0])
 
         return False
 

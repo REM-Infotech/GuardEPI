@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from time import sleep
 
+import aiofiles
 from flask_sqlalchemy import SQLAlchemy
 from quart import (
     Response,
@@ -36,7 +37,7 @@ from app.models import (
 )
 from app.routes.epi import estoque_bp
 from app.routes.epi.cautelas.actions import employee_info
-from app.routes.epi.cautelas.emissao.substract import subtract_estoque
+from app.routes.epi.cautelas.actions.saida import RegistrarSaida
 
 from . import form_manipulation
 
@@ -62,14 +63,14 @@ async def emitir_cautela() -> Response:
 
         if form.validate_on_submit():
             logo_empresa_path, funcionario = await employee_info(form, db)
-            nomefilename = f"Cautela - {funcionario.nome_funcionario} - {datetime.now().strftime('%d-%m-%Y %H-%M-%S')}.pdf"
-
-            return await emit_doc(
+            arquivo_cautela = f"Cautela - {funcionario.nome_funcionario} - {datetime.now().strftime('%d-%m-%Y %H-%M-%S')}.pdf"
+            epis_solicitadas = await RegistrarSaida(form, db, arquivo_cautela)()
+            return await emitir_documento(
                 db,
                 funcionario,
                 logo_empresa_path,
-                await subtract_estoque(form, db, nomefilename),
-                nomefilename,
+                epis_solicitadas,
+                arquivo_cautela,
             )
 
         return await make_response(
@@ -83,12 +84,12 @@ async def emitir_cautela() -> Response:
         abort(code, description=description)
 
 
-async def emit_doc(
+async def emitir_documento(
     db: SQLAlchemy,
     data_funcionario: Funcionarios,
     logo_empresa_path: Path,
-    list_epis_solict: list,
-    nomefilename: str,
+    epis_solicitadas: list[str],
+    arquivo_cautela: str,
 ) -> Response:
     count_ = db.session.query(RegistrosEPI).all()
     year = datetime.now().year
@@ -107,40 +108,35 @@ async def emit_doc(
         ["Descrição", "Qtde", "Grade", "CA"],
     ]
 
-    for obj in list_epis_solict:
-        item_data.append(obj)
+    item_data.extend([epi for epi in epis_solicitadas])
 
     num = str(uuid.uuid4())
 
-    adjusted_path = os.path.join(app.config["DOCS_PATH"], f"GuardEPI_adjusted{num}.png")
-    temp_watermark_pdf = os.path.join(app.config["DOCS_PATH"], f"{num} marca_dagua.pdf")
+    docs_path = Path(app.config["DOCS_PATH"]).resolve()
+
+    adjusted_path = os.path.join(docs_path, f"GuardEPI_adjusted{num}.png")
+    temp_watermark_pdf = os.path.join(docs_path, f"{num} marca_dagua.pdf")
+    path_cautela = os.path.join(docs_path, arquivo_cautela)
 
     try:
-        path_cautela = os.path.join(app.config["DOCS_PATH"], nomefilename)
-
-        ctrl_sheet = os.path.join(
-            app.config["DOCS_PATH"], f"EPI_control_sheet{num}.pdf"
-        )
+        ctrl_sheet = os.path.join(docs_path, f"EPI_control_sheet{num}.pdf")
 
         adjust_image_transparency(str(logo_empresa_path), adjusted_path, 1)
-        create_EPI_control_sheet(
-            ctrl_sheet,
-            employee_data,
-            item_data=item_data,
-            logo_path=adjusted_path,
-        )
+        create_EPI_control_sheet(ctrl_sheet, employee_data, item_data, adjusted_path)
         create_watermark_pdf(adjusted_path, temp_watermark_pdf)
         add_watermark(ctrl_sheet, path_cautela, temp_watermark_pdf)
 
         sleep(2)
 
-        set_cautela = RegistrosEPI.query.filter_by(filename=nomefilename).first()
+        set_cautela = (
+            db.session.query(RegistrosEPI).filter_by(filename=arquivo_cautela).first()
+        )
 
         if set_cautela is None:
             abort(400, description="Erro ao emitir a Cautela!")
 
-        with open(path_cautela, "rb") as file:
-            cautela_data = file.read()
+        async with aiofiles.open(path_cautela, "rb") as file:
+            cautela_data = await file.read()
             set_cautela.blob_doc = cautela_data
             db.session.commit()
 
@@ -155,7 +151,7 @@ async def emit_doc(
         folder_to_show = str(uuid.uuid4())
         path_toshow = Path(path_cautela).parent.resolve().joinpath(folder_to_show)
         path_toshow.mkdir(exist_ok=True)
-        str_foldertoshow = str(path_toshow.joinpath(nomefilename))
+        str_foldertoshow = str(path_toshow.joinpath(arquivo_cautela))
         shutil.copy(path_cautela, str_foldertoshow)
 
         return await make_response(
