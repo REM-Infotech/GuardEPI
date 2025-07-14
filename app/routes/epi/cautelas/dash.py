@@ -7,7 +7,6 @@ from quart import (
     Response,
     abort,
     current_app,
-    jsonify,
     make_response,
     render_template,
     request,
@@ -79,22 +78,22 @@ async def get_registro_saidas() -> List[RegistrosEPI]:
     return database
 
 
-@estoque_bp.route("/registro_saidas_rest", methods=["GET"])
-async def registro_saidas_rest() -> Response:
-    return await make_response(
-        jsonify(
-            data=[
-                dict(
-                    id=item.id,
-                    funcionario=item.funcionario,
-                    epis_entregues=item.nome_epis,
-                    data_entregue=item.data_solicitacao.strftime("%d/%m/%Y"),
-                    documento_assinado=item.filename,
-                )
-                for item in await get_registro_saidas()
-            ]
-        )
-    )
+# @estoque_bp.route("/registro_saidas_rest", methods=["GET"])
+# async def registro_saidas_rest() -> Response:
+#     return await make_response(
+#         jsonify(
+#             data=[
+#                 dict(
+#                     id=item.id,
+#                     funcionario=item.funcionario,
+#                     epis_entregues=item.nome_epis,
+#                     data_entregue=item.data_solicitacao.strftime("%d/%m/%Y"),
+#                     documento_assinado=item.filename,
+#                 )
+#                 for item in await get_registro_saidas()
+#             ]
+#         )
+#     )
 
 
 @estoque_bp.route("/cautelas", methods=["GET"])
