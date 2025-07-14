@@ -1,22 +1,106 @@
 from datetime import datetime
 from pathlib import Path
+from typing import TypedDict
 from uuid import uuid4
 
 import aiofiles
+import camelot
 import pytz
 from flask_sqlalchemy import SQLAlchemy
+from pandas import DataFrame
 from quart import current_app as app
 from quart.datastructures import FileStorage
 
 from app.forms.epi import FormEnvioCautelaAssinada
-from app.models.EPI.cautelas import CautelaAssinada, EPIsCautela, RegistrosEPI
+from app.models.EPI.cautelas import (
+    CautelaAssinada,
+    RegistrosCautelasCanceladas,
+    RegistrosEPI,
+)
+from app.models.EPI.estoque import EstoqueEPI, EstoqueGrade
 from app.models.Funcionários import Funcionarios
 
 
-async def cancelamento_cautela(db: SQLAlchemy, id_cautela: int):
-    query = db.session.query(EPIsCautela).all()
+class ItemCautela(TypedDict):
+    DESCRICAO: str
+    QTDE: str
+    GRADE: str
+    CA: str
 
-    return query
+
+async def cancelamento_cautela(db: SQLAlchemy, id_cautela: int):
+    query = db.session.query(RegistrosEPI).filter_by(id=id_cautela).first()
+    path_pdf = Path(app.config["DOCS_PATH"]).resolve()
+
+    path_pdf = path_pdf.joinpath(query.filename)
+
+    async with aiofiles.open(path_pdf, "wb") as f:
+        await f.write(query.blob_doc)
+
+    tables = camelot.read_pdf(path_pdf)
+    dataframe: DataFrame = tables[-1].df
+    data = dataframe.to_dict(orient="records")
+
+    keys: list[dict[int, str]] = data[0]
+
+    equips: list[ItemCautela] = []
+
+    for item in data[1:]:
+        desc = (
+            str(keys[0]).replace("\n", "").replace("ç", "c").replace("ã", "a").upper()
+        )
+        equips.append(
+            ItemCautela(
+                [
+                    (desc, item[0].replace("\n", " ")),
+                    (
+                        str(keys[1]).replace("\n", "").upper(),
+                        item[1].replace("\n", " "),
+                    ),
+                    (
+                        str(keys[2]).replace("\n", "").upper(),
+                        item[2].replace("\n", " "),
+                    ),
+                    (
+                        str(keys[3]).replace("\n", "").upper(),
+                        item[3].replace("\n", " "),
+                    ),
+                ]
+            )
+        )
+
+        print(item)
+
+    for item in equips:
+        await reinserir_estoque(db, item)
+
+    if not query.nome_epis:
+        query.nome_epis = ",".join([item["DESCRICAO"] for item in equips])
+
+    registro_cancelada = RegistrosCautelasCanceladas(cautela_id=id_cautela)
+    db.session.add(registro_cancelada)
+    db.session.commit()
+
+
+async def reinserir_estoque(db: SQLAlchemy, item: ItemCautela):
+    estoque_grade = (
+        db.session.query(EstoqueGrade)
+        .filter(
+            EstoqueGrade.nome_epi == item["DESCRICAO"],
+            EstoqueGrade.grade == item["GRADE"],
+        )
+        .first()
+    )
+
+    estoque_geral = (
+        db.session.query(EstoqueEPI)
+        .filter(EstoqueEPI.nome_epi == item["DESCRICAO"])
+        .first()
+    )
+
+    estoque_geral.qtd_estoque += int(item["QTDE"])
+    estoque_grade.qtd_estoque += int(item["QTDE"])
+    db.session.commit()
 
 
 async def add_cautela_assinada(

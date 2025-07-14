@@ -44,6 +44,7 @@ async def registro_saidas() -> str:
 @read_perm
 async def cautelas(to_show: str = None) -> str:
     url = None
+    title = "Liberações de EPI's"
     db: SQLAlchemy = current_app.extensions["sqlalchemy"]
     to_show = request.args.get("to_show", to_show)
     if to_show:
@@ -51,13 +52,11 @@ async def cautelas(to_show: str = None) -> str:
 
     page = "cautelas.html"
     data = db.session.query(RegistrosEPI).all()
-    title = "Liberações de EPI's"
 
-    database = []
+    if len(data) > 0:
+        data = list(filter(lambda x: not x.cautela_cancelada, data))
 
-    for item in data:
-        formated_data = RegistrosEPIClass(**dict(list(item.__dict__.items())))
-        database.append(formated_data)
+    database = [RegistrosEPIClass(**dict(list(item.__dict__.items()))) for item in data]
 
     session["itens_lista_cautela"] = []
     return await make_response(
