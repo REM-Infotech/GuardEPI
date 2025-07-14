@@ -98,8 +98,12 @@ async def reinserir_estoque(db: SQLAlchemy, item: ItemCautela):
         .first()
     )
 
-    estoque_geral.qtd_estoque += int(item["QTDE"])
-    estoque_grade.qtd_estoque += int(item["QTDE"])
+    if estoque_geral:
+        estoque_geral.qtd_estoque += int(item["QTDE"])
+
+    if estoque_grade:
+        estoque_grade.qtd_estoque += int(item["QTDE"])
+
     db.session.commit()
 
 
