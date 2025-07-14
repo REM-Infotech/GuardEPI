@@ -36,7 +36,7 @@ from app.models import (
     RegistrosEPI,
 )
 from app.routes.epi import estoque_bp
-from app.routes.epi.cautelas.actions import employee_info
+from app.routes.epi.cautelas.actions.employee import employee_info
 from app.routes.epi.cautelas.actions.saida import RegistrarSaida
 
 from . import form_manipulation

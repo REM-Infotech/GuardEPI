@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Any, AsyncGenerator, List
+from typing import AsyncGenerator, List
 from uuid import uuid4
 
 import aiofiles
@@ -129,7 +129,7 @@ class RegistrarSaida:
 
     async def dict_equipamentos_emissao(
         self,
-    ) -> AsyncGenerator[ItemsEPIDict, Any, None]:
+    ) -> AsyncGenerator[ItemsEPIDict]:
         path_json = Path(app.config["TEMP_PATH"]).joinpath(
             f"{session['uuid_Cautelas']}.json"
         )
