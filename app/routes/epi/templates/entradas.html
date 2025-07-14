@@ -2,8 +2,12 @@
   <div class="mt-4 card mb-4">
     <div class="card-header">
       <h2 class="m-2 p-1">{{ title }}</h2>
-      <hr>
-      <a type="button" class="btn btn-success me-2 btn-icon-split" href="{{ url_for('estoque.lancamento_produto') }}">
+      <hr />
+      <a
+        type="button"
+        class="btn btn-success me-2 btn-icon-split"
+        href="{{ url_for('estoque.lancamento_produto') }}"
+      >
         <span class="icon text-white-50">
           <i class="fa-solid fa-upload"></i>
         </span>
@@ -30,8 +34,7 @@
           </tr>
         </thead>
         <tbody>
-          {% if database %}
-          {% for item in database %}
+          {% if database %} {% for item in database %}
           <tr>
             <td>{{ item.id }}</td>
             <td>{{ item.nome_epi }}</td>
@@ -39,16 +42,19 @@
             <td>{{ item.qtd_entrada }}</td>
             <td>{{ format_currency_brl(item.valor_total) }}</td>
             {% if item.justificativa %}
-            <td> {{ item.jusitificativa }} </td>
+            <td>{{ item.jusitificativa }}</td>
             {% else %}
             <td>
               <span class="text fw-bold">...</span>
             </td>
-            {% endif %}
-            {% if item.filename %}
+            {% endif %} {% if item.filename %}
             <td>
-              <button type="button" class="btn btn-primary btn-icon-split btn-sm open-pdf" name="{{ item.filename }}"
-                data-pdf-url="#!">
+              <button
+                type="button"
+                class="btn btn-danger btn-sm btn-icon-split mb-2 open-pdf"
+                name="{{ item.filename }}"
+                data-pdf-url="{{ url_for('estoque.notafiscal_pdf', uuid_pasta=item.id) }}"
+              >
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-file-pdf"></i>
                 </span>
@@ -61,8 +67,7 @@
             </td>
             {% endif %}
           </tr>
-          {% endfor %}
-          {% endif %}
+          {% endfor %} {% endif %}
         </tbody>
         <tfoot>
           <tr>

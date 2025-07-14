@@ -88,14 +88,12 @@ class InsertEstoqueForm(FlaskForm):
 
     submit = SubmitField(label="Salvar")
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def extend_selectors(self):
         self.nome_epi.choices.extend(set_choices())
         self.tipo_grade.choices.extend(set_choicesGrade())
 
 
 class FormProduto(FlaskForm):
-
     ca = SelectField(
         label="CA",
         choices=[

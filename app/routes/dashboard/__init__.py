@@ -1,19 +1,93 @@
 import traceback
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
+from typing import List
 
 import pandas as pd
 import pytz
-from quart import Blueprint, Response, abort, jsonify, make_response, render_template
+from flask_sqlalchemy import SQLAlchemy
+from quart import (
+    Blueprint,
+    Response,
+    abort,
+    current_app,
+    jsonify,
+    make_response,
+    render_template,
+)
 from quart import current_app as app
 from quart_auth import login_required
 from sqlalchemy import extract
+
+from app.models.EPI.cautelas import RegistrosEPIRedis
 
 from ...misc import format_currency_brl
 from ...models import RegistroEntradas, RegistroSaidas, RegistrosEPI
 
 template_folder = Path(__file__).parent.resolve().joinpath("templates")
 dash = Blueprint("dash", __name__, template_folder=template_folder)
+
+
+async def get_registro_saidas() -> List[RegistrosEPI]:
+    # First try to get from Redis
+
+    pkeys = []
+    cached_registros: list[dict[str, str]] = []
+    for index, item in enumerate(RegistrosEPIRedis.all_pks()):
+        pkeys.append(item)
+
+    for pkey in pkeys:
+        cached_registros.append(RegistrosEPIRedis.get(pkey).model_dump())
+
+    if cached_registros:
+        return [
+            RegistrosEPI(
+                **{
+                    k: v
+                    for k, v in list(registro.items())
+                    if k != "pk" and k != "blob_doc" and k
+                }
+            )
+            for registro in cached_registros
+        ]
+
+    # If not in Redis, get from database
+    db: SQLAlchemy = current_app.extensions["sqlalchemy"]
+    db.get_engine()
+    database = db.session.query(RegistrosEPI).all()
+
+    if len(database) > 0:
+        database = database[:50]
+
+    def decode_blob(b: bytes) -> str:
+        if b == b"":
+            return b
+        decoded = b.decode(encoding="ISO-8859-1")
+        return decoded
+
+    # Convert to Redis models and cache them
+    registros_epi = [
+        RegistrosEPIRedis(
+            **{
+                "id": item.id,
+                "nome_epis": str(item.nome_epis),
+                "valor_total": item.valor_total,
+                "funcionario": item.funcionario,
+                "data_solicitacao": item.data_solicitacao,
+                "filename": item.filename,
+                "blob_doc": decode_blob(item.blob_doc if item.blob_doc else b""),
+            }
+        )
+        for item in database
+    ]
+
+    for item in registros_epi:
+        RegistrosEPIRedis.db().expire(item.key(), timedelta(seconds=600))
+
+    # Cache in Redis
+    RegistrosEPIRedis.add(registros_epi)
+
+    return database
 
 
 @dash.route("/dashboard", methods=["GET"])
@@ -32,6 +106,7 @@ async def dashboard() -> Response:
     """
 
     try:
+        db: SQLAlchemy = current_app.extensions["sqlalchemy"]
         now = datetime.now(pytz.timezone("Etc/GMT+4"))
         current_month = now.month
         month = str(now.month)
@@ -39,6 +114,8 @@ async def dashboard() -> Response:
 
         if len(month) == 1:
             month = f"0{month}"
+
+        data = await get_registro_saidas()
 
         valor_total = 0
         valor_totalEntradas = 0
@@ -64,7 +141,11 @@ async def dashboard() -> Response:
         # valor_total = sum(map(lambda item: float(item.valor_total), dbase))
         # valor_totalEntradas = sum(map(lambda item: float(item.valor_total), dbase2))
 
-        database = RegistrosEPI.query.all()
+        if not data:
+            data = db.session.query(RegistrosEPI).all()[:50]
+
+        database = data
+
         title = "Dashboard"
         page = "dashboard.html"
 

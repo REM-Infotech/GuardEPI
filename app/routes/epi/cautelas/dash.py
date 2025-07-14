@@ -1,12 +1,10 @@
 from pathlib import Path
-from typing import List
 from uuid import uuid4
 
 from flask_sqlalchemy import SQLAlchemy
 from quart import (
     Response,
     abort,
-    current_app,
     make_response,
     render_template,
     request,
@@ -20,7 +18,6 @@ from quart_auth import login_required
 from app.decorators import read_perm
 from app.misc import format_currency_brl
 from app.models import RegistroSaidas, RegistrosEPI
-from app.models.EPI.cautelas import RegistrosEPIRedis
 
 from .. import estoque_bp
 
@@ -42,40 +39,6 @@ async def registro_saidas() -> str:
             format_currency_brl=format_currency_brl,
         )
     )
-
-
-async def get_registro_saidas() -> List[RegistrosEPI]:
-    db: SQLAlchemy = current_app.extensions["sqlalchemy"]
-
-    db.get_engine()
-
-    database = db.session.query(RegistrosEPI).all()
-
-    def decode_blob(b: bytes) -> str:
-        if b == b"":
-            return b
-        # encoding = chardet.detect(b)
-        decoded = b.decode(encoding="ISO-8859-1")
-        return decoded
-
-    registros_epi = [
-        RegistrosEPIRedis(
-            **{
-                "id": item.id,
-                "nome_epis": str(item.nome_epis),
-                "valor_total": item.valor_total,
-                "funcionario": item.funcionario,
-                "data_solicitacao": item.data_solicitacao,
-                "filename": item.filename,
-                "blob_doc": decode_blob(item.blob_doc if item.blob_doc else b""),
-            }
-        )
-        for item in database
-    ]
-
-    RegistrosEPIRedis.add(registros_epi)
-
-    return database
 
 
 # @estoque_bp.route("/registro_saidas_rest", methods=["GET"])

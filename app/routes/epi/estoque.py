@@ -1,6 +1,8 @@
 import traceback
 from pathlib import Path
+from uuid import uuid4
 
+import aiofiles
 from flask_sqlalchemy import SQLAlchemy
 from psycopg2 import errors
 from quart import (
@@ -10,11 +12,14 @@ from quart import (
     make_response,
     redirect,
     render_template,
+    request,
+    send_from_directory,
     url_for,
 )
 from quart import current_app as app
 from quart.datastructures import FileStorage
 from quart_auth import login_required
+from werkzeug.datastructures import CombinedMultiDict
 from werkzeug.utils import secure_filename
 
 from app.decorators import create_perm, read_perm
@@ -23,6 +28,53 @@ from app.misc import format_currency_brl
 from app.models import EstoqueEPI, EstoqueGrade, ProdutoEPI, RegistroEntradas
 
 from . import estoque_bp
+
+
+@estoque_bp.get("/notafiscal_pdf/<uuid_pasta>")
+@read_perm
+async def notafiscal_pdf(uuid_pasta: str) -> Response:
+    """
+    Route to serve an image file.
+    This route handles GET requests to serve an image file from a specified directory.
+    The filename is provided as a URL parameter.
+    Args:
+        filename (str): The name of the image file to be served.
+    Returns:
+        Response: A Quart response object that sends the requested image file from the directory specified in the app configuration.
+    """
+
+    path_cautela = ""
+    filename = ""
+
+    path_cautela = Path(app.config["DOCS_PATH"]).joinpath(uuid_pasta)
+
+    if path_cautela.exists():
+        filename = next(path_cautela.glob("*.pdf")).name
+
+    elif not path_cautela.exists():
+        try:
+            uuid_pasta = int(uuid_pasta)
+
+        except ValueError:
+            uuid_pasta = uuid_pasta
+
+        if isinstance(uuid_pasta, int):
+            db: SQLAlchemy = app.extensions["sqlalchemy"]
+            query_file = (
+                db.session.query(RegistroEntradas).filter_by(id=uuid_pasta).first()
+            )
+
+            filename = query_file.filename
+            path_cautela = Path(app.config["DOCS_PATH"]).joinpath(uuid4().hex)
+            path_cautela.mkdir(exist_ok=True)
+
+            with path_cautela.joinpath(filename).open("wb") as file:
+                file.write(query_file.blob_doc)
+
+        else:
+            abort(404, description="Arquivo não encontrado")
+
+    return await make_response(await send_from_directory(path_cautela, filename))
 
 
 @estoque_bp.get("/produto")
@@ -152,7 +204,15 @@ async def lancamento_produto() -> Response:
         page = "forms/estoque/estoque_form.html"
 
         db: SQLAlchemy = app.extensions["sqlalchemy"]
-        form = InsertEstoqueForm()
+        data = CombinedMultiDict(
+            [
+                (await request.files),
+                (await request.form),
+            ]
+        )
+
+        form = InsertEstoqueForm(formdata=data)
+        form.extend_selectors()
         if form.validate_on_submit():
             if not form.nota_fiscal.data:
                 if form.justificativa.data == "...":
@@ -227,8 +287,11 @@ async def lancamento_produto() -> Response:
                 )
                 file_path.parent.mkdir(exist_ok=True, parents=True)
                 await file_nf.save(file_path)
+
+                async with aiofiles.open(file_path, "rb") as f:
+                    EntradaEPI.blob_doc = await f.read()
+
                 EntradaEPI.filename = secure_filename(file_nf.filename)
-                EntradaEPI.blob_doc = file_nf.stream.read()
 
             new_valor_unitario = data_insert // form.qtd_estoque.data
             dbase_produto = ProdutoEPI.query.filter_by(
