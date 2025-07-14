@@ -83,26 +83,40 @@ async def cancelamento_cautela(db: SQLAlchemy, id_cautela: int):
 
 
 async def reinserir_estoque(db: SQLAlchemy, item: ItemCautela):
-    estoque_grade = (
-        db.session.query(EstoqueGrade)
-        .filter(
-            EstoqueGrade.nome_epi == item["DESCRICAO"],
-            EstoqueGrade.grade == item["GRADE"],
+    estoque_grade = db.session.query(EstoqueGrade).all()
+    estoque_geral = db.session.query(EstoqueEPI).all()
+
+    def verify_nome_epi(item_filter: EstoqueGrade | EstoqueEPI) -> bool:
+        nome_epi: str = item_filter.nome_epi
+        return any(
+            [
+                nome_epi.lower() == item["DESCRICAO"].lower(),
+                nome_epi.lower() in item["DESCRICAO"].lower(),
+                nome_epi.lower().replace(" ", "")
+                == item["DESCRICAO"].lower().replace(" ", ""),
+            ]
         )
-        .first()
-    )
 
-    estoque_geral = (
-        db.session.query(EstoqueEPI)
-        .filter(EstoqueEPI.nome_epi == item["DESCRICAO"])
-        .first()
-    )
+    if len(estoque_grade) > 0:
+        estoque_grade = list(filter(verify_nome_epi, estoque_grade))
+        if len(estoque_grade) > 0:
+            estoque_grade = (
+                db.session.query(EstoqueGrade)
+                .filter(EstoqueGrade.id == estoque_grade[-1].id)
+                .first()
+            )
 
-    if estoque_geral:
-        estoque_geral.qtd_estoque += int(item["QTDE"])
+    if len(estoque_geral) > 0:
+        estoque_geral = list(filter(verify_nome_epi, estoque_geral))
+        if len(estoque_geral) > 0:
+            estoque_geral = (
+                db.session.query(EstoqueEPI)
+                .filter(EstoqueEPI.id == estoque_geral[-1].id)
+                .first()
+            )
 
-    if estoque_grade:
-        estoque_grade.qtd_estoque += int(item["QTDE"])
+    estoque_geral.qtd_estoque += int(item["QTDE"])
+    estoque_grade.qtd_estoque += int(item["QTDE"])
 
     db.session.commit()
 
