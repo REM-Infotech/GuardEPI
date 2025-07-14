@@ -2,8 +2,12 @@
   <div class="mt-4 card mb-4">
     <div class="card-header">
       <h2 class="m-2 p-1">{{ title }}</h2>
-      <hr>
-      <a type="button" class="btn btn-icon-split btn-success me-2" href="{{ url_for('estoque.emitir_cautela') }}">
+      <hr />
+      <a
+        type="button"
+        class="btn btn-icon-split btn-success me-2"
+        href="{{ url_for('estoque.emitir_cautela') }}"
+      >
         <span class="icon text-white-50">
           <i class="fa-solid fa-file-pdf"></i>
         </span>
@@ -28,55 +32,95 @@
           </tr>
         </thead>
         <tbody>
-          {% if database %}
-          {% for item in database %}
+          {% if database %} {% for item in database %}
           <tr>
+            {% set nome_epis = "" %}
             <td>{{ item.id }}</td>
-            {% set nome_epis = item.nome_epis_ | map(attribute='epis_saidas') | map(attribute='nome_epi') | join(' - ')
-            %}
-            {% if not nome_epis %}
-            {% if "," in item.nome_epis %}
-            {% set nome_epis = item.nome_epis.split(",") | join(' - ') | replace('"', '') %}
-            {% else %}
-            {% set nome_epis = item.nome_epis | replace('"', '') %}
-            {% endif %}
-            {% endif %}
+            {% if item.nome_epis %} {% set nome_epis = item.nome_epis_ |
+            map(attribute='epis_saidas') | map(attribute='nome_epi') | join(' - ') %} {% if not
+            nome_epis %} {% if "," in item.nome_epis %} {% set nome_epis = item.nome_epis.split(",")
+            | join(' - ') | replace('"', '') %} {% else %} {% set nome_epis = item.nome_epis |
+            replace('"', '') %} {% endif %} {% endif %} {% endif %}
             <td>
-              <span class="d-inline-block text-truncate" style="max-width: 350px;">
+              <span class="d-inline-block text-truncate" style="max-width: 350px">
                 {{ nome_epis }}
               </span>
             </td>
             <td>
-              <span class="d-inline-block text-truncate" style="max-width: 350px;">
+              <span class="d-inline-block text-truncate" style="max-width: 350px">
                 {{ item.funcionario }}
               </span>
             </td>
             <td>{{ item.data_solicitacao.strftime("%d/%m/%Y") }}</td>
             <td>
-              <button type="button" class="btn btn-danger btn-sm btn-icon-split mb-2 open-pdf"
-                name="{{ item.filename }}" data-pdf-url="{{ url_for('estoque.cautela_pdf', uuid_pasta=item.id) }}">
-                <span class="icon text-white-50">
-                  <i class="fa-solid fa-file-pdf"></i>
-                </span>
-                <span class="text">Ver PDF</span>
-              </button>
-              <button type="button" class="btn btn-warning btn-sm btn-icon-split mb-2" onclick="solicitarAssinado()">
-                <span class="icon text-white-50">
-                  <i class="fa-solid fa-file-pdf"></i>
-                </span>
-                <span class="text">Enviar Assinado</span>
-              </button>
-              {# <button type="button" class="btn btn-secondary btn-sm btn-icon-split mb-2 open-pdf"
-                name="{{ item.filename }}" data-pdf-url="{{ url_for('estoque.cautela_pdf', uuid_pasta=item.id) }}">
-                <span class="icon text-white-50">
-                  <i class="fa-solid fa-xmark"></i>
-                </span>
-                <span class="text">Cancelar Cautela</span>
-              </button> #}
+              <div class="btn-group" role="group">
+                <button
+                  type="button"
+                  class="btn btn-primary dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                ></button>
+                <ul class="dropdown-menu">
+                  <li class="dropdown-item">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-icon-split btn-primary open-pdf"
+                      name="{{ item.filename }}"
+                      data-pdf-url="{{ url_for('estoque.cautela_pdf', uuid_pasta=item.id) }}"
+                    >
+                      <span class="icon text-white-50">
+                        <i class="fa-solid fa-file-pdf"></i>
+                      </span>
+                      <span class="text">Ver PDF</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    {% if documentos_assinados %}
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-icon-split btn-success"
+                      name="{{ item.documentos_assinados.filename }}"
+                      data-pdf-url="{{ url_for('estoque.cautela_assinada_pdf', uuid_pasta=item.documentos_assinados.id) }}"
+                    >
+                      <span class="icon text-white-50">
+                        <i class="fa-solid fa-file-pdf"></i>
+                      </span>
+                      <span class="text">Ver PDF Assinado</span>
+                    </button>
+                    {% elif not documentos_assinados %}
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-icon-split btn-warning"
+                      hx-get="{{ url_for('estoque.envio_cautela_assinada', id_cautela=item.id) }}"
+                      hx-trigger="click"
+                      hx-target="#results"
+                    >
+                      <span class="icon text-white-50">
+                        <i class="fa-solid fa-file-pdf"></i>
+                      </span>
+                      <span class="text">Enviar Doc. Assinada</span>
+                    </button>
+                    {% endif %}
+                  </li>
+                  <li class="dropdown-item">
+                    <button
+                      type="button"
+                      class="btn btn-sm btn-icon-split btn-danger"
+                      hx-get="{{ url_for('estoque.cancelar_cautela', id_cautela=item.id) }}"
+                      hx-trigger="click"
+                      hx-target="#results"
+                    >
+                      <span class="icon text-white-50">
+                        <i class="fa-solid fa-xmark"></i>
+                      </span>
+                      <span class="text">Cancelar Cautela</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </td>
           </tr>
-          {% endfor %}
-          {% endif %}
+          {% endfor %} {% endif %}
         </tbody>
         <tfoot>
           <tr>
@@ -90,47 +134,7 @@
       </table>
     </div>
   </div>
-  {% include 'includes/modal_pdf.html' %}
-  {% if url %}
-  {% include 'includes/show_modal_pdf.html' %}
+  <div id="results"></div>
+  {% include 'includes/modal_pdf.html' %} {% if url %} {% include 'includes/show_modal_pdf.html' %}
   {% endif %}
-
-  <div class="modal fade modal-xl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <form action="">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-
-            <div class="input-group mb-3">
-              <input type="file" class="form-control" id="inputGroupFile02" accept=".pdf">
-              <label class="input-group-text" for="inputGroupFile02">Arquivo Assinado</label>
-            </div>
-
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
 </div>
-
-<script>
-
-
-  function solicitarAssinado() {
-
-    const modalForm = $("#exampleModal")
-    modalForm.modal("show")
-
-  }
-
-
-</script>

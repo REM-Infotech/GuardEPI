@@ -1,0 +1,47 @@
+<div class="modal fade modal-xl" id="ModalEnvioDocAssinado" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <form id="formEnvioDocAssinado" action="{{ url_action }}" method="post" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Envio da Cautela Assinada</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body row g-3 justify-content-center p-3">
+          <div class="col-12">
+            <div class="form-floating mb-3">
+              {{ form.nome_funcionario(class="form-control") }}
+              {{ form.nome_funcionario.label(for="nome_funcionario") }}
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-floating mb-3">
+              {{ form.nome_cautela(class="form-control", id="nome_cautela") }}
+              {{ form.nome_cautela.label(for="nome_cautela") }}
+            </div>
+          </div>
+          <div class="col-12 border border-black p-2 border-2 rounded border-opacity-25">
+            <div class="mb-3">
+              {{ form.arquivo_assinado.label(for="formFile", class="form-label") }}
+              {{ form.arquivo_assinado(class="form-control") }}
+            </div>
+          </div>
+          <div class="footer d-flex flex-column gap-2">
+            <div class="form-check">
+              {{ form.confirm_form( class="form-check-input", id="confirm_fields") }}
+              {{ form.confirm_form.label( class="form-check-label", for="confirm_fields") }}
+            </div>
+            <hr>
+            <div class="d-flex flex-column">
+              {{ form.submit( class="btn btn-outline-success", onclick="showLoad()") }}
+            </div>
+          </div>
+        </div>
+      </div>
+  </form>
+</div>
+<script>
+  $(document).ready(function () {
+    $("#ModalEnvioDocAssinado").modal("show");
+  });
+</script>

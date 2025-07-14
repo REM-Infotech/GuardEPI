@@ -31,6 +31,19 @@ class RegistrosEPI(db.Model):
     blob_doc = Column(LargeBinary(length=(2**32) - 1))
 
 
+class RegistrosCautelasCanceladas(db.Model):
+    __tablename__ = "registros_cautelas_canceladas"
+    id = Column(Integer, primary_key=True)
+    nome_epis = Column(String(length=2048))
+    valor_total = Column(db.Float, nullable=False)
+    funcionario = Column(String(length=64), nullable=False)
+    data_solicitacao: datetime = Column(
+        db.DateTime, default=datetime.now(pytz.timezone("Etc/GMT+4"))
+    )
+    filename = Column(Text, nullable=False)
+    blob_doc = Column(LargeBinary(length=(2**32) - 1))
+
+
 class RegistrosEPIRedis(HashModel):
     id: int
     nome_epis: str
@@ -39,3 +52,19 @@ class RegistrosEPIRedis(HashModel):
     data_solicitacao: datetime
     filename: str
     blob_doc: str
+
+
+class CautelaAssinada(db.Model):
+    __tablename__ = "entregas_assinadas"
+    id = Column(Integer, primary_key=True)
+
+    cautela_id = Column(Integer, db.ForeignKey("registros_epi.id"))
+    cautela = db.relationship("RegistrosEPI", backref="documentos_assinados")
+
+    funcionario_id = Column(Integer, db.ForeignKey("funcionarios.id"))
+    funcionario = db.relationship("Funcionarios", backref="documentos_assinados")
+    data_assinatura: datetime = Column(
+        db.DateTime, default=datetime.now(pytz.timezone("Etc/GMT+4"))
+    )
+    filename = Column(Text, nullable=False)
+    blob_doc = Column(LargeBinary(length=(2**32) - 1))

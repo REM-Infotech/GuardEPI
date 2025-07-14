@@ -15,6 +15,7 @@ from app.models.admissional import (
 )
 
 from .EPI import (
+    CautelaAssinada,
     ClassesEPI,
     EPIsCautela,
     EstoqueEPI,
@@ -32,6 +33,7 @@ from .Funcionários import Cargos, Departamento, Empresa, Funcionarios
 from .users import Groups, Roles, Routes, Users
 
 __all__ = (
+    CautelaAssinada,
     Funcionarios,
     Empresa,
     Cargos,

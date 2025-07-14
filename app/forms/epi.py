@@ -3,6 +3,7 @@ from datetime import datetime
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
 from wtforms import (
+    BooleanField,
     DateField,
     IntegerField,
     SelectField,
@@ -10,7 +11,7 @@ from wtforms import (
     SubmitField,
     TextAreaField,
 )
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length, StopValidation
 
 from app.forms.choices import (
     set_choices,
@@ -44,6 +45,94 @@ tipo_choices = [
     ("Lote", "Lote"),
     ("Fardo", "Fardo"),
 ]
+
+
+class BooleanRequired:
+    """
+    Validates that input was provided for this field.
+
+    Note there is a distinction between this and DataRequired in that
+    InputRequired looks that form-input data was provided, and DataRequired
+    looks at the post-coercion data. This means that this validator only checks
+    whether non-empty data was sent, not whether non-empty data was coerced
+    from that data. Initially populated data is not considered sent.
+
+    Sets the `required` attribute on widgets.
+    """
+
+    def __init__(self, message=None):
+        self.message = message
+        self.field_flags = {"required": True}
+
+    def __call__(self, form, field):
+        if field.raw_data and field.raw_data[0]:
+            return
+
+        if self.message is None:
+            message = field.gettext("This field is required.")
+        else:
+            message = self.message
+
+        field.errors[:] = []
+        raise StopValidation(message)
+
+
+class FormEnvioCautelaAssinada(FlaskForm):
+    nome_funcionario = StringField(
+        "Funcionário",
+        id="nome_funcionario",
+        validators=[DataRequired()],
+        render_kw={
+            "disabled": True,
+            "placeholder": "Nome do Funcionário",
+        },
+    )
+    nome_cautela = StringField(
+        "Nome Cautela (Arquivo original)",
+        id="nome_cautela",
+        validators=[DataRequired()],
+        render_kw={
+            "disabled": True,
+            "placeholder": "Nome da Cautela (PDF)",
+        },
+    )
+    arquivo_assinado = FileField(
+        "Arquivo assinado",
+        id="arquivo_assinado",
+        validators=[DataRequired(), permited_file],
+    )
+
+    confirm_form = BooleanField(
+        "Confirmo que o arquivo enviado refere-se ao arquivo assinado (Ação irreversível!).",
+        render_kw={"required": True},
+    )
+
+    submit = SubmitField("Enviar")
+
+
+class CancelarCautelaForm(FlaskForm):
+    nome_funcionario = StringField(
+        "Funcionário",
+        id="nome_funcionario",
+        render_kw={
+            "disabled": True,
+            "placeholder": "Nome do Funcionário",
+        },
+    )
+    nome_cautela = StringField(
+        "Nome Cautela (Arquivo original)",
+        id="nome_cautela",
+        render_kw={
+            "disabled": True,
+            "placeholder": "Nome da Cautela (PDF)",
+        },
+    )
+    confirm_form = BooleanField(
+        "Confirmo que a cautela selecionada refere-se a que desejo cancelar (Ação irreversível!).",
+        render_kw={"required": True},
+    )
+
+    submit = SubmitField("Solicitar Cancelamento")
 
 
 class FormGrade(FlaskForm):

@@ -1,4 +1,4 @@
-from .cautelas import EPIsCautela, RegistrosEPI
+from .cautelas import CautelaAssinada, EPIsCautela, RegistrosEPI
 from .equipamento import (
     ClassesEPI,
     Fornecedores,
@@ -11,6 +11,7 @@ from .estoque import EstoqueEPI, EstoqueGrade, RegistroEntradas, RegistroSaidas
 from .schedule_tasks import TaskNotificacao
 
 __all__ = (
+    CautelaAssinada,
     RegistrosEPI,
     ModelosEPI,
     Marcas,
