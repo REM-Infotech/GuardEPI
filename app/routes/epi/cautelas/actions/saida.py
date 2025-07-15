@@ -121,6 +121,7 @@ class RegistrarSaida:
                 epis_saidas_id=item.id,
             )
             to_add.nome_epis.append(registrar)
+            secondary.append(to_add)
 
         self.db.session.add(registrar)
         self.db.session.add_all(secondary)
