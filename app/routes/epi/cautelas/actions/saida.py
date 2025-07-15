@@ -113,14 +113,14 @@ class RegistrarSaida:
             [str(item.nome_epi) for item in lista_para_registro]
         )
 
-        secondary: List[EPIsCautela] = [
-            EPIsCautela(
+        secondary: List[EPIsCautela] = []
+
+        for item in lista_para_registro:
+            to_add = EPIsCautela(
                 cod_ref=str(uuid4()),
                 epis_saidas_id=item.id,
-                nomes_epis=registrar,
             )
-            for item in lista_para_registro
-        ]
+            to_add.nome_epis.append(registrar)
 
         self.db.session.add(registrar)
         self.db.session.add_all(secondary)
