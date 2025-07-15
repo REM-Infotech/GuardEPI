@@ -27,7 +27,7 @@ class RegistrarSaida:
             epis_lista = []
             para_registro: list[RegistroSaidas] = []
             list_epis_solict: list[list[str]] = []
-
+            valor_calc = 0
             async for item_epi in self.dict_equipamentos_emissao():
                 if not item_epi.get("NOME_EPI"):
                     continue
@@ -74,7 +74,7 @@ class RegistrarSaida:
         self,
         nome_epi: str,
         grade_epi: str,
-    ) -> tuple[ProdutoEPI | None, EstoqueEPI | None, EstoqueGrade | None]:
+    ) -> None:
         session = self.db.session
         self.equip = session.query(ProdutoEPI).filter_by(nome_epi=nome_epi).first()
 
