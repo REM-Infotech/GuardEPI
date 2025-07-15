@@ -120,7 +120,7 @@ class RegistrarSaida:
                 cod_ref=str(uuid4()),
                 epis_saidas_id=item.id,
             )
-            to_add.nome_epis.append(registrar)
+            to_add.nome_epis = registrar
             secondary.append(to_add)
 
         self.db.session.add(registrar)
