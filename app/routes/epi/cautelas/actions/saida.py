@@ -107,6 +107,7 @@ class RegistrarSaida:
             funcionario=nome_funcionario,
             data_solicitacao=datetime.now(),
             valor_total=valor_calculado,
+            filename=self.nomefilename,
         )
 
         registrar.nome_epis = ",".join(
