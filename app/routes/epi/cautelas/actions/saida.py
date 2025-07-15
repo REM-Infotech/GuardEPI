@@ -89,11 +89,11 @@ class RegistrarSaida:
 
     async def verificar_saldo_estoque(
         self,
-        estoque_grade: EstoqueGrade,
-        data_estoque: EstoqueEPI,
     ) -> bool:
-        if estoque_grade:
-            return all([estoque_grade.qtd_estoque > 0, data_estoque.qtd_estoque > 0])
+        if self.estoque_grade:
+            return all(
+                [self.estoque_grade.qtd_estoque > 0, self.data_estoque.qtd_estoque > 0]
+            )
 
         return False
 
