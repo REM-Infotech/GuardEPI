@@ -49,10 +49,12 @@ class RegistroSaidas(db.Model):
         self,
         nome_epi=None,
         qtd_saida=1,
+        grade_epi: str = None,
         data_saida: Type[datetime] = datetime.now(),
         valor_total: float = 0.00,
     ) -> None:
         self.nome_epi = nome_epi
         self.qtd_saida = qtd_saida
+        self.grade_epi = grade_epi
         self.data_saida = data_saida
         self.valor_total = valor_total
