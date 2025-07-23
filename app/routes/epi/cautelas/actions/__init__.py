@@ -146,7 +146,7 @@ async def add_cautela_assinada(
         await arquivo_assinado.save(file_path)
 
         new_cautela_assinada.filename = arquivo_assinado.filename
-        async with aiofiles.open(file_path) as f:
+        async with aiofiles.open(file_path, "rb") as f:
             new_cautela_assinada.blob_doc = await f.read()
 
         new_cautela_assinada.cautela_id = query.id
