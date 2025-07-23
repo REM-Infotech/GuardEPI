@@ -1,3 +1,5 @@
+import shutil
+from contextlib import suppress
 from datetime import datetime
 from pathlib import Path
 from typing import TypedDict
@@ -148,6 +150,9 @@ async def add_cautela_assinada(
         new_cautela_assinada.filename = arquivo_assinado.filename
         async with aiofiles.open(file_path, "rb") as f:
             new_cautela_assinada.blob_doc = await f.read()
+
+        with suppress(Exception):
+            shutil.rmtree(temp_path_doc)
 
         new_cautela_assinada.cautela_id = query.id
         new_cautela_assinada.funcionario_id = query_funcionario.id
