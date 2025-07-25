@@ -1,3 +1,4 @@
+import re
 import shutil
 from contextlib import suppress
 from datetime import datetime
@@ -30,6 +31,10 @@ class ItemCautela(TypedDict):
     CA: str
 
 
+def _regex_epi(val: str) -> str:
+    return re.sub(r"[^A-Za-z0-9]", "", str(val)).upper()
+
+
 async def cancelamento_cautela(db: SQLAlchemy, id_cautela: int):
     query = db.session.query(RegistrosEPI).filter_by(id=id_cautela).first()
     path_pdf = Path(app.config["DOCS_PATH"]).resolve()
@@ -54,7 +59,7 @@ async def cancelamento_cautela(db: SQLAlchemy, id_cautela: int):
         equips.append(
             ItemCautela(
                 [
-                    (desc, item[0].replace("\n", " ")),
+                    (desc, _regex_epi(item[0].replace("\n", " "))),
                     (
                         str(keys[1]).replace("\n", "").upper(),
                         item[1].replace("\n", " "),
@@ -84,38 +89,41 @@ async def cancelamento_cautela(db: SQLAlchemy, id_cautela: int):
     db.session.commit()
 
 
-async def reinserir_estoque(db: SQLAlchemy, item: ItemCautela):
-    estoque_grade = db.session.query(EstoqueGrade).all()
-    estoque_geral = db.session.query(EstoqueEPI).all()
-
-    def verify_nome_epi(item_filter: EstoqueGrade | EstoqueEPI) -> bool:
+async def reinserir_estoque(db: SQLAlchemy, item: ItemCautela) -> None:
+    def verify_nome_epi(item_filter: EstoqueEPI) -> bool:
         nome_epi: str = item_filter.nome_epi
-        return any(
-            [
-                nome_epi.lower() == item["DESCRICAO"].lower(),
-                nome_epi.lower() in item["DESCRICAO"].lower(),
-                nome_epi.lower().replace(" ", "")
-                == item["DESCRICAO"].lower().replace(" ", ""),
-            ]
+
+        db_nome_epi = _regex_epi(nome_epi.lower())
+        estorno_nome_epi = _regex_epi(item["DESCRICAO"].lower())
+
+        return db_nome_epi == estorno_nome_epi
+
+    def verify_nome_grade(item_filter: EstoqueGrade) -> bool:
+        db_nome_epi = _regex_epi(item_filter.nome_epi).lower()
+        db_grade = _regex_epi(item_filter.grade).lower()
+
+        estorno_nome_epi = _regex_epi(item["DESCRICAO"]).lower()
+        estorno_grade = _regex_epi(item["GRADE"]).lower()
+
+        return db_nome_epi == estorno_nome_epi and db_grade == estorno_grade
+
+    estoque_grade = list(
+        filter(verify_nome_grade, db.session.query(EstoqueGrade).all())
+    )
+    if len(estoque_grade) > 0:
+        estoque_grade = (
+            db.session.query(EstoqueGrade)
+            .filter(EstoqueGrade.id == estoque_grade[-1].id)
+            .first()
         )
 
-    if len(estoque_grade) > 0:
-        estoque_grade = list(filter(verify_nome_epi, estoque_grade))
-        if len(estoque_grade) > 0:
-            estoque_grade = (
-                db.session.query(EstoqueGrade)
-                .filter(EstoqueGrade.id == estoque_grade[-1].id)
-                .first()
-            )
-
+    estoque_geral = list(filter(verify_nome_epi, db.session.query(EstoqueEPI).all()))
     if len(estoque_geral) > 0:
-        estoque_geral = list(filter(verify_nome_epi, estoque_geral))
-        if len(estoque_geral) > 0:
-            estoque_geral = (
-                db.session.query(EstoqueEPI)
-                .filter(EstoqueEPI.id == estoque_geral[-1].id)
-                .first()
-            )
+        estoque_geral = (
+            db.session.query(EstoqueEPI)
+            .filter(EstoqueEPI.id == estoque_geral[-1].id)
+            .first()
+        )
 
     estoque_geral.qtd_estoque += int(item["QTDE"])
     estoque_grade.qtd_estoque += int(item["QTDE"])
